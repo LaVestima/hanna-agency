@@ -22,7 +22,7 @@
             text-decoration: none;
         }
         a:visited {
-            color: white;
+            /*color: white;*/
         }
         a:active {
             color: #AEF2FF;
@@ -245,7 +245,8 @@
         <div id="title-center">
             {% block body_title %}{% endblock %}
         </div>
-        <img src="{{ asset('radioactive.png') }}" alt=""><br>
+        Some <br> options <br> here <br><br>
+        {#<img src="{{ asset('radioactive.png') }}" alt=""><br>#}
         {% block body %}{% endblock %}
     </div> 
 </body>

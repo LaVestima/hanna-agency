@@ -41,6 +41,13 @@ class DefaultController extends Controller {
     }
 
     /**
+     * @Route("/customer/{customerID}", name="customer", defaults={"customerID": 0})
+     */
+    public function customerAction($customerID) {
+        return new Response('<html><body>Customer page!' . $customerID . '</body></html>');
+    }
+
+    /**
      * @Route("/product/{urlSlugName}", name="product", defaults={"urlSlugName" = ""})
      * @Route("/product/")
      */

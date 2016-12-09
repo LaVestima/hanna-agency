@@ -6,43 +6,65 @@
 
 {% block stylesheets %}
     <style>
-        #customer-list {
+        #list-body {
+            height: 700px;
+            overflow-y: scroll;
+        }
+        #customer-list-header, #customer-list {
             width: 100%;
         }
-        #customer-list tr td {
+        #list-header {
+            margin-right: 15px;
+        }
+        #customer-list-header tr {
+            border-bottom: 2px solid black;
+        }
+        td {
+            border: 1px solid black;
+        }
+        .list-section table tr td {
             width: 50px;
+        }
+        #customer-list tr:nth-child(even) {
+            background: #CCCCCC;
+        }
+        #customer-list tr td:nth-last-child(1) {
+            width: 10px;
+            text-align: center;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <table id="customer-list">
-        <tr>
-            <td>First Name</td>
-            <td> | </td>
-            <td>Last Name</td>
-            <td> | </td>
-            <td>Country</td>
-        </tr>
-        <tr>
-            <td>---</td>
-            <td>---</td>
-            <td>---</td>
-            <td>---</td>
-            <td>---</td>
-        </tr>
-        {% for customer in customers %}
+    <div class="list-section" id="list-header">
+        <table id="customer-list-header">
             <tr>
-                <td>{{ customer.firstName }}</td>
-                <td> | </td>
-                <td>{{ customer.lastName }}</td>
-                <td> | </td>
-                <td>{{ customer.idCountries.name }}</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Country</td>
+                <td>City</td>
             </tr>
-        {% endfor %}
-    </table>
-    {#{% for result in db_result %}#}
-    {#{{ result[1] }}<br>#}
-    {#{% endfor %}#}
+        </table>
+    </div>
+    <div class="list-section" id="list-body">
+        <table id="customer-list">
+            {#<tr>#}
+                {#<td>First Name</td>#}
+                {#<td>Last Name</td>#}
+                {#<td>Country</td>#}
+                {#<td>City</td>#}
+            {#</tr>#}
+            {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.firstName }}</td>
+                    <td>{{ customer.lastName }}</td>
+                    <td>{{ customer.idCountries.name }}</td>
+                    <td>{{ customer.idCities.name }}</td>
+                    <td><a href="{{ path('customer', {'customerID': customer.id}) }}"> -></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
 
 {% endblock %}
