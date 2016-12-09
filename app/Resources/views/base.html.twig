@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>HA-{% block title%}{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 5px;
+            font-family: 'Dosis', sans-serif;
+            font-size: 20px;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: none;
+        }
+        a:visited {
+            color: white;
+        }
+        a:active {
+            color: #AEF2FF;
+        }
+        /*#top-menu {*/
+            /*position: fixed;*/
+            /*top: 0;*/
+            /*left: 0;*/
+            /*width: 100%;*/
+        /*}*/
+        /*#top-menu ul {*/
+            /*!*background: #9999aa;*!*/
+            /*list-style-type: none;*/
+            /*margin: 0;*/
+        /*}*/
+        /*#top-menu ul li {*/
+            /*background: #01FF55;*/
+            /*display: inline-block;*/
+            /*height: 50px;*/
+            /*width: 100px;*/
+            /*text-align: center;*/
+            /*line-height: 50px;*/
+        /*}*/
+        /*#top-menu ul li:hover {*/
+            /*background: #01AE3B;*/
+        /*}*/
+        #left-menu {
+            width: 150px;
+            position: fixed;
+            top: 10px;
+            left: -150px;
+            opacity: 1;
+            z-index: 100;
+        }
+        #left-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #left-menu ul li {
+            width: 150px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: #777777;
+            color: #FFFFFF;
+        }
+        #left-menu ul li:hover {
+            background: #7777FF;
+        }
+        #left-menu-header {
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background: #444444;
+            color: #33FF33;
+        }
+        #left-menu-button {
+            background: #663399;
+            height: 50px;
+            line-height: 55px;
+            width: 50px;
+            position: fixed;
+            top: 10px;
+            left: 0;
+            font-size: 25px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            z-index: 100;
+        }
+        #right-menu {
+            position: fixed;
+            top: 50px;
+            right: 0;
+        }
+        #right-menu ul {
+            padding-left: 5px;
+            padding-bottom: 5px;
+            margin: 0;
+            list-style-type: none;
+            
+        }
+        #right-menu ul li {
+            background: #2E9FB3;
+            height: 40px;
+            width: 150px;
+            margin-top: 5px;
+            position: relative;
+            right: -10px;
+            text-align: center;
+            padding-right: 5px;
+            line-height: 40px;
+            border-radius: 5px 0 0 5px;
+            box-shadow: 0 0 2px #000000;
+        }
+        #right-menu ul li:hover {
+            /*height: 28px;*/
+            right: 0;
+        }
+        #body-overlay {
+            position: fixed;
+            background: #000000;
+            opacity: 0.8;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            visibility: hidden;
+            z-index: 50;
+        }
+        #main-body {
+            margin-top: 20px;
+        }
+        #title-center {
+            font-size: 30px;
+            margin-right: 50px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+    <script>
+        var isLeftMenuActive = 0;
+
+        function showLeftMenu() {
+            $("#left-menu").animate({
+                left: "0px"
+            }, 500);
+            $("#left-menu-button").animate({
+                left: "150px"
+            }, 500);
+            $("#body-overlay").fadeIn("fast");
+            isLeftMenuActive = 1;
+        }
+
+        function hideLeftMenu() {
+            $("#left-menu").animate({
+                left: "-150px"
+            }, 500);
+            $("#left-menu-button").animate({
+                left: "0px"
+            }, 500);
+            $("#body-overlay").fadeOut("fast");
+            isLeftMenuActive = 0;
+        }
+
+        $(document).ready(function() {
+            $("#body-overlay").fadeOut(0);
+            $("#body-overlay").css("visibility", "visible");
+
+            $("#left-menu-button").click(function() {
+                if (!isLeftMenuActive) {
+                    showLeftMenu();
+                }
+                else {
+                    hideLeftMenu();
+                }
+            });
+
+            $("#body-overlay").click(function() {
+                if(isLeftMenuActive) {
+                    hideLeftMenu();
+                }
+            });
+
+            $(document).keydown(function(event) {
+                if (event.keyCode == 27) {
+                    if (isLeftMenuActive) {
+                        hideLeftMenu();
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    {#<div id="top-menu">#}
+        {#<ul>#}
+            {#<a href="#"><li><div></div>safasdfds</li></a>#}
+            {#<li>2</li>#}
+        {#</ul>#}
+    {#</div>#}
+
+    <div id="left-menu-button">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </div>
+    <div id="left-menu">
+        <ul>
+            <div id="left-menu-header">MENU</div>
+            <a href="{{ path('homepage') }}"><li>Homepage</li></a>
+            <a href=""><li>Orders</li></a>
+            <a href="{{ path('invoices') }}"><li>Invoices</li></a>
+            <li>Items</li>
+            <a href="{{ path('customers') }}"><li>Customers</li></a>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_index') }}"><li>Admin Page</li></a>
+            {% endif %}
+            {% if not app.user %}
+                <a href="{{ path('security_login') }}"><li>Log in <span class="glyphicon glyphicon-log-in"></span></li></a>
+            {% elseif app.user %}
+                <a href="{{ path('logout') }}"><li>Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
+            {% endif %}
+
+        </ul>
+    </div>
+
+    <div id="right-menu">
+        <ul>
+            <a href="#"><li><div>Orders</div></li></a>
+            <a href="{{ path('invoices') }}"><li>Invoices</li></a>
+            {#<a href="dbtest.php"><li><div>DB Test</div></li></a>#}
+        </ul>
+    </div>
+
+    <div id="body-overlay"></div>
+
+    <div id="main-body">
+        <div id="title-center">
+            {% block body_title %}{% endblock %}
+        </div>
+        <img src="{{ asset('radioactive.png') }}" alt=""><br>
+        {% block body %}{% endblock %}
+    </div> 
+</body>
+</html>

@@ -1,0 +1,47 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Countries
+ *
+ * @ORM\Table(name="Countries", uniqueConstraints={@ORM\UniqueConstraint(name="Countries_NameU", columns={"Name"})})
+ * @ORM\Entity
+ */
+class Countries
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=100, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Symbol", type="string", length=10, nullable=false)
+     */
+    private $symbol;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
+     */
+    private $note;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+
+}
+

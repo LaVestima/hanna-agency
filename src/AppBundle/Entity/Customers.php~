@@ -1,0 +1,136 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Customers
+ *
+ * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_NumberU", columns={"Identification_Number"})}, indexes={@ORM\Index(name="Customers_ID_COUNTRIES_FK", columns={"ID_COUNTRIES"}), @ORM\Index(name="Customers_ID_CITIES_FK", columns={"ID_CITIES"}), @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}), @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})})
+ * @ORM\Entity
+ */
+class Customers
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Identification_Number", type="string", length=10, nullable=false)
+     */
+    private $identificationNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="First_Name", type="string", length=50, nullable=false)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Last_Name", type="string", length=50, nullable=false)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Company_Name", type="string", length=200, nullable=true)
+     */
+    private $companyName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="VAT", type="string", length=50, nullable=true)
+     */
+    private $vat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Street", type="string", length=200, nullable=false)
+     */
+    private $street;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Postal_Code", type="string", length=20, nullable=false)
+     */
+    private $postalCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="string", length=200, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Phone", type="string", length=50, nullable=false)
+     */
+    private $phone;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Default_Discount", type="integer", nullable=true)
+     */
+    private $defaultDiscount = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \AppBundle\Entity\Users
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
+     * })
+     */
+    private $idUsers;
+
+    /**
+     * @var \AppBundle\Entity\Currencies
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Currencies")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CURRENCIES", referencedColumnName="ID")
+     * })
+     */
+    private $idCurrencies;
+
+    /**
+     * @var \AppBundle\Entity\Countries
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Countries")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
+     * })
+     */
+    private $idCountries;
+
+    /**
+     * @var \AppBundle\Entity\Cities
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cities")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
+     * })
+     */
+    private $idCities;
+
+
+}
+

@@ -1,0 +1,17 @@
+app:
+    resource: "@AppBundle/Controller/DefaultController.php"
+    prefix:   /
+    type:     annotation
+
+admin:
+    resource: "@AppBundle/Controller/AdminController.php"
+    prefix:   /admin
+    type:     annotation
+
+login:
+    resource: "@AppBundle/Controller/SecurityController.php"
+    prefix:   /security
+    type:     annotation
+
+logout:
+    path: /logout
