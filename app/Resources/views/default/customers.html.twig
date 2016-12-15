@@ -6,36 +6,77 @@
 
 {% block stylesheets %}
     <style>
+        td {
+            width: 200px;
+            padding: 0 5px;
+            height: 30px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
         #list-body {
-            height: 700px;
+            height: 600px;
             overflow-y: scroll;
         }
         #customer-list-header, #customer-list {
-            width: 100%;
+            /*width: 100%;*/
+        }
+        #list-search {
+            margin: 0;
+            padding: 0;
+        }
+        #list-search td {
+            padding: 0;
+            border: 0;
+        }
+        #list-search input {
+            width: 200px;
         }
         #list-header {
             margin-right: 15px;
         }
         #customer-list-header tr {
             border-bottom: 2px solid black;
+            background: #AAAAFF;
         }
-        td {
-            border: 1px solid black;
-        }
-        .list-section table tr td {
-            width: 50px;
-        }
+        /*.list-section table tr td {*/
+            /*width: 50px;*/
+        /*}*/
+
         #customer-list tr:nth-child(even) {
-            background: #CCCCCC;
+            background: #DDDDDD;
+        }
+        #customer-list tr:hover {
+            background: #BBBBBB;
         }
         #customer-list tr td:nth-last-child(1) {
-            width: 10px;
+            width: 40px;
             text-align: center;
+        }
+        #customer-list a {
+            color: #000000;
         }
     </style>
 {% endblock %}
 
 {% block body %}
+    <div class="list-section" id="list-search">
+        <table id="customer-list-search">
+            <tr>
+                <td>
+                    <input type="text" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="">
+                </td>
+                <td>
+                    <input type="text" class="table-search" id="last-name-search-input" onkeyup="tableSearch('customer-list', 'last-name-search-input', 1)" placeholder="">
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+    </div>
     <div class="list-section" id="list-header">
         <table id="customer-list-header">
             <tr>
@@ -60,7 +101,7 @@
                     <td>{{ customer.lastName }}</td>
                     <td>{{ customer.idCountries.name }}</td>
                     <td>{{ customer.idCities.name }}</td>
-                    <td><a href="{{ path('customer', {'customerID': customer.id}) }}"> -></a></td>
+                    <td><a href="{{ path('customer', {'customerID': customer.id}) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
                 </tr>
             {% endfor %}
         </table>
