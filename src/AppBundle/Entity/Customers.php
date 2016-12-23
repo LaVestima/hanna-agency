@@ -89,6 +89,13 @@ class Customers
      */
     private $defaultDiscount = '0';
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+	 */
+	private $pathSlug;
+
     /**
      * @var integer
      *
@@ -508,5 +515,29 @@ class Customers
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * Set pathSlug
+     *
+     * @param string $pathSlug
+     *
+     * @return Customers
+     */
+    public function setPathSlug($pathSlug)
+    {
+        $this->pathSlug = $pathSlug;
+
+        return $this;
+    }
+
+    /**
+     * Get pathSlug
+     *
+     * @return string
+     */
+    public function getPathSlug()
+    {
+        return $this->pathSlug;
     }
 }

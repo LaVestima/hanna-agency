@@ -27,13 +27,6 @@ class Users
     private $passwordHash;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="Salt", type="string", length=50, nullable=false)
-     */
-    private $salt;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="Is_Admin", type="integer", nullable=false)
@@ -49,7 +42,9 @@ class Users
      */
     private $id;
 
-
+    public function __toString() {
+        return $this->getLogin();
+    }
 
     /**
      * Set login
@@ -97,30 +92,6 @@ class Users
     public function getPasswordHash()
     {
         return $this->passwordHash;
-    }
-
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     *
-     * @return Users
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * Get salt
-     *
-     * @return string
-     */
-    public function getSalt()
-    {
-        return $this->salt;
     }
 
     /**

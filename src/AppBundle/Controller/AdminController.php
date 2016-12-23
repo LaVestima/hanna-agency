@@ -36,18 +36,26 @@ class AdminController extends Controller {
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
 
-			$randomIdentificationNumber = rand(1000000000, 9999999999);
+			$randomIdentificationNumber = rand(1000000000, 9999999999);// TODO: check uniqueness
 			$customer->setIdentificationNumber((string)$randomIdentificationNumber);
 
-			$randomPathSlug = bin2hex(random_bytes(25)); // TODO: check uniqueness
+			do {
+				$randomPathSlug = bin2hex(random_bytes(25));
+				$customerCheck = 0;//$this->getDoctrine()
+//					->getRepository('AppBundle:Customers')
+//					->findBy(array('pathSlug' => $randomPathSlug));
+			} while ($customerCheck);
+
 			$customer->setPathSlug($randomPathSlug);
+
+			$customer->setId(5);
 
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($customer);
 			$em->flush();
 
 			return $this->render('admin/add_customer.html.twig', array(
-				'form' => $form->createView(),
+//				'form' => $form->createView(),
 				'message' => 'User added!',
 			));
 		}

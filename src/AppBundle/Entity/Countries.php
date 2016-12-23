@@ -42,8 +42,7 @@ class Countries
      */
     private $id;
 
-    public function __toString()
-	{
+    public function __toString() {
 		return $this->getName();
 	}
 

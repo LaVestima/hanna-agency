@@ -89,6 +89,13 @@ class Customers
      */
     private $defaultDiscount = '0';
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+	 */
+	private $pathSlug;
+
     /**
      * @var integer
      *
@@ -484,5 +491,29 @@ class Customers
     public function getIdCities()
     {
         return $this->idCities;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     *
+     * @return Customers
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 }

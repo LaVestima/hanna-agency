@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,9 +16,21 @@ class CustomersType extends AbstractType {
 		$builder
 			->add('firstName', TextType::class)
 			->add('lastName', TextType::class)
-			->add('gender', TextType::class)
-			->add('companyName', TextType::class)
-			->add('vat', TextType::class)
+			->add('gender', ChoiceType::class, array(
+				'choices' => array(
+					'Female' => 'F',
+					'Male' => 'M',
+					'Other' => 'O',
+				),
+				'placeholder' => '',
+				'required' => true,
+			))
+			->add('companyName', TextType::class, array(
+				'required' => false,
+			))
+			->add('vat', TextType::class, array(
+				'required' => false,
+			))
 			->add('idCountries', null, array(
 				'placeholder' => '',
 				'required' => true
@@ -34,8 +47,13 @@ class CustomersType extends AbstractType {
 				'placeholder' => '',
 				'required' => true
 			))
-			->add('defaultDiscount', IntegerType::class)
-			->add('idUsers', TextType::class)
+			->add('defaultDiscount', IntegerType::class, array(
+				'required' => false,
+			))
+			->add('idUsers', null, array(
+				'placeholder' => '',
+				'required' => false
+			))
 			->add('add', SubmitType::class)
 		;
 	}

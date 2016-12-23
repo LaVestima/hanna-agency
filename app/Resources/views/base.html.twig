@@ -63,7 +63,8 @@
             padding: 0;
             margin: 0;
         }
-        #left-menu ul li {
+        /*#left-menu ul li {*/
+        .left-menu-option {
             width: 150px;
             height: 40px;
             line-height: 40px;
@@ -96,35 +97,35 @@
             cursor: pointer;
             z-index: 100;
         }
-        #right-menu {
-            position: fixed;
-            top: 50px;
-            right: 0;
-        }
-        #right-menu ul {
-            padding-left: 5px;
-            padding-bottom: 5px;
-            margin: 0;
-            list-style-type: none;
-            
-        }
-        #right-menu ul li {
-            background: #2E9FB3;
-            height: 40px;
-            width: 150px;
-            margin-top: 5px;
-            position: relative;
-            right: -10px;
-            text-align: center;
-            padding-right: 5px;
-            line-height: 40px;
-            border-radius: 5px 0 0 5px;
-            box-shadow: 0 0 2px #000000;
-        }
-        #right-menu ul li:hover {
-            /*height: 28px;*/
-            right: 0;
-        }
+        /*#right-menu {*/
+            /*position: fixed;*/
+            /*top: 50px;*/
+            /*right: 0;*/
+        /*}*/
+        /*#right-menu ul {*/
+            /*padding-left: 5px;*/
+            /*padding-bottom: 5px;*/
+            /*margin: 0;*/
+            /*list-style-type: none;*/
+            /**/
+        /*}*/
+        /*#right-menu ul li {*/
+            /*background: #2E9FB3;*/
+            /*height: 40px;*/
+            /*width: 150px;*/
+            /*margin-top: 5px;*/
+            /*position: relative;*/
+            /*right: -10px;*/
+            /*text-align: center;*/
+            /*padding-right: 5px;*/
+            /*line-height: 40px;*/
+            /*border-radius: 5px 0 0 5px;*/
+            /*box-shadow: 0 0 2px #000000;*/
+        /*}*/
+        /*#right-menu ul li:hover {*/
+            /*!*height: 28px;*!*/
+            /*right: 0;*/
+        /*}*/
         #body-overlay {
             position: fixed;
             background: #000000;
@@ -173,7 +174,7 @@
         }
 
         function tableSearch(tableName, inputName, columnNumber) {
-            var input, filter, table, tr, td, i;
+            var input, filter, table, tr, td, i;left-menu-option
             table = document.getElementById(tableName);
             input = document.getElementById(inputName);
             allInputs = table.getElementsByTagName("input");
@@ -242,31 +243,32 @@
     <div id="left-menu">
         <ul>
             <div id="left-menu-header">MENU</div>
-            <a href="{{ path('homepage') }}"><li>Homepage</li></a>
-            <a href=""><li>Orders</li></a>
-            <a href="{{ path('invoices') }}"><li>Invoices</li></a>
-            <li>Items</li>
+            <a href="{{ path('homepage') }}"><li class="left-menu-option">Homepage</li></a>
+            <a href=""><li class="left-menu-option">Orders</li></a>
+            <a href="{{ path('invoices') }}"><li class="left-menu-option">Invoices</li></a>
+            <a href=""><li class="left-menu-option">Items</li></a>
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('customers') }}"><li>Customers</li></a>
-                <a href="{{ path('admin_index') }}"><li>Admin Page</li></a>
+                <a href="{{ path('admin_index') }}"><li class="left-menu-option">Admin Page</li></a>
+                <a href="{{ path('customers') }}"><li class="left-menu-option">Customers</li></a>
+                <a href="{{ path('admin_add_customer') }}"><li class="left-menu-option">Add Customer</li></a>
             {% endif %}
             {% if not app.user %}
-                <a href="{{ path('security_login') }}"><li>Log in <span class="glyphicon glyphicon-log-in"></span></li></a>
+                <a href="{{ path('security_login') }}"><li class="left-menu-option">Log in <span class="glyphicon glyphicon-log-in"></span></li></a>
             {% elseif app.user %}
-                <a href="{{ path('logout') }}"><li>Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
+                <a href="{{ path('logout') }}"><li class="left-menu-option">Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
             {% endif %}
 
         </ul>
     </div>
 
-    <div id="right-menu">
-        <ul>
-            <a href="#"><li><div>Orders</div></li></a>
-            <a href="{{ path('invoices') }}"><li>Invoices</li></a>
+    {#<div id="right-menu">#}
+        {#<ul>#}
+            {#<a href="#"><li><div>Orders</div></li></a>#}
+            {#<a href="{{ path('invoices') }}"><li>Invoices</li></a>#}
             {#<a href="dbtest.php"><li><div>DB Test</div></li></a>#}
-        </ul>
-    </div>
+        {#</ul>#}
+    {#</div>#}
 
     <div id="body-overlay"></div>
 
