@@ -246,8 +246,9 @@
             <a href=""><li>Orders</li></a>
             <a href="{{ path('invoices') }}"><li>Invoices</li></a>
             <li>Items</li>
-            <a href="{{ path('customers') }}"><li>Customers</li></a>
+
             {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('customers') }}"><li>Customers</li></a>
                 <a href="{{ path('admin_index') }}"><li>Admin Page</li></a>
             {% endif %}
             {% if not app.user %}

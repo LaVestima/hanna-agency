@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Customer{% endblock %}
+
+{% block body_title %}Add Customer{% endblock %}
+
+{% block body %}
+    Add a customer here<br>
+    <span class="glyphicon glyphicon-search"></span><br>
+
+    {{ message|default('') }}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+
+    </style>
+{% endblock %}

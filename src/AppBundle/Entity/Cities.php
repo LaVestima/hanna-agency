@@ -45,7 +45,10 @@ class Cities
      */
     private $idCountries;
 
-
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * Set name

@@ -8,8 +8,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Customers;
+use AppBundle\Form\CustomersType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -20,4 +23,37 @@ class AdminController extends Controller {
     public function adminAction() {
         return new Response('<html><body>Admin page!</body></html>');
     }
+
+	/**
+	 * @Route("/add_customer", name="admin_add_customer")
+	 */
+	public function addCustomerAction(Request $request) {
+		$customer = new Customers();
+
+		$form = $this->createForm(CustomersType::class, $customer);
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$customer = $form->getData();
+
+			$randomIdentificationNumber = rand(1000000000, 9999999999);
+			$customer->setIdentificationNumber((string)$randomIdentificationNumber);
+
+			$randomPathSlug = bin2hex(random_bytes(25)); // TODO: check uniqueness
+			$customer->setPathSlug($randomPathSlug);
+
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($customer);
+			$em->flush();
+
+			return $this->render('admin/add_customer.html.twig', array(
+				'form' => $form->createView(),
+				'message' => 'User added!',
+			));
+		}
+
+		return $this->render('admin/add_customer.html.twig', array(
+			'form' => $form->createView(),
+		));
+	}
 }

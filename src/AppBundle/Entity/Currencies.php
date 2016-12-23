@@ -35,7 +35,9 @@ class Currencies
      */
     private $id;
 
-
+    public function __toString() {
+        return $this->getSymbol() . ' - ' . $this->getName();
+    }
 
     /**
      * Set name

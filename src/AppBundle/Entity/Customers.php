@@ -33,6 +33,13 @@ class Customers
      */
     private $lastName;
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="Gender", type="string", length=1, nullable=false)
+	 */
+	private $gender;
+
     /**
      * @var string
      *
@@ -477,5 +484,29 @@ class Customers
     public function getIdCities()
     {
         return $this->idCities;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     *
+     * @return Customers
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 }
