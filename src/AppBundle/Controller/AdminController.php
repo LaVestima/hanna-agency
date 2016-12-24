@@ -18,11 +18,46 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller {
     /**
-     * @Route("/", name="admin_index")
+     * @Route("/panel", name="admin_panel")
      */
-    public function adminAction() {
-        return new Response('<html><body>Admin page!</body></html>');
+    public function panelAction() {
+        return $this->render('admin/panel.html.twig');
     }
+
+	/**
+	 * @Route("/customer_list", name="admin_customer_list")
+	 */
+	public function customerListAction() {
+		$customers = $this->getDoctrine()
+			->getRepository('AppBundle:Customers')
+			->findAll();
+
+		return $this->render('admin/customer_list.html.twig', array(
+			'customers' => $customers
+		));
+	}
+
+	/**
+	 * @Route("/customer/{pathSlug}", name="admin_customer", defaults={"pathSlug": 0})
+	 */
+	public function customerAction($pathSlug) {
+//		$customer = new Customers();
+
+		$customer = $this->getDoctrine()
+			->getRepository('AppBundle:Customers')
+			->findBy(array('pathSlug' => $pathSlug));
+
+		if (!$customer) {
+//			$this->addFlash(
+//                'productListError',
+//                'Wrong Product Chosen!'
+//            );
+		}
+
+		return $this->render('admin/customer.html.twig', array(
+			'customers' => $customer
+		));
+	}
 
 	/**
 	 * @Route("/add_customer", name="admin_add_customer")
@@ -41,9 +76,9 @@ class AdminController extends Controller {
 
 			do {
 				$randomPathSlug = bin2hex(random_bytes(25));
-				$customerCheck = 0;//$this->getDoctrine()
-//					->getRepository('AppBundle:Customers')
-//					->findBy(array('pathSlug' => $randomPathSlug));
+				$customerCheck = $this->getDoctrine()
+					->getRepository('AppBundle:Customers')
+					->findBy(array('pathSlug' => $randomPathSlug));
 			} while ($customerCheck);
 
 			$customer->setPathSlug($randomPathSlug);

@@ -14,10 +14,11 @@
             padding: 5px;
         }
         .add-entity-body tr:nth-child(even) {
-            background: #DDDDDD;
+            /*background: #DDDDDD;*/
         }
         .add-entity-body tr td:nth-child(1) {
             width: 30%;
+            text-align: right;
         }
         .add-entity-body tr td:nth-child(2) {
             width: 30%;
@@ -26,17 +27,17 @@
             width: 30%;
         }
         .add-entity-body tr td input {
-            width: 400px;
+            /*width: 400px;*/
+            width: 100%;
         }
         .add-entity-body tr td select {
-            width: 400px;
+            /*width: 400px;*/
+            width: 100%;
         }
     </style>
 {% endblock %}
 
-{% block body %}
-    Add a customer here<br>
-
+{% block body %}//TODO: check data correctness on the fly with js
     {{ message|default('') }}
 
     {{ form_start(form) }}

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Customer{% endblock %}
+
+{% block body_title %}Add Customer{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .customer-info-body tr td {
+            padding: 5px;
+        }
+        .customer-info-body tr td:nth-child(1) {
+            width: 25%;
+            text-align: right;
+            border-right: #000000 solid 1px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% for customer in customers %}
+        <table class="customer-info-body">
+            <tr>
+                <td>
+                    Name
+                </td>
+                <td>
+                    {{ customer.firstName }} {{ customer.lastName }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address
+                </td>
+                <td>
+                    {{ customer.street }}, {{ customer.postalCode }} {{ customer.idCities.name }}, {{ customer.idCountries.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone
+                </td>
+                <td>
+                    {{ customer.phone }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    {{ customer.email }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Currency
+                </td>
+                <td>
+                    {{ customer.idCurrencies.symbol }} - {{ customer.idCurrencies.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Company name
+                </td>
+                <td>
+                    {{ customer.companyName }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    VAT
+                </td>
+                <td>
+                    {{ customer.vat }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Client number
+                </td>
+                <td>
+                    {{ customer.identificationNumber }}
+                </td>
+            </tr>
+        </table>
+
+
+    {% endfor %}
+    <br>
+    Some other information, maybe order/invoice history.
+{% endblock %}
+
+

@@ -22,34 +22,9 @@
         a:hover {
             text-decoration: none;
         }
-        a:visited {
-            /*color: white;*/
-        }
         a:active {
             color: #AEF2FF;
         }
-        /*#top-menu {*/
-            /*position: fixed;*/
-            /*top: 0;*/
-            /*left: 0;*/
-            /*width: 100%;*/
-        /*}*/
-        /*#top-menu ul {*/
-            /*!*background: #9999aa;*!*/
-            /*list-style-type: none;*/
-            /*margin: 0;*/
-        /*}*/
-        /*#top-menu ul li {*/
-            /*background: #01FF55;*/
-            /*display: inline-block;*/
-            /*height: 50px;*/
-            /*width: 100px;*/
-            /*text-align: center;*/
-            /*line-height: 50px;*/
-        /*}*/
-        /*#top-menu ul li:hover {*/
-            /*background: #01AE3B;*/
-        /*}*/
         #left-menu {
             width: 150px;
             position: fixed;
@@ -63,7 +38,6 @@
             padding: 0;
             margin: 0;
         }
-        /*#left-menu ul li {*/
         .left-menu-option {
             width: 150px;
             height: 40px;
@@ -97,35 +71,6 @@
             cursor: pointer;
             z-index: 100;
         }
-        /*#right-menu {*/
-            /*position: fixed;*/
-            /*top: 50px;*/
-            /*right: 0;*/
-        /*}*/
-        /*#right-menu ul {*/
-            /*padding-left: 5px;*/
-            /*padding-bottom: 5px;*/
-            /*margin: 0;*/
-            /*list-style-type: none;*/
-            /**/
-        /*}*/
-        /*#right-menu ul li {*/
-            /*background: #2E9FB3;*/
-            /*height: 40px;*/
-            /*width: 150px;*/
-            /*margin-top: 5px;*/
-            /*position: relative;*/
-            /*right: -10px;*/
-            /*text-align: center;*/
-            /*padding-right: 5px;*/
-            /*line-height: 40px;*/
-            /*border-radius: 5px 0 0 5px;*/
-            /*box-shadow: 0 0 2px #000000;*/
-        /*}*/
-        /*#right-menu ul li:hover {*/
-            /*!*height: 28px;*!*/
-            /*right: 0;*/
-        /*}*/
         #body-overlay {
             position: fixed;
             background: #000000;
@@ -174,7 +119,7 @@
         }
 
         function tableSearch(tableName, inputName, columnNumber) {
-            var input, filter, table, tr, td, i;left-menu-option
+            var input, filter, table, tr, td, i;
             table = document.getElementById(tableName);
             input = document.getElementById(inputName);
             allInputs = table.getElementsByTagName("input");
@@ -242,15 +187,15 @@
     </div>
     <div id="left-menu">
         <ul>
-            <div id="left-menu-header">MENU</div>
+            <div id="left-menu-header"><b>MENU</b></div>
             <a href="{{ path('homepage') }}"><li class="left-menu-option">Homepage</li></a>
             <a href=""><li class="left-menu-option">Orders</li></a>
             <a href="{{ path('invoices') }}"><li class="left-menu-option">Invoices</li></a>
             <a href=""><li class="left-menu-option">Items</li></a>
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('admin_index') }}"><li class="left-menu-option">Admin Page</li></a>
-                <a href="{{ path('customers') }}"><li class="left-menu-option">Customers</li></a>
+                <a href="{{ path('admin_panel') }}"><li class="left-menu-option">Admin Panel</li></a>
+                <a href="{{ path('admin_customer_list') }}"><li class="left-menu-option">Customers</li></a>
                 <a href="{{ path('admin_add_customer') }}"><li class="left-menu-option">Add Customer</li></a>
             {% endif %}
             {% if not app.user %}

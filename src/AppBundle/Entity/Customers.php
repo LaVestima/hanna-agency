@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_NumberU", columns={"Identification_Number"})}, indexes={@ORM\Index(name="Customers_ID_COUNTRIES_FK", columns={"ID_COUNTRIES"}), @ORM\Index(name="Customers_ID_CITIES_FK", columns={"ID_CITIES"}), @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}), @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Customers
-{
+class Customers {
     /**
      * @var string
      *

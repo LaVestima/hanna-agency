@@ -11,8 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class CustomersType extends AbstractType {
-	public function buildForm(FormBuilderInterface $builder, array $options)
-	{
+	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
 			->add('firstName', TextType::class)
 			->add('lastName', TextType::class)
@@ -32,10 +31,12 @@ class CustomersType extends AbstractType {
 				'required' => false,
 			))
 			->add('idCountries', null, array(
+				'label' => 'Country',
 				'placeholder' => '',
 				'required' => true
 			))
 			->add('idCities', null, array(
+				'label' => 'City',
 				'placeholder' => '',
 				'required' => true
 			))
@@ -54,7 +55,9 @@ class CustomersType extends AbstractType {
 				'placeholder' => '',
 				'required' => false
 			))
-			->add('add', SubmitType::class)
+			->add('add', SubmitType::class, array(
+				'label' => 'Add',
+			))
 		;
 	}
 }

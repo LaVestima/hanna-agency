@@ -28,26 +28,6 @@ class DefaultController extends Controller {
     }
 
     /**
-     * @Route("/customers", name="customers")
-     */
-    public function customersAction() {
-        $customers = $this->getDoctrine()
-            ->getRepository('AppBundle:Customers')
-            ->findAll();
-
-        return $this->render('default/customers.html.twig', array(
-            'customers' => $customers
-        ));
-    }
-
-    /**
-     * @Route("/customer/{customerID}", name="customer", defaults={"customerID": 0})
-     */
-    public function customerAction($customerID) {
-        return new Response('<html><body>Customer page!' . $customerID . '</body></html>');
-    }
-
-    /**
      * @Route("/product/{urlSlugName}", name="product", defaults={"urlSlugName" = ""})
      * @Route("/product/")
      */

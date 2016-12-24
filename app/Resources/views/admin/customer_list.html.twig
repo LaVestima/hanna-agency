@@ -101,7 +101,7 @@
                     <td>{{ customer.lastName }}</td>
                     <td>{{ customer.idCountries.name }}</td>
                     <td>{{ customer.idCities.name }}</td>
-                    <td><a href="{{ path('customer', {'customerID': customer.id}) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
+                    <td><a href="{{ path('admin_customer', {'pathSlug': customer.pathSlug}) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
                 </tr>
             {% endfor %}
         </table>
