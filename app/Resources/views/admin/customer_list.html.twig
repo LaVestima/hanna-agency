@@ -8,6 +8,7 @@
     <style>
         td {
             width: 200px;
+            max-width: 200px;
             padding: 0 5px;
             height: 30px;
             border: 1px solid black;
@@ -55,6 +56,36 @@
         #customer-list a {
             color: #000000;
         }
+
+        .notice-box {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 5px;
+        }
+        #notice-box-positive {
+            background: #00CC00;
+        }
+        #notice-box-negative {
+            background: #CC5555;
+        }
+        #notice-box-warning {
+            background: #CCCC00;
+        }
+        #notice-box-neutral {
+            background: #22AAF3;
+        }
+        .notice-box-close-button {
+            margin-right: 10px;
+            cursor: pointer;
+            float: right;
+            font-weight: bold;
+            font-size: 30px;
+            line-height: 25px;
+        }
+        .notice-box-close-button:hover {
+            color: white;
+        }
     </style>
 {% endblock %}
 
@@ -63,13 +94,13 @@
         <table id="customer-list-search">
             <tr>
                 <td>
-                    <input type="text" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="">
+                    <input type="text" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="Search">
                 </td>
                 <td>
-                    <input type="text" class="table-search" id="last-name-search-input" onkeyup="tableSearch('customer-list', 'last-name-search-input', 1)" placeholder="">
+                    <input type="text" class="table-search" id="last-name-search-input" onkeyup="tableSearch('customer-list', 'last-name-search-input', 1)" placeholder="Search">
                 </td>
                 <td>
-                    search
+                    <input type="text" class="table-search" id="country-search-input" onkeyup="tableSearch('customer-list', 'country-search-input', 2)" placeholder="Search">
                 </td>
                 <td>
                     search

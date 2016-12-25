@@ -223,6 +223,17 @@
         </div>
         Some <br> options <br> here <br><br>
         {#<img src="{{ asset('radioactive.png') }}" alt=""><br>#}
+
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            {% for flash_type in app.session.flashBag.get('noticeType') %}
+                <div class="notice-box" id="notice-box-{{ flash_type }}">
+                    {{ flash_message }}
+                    <span class="notice-box-close-button" onclick="this.parentElement.style.display='none';">&times;</span>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <br>
+
         {% block body %}{% endblock %}
     </div> 
 </body>

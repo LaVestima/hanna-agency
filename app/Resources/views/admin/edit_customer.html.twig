@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add Customer{% endblock %}
+{% block title %}Edit Customer{% endblock %}
 
-{% block body_title %}Add Customer{% endblock %}
+{% block body_title %}Edit Customer{% endblock %}
 
 {% block stylesheets %}
     <style>
@@ -48,7 +48,7 @@
             </tr>
         {% endfor %}
         <tr>
-            <td>{{ form_widget(form['add']) }}</td>
+            <td>{{ form_widget(form['add'], {'label': 'Edit'}) }}</td>
         </tr>
     </table>
     {{ form_end(form) }}

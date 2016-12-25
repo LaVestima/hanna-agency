@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add Customer{% endblock %}
+{% block title %}Customer{% endblock %}
 
-{% block body_title %}Add Customer{% endblock %}
+{% block body_title %}Customer{% endblock %}
 
 {% block stylesheets %}
     <style>
@@ -85,7 +85,10 @@
                 </td>
             </tr>
         </table>
-
+    <br>
+    <form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}">
+        <input type="submit" value="Edit" />
+    </form>
 
     {% endfor %}
     <br>

@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -30,7 +32,17 @@ class CustomersType extends AbstractType {
 			->add('vat', TextType::class, array(
 				'required' => false,
 			))
-			->add('idCountries', null, array(
+//			->add('idCountries', null, array(
+//				'label' => 'Country',
+//				'placeholder' => '',
+//				'required' => true
+//			))
+			->add('idCountries', EntityType::class, array(
+				'class' => 'AppBundle:Countries',
+				'query_builder' => function (EntityRepository $er) {
+					return $er->createQueryBuilder('co')
+						->orderBy('co.name', 'ASC');
+				},
 				'label' => 'Country',
 				'placeholder' => '',
 				'required' => true
@@ -45,6 +57,7 @@ class CustomersType extends AbstractType {
 			->add('email', EmailType::class)
 			->add('phone', TextType::class)
 			->add('idCurrencies', null, array(
+				'label' => 'Currency',
 				'placeholder' => '',
 				'required' => true
 			))
