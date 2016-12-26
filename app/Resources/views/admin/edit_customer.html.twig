@@ -49,6 +49,7 @@
         {% endfor %}
         <tr>
             <td>{{ form_widget(form['add'], {'label': 'Edit'}) }}</td>
+            <td>{{ form_widget(form['delete']) }}</td>
         </tr>
     </table>
     {{ form_end(form) }}

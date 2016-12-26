@@ -44,11 +44,12 @@
             <tr>
                 <td>{{ form_label(form[columnName]) }}{% if form[columnName].vars.required %} <span style="color:red">*</span>{% endif %}</td>
                 <td>{{ form_widget(form[columnName]) }}</td>
-                <td id="add-entity-body-data-error">{{ form_errors(form[columnName]) }}</td>
+                <td class="add-entity-body-data-error" id="add-entity-body-data-error-{{ columnName }}">{{ form_errors(form[columnName]) }}</td>
             </tr>
         {% endfor %}
         <tr>
             <td>{{ form_widget(form['add']) }}</td>
+            <td class="hidden">{{ form_widget(form['delete'], {'disabled': 'true', 'label': '.'}) }}</td>
         </tr>
     </table>
     {{ form_end(form) }}

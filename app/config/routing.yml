@@ -8,6 +8,11 @@ admin:
     prefix:   /admin
     type:     annotation
 
+super_admin:
+    resource: "@AppBundle/Controller/SuperAdminController.php"
+    prefix:   /super_admin
+    type:     annotation
+
 login:
     resource: "@AppBundle/Controller/SecurityController.php"
     prefix:   /security

@@ -11,6 +11,10 @@ security:
                     admin:
                         password: lave_toor
                         roles: 'ROLE_ADMIN'
+                    lavestima:
+                        password: lave_toor
+                        roles: 'ROLE_SUPER_ADMIN'
+
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -43,5 +47,10 @@ security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/super_admin, roles: ROLE_SUPER_ADMIN }

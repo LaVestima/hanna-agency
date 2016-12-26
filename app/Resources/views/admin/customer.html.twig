@@ -86,7 +86,7 @@
             </tr>
         </table>
     <br>
-    <form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}">
+    <form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}" method="post">
         <input type="submit" value="Edit" />
     </form>
 

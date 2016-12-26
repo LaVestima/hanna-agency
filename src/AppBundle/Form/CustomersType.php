@@ -71,6 +71,9 @@ class CustomersType extends AbstractType {
 			->add('add', SubmitType::class, array(
 				'label' => 'Add',
 			))
+			->add('delete', SubmitType::class, array(
+				'label' => 'Delete',
+			))
 		;
 	}
 }

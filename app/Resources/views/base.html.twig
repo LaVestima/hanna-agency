@@ -25,6 +25,12 @@
         a:active {
             color: #AEF2FF;
         }
+        .hidden {
+            max-width: 0;
+            max-height: 0;
+            visibility: hidden;
+            display: none;
+        }
         #left-menu {
             width: 150px;
             position: fixed;
@@ -45,6 +51,7 @@
             text-align: center;
             background: #777777;
             color: #FFFFFF;
+            cursor: pointer;
         }
         #left-menu ul li:hover {
             background: #7777FF;
@@ -171,6 +178,21 @@
                     }
                 }
             });
+
+            $(".add-entity-body tr td input").each(function() {
+                $(this).keyup(function() {
+                    var id = $(this).attr('id').split('_')[1];
+                    if ($.trim($(this).val()).length == 0 && $(this).attr('required') == "required") {
+                        $("#add-entity-body-data-error-"+id).html('<span style="color:red">This field cannot be empty!</span>');
+                    }
+                    else {
+                        $("#add-entity-body-data-error-"+id).html(" ");
+                        //............
+                    }
+                });
+            });
+//            $(".add-entity-body tr td input")
+
         });
     </script>
 </head>
@@ -196,11 +218,11 @@
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_panel') }}"><li class="left-menu-option">Admin Panel</li></a>
                 <a href="{{ path('admin_customer_list') }}"><li class="left-menu-option">Customers</li></a>
-                <a href="{{ path('admin_add_customer') }}"><li class="left-menu-option">Add Customer</li></a>
             {% endif %}
             {% if not app.user %}
                 <a href="{{ path('security_login') }}"><li class="left-menu-option">Log in <span class="glyphicon glyphicon-log-in"></span></li></a>
             {% elseif app.user %}
+                <li class="left-menu-option">- {{ app.user }} -</li>
                 <a href="{{ path('logout') }}"><li class="left-menu-option">Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
             {% endif %}
 

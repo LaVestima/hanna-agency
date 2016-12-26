@@ -104,6 +104,15 @@ class AdminController extends Controller {
 				'noticeType', 'positive'
 			);
 
+			// just for test: Send an email
+			$message = \Swift_Message::newInstance()
+				->setSubject('Test for adding a customer!')
+				->setFrom('lavestima@lavestima.com')
+				->setTo('lavestima@gmail.com')
+				->setBody('This is the body of the message, there is nothing interesting here.');
+			$this->get('mailer')->send($message);
+			// end of test
+
 			return $this->redirectToRoute('admin_customer_list');
 		}
 
@@ -135,12 +144,22 @@ class AdminController extends Controller {
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
+
+			if ($form->get('delete')->isClicked()) {
+				$em->remove($customer);
+
+				$this->addFlash(
+					'notice', 'User deleted successfully!'
+				);
+			}
+			else if ($form->get('add')->isClicked()) {
+				$this->addFlash(
+					'notice', 'User edited successfully!'
+				);
+			}
 			
 			$em->flush();
 
-			$this->addFlash(
-				'notice', 'User edited successfully!'
-			);
 			$this->addFlash(
 				'noticeType', 'positive'
 			);
