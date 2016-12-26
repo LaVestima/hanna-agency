@@ -2,18 +2,66 @@
 
 {% block title %}Invoices{% endblock %}
 
-{% block body_title %}Invoices{% endblock %}
-
-{% block body %}
-    Invoices
-    {#{% for result in db_result %}#}
-        {#{{ result[1] }}<br>#}
-    {#{% endfor %}#}
-
-{% endblock %}
+{% block body_title %}Invoices AKA Playground{% endblock %}
 
 {% block stylesheets %}
     <style>
 
     </style>
 {% endblock %}
+
+{% block scripts %}
+    <script>
+        var countries = {{ jsonCountries|raw }};
+        var cities = {{ jsonCities|raw }};
+
+        $(document).ready(function() {
+            $.each(countries, function (index, value) {
+                $("#country").append($("<option></option>")
+                        .attr("value", value.id)
+                        .text(value.name)
+                );
+            });
+
+            $('#country').on('change', function(){
+//                console.log($(this).val());
+                $("#city").html('<option value="000">-Select City-</option>');
+                for(var i = 0; i < cities.length; i++) {
+                    if (cities[i].id_countries.id == $(this).val()) {
+                        $("#city").append($("<option></option>")
+                                .attr("value", cities[i].name)
+                                .text(cities[i].name)
+                        );
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    Invoices
+    <br>
+    {{ jsonCountries }}
+    <br>
+    {{ jsonCities }}
+
+    <form id="dropdowns" action="">
+
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            <option value="000">-Select Country-</option>
+        </select>
+
+        <br />
+
+        <label>City:</label>
+        <select id="city" name="city">
+            <option value="000">-Select City-</option>
+        </select>
+
+        <br />
+
+    </form>
+{% endblock %}
+

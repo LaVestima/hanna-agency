@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +24,28 @@ class DefaultController extends Controller {
      */
     public function invoicesAction() {
         //get data from database
-        return $this->render('default/invoices.html.twig'
-//            ['db_result' => $dbh->query($query)]
-        );
+
+		//testing playground
+		$countries = $this->getDoctrine()
+			->getRepository('AppBundle:Countries')
+			->findAll();
+		$cities = $this->getDoctrine()
+			->getRepository('AppBundle:Cities')
+			->findAll();
+		$serializer = SerializerBuilder::create()->build();
+		$jsonCountries = $serializer->serialize($countries, 'json');
+		$jsonCities = $serializer->serialize($cities, 'json');
+
+//		return new Response($jsonContent);
+		return $this->render('default/invoices.html.twig', array(
+			'jsonCountries' => $jsonCountries,
+			'jsonCities' => $jsonCities,
+			'cities' => $cities,
+		));
+
+//        return $this->render('default/invoices.html.twig'
+////            ['db_result' => $dbh->query($query)]
+//        );
     }
 
     /**
