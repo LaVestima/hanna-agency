@@ -2,95 +2,134 @@
 
 {% block title %}Customer{% endblock %}
 
-{% block body_title %}Customer{% endblock %}
+{% block body_title %}Customer Info{% endblock %}
 
 {% block stylesheets %}
     <style>
-        .customer-info-body tr td {
+        .entity-info-body {
+            width: 100%;
+            background: #00b3ee;
+        }
+        .entity-info-body tr td {
             padding: 5px;
         }
-        .customer-info-body tr td:nth-child(1) {
-            width: 25%;
+        .entity-info-body tr td:nth-child(2) {
+            width: 50%;
+        }
+        .entity-info-body tr td:nth-child(1) {
+            width: 50%;
             text-align: right;
             border-right: #000000 solid 1px;
+        }
+        .entity-info-button {
+            min-width: 100px;
+        }
+        .entity-history-body {
+            width: 100%;
+            background: #3D9970;
+        }
+        .entity-history-body tr:hover {
+            background: #2D8960;
+        }
+        .entity-history-body tr th {
+            padding: 5px;
+        }
+        .entity-history-body tr td {
+            padding: 5px;
+        }
+        .entity-history-body tr td:nth-last-child(1) {
+            width: 5%;
+            text-align: center;
+        }
+        .entity-history-body tr td:nth-last-child(1) a {
+            color: #000000;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    {% for customer in customers %}
-        <table class="customer-info-body">
-            <tr>
-                <td>
-                    Name
-                </td>
-                <td>
-                    {{ customer.firstName }} {{ customer.lastName }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Address
-                </td>
-                <td>
-                    {{ customer.street }}, {{ customer.postalCode }} {{ customer.idCities.name }}, {{ customer.idCountries.name }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Phone
-                </td>
-                <td>
-                    {{ customer.phone }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Email
-                </td>
-                <td>
-                    {{ customer.email }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Currency
-                </td>
-                <td>
-                    {{ customer.idCurrencies.symbol }} - {{ customer.idCurrencies.name }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Company name
-                </td>
-                <td>
-                    {{ customer.companyName }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    VAT
-                </td>
-                <td>
-                    {{ customer.vat }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Client number
-                </td>
-                <td>
-                    {{ customer.identificationNumber }}
-                </td>
-            </tr>
-        </table>
-    <br>
-    <form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}" method="post">
-        <input type="submit" value="Edit" />
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <table class="entity-info-body">
+                    <tr>
+                        <td>Name</td>
+                        <td>{{ customer.firstName }} {{ customer.lastName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>{{ customer.street }}<br>
+                            {{ customer.postalCode }} {{ customer.idCities.name }}<br>
+                            {{ customer.idCountries.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>{{ customer.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ customer.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Currency</td>
+                        <td>{{ customer.idCurrencies.symbol }} - {{ customer.idCurrencies.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Company name
+                        </td>
+                        <td>{{ customer.companyName }}</td>
+                    </tr>
+                    <tr>
+                        <td>VAT</td>
+                        <td>{{ customer.vat }}</td>
+                    </tr>
+                    <tr>
+                        <td>Client number</td>
+                        <td>{{ customer.identificationNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <br>
+                            <form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}" method="post">
+                                <input class="entity-info-button" type="submit" value="Edit" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                Invoices history
+                <table class="entity-history-body">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Date Issued
+                        </th>
+                    </tr>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>
+                                {{ invoice.name }}
+                            </td>
+                            <td>
+                                {{ invoice.dateIssued|date("d.m.Y") }}
+                            </td>
+                            <td>
+                                <a href="">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 
-    {% endfor %}
     <br>
     Some other information, maybe order/invoice history.
 {% endblock %}

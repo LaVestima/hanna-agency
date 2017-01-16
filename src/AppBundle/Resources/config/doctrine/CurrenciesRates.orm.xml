@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\CurrenciesRates" table="Currencies_Rates">
+    <indexes>
+      <index name="Currencies_H_ID_Currencies_FK" columns="ID_CURRENCIES"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="Currencies_H_Date_CurrencyU" columns="Date_Rate,ID_CURRENCIES"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="ID">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="conversionRate" type="decimal" column="Conversion_Rate" precision="10" scale="6" nullable="false"/>
+    <field name="dateRate" type="datetime" column="Date_Rate" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <many-to-one field="idCurrencies" target-entity="Currencies" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_CURRENCIES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

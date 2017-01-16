@@ -46,5 +46,86 @@ class CurrenciesRates
     private $idCurrencies;
 
 
-}
 
+    /**
+     * Set conversionRate
+     *
+     * @param string $conversionRate
+     *
+     * @return CurrenciesRates
+     */
+    public function setConversionRate($conversionRate)
+    {
+        $this->conversionRate = $conversionRate;
+
+        return $this;
+    }
+
+    /**
+     * Get conversionRate
+     *
+     * @return string
+     */
+    public function getConversionRate()
+    {
+        return $this->conversionRate;
+    }
+
+    /**
+     * Set dateRate
+     *
+     * @param \DateTime $dateRate
+     *
+     * @return CurrenciesRates
+     */
+    public function setDateRate($dateRate)
+    {
+        $this->dateRate = $dateRate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateRate
+     *
+     * @return \DateTime
+     */
+    public function getDateRate()
+    {
+        return $this->dateRate;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set idCurrencies
+     *
+     * @param \AppBundle\Entity\Currencies $idCurrencies
+     *
+     * @return CurrenciesRates
+     */
+    public function setIdCurrencies(\AppBundle\Entity\Currencies $idCurrencies = null)
+    {
+        $this->idCurrencies = $idCurrencies;
+
+        return $this;
+    }
+
+    /**
+     * Get idCurrencies
+     *
+     * @return \AppBundle\Entity\Currencies
+     */
+    public function getIdCurrencies()
+    {
+        return $this->idCurrencies;
+    }
+}

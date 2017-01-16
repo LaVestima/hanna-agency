@@ -5,26 +5,19 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Countries
+ * Sizes
  *
- * @ORM\Table(name="Countries", uniqueConstraints={@ORM\UniqueConstraint(name="Countries_NameU", columns={"Name"})})
+ * @ORM\Table(name="Sizes", uniqueConstraints={@ORM\UniqueConstraint(name="Sizes_NameU", columns={"Name"})})
  * @ORM\Entity
  */
-class Countries
+class Sizes
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=100, nullable=false)
+     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Symbol", type="string", length=10, nullable=false)
-     */
-    private $symbol;
 
     /**
      * @var string
@@ -42,16 +35,14 @@ class Countries
      */
     private $id;
 
-    public function __toString() {
-		return $this->getName();
-	}
 
-	/**
+
+    /**
      * Set name
      *
      * @param string $name
      *
-     * @return Countries
+     * @return Sizes
      */
     public function setName($name)
     {
@@ -71,35 +62,11 @@ class Countries
     }
 
     /**
-     * Set symbol
-     *
-     * @param string $symbol
-     *
-     * @return Countries
-     */
-    public function setSymbol($symbol)
-    {
-        $this->symbol = $symbol;
-
-        return $this;
-    }
-
-    /**
-     * Get symbol
-     *
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return $this->symbol;
-    }
-
-    /**
      * Set note
      *
      * @param string $note
      *
-     * @return Countries
+     * @return Sizes
      */
     public function setNote($note)
     {

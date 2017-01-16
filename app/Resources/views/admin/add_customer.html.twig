@@ -6,16 +6,6 @@
 
 {% block stylesheets %}
     <style>
-        .add-entity-body {
-            width: 100%;
-
-        }
-        .add-entity-body tr td {
-            padding: 5px;
-        }
-        .add-entity-body tr:nth-child(even) {
-            /*background: #DDDDDD;*/
-        }
         .add-entity-body tr td:nth-child(1) {
             width: 30%;
             text-align: right;
@@ -27,19 +17,20 @@
             width: 30%;
         }
         .add-entity-body tr td input {
-            /*width: 400px;*/
             width: 100%;
         }
         .add-entity-body tr td select {
-            /*width: 400px;*/
             width: 100%;
+        }
+        .input-table tr td button {
+            width: 30%;
         }
     </style>
 {% endblock %}
 
 {% block body %}//TODO: check data correctness on the fly with js
     {{ form_start(form) }}
-    <table class="add-entity-body">
+    <table class="input-table add-entity-body">
         {% for columnName in ['firstName', 'lastName', 'gender', 'companyName', 'vat', 'idCountries', 'idCities', 'street', 'postalCode', 'email', 'phone', 'idCurrencies', 'defaultDiscount', 'idUsers'] %}
             <tr>
                 <td>{{ form_label(form[columnName]) }}{% if form[columnName].vars.required %} <span style="color:red">*</span>{% endif %}</td>
@@ -48,8 +39,8 @@
             </tr>
         {% endfor %}
         <tr>
+            <td class="hidden">{{ form_widget(form['delete'], {'disabled': 'true', 'label': ' '}) }}</td>
             <td>{{ form_widget(form['add']) }}</td>
-            <td class="hidden">{{ form_widget(form['delete'], {'disabled': 'true', 'label': '.'}) }}</td>
         </tr>
     </table>
     {{ form_end(form) }}

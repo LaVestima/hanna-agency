@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products{% endblock %}
+
+{% block body_title %}Products{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        td {
+            width: 200px;
+            max-width: 200px;
+            padding: 0 5px;
+            height: 30px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+        #list-body {
+            height: 600px;
+            overflow-y: scroll;
+        }
+        #list-search {
+            margin: 0;
+            padding: 0;
+        }
+        #list-search td {
+            padding: 0;
+            border: 0;
+        }
+        #list-search input {
+            width: 200px;
+        }
+        #list-header {
+            margin-right: 15px;
+        }
+        #customer-list-header tr {
+            border-bottom: 2px solid black;
+            background: #AAAAFF;
+        }
+        /*.list-section table tr td {*/
+        /*width: 50px;*/
+        /*}*/
+
+        #customer-list tr:nth-child(even) {
+            background: #DDDDDD;
+        }
+        #customer-list tr:hover {
+            background: #BBBBBB;
+        }
+        #customer-list tr td:nth-last-child(1) {
+            width: 40px;
+            text-align: center;
+        }
+        #customer-list a {
+            color: #000000;
+        }
+        .price-cell {
+            text-align: right;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    {#<form action="{{ path('admin_add_customer') }}" method="post">#}
+        {#<input type="submit" value="Add customer" />#}
+    {#</form>#}
+    <br>
+
+    <div class="list-section" id="list-search">
+        <table id="customer-list-search">
+            <tr>
+                <td>
+                    <input type="text" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="text" class="table-search" id="last-name-search-input" onkeyup="tableSearch('customer-list', 'last-name-search-input', 1)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="text" class="table-search" id="country-search-input" onkeyup="tableSearch('customer-list', 'country-search-input', 2)" placeholder="Search">
+                </td>
+                <td>
+                    search
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="list-section" id="list-header">
+        <table id="customer-list-header">
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Category</td>
+                <td>City</td>
+            </tr>
+        </table>
+    </div>
+    <div class="list-section" id="list-body">
+        <table id="customer-list">
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.idSizes.name }}</td>
+                    {#<td>{{ product.priceProducer }}</td>#}
+                    <td class="price-cell">{{ product.priceCustomer }}</td>
+                    <td>{{ product.idCategories.name }}</td>
+                    <td><a href="{{ path('product', {'pathSlug': product.pathSlug}) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+{% endblock %}

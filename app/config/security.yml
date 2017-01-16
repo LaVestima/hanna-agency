@@ -14,6 +14,9 @@ security:
                     lavestima:
                         password: lave_toor
                         roles: 'ROLE_SUPER_ADMIN'
+                    standardUser:
+                        password: standard
+                        roles: 'ROLE_USER'
 
 
     firewalls:

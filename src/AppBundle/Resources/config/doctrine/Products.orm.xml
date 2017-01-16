@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Products" table="Products">
+    <indexes>
+      <index name="Items_ID_CATEGORIES_FK" columns="ID_CATEGORIES"/>
+      <index name="Items_ID_PRODUCERS_FK" columns="ID_PRODUCERS"/>
+      <index name="Items_ID_SIZES_FK" columns="ID_SIZES"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="Products_NameU" columns="Name"/>
+      <unique-constraint name="Products_Path_SlugU" columns="Path_Slug"/>
+      <unique-constraint name="Products_QR_CodeU" columns="QR_Code"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="ID">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="Name" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="pathSlug" type="string" column="Path_Slug" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="priceProducer" type="decimal" column="Price_Producer" precision="10" scale="2" nullable="false"/>
+    <field name="priceCustomer" type="decimal" column="Price_Customer" precision="10" scale="2" nullable="false"/>
+    <field name="qrCode" type="string" column="QR_Code" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="availability" type="integer" column="Availability" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <many-to-one field="idCategories" target-entity="Categories" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_CATEGORIES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idProducers" target-entity="Producers" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_PRODUCERS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idSizes" target-entity="Sizes" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_SIZES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

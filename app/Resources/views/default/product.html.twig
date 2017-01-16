@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product{% endblock %}
+
+{% block body_title %}Product{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .customer-info-body tr td {
+            padding: 5px;
+        }
+        .customer-info-body tr td:nth-child(1) {
+            width: 25%;
+            text-align: right;
+            border-right: #000000 solid 1px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% for product in products %}
+        <table class="customer-info-body">
+            <tr>
+                <td>
+                    Name
+                </td>
+                <td>
+                    {{ product.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Category
+                </td>
+                <td>
+                    {{ product.idCategories.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Producer
+                </td>
+                <td>
+                    {{ product.idProducers.fullName }}<br>
+                    Add link to the producer here
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Size
+                </td>
+                <td>
+                    {{ product.idSizes.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Price
+                </td>
+                <td>
+                    {{ product.priceCustomer }}
+                </td>
+            </tr>
+            {% if is_granted('ROLE_ADMIN') %}
+                <tr>
+                    <td>
+                        Producer Price
+                    </td>
+                    <td>
+                        {{ product.priceProducer }}
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+        <br>
+        {#<form action="{{ path('admin_edit_customer', {'pathSlug':customer.pathSlug}) }}" method="post">#}
+            {#<input type="submit" value="Edit" />#}
+        {#</form>#}
+
+    {% endfor %}
+    <br>
+    Some other information, maybe order/invoice history.
+{% endblock %}
+
+

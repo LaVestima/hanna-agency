@@ -42,11 +42,9 @@ class AdminController extends Controller {
 	 * @Route("/customer/{pathSlug}", name="admin_customer", defaults={"pathSlug": 0})
 	 */
 	public function customerAction($pathSlug) {
-//		$customer = new Customers();
-
 		$customer = $this->getDoctrine()
 			->getRepository('AppBundle:Customers')
-			->findBy(array('pathSlug' => $pathSlug));
+			->findOneBy(array('pathSlug' => $pathSlug));
 
 		if (!$customer) {
 //			$this->addFlash(
@@ -54,9 +52,25 @@ class AdminController extends Controller {
 //                'Wrong Product Chosen!'
 //            );
 		}
+		else {
+//			$invoices = $this->getDoctrine()
+//				->getRepository('AppBundle:Invoices')
+//				->findBy(array(
+//					'idCustomers' => $customer->getId(),
+//				));
+			$invoices = $this->getDoctrine()
+				->getRepository('AppBundle:Invoices')
+				->createQueryBuilder('i')
+				->where('i.idCustomers = :idCustomers')
+				->setParameter('idCustomers', $customer->getId())
+				->orderBy('i.dateIssued', 'DESC')
+				->getQuery()
+				->getResult();
+		}
 
 		return $this->render('admin/customer.html.twig', array(
-			'customers' => $customer
+			'customer' => $customer,
+			'invoices' => $invoices,
 		));
 	}
 

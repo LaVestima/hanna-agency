@@ -48,6 +48,32 @@ class DefaultController extends Controller {
 //        );
     }
 
+	/**
+	 * @Route("/product_list", name="product_list")
+	 */
+	public function productListAction() {
+		$products = $this->getDoctrine()->getRepository('AppBundle:Products')
+			->findAll();
+
+		return $this->render('default/product_list.html.twig', array(
+			'products' => $products,
+		));
+	}
+
+	/**
+	 * @Route("/product/{pathSlug}", name="product", defaults={"pathSlug": 0})
+	 */
+	public function productAction($pathSlug) {
+		$product = $this->getDoctrine()->getRepository('AppBundle:Products')
+			->findBy(array(
+				'pathSlug' => $pathSlug
+			));
+
+		return $this->render('default/product.html.twig', array(
+			'products' => $product,
+		));
+	}
+
     /**
      * @Route("/product/{urlSlugName}", name="product", defaults={"urlSlugName" = ""})
      * @Route("/product/")

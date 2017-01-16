@@ -127,4 +127,33 @@ class Users
     {
         return $this->id;
     }
+    /**
+     * @var \DateTime
+     */
+    private $dateCreated = 'CURRENT_TIMESTAMP';
+
+
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     *
+     * @return Users
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
 }

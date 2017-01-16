@@ -45,6 +45,90 @@ class Cities
      */
     private $idCountries;
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Cities
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set note
+     *
+     * @param string $note
+     *
+     * @return Cities
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * Get note
+     *
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set idCountries
+     *
+     * @param \AppBundle\Entity\Countries $idCountries
+     *
+     * @return Cities
+     */
+    public function setIdCountries(\AppBundle\Entity\Countries $idCountries = null)
+    {
+        $this->idCountries = $idCountries;
+
+        return $this;
+    }
+
+    /**
+     * Get idCountries
+     *
+     * @return \AppBundle\Entity\Countries
+     */
+    public function getIdCountries()
+    {
+        return $this->idCountries;
+    }
 }
-

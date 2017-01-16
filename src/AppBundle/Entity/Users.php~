@@ -27,13 +27,6 @@ class Users
     private $passwordHash;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="Salt", type="string", length=50, nullable=false)
-     */
-    private $salt;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="Is_Admin", type="integer", nullable=false)
@@ -49,6 +42,118 @@ class Users
      */
     private $id;
 
+    public function __toString() {
+        return $this->getLogin();
+    }
 
+    /**
+     * Set login
+     *
+     * @param string $login
+     *
+     * @return Users
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set passwordHash
+     *
+     * @param string $passwordHash
+     *
+     * @return Users
+     */
+    public function setPasswordHash($passwordHash)
+    {
+        $this->passwordHash = $passwordHash;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordHash
+     *
+     * @return string
+     */
+    public function getPasswordHash()
+    {
+        return $this->passwordHash;
+    }
+
+    /**
+     * Set isAdmin
+     *
+     * @param integer $isAdmin
+     *
+     * @return Users
+     */
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    /**
+     * Get isAdmin
+     *
+     * @return integer
+     */
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $dateCreated = 'CURRENT_TIMESTAMP';
+
+
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     *
+     * @return Users
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
 }
-

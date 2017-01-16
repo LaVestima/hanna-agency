@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Invoices" table="Invoices">
+    <indexes>
+      <index name="Invoices_ID_CUSTOMERS_FK" columns="ID_CUSTOMERS"/>
+      <index name="Invoices_ID_USERS_FK" columns="ID_USERS"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="Invoices_NameU" columns="Name"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="ID">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="Name" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dateIssued" type="datetime" column="Date_Issued" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <many-to-one field="idCustomers" target-entity="Customers" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_CUSTOMERS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idUsers" target-entity="Users" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_USERS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

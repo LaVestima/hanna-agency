@@ -31,6 +31,10 @@
             visibility: hidden;
             display: none;
         }
+        .container {
+            width: 100%;
+            margin: 0;
+        }
         #left-menu {
             width: 150px;
             position: fixed;
@@ -97,6 +101,41 @@
             margin-right: 50px;
             margin-bottom: 10px;
             text-align: center;
+        }
+        .input-table {
+            width: 100%;
+        }
+        .input-table tr td {
+            padding: 5px;
+        }
+        .notice-box {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 5px;
+        }
+        #notice-box-positive {
+            background: #00CC00;
+        }
+        #notice-box-negative {
+            background: #CC5555;
+        }
+        #notice-box-warning {
+            background: #CCCC00;
+        }
+        #notice-box-neutral {
+            background: #22AAF3;
+        }
+        .notice-box-close-button {
+            margin-right: 10px;
+            cursor: pointer;
+            float: right;
+            font-weight: bold;
+            font-size: 30px;
+            line-height: 25px;
+        }
+        .notice-box-close-button:hover {
+            color: white;
         }
     </style>
     {% block stylesheets %}{% endblock %}
@@ -198,13 +237,6 @@
     {% block scripts %}{% endblock %}
 </head>
 <body>
-    {#<div id="top-menu">#}
-        {#<ul>#}
-            {#<a href="#"><li><div></div>safasdfds</li></a>#}
-            {#<li>2</li>#}
-        {#</ul>#}
-    {#</div>#}
-
     <div id="left-menu-button">
         <span class="glyphicon glyphicon-menu-hamburger"></span>
     </div>
@@ -214,7 +246,7 @@
             <a href="{{ path('homepage') }}"><li class="left-menu-option">Homepage</li></a>
             <a href=""><li class="left-menu-option">Orders</li></a>
             <a href="{{ path('invoices') }}"><li class="left-menu-option">Invoices</li></a>
-            <a href=""><li class="left-menu-option">Items</li></a>
+            <a href="{{ path('product_list') }}"><li class="left-menu-option">Products</li></a>
 
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('admin_panel') }}"><li class="left-menu-option">Admin Panel</li></a>
@@ -226,17 +258,8 @@
                 <li class="left-menu-option">- {{ app.user }} -</li>
                 <a href="{{ path('logout') }}"><li class="left-menu-option">Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
             {% endif %}
-
         </ul>
     </div>
-
-    {#<div id="right-menu">#}
-        {#<ul>#}
-            {#<a href="#"><li><div>Orders</div></li></a>#}
-            {#<a href="{{ path('invoices') }}"><li>Invoices</li></a>#}
-            {#<a href="dbtest.php"><li><div>DB Test</div></li></a>#}
-        {#</ul>#}
-    {#</div>#}
 
     <div id="body-overlay"></div>
 
@@ -245,7 +268,6 @@
             {% block body_title %}{% endblock %}
         </div>
         Some <br> options <br> here <br><br>
-        {#<img src="{{ asset('radioactive.png') }}" alt=""><br>#}
 
         {% for flash_message in app.session.flashBag.get('notice') %}
             {% for flash_type in app.session.flashBag.get('noticeType') %}
@@ -255,7 +277,6 @@
                 </div>
             {% endfor %}
         {% endfor %}
-        <br>
 
         {% block body %}{% endblock %}
     </div> 

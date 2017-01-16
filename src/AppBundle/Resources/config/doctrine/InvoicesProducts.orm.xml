@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\InvoicesProducts" table="Invoices_Products">
+    <indexes>
+      <index name="Invoices_Items_ID_INVOICES_FK" columns="ID_INVOICES"/>
+      <index name="Invoices_Items_ID_PRODUCTS_FK" columns="ID_PRODUCTS"/>
+    </indexes>
+    <id name="id" type="integer" column="ID">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="quantity" type="integer" column="Quantity" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="discount" type="integer" column="Discount" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="priceFinal" type="decimal" column="Price_Final" precision="10" scale="2" nullable="false"/>
+    <field name="note" type="string" column="Note" length="200" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="idInvoices" target-entity="Invoices" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_INVOICES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idProducts" target-entity="Products" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_PRODUCTS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

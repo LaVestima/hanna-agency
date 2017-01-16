@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\ProductsSizes" table="Products_Sizes">
+    <indexes>
+      <index name="Products_Sizes_ID_PRODUCTS_FK" columns="ID_PRODUCTS"/>
+      <index name="Products_Sizes_ID_SIZES_FK" columns="ID_SIZES"/>
+    </indexes>
+    <id name="id" type="integer" column="ID">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="availability" type="integer" column="Availability" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <many-to-one field="idProducts" target-entity="Products" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_PRODUCTS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idSizes" target-entity="Sizes" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_SIZES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
