@@ -16,7 +16,8 @@
         }
         #list-body {
             height: 600px;
-            overflow-y: scroll;
+            /*overflow-y: scroll;*/
+            overflow-y: overlay;
         }
         #customer-list-header, #customer-list, #customer-list-search {
             width: 100%;
@@ -50,6 +51,9 @@
         #customer-list-header tr {
             border-bottom: 2px solid black;
             background: #AAAAFF;
+        }
+        #customer-list-header tr td {
+            font-weight: bold;
         }
         #customer-list-header tr td:nth-last-child(1), #customer-list-search tr td:nth-last-child(1) {
             width: 5%;
@@ -107,7 +111,7 @@
                     <input type="search" class="table-search" id="country-search-input" onkeyup="tableSearch('customer-list', 'country-search-input', 2)" placeholder="Search">
                 </td>
                 <td>
-                    search
+                    <input type="search">
                 </td>
                 <td></td>
             </tr>

@@ -18,5 +18,10 @@ login:
     prefix:   /security
     type:     annotation
 
+faker:
+    resource: "@AppBundle/Controller/FakerController.php"
+    prefix:   /faker
+    type:     annotation
+
 logout:
     path: /logout
