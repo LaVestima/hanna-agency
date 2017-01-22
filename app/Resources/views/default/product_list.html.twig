@@ -67,7 +67,7 @@
     <br>
 
     <div class="list-section" id="list-search">
-        <table id="customer-list-search">
+        <table id="entity-list-search">
             <tr>
                 <td>
                     <input type="text" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="Search">
@@ -85,7 +85,7 @@
         </table>
     </div>
     <div class="list-section" id="list-header">
-        <table id="customer-list-header">
+        <table id="entity-list-header">
             <tr>
                 <td>Name</td>
                 <td>Price</td>
@@ -95,7 +95,7 @@
         </table>
     </div>
     <div class="list-section" id="list-body">
-        <table id="customer-list">
+        <table id="entity-list-body">
             {% for product in products %}
                 <tr>
                     <td>{{ product.name }}</td>

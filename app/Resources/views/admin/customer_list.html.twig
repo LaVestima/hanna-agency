@@ -6,78 +6,70 @@
 
 {% block stylesheets %}
     <style>
-        td {
-            width: 200px;
-            max-width: 200px;
-            padding: 0 5px;
-            height: 30px;
-            border: 1px solid black;
-            overflow: hidden;
-        }
-        #list-body {
-            height: 600px;
-            /*overflow-y: scroll;*/
-            overflow-y: overlay;
-        }
-        #customer-list-header, #customer-list, #customer-list-search {
-            width: 100%;
-        }
-        #list-search {
-            margin: 0;
-            padding: 0;
-        }
-        #customer-list-search tr td {
-            padding: 0;
-            border: 0;
-            text-align: center;
-        }
-        /*#list-search input {*/
-            /*width: 200px;*/
-        /*}*/
-        #customer-list-search tr td input {
-            width: 100%;
-            padding: 0 5px;
-            border: 1px solid black;
-            border-radius: 5px;
-            background-image: url('{{ asset('searchicon.png') }}');
-            background-size: 20px;
-            background-position: 10px 5px;
-            background-repeat: no-repeat;
-            padding-left: 40px;
-        }
-        #list-header {
-            margin-right: 15px;
-        }
-        #customer-list-header tr {
-            border-bottom: 2px solid black;
-            background: #AAAAFF;
-        }
-        #customer-list-header tr td {
-            font-weight: bold;
-        }
-        #customer-list-header tr td:nth-last-child(1), #customer-list-search tr td:nth-last-child(1) {
-            width: 5%;
-            visibility: hidden;
-        }
-        /*.list-section table tr td {*/
-            /*width: 50px;*/
-        /*}*/
-        #customer-list tr:nth-child(even) {
-            background: #DDDDDD;
-        }
-        #customer-list tr:hover {
-            background: #BBBBBB;
-        }
-        #customer-list tr td:nth-last-child(1) {
-            width: 4%;
-            text-align: center;
-        }
-        #customer-list a {
-            color: #000000;
-        }
+
 
 
     </style>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+           $(".table-search").keyup(function () {
+               var columnIndex = $(".table-search").index(this);
+               var columnCount = $(".table-search").length;
+               var inputValue = $(this).val();
+               var table = $("#entity-list");
+
+               var rows = $("#entity-list-tr").map(function() {
+                   return this;
+               }).get();
+
+               $(".testSpan").text(columnIndex + " / " + columnCount + " " + inputValue);
+
+
+
+
+
+               var input, filter, td, i;
+//               table = document.getElementById("entity-list");
+//               input = document.getElementById(inputName);
+//               allInputs = table.getElementsByTagName("input");
+               filter = inputValue.toUpperCase();
+//               var tr = table.getElementsByTagName("entity-list-tr");
+
+               for (i = 0; i < columnCount; i++) {
+
+
+                   console.log(rows[0]);
+//                   rows.style.display = "none";
+
+//                   $("#entity-list-tr").each(function () {
+//                       $(this).style.display = "none";
+////                       $("#entity-list-tr td").each(function () {
+//                           if ($("#entity-list-tr td").eq(columnIndex).html() == inputValue) {
+//                                console.log("yes");
+//                           }
+//                           else {
+//                               console.log("no");
+//                           }
+////                       })
+//                   });
+
+//                   td = tr[i].getElementsByTagName("td")[columnIndex];
+//                   alert("a");
+//                   if (td) {
+//                       alert("b");
+//                       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+//                           tr[i].style.display = "";
+//                       } else {
+//                           tr[i].style.display = "none";
+//                       }
+//                   }
+               }
+           });
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -85,11 +77,14 @@
     <form action="{{ path('admin_add_customer') }}">
         <input type="submit" value="Add customer" />
     </form>
-    <br>
+
+
+    <span class="testSpan">Fix search function !!!!!!!</span>
 
     {#<div class="list-section" id="list-header">#}
-        <table id="customer-list-header">
+        <table id="entity-list-header">
             <tr>
+                <td>Id Number</td>
                 <td>First Name</td>
                 <td>Last Name</td>
                 <td>Country</td>
@@ -99,27 +94,32 @@
         </table>
     {#</div>#}
     {#<div class="list-section" id="list-search">#}
-        <table id="customer-list-search">
+        <table id="entity-list-search">
             <tr>
                 <td>
-                    <input type="search" class="table-search" id="first-name-search-input" onkeyup="tableSearch('customer-list', 'first-name-search-input', 0)" placeholder="Search">
+                    <input type="search" class="table-search" placeholder="Search">
                 </td>
                 <td>
-                    <input type="search" class="table-search" id="last-name-search-input" onkeyup="tableSearch('customer-list', 'last-name-search-input', 1)" placeholder="Search">
+                    <input type="search" class="table-search" id="first-name-search-input" onkeyup="tableSearch('entity-list-body', 'first-name-search-input', 1)" placeholder="Search">
                 </td>
                 <td>
-                    <input type="search" class="table-search" id="country-search-input" onkeyup="tableSearch('customer-list', 'country-search-input', 2)" placeholder="Search">
+                    <input type="search" class="table-search" id="last-name-search-input" onkeyup="tableSearch('entity-list-body', 'last-name-search-input', 2)" placeholder="Search">
                 </td>
                 <td>
-                    <input type="search">
+                    <input type="search" class="table-search" id="country-search-input" onkeyup="tableSearch('entity-list-body', 'country-search-input', 3)" placeholder="Search">
                 </td>
-                <td></td>
+                <td>
+                    <input type="search" class="table-search" placeholder="Search">
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-remove"></span>
+                </td>
             </tr>
         </table>
     {#</div>#}
 
     <div class="list-section" id="list-body">
-        <table id="customer-list">
+        <table id="entity-list-body">
             {#<tr>#}
                 {#<td>First Name</td>#}
                 {#<td>Last Name</td>#}
@@ -127,12 +127,13 @@
                 {#<td>City</td>#}
             {#</tr>#}
             {% for customer in customers %}
-                <tr>
+                <tr id="entity-list-tr">
+                    <td>{{ customer.identificationNumber }}</td>
                     <td>{{ customer.firstName }}</td>
                     <td>{{ customer.lastName }}</td>
                     <td>{{ customer.idCountries.name }}</td>
                     <td>{{ customer.idCities.name }}</td>
-                    <td><a href="{{ path('admin_customer', {'pathSlug': customer.pathSlug}) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
+                    <td><a href="{{ path('admin_customer', {'pathSlug': customer.pathSlug}) }}"><div style="width: 100%; height: 100%;"><span class="glyphicon glyphicon-chevron-right"></span></div></a></td>
                 </tr>
             {% endfor %}
         </table>

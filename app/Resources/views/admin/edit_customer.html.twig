@@ -6,6 +6,9 @@
 
 {% block stylesheets %}
     <style>
+        td {
+            border: 0;
+        }
         .add-entity-body tr:nth-child(even) {
             /*background: #DDDDDD;*/
         }
@@ -32,7 +35,7 @@
 
 {% block body %}//TODO: check data correctness on the fly with js
     {{ form_start(form) }}
-    <table class="add-entity-body">
+    <table class="input-table add-entity-body">
         {% for columnName in ['firstName', 'lastName', 'gender', 'companyName', 'vat', 'idCountries', 'idCities', 'street', 'postalCode', 'email', 'phone', 'idCurrencies', 'defaultDiscount', 'idUsers'] %}
             <tr>
                 <td>{{ form_label(form[columnName]) }}{% if form[columnName].vars.required %} <span style="color:red">*</span>{% endif %}</td>

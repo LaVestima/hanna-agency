@@ -22,7 +22,7 @@ class FakerController extends Controller{
 	public function fakerCustomerAction() {
 		$faker = Factory::create();
 		$customers = [];
-		$counter = 10;
+		$counter = 1;
 
 		for ($i = 0; $i < $counter; $i++) {
 			$tmpCustomer = new Customers();
@@ -61,9 +61,12 @@ class FakerController extends Controller{
 			$country = $this->getDoctrine()->getRepository('AppBundle:Countries')
 				->find($customers[$i]["country"]);
 			$tmpCustomer->setIdCountries($country);
-			$city = $this->getDoctrine()->getRepository('AppBundle:Cities')
-				->find($customers[$i]["city"]);
-			$tmpCustomer->setIdCities($city);
+			do {
+				$customers[$i]["city"] = $faker->numberBetween(1, 15);
+				$city = $this->getDoctrine()->getRepository('AppBundle:Cities')
+					->find($customers[$i]["city"]);
+				$tmpCustomer->setIdCities($city);
+			} while ($city->getIdCountries()->getId() != $country->getId());
 			$currency = $this->getDoctrine()->getRepository('AppBundle:Currencies')
 				->find($customers[$i]["currency"]);
 			$tmpCustomer->setIdCurrencies($currency);

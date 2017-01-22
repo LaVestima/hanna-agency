@@ -47,17 +47,12 @@ class AdminController extends Controller {
 			->findOneBy(array('pathSlug' => $pathSlug));
 
 		if (!$customer) {
-//			$this->addFlash(
-//                'productListError',
-//                'Wrong Product Chosen!'
-//            );
+			$this->addFlash('notice', 'Wrong customer!');
+			$this->addFlash('noticeType', 'negative');
+
+			return $this->redirectToRoute('admin_customer_list');
 		}
 		else {
-//			$invoices = $this->getDoctrine()
-//				->getRepository('AppBundle:Invoices')
-//				->findBy(array(
-//					'idCustomers' => $customer->getId(),
-//				));
 			$invoices = $this->getDoctrine()
 				->getRepository('AppBundle:Invoices')
 				->createQueryBuilder('i')
@@ -86,6 +81,12 @@ class AdminController extends Controller {
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
 
+			if ($customer->getIdCities()->getIdCountries() != $customer->getIdCountries()) {
+				$this->addFlash('notice', 'City does not match with the country!');
+				$this->addFlash('noticeType', 'negative');
+				return $this->redirectToRoute('admin_add_customer');
+			}
+
 			$factory = new Factory();
 			$generator = $factory->getMediumStrengthGenerator();
 
@@ -111,19 +112,20 @@ class AdminController extends Controller {
 			$em->persist($customer);
 			$em->flush();
 			
-			$this->addFlash(
-				'notice', 'User added successfully!'
-			);
-			$this->addFlash(
-				'noticeType', 'positive'
-			);
+			$this->addFlash('notice', 'User added successfully!');
+			$this->addFlash('noticeType', 'positive');
 
 			// just for test: Send an email
 			$message = \Swift_Message::newInstance()
-				->setSubject('Test for adding a customer!')
+				->setSubject('Customer added!')
 				->setFrom('lavestima@lavestima.com')
 				->setTo('lavestima@gmail.com')
-				->setBody('This is the body of the message, there is nothing interesting here.');
+				->setBody("New customer has just been added." . "\n"
+					. $customer->getFirstName() . ' ' . $customer->getLastName() . "\n"
+					. $customer->getStreet() . "\n"
+					. $customer->getPostalCode() . ' ' . $customer->getIdCities()->getName() . "\n"
+					. $customer->getIdCountries()->getName()
+				);
 			$this->get('mailer')->send($message);
 			// end of test
 
@@ -144,12 +146,8 @@ class AdminController extends Controller {
 			->findOneBy(array('pathSlug' => $pathSlug));
 
 		if (!$customer) {
-			$this->addFlash(
-				'notice', 'No customer found!'
-			);
-			$this->addFlash(
-				'noticeType', 'negative'
-			);
+			$this->addFlash('notice', 'No customer found!');
+			$this->addFlash('noticeType', 'negative');
 			 return $this->redirectToRoute('admin_customer_list');
 		}
 
@@ -158,25 +156,33 @@ class AdminController extends Controller {
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
+//			$messageSubject = "";
 
 			if ($form->get('delete')->isClicked()) {
 				$em->remove($customer);
-
-				$this->addFlash(
-					'notice', 'User deleted successfully!'
-				);
+//				$messageSubject = "Customer deleted!";
+				$this->addFlash('notice', 'User deleted successfully!');
 			}
 			else if ($form->get('add')->isClicked()) {
-				$this->addFlash(
-					'notice', 'User edited successfully!'
-				);
+//				$messageSubject = "Customer edited!";
+				$this->addFlash('notice', 'User edited successfully!');
 			}
 			
 			$em->flush();
 
-			$this->addFlash(
-				'noticeType', 'positive'
-			);
+			$this->addFlash('noticeType', 'positive');
+
+//			$message = \Swift_Message::newInstance()
+//				->setSubject($messageSubject)
+//				->setFrom('lavestima@lavestima.com')
+//				->setTo('lavestima@gmail.com')
+//				->setBody("New customer has just been added." . "\n"
+//					. $customer->getFirstName() . ' ' . $customer->getLastName() . "\n"
+//					. $customer->getStreet() . "\n"
+//					. $customer->getPostalCode() . ' ' . $customer->getIdCities()->getName() . "\n"
+//					. $customer->getIdCountries()->getName()
+//				);
+//			$this->get('mailer')->send($message);
 
 			return $this->redirectToRoute('admin_customer_list');
 		}
@@ -184,5 +190,12 @@ class AdminController extends Controller {
 		return $this->render('admin/edit_customer.html.twig', array(
 			'form' => $form->createView(),
 		));
+	}
+
+	/**
+	 * @Route("/country_city_list", name="country_city_list")
+	 */
+	public function CountryCityListAction() {
+		return $this->render('admin/country_city_list.html.twig');
 	}
 }

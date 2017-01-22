@@ -42,9 +42,9 @@
 {% block body %}
     Invoices
     <br>
-    {{ jsonCountries }}
+    {#{{ jsonCountries }}#}
     <br>
-    {{ jsonCities }}
+    {#{{ jsonCities }}#}
 
     <form id="dropdowns" action="">
 
@@ -55,7 +55,7 @@
 
         <br />
 
-        <label>City:</label>
+        <label for="city">City:</label>
         <select id="city" name="city">
             <option value="000">-Select City-</option>
         </select>

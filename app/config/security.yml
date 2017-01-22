@@ -12,11 +12,14 @@ security:
                         password: lave_toor
                         roles: 'ROLE_ADMIN'
                     lavestima:
-                        password: lave_toor
+                        password: lavestima_toor
                         roles: 'ROLE_SUPER_ADMIN'
                     standardUser:
                         password: standard
                         roles: 'ROLE_USER'
+                    juka:
+                        password: juka12345
+                        roles: 'ROLE_ADMIN'
 
 
     firewalls:

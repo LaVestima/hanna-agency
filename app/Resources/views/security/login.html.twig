@@ -4,6 +4,14 @@
     Login
 {% endblock %}
 
+{% block stylesheets %}
+    <style>
+        td {
+            border: 0;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     {% if error %}
         <span style="color:red">
@@ -22,6 +30,7 @@
                     <td>
                         <input type="text" id="username" name="_username" value="{{ last_username }}" />
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>
@@ -30,6 +39,7 @@
                     <td>
                         <input type="password" id="password" name="_password" />
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>
@@ -39,6 +49,7 @@
                     <td>
                         <button type="submit">login</button>
                     </td>
+                    <td></td>
                 </tr>
             </table>
         </form>

@@ -30,6 +30,7 @@
             max-height: 0;
             visibility: hidden;
             display: none;
+            opacity: 0;
         }
         .container {
             width: 100%;
@@ -53,8 +54,10 @@
             height: 40px;
             line-height: 40px;
             text-align: center;
-            background: #777777;
+            background: #888888;
             color: #FFFFFF;
+            /*color: #000000;*/
+            font-weight: bold;
             cursor: pointer;
         }
         #left-menu ul li:hover {
@@ -137,6 +140,79 @@
         .notice-box-close-button:hover {
             color: white;
         }
+        /* For list pages */
+        td {
+            /*width: 200px;*/
+            /*max-width: 200px;*/
+            padding: 5px;
+            /*height: 30px;*/
+            border: 1px solid black;
+            overflow: hidden;
+        }
+        #list-body {
+            height: 650px;
+            /*overflow-y: scroll;*/
+            overflow-y: overlay;
+        }
+        #entity-list-header, #entity-list-search, #entity-list-body {
+            width: 100%;
+            table-layout: fixed;
+            margin-right: 30px;
+        }
+        #entity-list-search tr td {
+            padding: 0;
+            border: 0;
+            text-align: center;
+        }
+        #entity-list-search tr td input {
+            width: 100%;
+            height: 35px;
+            padding: 0 5px;
+            border: 1px solid black;
+            border-radius: 0;
+            background-image: url('{{ asset('searchicon.png') }}');
+            background-size: 20px;
+            background-position: 10px 5px;
+            background-repeat: no-repeat;
+            padding-left: 40px;
+        }
+        #entity-list-header tr {
+            border-bottom: 2px solid black;
+            background: #AAAAFF;
+        }
+        #entity-list-header tr td {
+            font-weight: bold;
+        }
+        #entity-list-header tr td:nth-last-child(1) {
+            width: 5%;
+            visibility: hidden;
+        }
+        #entity-list-search tr td:nth-last-child(1) {
+            width: 5%;
+        }
+        #entity-list-body tr:nth-child(even) {
+            background: #DDDDDD;
+        }
+        #entity-list-body tr:hover {
+            background: #BBBBBB;
+        }
+        #entity-list-body tr td:nth-last-child(1) {
+            width: 5%;
+            text-align: center;
+            padding: 0;
+        }
+        #entity-list-body a {
+            color: #000000;
+        }
+        /* End */
+        /* For input pages */
+        .input-table tr td {
+            width: 30%;
+        }
+        .input-table tr td button {
+            width: 30%;
+        }
+        /* END */
     </style>
     {% block stylesheets %}{% endblock %}
     <script>
@@ -182,13 +258,6 @@
                     }
                 }
             }
-
-//            for (i = 0; i < allInputs.length; i++) {
-//
-//                if (allInputs.id != inputName) {
-//                    $(input).keyup();
-//                }
-//            }
         }
 
         $(document).ready(function() {
@@ -242,21 +311,60 @@
     </div>
     <div id="left-menu">
         <ul>
-            <div id="left-menu-header"><b>MENU</b></div>
-            <a href="{{ path('homepage') }}"><li class="left-menu-option">Homepage</li></a>
-            <a href=""><li class="left-menu-option">Orders</li></a>
-            <a href="{{ path('invoices') }}"><li class="left-menu-option">Invoices</li></a>
-            <a href="{{ path('product_list') }}"><li class="left-menu-option">Products</li></a>
+            <div id="left-menu-header">
+                <b>MENU</b>
+            </div>
+            <a href="{{ path('homepage') }}">
+                <li class="left-menu-option">
+                    <span class="glyphicon glyphicon-home"></span> Homepage
+                </li>
+            </a>
+            <a href="">
+                <li class="left-menu-option">
+                    Orders
+                </li>
+            </a>
+            <a href="{{ path('invoices') }}">
+                <li class="left-menu-option">
+                    Invoices
+                </li>
+            </a>
+            <a href="{{ path('product_list') }}">
+                <li class="left-menu-option">
+                    Products
+                </li>
+            </a>
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('admin_panel') }}"><li class="left-menu-option">Admin Panel</li></a>
-                <a href="{{ path('admin_customer_list') }}"><li class="left-menu-option">Customers</li></a>
+            <a href="{{ path('admin_panel') }}">
+                <li class="left-menu-option">
+                    Admin Panel
+                </li>
+            </a>
+            <a href="{{ path('admin_customer_list') }}">
+                <li class="left-menu-option">
+                    <span class="glyphicon glyphicon-briefcase"></span> Customers
+                </li>
+            </a>
+            <a href="{{ path('country_city_list') }}">
+                <li class="left-menu-option">
+                    <span class="glyphicon glyphicon-road"></span> Countries/Cities
+                </li>
+            </a>
             {% endif %}
             {% if not app.user %}
-                <a href="{{ path('security_login') }}"><li class="left-menu-option">Log in <span class="glyphicon glyphicon-log-in"></span></li></a>
+            <a href="{{ path('security_login') }}">
+                <li class="left-menu-option">
+                    Log in <span class="glyphicon glyphicon-log-in"></span>
+                </li>
+            </a>
             {% elseif app.user %}
-                <li class="left-menu-option">- {{ app.user }} -</li>
-                <a href="{{ path('logout') }}"><li class="left-menu-option">Log out <span class="glyphicon glyphicon-log-out"></span></li></a>
+            <li class="left-menu-option">- {{ app.user }} -</li>
+            <a href="{{ path('logout') }}">
+                <li class="left-menu-option">
+                    Log out <span class="glyphicon glyphicon-log-out"></span>
+                </li>
+            </a>
             {% endif %}
         </ul>
     </div>
@@ -267,7 +375,8 @@
         <div id="title-center">
             {% block body_title %}{% endblock %}
         </div>
-        Some <br> options <br> here <br><br>
+
+        Some options here <br> -------------------------------- <br>
 
         {% for flash_message in app.session.flashBag.get('notice') %}
             {% for flash_type in app.session.flashBag.get('noticeType') %}
