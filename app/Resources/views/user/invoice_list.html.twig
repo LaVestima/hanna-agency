@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Customers{% endblock %}
+
+{% block body_title %}Customers{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block body %}
+    <form action="{{ path('admin_add_customer') }}">
+        <input type="submit" value="Add customer" />
+    </form>
+
+    <span class="testSpan">Fix search function !!!!!!!</span>
+
+    <div class="list-section" id="list-header">
+        <table id="entity-list-header">
+            <tr>
+                <td>Name</td>
+                <td>Date Issued</td>
+                <td>Customer</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="list-section" id="list-search">
+        <table id="entity-list-search">
+            <tr>
+                <td>
+                    <input type="search" class="table-search" id="first-name-search-input" onkeyup="tableSearch('entity-list-body', 'first-name-search-input', 0)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="search" class="table-search" id="last-name-search-input" onkeyup="tableSearch('entity-list-body', 'last-name-search-input', 1)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="search" class="table-search" id="country-search-input" onkeyup="tableSearch('entity-list-body', 'country-search-input', 2)" placeholder="Search">
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-remove"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="list-section" id="list-body">
+        <table id="entity-list-body">
+            {% for invoice in invoices %}
+                <tr id="entity-list-tr">
+                    <td>{{ invoice.name }}</td>
+                    <td>{{ invoice.dateIssued|date('d.m.Y') }}</td>
+                    <td>{{ invoice.idCustomers.firstName }} {{ invoice.idCustomers.lastName }}</td>
+                    <td>
+                        <a href="{{ path('user_invoice', {'id': invoice.id}) }}">
+                            <div style="width: 100%; height: 100%; ">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

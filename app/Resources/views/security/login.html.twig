@@ -13,16 +13,18 @@
 {% endblock %}
 
 {% block body %}
-    {% if error %}
-        <span style="color:red">
-            {{ error.messageKey|trans(error.messageData, 'security') }}
-            {{ error.message }}
-        </span>
-    {% endif %}
-
     {% if not app.user %}
         <form action="{{ path('security_login') }}" method="post">
             <table class="input-table">
+                {% if error %}
+                <tr>
+                    <td></td>
+                    <td>
+                        <span style="color:red">{{ error.message }}</span>
+                    </td>
+                    <td></td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td>
                         <label for="username">Username:</label>
@@ -44,7 +46,7 @@
                 <tr>
                     <td>
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                        <input type="hidden" name="_target_path" value="{{ path("homepage") }}" />
+                        <input type="hidden" name="_target_path" value="{{ path('homepage') }}" />
                     </td>
                     <td>
                         <button type="submit">login</button>

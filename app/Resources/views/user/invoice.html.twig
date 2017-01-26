@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Invoice{% endblock %}
+
+{% block body_title %}Invoice{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+{% set invoicePriceFinal = 0 %}
+
+    Name: {{ invoice[0].iName }}
+    Date: {{ invoice[0].dateIssued|date('d-m-Y') }} <br>
+
+Products: <br>
+<table>
+    <tr>
+        <td>Product</td>
+        <td>Quantity</td>
+        <td>Unit Price</td>
+        <td>Total Price</td>
+    </tr>
+    {% for invoice in invoice %}
+        {% set productPriceFinal = invoice.quantity * invoice.priceFinal %}
+        {% set invoicePriceFinal = invoicePriceFinal + productPriceFinal %}
+        <tr>
+            <td>{{ invoice.pName }}</td>
+            <td>{{ invoice.quantity }}</td>
+            <td>{{ invoice.priceFinal }}</td>
+            <td>{{ productPriceFinal }}</td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Final</td>
+            <td>{{ invoicePriceFinal }}</td>
+        </tr>
+</table>
+
+{% endblock %}
+

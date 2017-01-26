@@ -1,3 +1,5 @@
+<!--[if IE]>Use a serious browser!<![endif]-->
+<!--[if !IE]><!-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,7 +99,7 @@
             z-index: 50;
         }
         #main-body {
-            margin-top: 20px;
+            margin-top: 15px;
         }
         #title-center {
             font-size: 30px;
@@ -149,15 +151,19 @@
             border: 1px solid black;
             overflow: hidden;
         }
+        .list-section {
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
         #list-body {
-            height: 650px;
-            /*overflow-y: scroll;*/
-            overflow-y: overlay;
+            max-height: 650px;
+            margin-bottom: 10px;
         }
         #entity-list-header, #entity-list-search, #entity-list-body {
             width: 100%;
             table-layout: fixed;
             margin-right: 30px;
+
         }
         #entity-list-search tr td {
             padding: 0;
@@ -208,6 +214,12 @@
         /* For input pages */
         .input-table tr td {
             width: 30%;
+        }
+        .input-table tr td:nth-child(1) {
+            text-align: right;
+        }
+        .input-table tr td input {
+            width: 100%;
         }
         .input-table tr td button {
             width: 30%;
@@ -319,21 +331,23 @@
                     <span class="glyphicon glyphicon-home"></span> Homepage
                 </li>
             </a>
-            <a href="">
-                <li class="left-menu-option">
-                    Orders
-                </li>
-            </a>
-            <a href="{{ path('invoices') }}">
-                <li class="left-menu-option">
-                    Invoices
-                </li>
-            </a>
             <a href="{{ path('product_list') }}">
                 <li class="left-menu-option">
                     Products
                 </li>
             </a>
+            {% if app.user %}
+            <a href="">
+                <li class="left-menu-option">
+                    Orders
+                </li>
+            </a>
+            <a href="{{ path('user_invoice_list') }}">
+                <li class="left-menu-option">
+                    Invoices
+                </li>
+            </a>
+            {% endif %}
 
             {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('admin_panel') }}">
@@ -346,7 +360,7 @@
                     <span class="glyphicon glyphicon-briefcase"></span> Customers
                 </li>
             </a>
-            <a href="{{ path('country_city_list') }}">
+            <a href="{{ path('admin_country_city_list') }}">
                 <li class="left-menu-option">
                     <span class="glyphicon glyphicon-road"></span> Countries/Cities
                 </li>
@@ -391,3 +405,4 @@
     </div> 
 </body>
 </html>
+<!--<![endif]-->

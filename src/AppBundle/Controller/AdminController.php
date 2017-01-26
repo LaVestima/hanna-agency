@@ -10,6 +10,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Customers;
 use AppBundle\Form\CustomersType;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
+use Doctrine\DBAL\Query\QueryBuilder;
 use RandomLib\Factory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -148,7 +151,7 @@ class AdminController extends Controller {
 		if (!$customer) {
 			$this->addFlash('notice', 'No customer found!');
 			$this->addFlash('noticeType', 'negative');
-			 return $this->redirectToRoute('admin_customer_list');
+			return $this->redirectToRoute('admin_customer_list');
 		}
 
 		$form = $this->createForm(CustomersType::class, $customer);
@@ -193,9 +196,18 @@ class AdminController extends Controller {
 	}
 
 	/**
-	 * @Route("/country_city_list", name="country_city_list")
+	 * @Route("/country_city_list", name="admin_country_city_list")
 	 */
 	public function CountryCityListAction() {
-		return $this->render('admin/country_city_list.html.twig');
+		$countries = $this->getDoctrine()->getRepository('AppBundle:Countries')
+			->findAll();
+
+		$cities = $this->getDoctrine()->getRepository('AppBundle:Cities')
+			->findAll();
+
+		return $this->render('admin/country_city_list.html.twig', array(
+			'countries' => $countries,
+			'cities' => $cities,
+		));
 	}
 }
