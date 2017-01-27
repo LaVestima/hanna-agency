@@ -5,6 +5,13 @@
 {% block body_title %}Invoice{% endblock %}
 
 {% block stylesheets %}
+    <style>
+        #invoice-product-list {
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -14,7 +21,7 @@
     Date: {{ invoice[0].dateIssued|date('d-m-Y') }} <br>
 
 Products: <br>
-<table>
+<table id="invoice-product-list">
     <tr>
         <td>Product</td>
         <td>Quantity</td>
@@ -39,5 +46,7 @@ Products: <br>
         </tr>
 </table>
 
+    <br><br><br><br>
+    Generate PDF button
 {% endblock %}
 

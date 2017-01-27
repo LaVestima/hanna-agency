@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Customers{% endblock %}
+{% block title %}Invoices{% endblock %}
 
-{% block body_title %}Customers{% endblock %}
+{% block body_title %}Invoices{% endblock %}
 
 {% block stylesheets %}
 {% endblock %}
@@ -11,11 +11,9 @@
 {% endblock %}
 
 {% block body %}
-    <form action="{{ path('admin_add_customer') }}">
-        <input type="submit" value="Add customer" />
-    </form>
-
-    <span class="testSpan">Fix search function !!!!!!!</span>
+    {#<form action="{{ path('admin_add_customer') }}">#}
+        {#<input type="submit" value="Add customer" />#}
+    {#</form>#}
 
     <div class="list-section" id="list-header">
         <table id="entity-list-header">
