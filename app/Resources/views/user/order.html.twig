@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order{% endblock %}
+
+{% block body_title %}Order{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #order-product-list {
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% set orderPriceFinal = 0 %}
+
+    Date: {{ order[0].datePlaced|date('d-m-Y') }} <br>
+    {#Customer: {{ order[0].firstName }} {{ order[0].lastName }} <br>#}
+    Status: {{ order[0].osName }}
+    <br>
+    Products: <br>
+    <table id="order-product-list">
+        <tr>
+            <td>Product</td>
+            <td>Quantity</td>
+            <td>Unit Price</td>
+            <td>Total Price</td>
+        </tr>
+        {% for order in order %}
+            {% set productPriceFinal = order.quantity * order.priceFinal %}
+            {% set orderPriceFinal = orderPriceFinal + productPriceFinal %}
+            <tr>
+                <td>{{ order.pName }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.priceFinal }}</td>
+                <td>{{ productPriceFinal }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Final</td>
+            <td>{{ orderPriceFinal }}</td>
+        </tr>
+    </table>
+
+    <br><br><br><br>
+    Generate PDF button
+{% endblock %}
+

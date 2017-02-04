@@ -1,1 +1,70 @@
-order list
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block body_title %}Orders{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block body %}
+    <form action="{{ path('user_add_order') }}">
+    <input type="submit" value="Add order" />
+    </form>
+
+    <div class="list-section" id="list-header">
+        <table id="entity-list-header">
+            <tr>
+                <td>Name</td>
+                <td>Date Issued</td>
+                <td>Customer</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="list-section" id="list-search">
+        <table id="entity-list-search">
+            <tr>
+                <td>
+                    <input type="search" class="table-search" id="first-name-search-input" onkeyup="tableSearch('entity-list-body', 'first-name-search-input', 0)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="search" class="table-search" id="last-name-search-input" onkeyup="tableSearch('entity-list-body', 'last-name-search-input', 1)" placeholder="Search">
+                </td>
+                <td>
+                    <input type="search" class="table-search" id="country-search-input" onkeyup="tableSearch('entity-list-body', 'country-search-input', 2)" placeholder="Search">
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-remove"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="list-section" id="list-body">
+        <table id="entity-list-body">
+            {% for order in orders %}
+                <tr id="entity-list-tr">
+                    <td></td>
+                    <td>{{ order.datePlaced|date('d.m.Y') }}</td>
+                    {% if order.idCustomers %}
+                    <td>{{ order.idCustomers.firstName }} {{ order.idCustomers.lastName }}</td>
+                    {% elseif not order.idCustomers %}
+                    <td>No customer</td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ path('user_order', {'pathSlug': order.pathSlug}) }}">
+                            <div style="width: 100%; height: 100%; ">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

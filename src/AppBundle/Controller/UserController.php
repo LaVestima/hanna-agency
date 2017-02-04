@@ -35,23 +35,25 @@ class UserController extends Controller {
 	/**
 	 * @Route("/invoice/{id}", name="user_invoice")
 	 */
-	public function InvoiceAction($id) { // TODO: change id to path_slug
+	public function invoiceAction($id) { // TODO: change id to path_slug
 		$em = $this->getDoctrine()->getManager();
 		$qb = $em->createQueryBuilder();
-		$qb->select('i.name AS iName' ,
+		$qb->select(
+			'i.name AS iName',
 			'i.dateIssued',
 			'ip.quantity',
 			'ip.discount',
 			'ip.priceFinal',
-			'p.name AS pName'
-		)
+			'ip.note',
+			'p.name AS pName',
+			'c.firstName',
+			'c.lastName')
 			->from('AppBundle:Invoices', 'i')
 			->join('AppBundle:InvoicesProducts', 'ip', 'WITH', 'ip.idInvoices = i.id')
 			->join('AppBundle:Products', 'p', 'WITH', 'p.id=ip.idProducts')
+			->join('AppBundle:Customers', 'c', 'WITH', 'c.id = i.idCustomers')
 			->where('i.id = :id')
-			->orderBy('i.dateIssued', 'DESC')
-			->setParameter('id', $id)
-		;
+			->setParameter('id', $id);
 		$query = $qb->getQuery();
 
 		$invoice = $query->getResult();
@@ -82,8 +84,42 @@ class UserController extends Controller {
 	/**
 	 * @Route("/order/{pathSlug}", name="user_order")
 	 */
-	public function orderAction() { // TODO: change id to path_slug
+	public function orderAction($pathSlug) {
+		$em = $this->getDoctrine()->getManager();
+		$qb = $em->createQueryBuilder();
+		$qb->select(
+			'o.datePlaced',
+			'op.quantity',
+			'op.discount',
+			'op.priceFinal',
+			'op.note',
+			'p.name AS pName',
+			'os.name AS osName'
+//			'c.firstName',
+//			'c.lastName'
+			)
+			->from('AppBundle:Orders', 'o')
+			->join('AppBundle:OrdersProducts', 'op', 'WITH', 'op.idOrders=o.id')
+			->join('AppBundle:Products', 'p', 'WITH', 'p.id = op.idProducts')
+//			->join('AppBundle:Customers', 'c', 'WITH', 'c.id = o.idCustomers')
+			->join('AppBundle:OrdersStatuses', 'os', 'WITH', 'os.id = op.idStatuses')
+			->where('o.pathSlug = :pathSlug')
+			->setParameter('pathSlug', $pathSlug);
+		$query = $qb->getQuery();
+//		echo $query->getSql()."\n";
 
+		$order = $query->getResult();
+//		var_dump($order);
+		
+		if (!$order) {
+			$this->addFlash('notice', 'No order found!');
+			$this->addFlash('noticeType', 'negative');
+			return $this->redirectToRoute('user_order_list');
+		}
+
+		return $this->render('user/order.html.twig', array(
+			'order' => $order,
+		));
 	}
 
 	/**
@@ -130,7 +166,7 @@ class UserController extends Controller {
 				$order->setIdCustomers($customer);
 			}
 			elseif ($user->getIsAdmin()) {
-
+				// TODO: fix, add Customer associated with the admin
 			}
 
 			$em = $this->getDoctrine()->getManager();
@@ -142,17 +178,26 @@ class UserController extends Controller {
 				if ($form['idProducts'][$key]['isSelected']->getData()) {
 //					echo '<br>'.'<br>'.$form['idProducts'][$key]['quantity']->getData();
 
+					$orderStatus = $doctrine->getRepository('AppBundle:OrdersStatuses')
+						->findOneBy(array('name' => 'Queued'));
+
 					$ordersProduct = new OrdersProducts();
 					$ordersProduct->setIdOrders($order);
 					$ordersProduct->setIdProducts($idProduct);
+					$ordersProduct->setIdStatuses($orderStatus);
 					$ordersProduct->setPriceFinal(0); // TODO: change
 					$ordersProduct->setDiscount(0); // TODO: change
 					$ordersProduct->setQuantity($form['idProducts'][$key]['quantity']->getData());
+					// TODO: check availability
 
 					$em->persist($ordersProduct);
 				}
 			}
 			$em->flush();
+
+			$this->addFlash('notice', 'Order added!');
+			$this->addFlash('noticeType', 'positive');
+			return $this->redirectToRoute('user_order_list');
 		}
 
 		return $this->render('user/add_order.html.twig', array(

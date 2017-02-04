@@ -6,10 +6,32 @@
 
 {% block body %}
 {{ form_start(form) }}
+    <table>
+        <tr>
+            <td>
+                Name
+            </td>
+            <td>
+                Selected
+            </td>
+            <td>
+                Quantity
+            </td>
+        </tr>
     {% for product in form.idProducts %}
-        Product: {{ form_widget(product.name) }}
-        Selected: {{ form_widget(product.isSelected) }}
-        Quantity: {{ form_widget(product.quantity) }}<br>
+        <tr>
+            <td>
+                {{ form_widget(product.name) }}
+            </td>
+            <td>
+                {{ form_widget(product.isSelected) }}
+            </td>
+            <td>
+                {{ form_widget(product.quantity) }}
+            </td>
+        </tr>
     {% endfor %}
+    </table>
+    {{ form_row(form.submit) }}
 {{ form_end(form) }}
 {% endblock %}

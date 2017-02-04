@@ -17,34 +17,35 @@
 {% block body %}
 {% set invoicePriceFinal = 0 %}
 
-    Name: {{ invoice[0].iName }}
+    Name: {{ invoice[0].iName }} <br>
     Date: {{ invoice[0].dateIssued|date('d-m-Y') }} <br>
-
-Products: <br>
-<table id="invoice-product-list">
-    <tr>
-        <td>Product</td>
-        <td>Quantity</td>
-        <td>Unit Price</td>
-        <td>Total Price</td>
-    </tr>
-    {% for invoice in invoice %}
-        {% set productPriceFinal = invoice.quantity * invoice.priceFinal %}
-        {% set invoicePriceFinal = invoicePriceFinal + productPriceFinal %}
+    Customer: {{ invoice[0].firstName }} {{ invoice[0].lastName }} <br>
+    <br>
+    Products: <br>
+    <table id="invoice-product-list">
         <tr>
-            <td>{{ invoice.pName }}</td>
-            <td>{{ invoice.quantity }}</td>
-            <td>{{ invoice.priceFinal }}</td>
-            <td>{{ productPriceFinal }}</td>
+            <td>Product</td>
+            <td>Quantity</td>
+            <td>Unit Price</td>
+            <td>Total Price</td>
         </tr>
-    {% endfor %}
-        <tr>
-            <td></td>
-            <td></td>
-            <td>Final</td>
-            <td>{{ invoicePriceFinal }}</td>
-        </tr>
-</table>
+        {% for invoice in invoice %}
+            {% set productPriceFinal = invoice.quantity * invoice.priceFinal %}
+            {% set invoicePriceFinal = invoicePriceFinal + productPriceFinal %}
+            <tr>
+                <td>{{ invoice.pName }}</td>
+                <td>{{ invoice.quantity }}</td>
+                <td>{{ invoice.priceFinal }}</td>
+                <td>{{ productPriceFinal }}</td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Final</td>
+                <td>{{ invoicePriceFinal }}</td>
+            </tr>
+    </table>
 
     <br><br><br><br>
     Generate PDF button
