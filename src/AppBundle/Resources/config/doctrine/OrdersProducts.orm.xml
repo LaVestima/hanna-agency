@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\InvoicesProducts" table="Invoices_Products">
+  <entity name="AppBundle\Entity\OrdersProducts" table="Orders_Products">
     <indexes>
-      <index name="FK_7A615D543506D34B" columns="ID_INVOICES"/>
-      <index name="FK_7A615D54EC93A684" columns="ID_PRODUCTS"/>
+      <index name="FK_52FDB5448676F70" columns="ID_ORDERS"/>
+      <index name="FK_52FDB54EC93A684" columns="ID_PRODUCTS"/>
+      <index name="FK_52FDB5414D9E2CF" columns="ID_STATUSES"/>
     </indexes>
     <id name="id" type="integer" column="ID">
       <generator strategy="IDENTITY"/>
@@ -24,9 +25,14 @@
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="idInvoices" target-entity="Invoices" fetch="LAZY">
+    <many-to-one field="idStatuses" target-entity="OrdersStatuses" fetch="LAZY">
       <join-columns>
-        <join-column name="ID_INVOICES" referenced-column-name="ID"/>
+        <join-column name="ID_STATUSES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idOrders" target-entity="Orders" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_ORDERS" referenced-column-name="ID"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="idProducts" target-entity="Products" fetch="LAZY">

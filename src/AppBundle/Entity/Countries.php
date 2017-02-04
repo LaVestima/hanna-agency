@@ -43,10 +43,10 @@ class Countries
     private $id;
 
     public function __toString() {
-		return $this->getName();
-	}
+        return $this->name;
+    }
 
-	/**
+    /**
      * Set name
      *
      * @param string $name

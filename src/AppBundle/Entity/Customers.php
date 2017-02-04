@@ -7,10 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Customers
  *
- * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_NumberU", columns={"Identification_Number"})}, indexes={@ORM\Index(name="Customers_ID_COUNTRIES_FK", columns={"ID_COUNTRIES"}), @ORM\Index(name="Customers_ID_CITIES_FK", columns={"ID_CITIES"}), @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}), @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})})
+ * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_NumberU", columns={"Identification_Number"}), @ORM\UniqueConstraint(name="Customers_Path_SlugU", columns={"Path_Slug"})}, indexes={@ORM\Index(name="FK_E0A2CC82741523F5", columns={"ID_CITIES"}), @ORM\Index(name="FK_E0A2CC8273C1D4A", columns={"ID_COUNTRIES"}), @ORM\Index(name="FK_E0A2CC82329E4B76", columns={"ID_CURRENCIES"}), @ORM\Index(name="FK_E0A2CC823B997DA3", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Customers {
+class Customers
+{
     /**
      * @var string
      *
@@ -32,12 +33,12 @@ class Customers {
      */
     private $lastName;
 
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(name="Gender", type="string", length=1, nullable=false)
-	 */
-	private $gender;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Gender", type="string", length=1, nullable=false)
+     */
+    private $gender;
 
     /**
      * @var string
@@ -88,12 +89,12 @@ class Customers {
      */
     private $defaultDiscount = '0';
 
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
-	 */
-	private $pathSlug;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     */
+    private $pathSlug;
 
     /**
      * @var integer
@@ -105,16 +106,6 @@ class Customers {
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Users
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
-     */
-    private $idUsers;
-
-    /**
      * @var \AppBundle\Entity\Currencies
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Currencies")
@@ -123,6 +114,16 @@ class Customers {
      * })
      */
     private $idCurrencies;
+
+    /**
+     * @var \AppBundle\Entity\Users
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
+     * })
+     */
+    private $idUsers;
 
     /**
      * @var \AppBundle\Entity\Countries
@@ -216,6 +217,30 @@ class Customers {
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    /**
+     * Set gender
+     *
+     * @param string $gender
+     *
+     * @return Customers
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get gender
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 
     /**
@@ -323,7 +348,7 @@ class Customers {
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = $email;
 
         return $this;
     }
@@ -387,6 +412,30 @@ class Customers {
     }
 
     /**
+     * Set pathSlug
+     *
+     * @param string $pathSlug
+     *
+     * @return Customers
+     */
+    public function setPathSlug($pathSlug)
+    {
+        $this->pathSlug = $pathSlug;
+
+        return $this;
+    }
+
+    /**
+     * Get pathSlug
+     *
+     * @return string
+     */
+    public function getPathSlug()
+    {
+        return $this->pathSlug;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -394,30 +443,6 @@ class Customers {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set idUsers
-     *
-     * @param \AppBundle\Entity\Users $idUsers
-     *
-     * @return Customers
-     */
-    public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
-    {
-        $this->idUsers = $idUsers;
-
-        return $this;
-    }
-
-    /**
-     * Get idUsers
-     *
-     * @return \AppBundle\Entity\Users
-     */
-    public function getIdUsers()
-    {
-        return $this->idUsers;
     }
 
     /**
@@ -442,6 +467,30 @@ class Customers {
     public function getIdCurrencies()
     {
         return $this->idCurrencies;
+    }
+
+    /**
+     * Set idUsers
+     *
+     * @param \AppBundle\Entity\Users $idUsers
+     *
+     * @return Customers
+     */
+    public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
+    {
+        $this->idUsers = $idUsers;
+
+        return $this;
+    }
+
+    /**
+     * Get idUsers
+     *
+     * @return \AppBundle\Entity\Users
+     */
+    public function getIdUsers()
+    {
+        return $this->idUsers;
     }
 
     /**
@@ -490,53 +539,5 @@ class Customers {
     public function getIdCities()
     {
         return $this->idCities;
-    }
-
-    /**
-     * Set gender
-     *
-     * @param string $gender
-     *
-     * @return Customers
-     */
-    public function setGender($gender)
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    /**
-     * Get gender
-     *
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
-    /**
-     * Set pathSlug
-     *
-     * @param string $pathSlug
-     *
-     * @return Customers
-     */
-    public function setPathSlug($pathSlug)
-    {
-        $this->pathSlug = $pathSlug;
-
-        return $this;
-    }
-
-    /**
-     * Get pathSlug
-     *
-     * @return string
-     */
-    public function getPathSlug()
-    {
-        return $this->pathSlug;
     }
 }

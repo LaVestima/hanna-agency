@@ -2,10 +2,10 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="AppBundle\Entity\Customers" table="Customers">
     <indexes>
-      <index name="Customers_ID_COUNTRIES_FK" columns="ID_COUNTRIES"/>
-      <index name="Customers_ID_CITIES_FK" columns="ID_CITIES"/>
-      <index name="Customers_ID_CURRENCIES_FK" columns="ID_CURRENCIES"/>
-      <index name="Customers_ID_USERS_FK" columns="ID_USERS"/>
+      <index name="FK_E0A2CC82741523F5" columns="ID_CITIES"/>
+      <index name="FK_E0A2CC8273C1D4A" columns="ID_COUNTRIES"/>
+      <index name="FK_E0A2CC82329E4B76" columns="ID_CURRENCIES"/>
+      <index name="FK_E0A2CC823B997DA3" columns="ID_USERS"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="Customers_Identification_NumberU" columns="Identification_Number"/>
@@ -75,16 +75,6 @@
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="idCities" target-entity="Cities" fetch="LAZY">
-      <join-columns>
-        <join-column name="ID_CITIES" referenced-column-name="ID"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="idCountries" target-entity="Countries" fetch="LAZY">
-      <join-columns>
-        <join-column name="ID_COUNTRIES" referenced-column-name="ID"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="idCurrencies" target-entity="Currencies" fetch="LAZY">
       <join-columns>
         <join-column name="ID_CURRENCIES" referenced-column-name="ID"/>
@@ -93,6 +83,16 @@
     <many-to-one field="idUsers" target-entity="Users" fetch="LAZY">
       <join-columns>
         <join-column name="ID_USERS" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idCountries" target-entity="Countries" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_COUNTRIES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idCities" target-entity="Cities" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_CITIES" referenced-column-name="ID"/>
       </join-columns>
     </many-to-one>
   </entity>

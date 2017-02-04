@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Categories
+ * OrdersStatuses
  *
- * @ORM\Table(name="Categories", uniqueConstraints={@ORM\UniqueConstraint(name="Categories_NameU", columns={"Name"})})
+ * @ORM\Table(name="Orders_Statuses", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Statuses_NameU", columns={"Name"})})
  * @ORM\Entity
  */
-class Categories
+class OrdersStatuses
 {
     /**
      * @var string
@@ -18,13 +18,6 @@ class Categories
      * @ORM\Column(name="Name", type="string", length=50, nullable=false)
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
-     */
-    private $note;
 
     /**
      * @var integer

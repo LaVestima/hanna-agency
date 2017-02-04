@@ -188,6 +188,9 @@
         .list-section {
             overflow-y: scroll;
             overflow-x: hidden;
+            width: 950px;
+            margin-left: auto;
+            margin-right: auto;
         }
         #list-body {
             max-height: 650px;
@@ -371,7 +374,7 @@
                 </li>
             </a>
             {% if app.user %}
-            <a href="">
+            <a href="{{ path('user_order_list') }}">
                 <li class="left-menu-option">
                     Orders
                 </li>
@@ -432,8 +435,6 @@
         <div id="title-center">
             {% block body_title %}{% endblock %}
         </div>
-
-        Some options here
     </div>
 
     {#<hr>#}

@@ -159,15 +159,12 @@ class AdminController extends Controller {
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$customer = $form->getData();
-//			$messageSubject = "";
 
 			if ($form->get('delete')->isClicked()) {
 				$em->remove($customer);
-//				$messageSubject = "Customer deleted!";
 				$this->addFlash('notice', 'User deleted successfully!');
 			}
 			else if ($form->get('add')->isClicked()) {
-//				$messageSubject = "Customer edited!";
 				$this->addFlash('notice', 'User edited successfully!');
 			}
 			

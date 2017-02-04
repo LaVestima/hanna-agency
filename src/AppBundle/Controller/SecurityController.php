@@ -10,10 +10,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Users;
 use AppBundle\Form\UsersType;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class SecurityController extends Controller {
     /**
@@ -27,8 +27,8 @@ class SecurityController extends Controller {
         $lastUsername = $authenticationUtils->getLastUsername();
 
 		if (!$error) {
-			$this->addFlash('notice', 'Logged in!');
-			$this->addFlash('noticeType', 'positive');
+//			$this->addFlash('notice', 'Logged in!');
+//			$this->addFlash('noticeType', 'positive');
 		}
 
         return $this->render('security/login.html.twig', array(
@@ -46,23 +46,30 @@ class SecurityController extends Controller {
 
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
-			$password = $this->get('security.password_encoder')
-				->encodePassword($user, $user->getPlainPassword());
-			$user->setPasswordHash($password);
-			$dateCreated = new \DateTime("now");
-			$user->setDateCreated($dateCreated);
-			$user->setIsAdmin(0);
+			try {
+				// check login uniqueness
+				$password = $this->get('security.password_encoder')
+					->encodePassword($user, $user->getPlainPassword());
+				$user->setPasswordHash($password);
+				$dateCreated = new \DateTime("now");
+				$user->setDateCreated($dateCreated);
+				$user->setIsAdmin(0);
 
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($user);
-			$em->flush();
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($user);
+				$em->flush();
 
-			$this->addFlash('notice', 'Registered successfully!');
-			$this->addFlash('noticeType', 'positive');
+				$this->addFlash('notice', 'Registered successfully!');
+				$this->addFlash('noticeType', 'positive');
+
+				return $this->redirectToRoute('homepage');
+			} catch (UniqueConstraintViolationException $e) {
+				$this->addFlash('notice', 'User with this login already exists!');
+				$this->addFlash('noticeType', 'negative');
+			}
 
 			// add some other action
 
-			return $this->redirectToRoute('homepage');
 		}
 
 		return $this->render('security/register.html.twig', array(

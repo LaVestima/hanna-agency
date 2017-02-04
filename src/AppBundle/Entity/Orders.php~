@@ -5,26 +5,26 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Invoices
+ * Orders
  *
- * @ORM\Table(name="Invoices", uniqueConstraints={@ORM\UniqueConstraint(name="Invoices_NameU", columns={"Name"})}, indexes={@ORM\Index(name="FK_93594DC33809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_93594DC33B997DA3", columns={"ID_USERS"})})
+ * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_SlugU", columns={"Path_Slug"})}, indexes={@ORM\Index(name="FK_E283F8D83809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_E283F8D83B997DA3", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Invoices
+class Orders
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
-     */
-    private $name;
-
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Issued", type="datetime", nullable=false)
+     * @ORM\Column(name="Date_Placed", type="datetime", nullable=false)
      */
-    private $dateIssued = 'CURRENT_TIMESTAMP';
+    private $datePlaced = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     */
+    private $pathSlug;
 
     /**
      * @var integer

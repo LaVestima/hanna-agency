@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="AppBundle\Entity\Cities" table="Cities">
     <indexes>
-      <index name="Cities_ID_COUNTRIES_FK" columns="ID_COUNTRIES"/>
+      <index name="FK_DEF1B45D73C1D4A" columns="ID_COUNTRIES"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="Cities_Name_CountriesU" columns="Name,ID_COUNTRIES"/>

@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\Images" table="Images">
-    <indexes>
-      <index name="FK_E7B3BB5CEC93A684" columns="ID_PRODUCTS"/>
-    </indexes>
+  <entity name="AppBundle\Entity\OrdersStatuses" table="Orders_Statuses">
     <unique-constraints>
-      <unique-constraint name="Images_File_PathU" columns="File_Path"/>
+      <unique-constraint name="Orders_Statuses_NameU" columns="Name"/>
     </unique-constraints>
     <id name="id" type="integer" column="ID">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="filePath" type="string" column="File_Path" length="50" nullable="false">
+    <field name="name" type="string" column="Name" length="50" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <many-to-one field="idProducts" target-entity="Products" fetch="LAZY">
-      <join-columns>
-        <join-column name="ID_PRODUCTS" referenced-column-name="ID"/>
-      </join-columns>
-    </many-to-one>
   </entity>
 </doctrine-mapping>

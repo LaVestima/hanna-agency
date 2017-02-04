@@ -13,6 +13,7 @@ use AppBundle\Entity\Customers;
 class DefaultController extends Controller {
     /**
      * @Route("/", name="homepage")
+	 * @Route("/homepage")
      */
     public function indexAction(Request $request) {
         return $this->render('default/index.html.twig');

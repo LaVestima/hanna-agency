@@ -2,15 +2,16 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * InvoicesProducts
+ * OrdersProducts
  *
- * @ORM\Table(name="Invoices_Products", indexes={@ORM\Index(name="FK_7A615D543506D34B", columns={"ID_INVOICES"}), @ORM\Index(name="FK_7A615D54EC93A684", columns={"ID_PRODUCTS"})})
+ * @ORM\Table(name="Orders_Products", indexes={@ORM\Index(name="FK_52FDB5448676F70", columns={"ID_ORDERS"}), @ORM\Index(name="FK_52FDB54EC93A684", columns={"ID_PRODUCTS"}), @ORM\Index(name="FK_52FDB5414D9E2CF", columns={"ID_STATUSES"})})
  * @ORM\Entity
  */
-class InvoicesProducts
+class OrdersProducts
 {
     /**
      * @var integer
@@ -50,14 +51,24 @@ class InvoicesProducts
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Invoices
+     * @var \AppBundle\Entity\OrdersStatuses
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Invoices")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\OrdersStatuses")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_INVOICES", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_STATUSES", referencedColumnName="ID")
      * })
      */
-    private $idInvoices;
+    private $idStatuses;
+
+    /**
+     * @var \AppBundle\Entity\Orders
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Orders")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_ORDERS", referencedColumnName="ID")
+     * })
+     */
+    private $idOrders;
 
     /**
      * @var \AppBundle\Entity\Products
@@ -70,13 +81,16 @@ class InvoicesProducts
     private $idProducts;
 
 
+    public function __construct() {
+		$this->idProducts = new ArrayCollection();
+	}
 
-    /**
+	/**
      * Set quantity
      *
      * @param integer $quantity
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
     public function setQuantity($quantity)
     {
@@ -100,7 +114,7 @@ class InvoicesProducts
      *
      * @param integer $discount
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
     public function setDiscount($discount)
     {
@@ -124,7 +138,7 @@ class InvoicesProducts
      *
      * @param string $priceFinal
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
     public function setPriceFinal($priceFinal)
     {
@@ -148,7 +162,7 @@ class InvoicesProducts
      *
      * @param string $note
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
     public function setNote($note)
     {
@@ -178,27 +192,51 @@ class InvoicesProducts
     }
 
     /**
-     * Set idInvoices
+     * Set idStatuses
      *
-     * @param \AppBundle\Entity\Invoices $idInvoices
+     * @param \AppBundle\Entity\OrdersStatuses $idStatuses
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
-    public function setIdInvoices(\AppBundle\Entity\Invoices $idInvoices = null)
+    public function setIdStatuses(\AppBundle\Entity\OrdersStatuses $idStatuses = null)
     {
-        $this->idInvoices = $idInvoices;
+        $this->idStatuses = $idStatuses;
 
         return $this;
     }
 
     /**
-     * Get idInvoices
+     * Get idStatuses
      *
-     * @return \AppBundle\Entity\Invoices
+     * @return \AppBundle\Entity\OrdersStatuses
      */
-    public function getIdInvoices()
+    public function getIdStatuses()
     {
-        return $this->idInvoices;
+        return $this->idStatuses;
+    }
+
+    /**
+     * Set idOrders
+     *
+     * @param \AppBundle\Entity\Orders $idOrders
+     *
+     * @return OrdersProducts
+     */
+    public function setIdOrders(\AppBundle\Entity\Orders $idOrders = null)
+    {
+        $this->idOrders = $idOrders;
+
+        return $this;
+    }
+
+    /**
+     * Get idOrders
+     *
+     * @return \AppBundle\Entity\Orders
+     */
+    public function getIdOrders()
+    {
+        return $this->idOrders;
     }
 
     /**
@@ -206,7 +244,7 @@ class InvoicesProducts
      *
      * @param \AppBundle\Entity\Products $idProducts
      *
-     * @return InvoicesProducts
+     * @return OrdersProducts
      */
     public function setIdProducts(\AppBundle\Entity\Products $idProducts = null)
     {

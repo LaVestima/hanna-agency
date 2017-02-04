@@ -2,9 +2,9 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="AppBundle\Entity\Products" table="Products">
     <indexes>
-      <index name="Items_ID_CATEGORIES_FK" columns="ID_CATEGORIES"/>
-      <index name="Items_ID_PRODUCERS_FK" columns="ID_PRODUCERS"/>
-      <index name="Items_ID_SIZES_FK" columns="ID_SIZES"/>
+      <index name="FK_4ACC380C3FA94B8D" columns="ID_CATEGORIES"/>
+      <index name="FK_4ACC380CCEA6C35A" columns="ID_PRODUCERS"/>
+      <index name="FK_4ACC380C99845F23" columns="ID_SIZES"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="Products_NameU" columns="Name"/>
@@ -42,14 +42,14 @@
         <join-column name="ID_CATEGORIES" referenced-column-name="ID"/>
       </join-columns>
     </many-to-one>
-    <many-to-one field="idProducers" target-entity="Producers" fetch="LAZY">
-      <join-columns>
-        <join-column name="ID_PRODUCERS" referenced-column-name="ID"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="idSizes" target-entity="Sizes" fetch="LAZY">
       <join-columns>
         <join-column name="ID_SIZES" referenced-column-name="ID"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idProducers" target-entity="Producers" fetch="LAZY">
+      <join-columns>
+        <join-column name="ID_PRODUCERS" referenced-column-name="ID"/>
       </join-columns>
     </many-to-one>
   </entity>

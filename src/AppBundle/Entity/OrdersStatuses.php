@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Currencies
+ * OrdersStatuses
  *
- * @ORM\Table(name="Currencies", uniqueConstraints={@ORM\UniqueConstraint(name="Currencies_NameU", columns={"Name"}), @ORM\UniqueConstraint(name="Currencies_SymbolU", columns={"Symbol"})})
+ * @ORM\Table(name="Orders_Statuses", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Statuses_NameU", columns={"Name"})})
  * @ORM\Entity
  */
-class Currencies
+class OrdersStatuses
 {
     /**
      * @var string
@@ -18,13 +18,6 @@ class Currencies
      * @ORM\Column(name="Name", type="string", length=50, nullable=false)
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Symbol", type="string", length=5, nullable=false)
-     */
-    private $symbol;
 
     /**
      * @var integer
@@ -35,16 +28,14 @@ class Currencies
      */
     private $id;
 
-    public function __toString() {
-        return $this->name;
-    }
+
 
     /**
      * Set name
      *
      * @param string $name
      *
-     * @return Currencies
+     * @return OrdersStatuses
      */
     public function setName($name)
     {
@@ -61,30 +52,6 @@ class Currencies
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set symbol
-     *
-     * @param string $symbol
-     *
-     * @return Currencies
-     */
-    public function setSymbol($symbol)
-    {
-        $this->symbol = $symbol;
-
-        return $this;
-    }
-
-    /**
-     * Get symbol
-     *
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return $this->symbol;
     }
 
     /**

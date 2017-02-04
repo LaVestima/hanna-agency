@@ -2,25 +2,42 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Images
+ *
+ * @ORM\Table(name="Images", uniqueConstraints={@ORM\UniqueConstraint(name="Images_File_PathU", columns={"File_Path"})}, indexes={@ORM\Index(name="FK_E7B3BB5CEC93A684", columns={"ID_PRODUCTS"})})
+ * @ORM\Entity
  */
 class Images
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="File_Path", type="string", length=50, nullable=false)
      */
     private $filePath;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var \AppBundle\Entity\Products
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Products")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
+     * })
      */
     private $idProducts;
+
 
 
     /**

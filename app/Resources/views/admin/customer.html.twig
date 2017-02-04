@@ -102,8 +102,13 @@
                     </tr>
                 </table>
             </div>
+
             <div class="col-md-12 col-lg-6">
                 Invoices history
+                {% if invoices is empty %}
+                    <br>
+                    No Invoices!
+                {% elseif invoices is not empty %}
                 <table class="entity-history-body">
                     <tr>
                         <th>
@@ -129,6 +134,7 @@
                         </tr>
                     {% endfor %}
                 </table>
+                {% endif %}
             </div>
         </div>
     </div>

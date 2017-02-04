@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\Invoices" table="Invoices">
+  <entity name="AppBundle\Entity\Orders" table="Orders">
     <indexes>
-      <index name="FK_93594DC33809B8C6" columns="ID_CUSTOMERS"/>
-      <index name="FK_93594DC33B997DA3" columns="ID_USERS"/>
+      <index name="FK_E283F8D83809B8C6" columns="ID_CUSTOMERS"/>
+      <index name="FK_E283F8D83B997DA3" columns="ID_USERS"/>
     </indexes>
     <unique-constraints>
-      <unique-constraint name="Invoices_NameU" columns="Name"/>
+      <unique-constraint name="Orders_Path_SlugU" columns="Path_Slug"/>
     </unique-constraints>
     <id name="id" type="integer" column="ID">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="name" type="string" column="Name" length="50" nullable="false">
-      <options>
-        <option name="fixed"/>
-      </options>
-    </field>
-    <field name="dateIssued" type="datetime" column="Date_Issued" nullable="false">
+    <field name="datePlaced" type="datetime" column="Date_Placed" nullable="false">
       <options>
         <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="pathSlug" type="string" column="Path_Slug" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
       </options>
     </field>
     <many-to-one field="idCustomers" target-entity="Customers" fetch="LAZY">

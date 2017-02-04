@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="AppBundle\Entity\CurrenciesRates" table="Currencies_Rates">
     <indexes>
-      <index name="Currencies_H_ID_Currencies_FK" columns="ID_CURRENCIES"/>
+      <index name="FK_8C585099329E4B76" columns="ID_CURRENCIES"/>
     </indexes>
     <unique-constraints>
       <unique-constraint name="Currencies_H_Date_CurrencyU" columns="Date_Rate,ID_CURRENCIES"/>

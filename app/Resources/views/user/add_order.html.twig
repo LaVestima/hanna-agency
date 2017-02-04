@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Order{% endblock %}
+
+{% block body_title %}Add Order{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {% for product in form.idProducts %}
+        Product: {{ form_widget(product.name) }}
+        Selected: {{ form_widget(product.isSelected) }}
+        Quantity: {{ form_widget(product.quantity) }}<br>
+    {% endfor %}
+{{ form_end(form) }}
+{% endblock %}

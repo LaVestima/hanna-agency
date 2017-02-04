@@ -5,26 +5,26 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Invoices
+ * Orders
  *
- * @ORM\Table(name="Invoices", uniqueConstraints={@ORM\UniqueConstraint(name="Invoices_NameU", columns={"Name"})}, indexes={@ORM\Index(name="FK_93594DC33809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_93594DC33B997DA3", columns={"ID_USERS"})})
+ * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_SlugU", columns={"Path_Slug"})}, indexes={@ORM\Index(name="FK_E283F8D83809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_E283F8D83B997DA3", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Invoices
+class Orders
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
-     */
-    private $name;
-
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Issued", type="datetime", nullable=false)
+     * @ORM\Column(name="Date_Placed", type="datetime", nullable=false)
      */
-    private $dateIssued = 'CURRENT_TIMESTAMP';
+    private $datePlaced = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     */
+    private $pathSlug;
 
     /**
      * @var integer
@@ -58,51 +58,51 @@ class Invoices
 
 
     /**
-     * Set name
+     * Set datePlaced
      *
-     * @param string $name
+     * @param \DateTime $datePlaced
      *
-     * @return Invoices
+     * @return Orders
      */
-    public function setName($name)
+    public function setDatePlaced($datePlaced)
     {
-        $this->name = $name;
+        $this->datePlaced = $datePlaced;
 
         return $this;
     }
 
     /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set dateIssued
-     *
-     * @param \DateTime $dateIssued
-     *
-     * @return Invoices
-     */
-    public function setDateIssued($dateIssued)
-    {
-        $this->dateIssued = $dateIssued;
-
-        return $this;
-    }
-
-    /**
-     * Get dateIssued
+     * Get datePlaced
      *
      * @return \DateTime
      */
-    public function getDateIssued()
+    public function getDatePlaced()
     {
-        return $this->dateIssued;
+        return $this->datePlaced;
+    }
+
+    /**
+     * Set pathSlug
+     *
+     * @param string $pathSlug
+     *
+     * @return Orders
+     */
+    public function setPathSlug($pathSlug)
+    {
+        $this->pathSlug = $pathSlug;
+
+        return $this;
+    }
+
+    /**
+     * Get pathSlug
+     *
+     * @return string
+     */
+    public function getPathSlug()
+    {
+        return $this->pathSlug;
     }
 
     /**
@@ -120,7 +120,7 @@ class Invoices
      *
      * @param \AppBundle\Entity\Customers $idCustomers
      *
-     * @return Invoices
+     * @return Orders
      */
     public function setIdCustomers(\AppBundle\Entity\Customers $idCustomers = null)
     {
@@ -144,7 +144,7 @@ class Invoices
      *
      * @param \AppBundle\Entity\Users $idUsers
      *
-     * @return Invoices
+     * @return Orders
      */
     public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
     {

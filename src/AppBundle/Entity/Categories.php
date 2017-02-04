@@ -2,25 +2,39 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Categories
+ *
+ * @ORM\Table(name="Categories", uniqueConstraints={@ORM\UniqueConstraint(name="Categories_NameU", columns={"Name"})})
+ * @ORM\Entity
  */
 class Categories
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
      */
     private $name;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
      */
     private $note;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
 
 
     /**

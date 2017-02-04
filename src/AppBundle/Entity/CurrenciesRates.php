@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CurrenciesRates
  *
- * @ORM\Table(name="Currencies_Rates", uniqueConstraints={@ORM\UniqueConstraint(name="Currencies_H_Date_CurrencyU", columns={"Date_Rate", "ID_CURRENCIES"})}, indexes={@ORM\Index(name="Currencies_H_ID_Currencies_FK", columns={"ID_CURRENCIES"})})
+ * @ORM\Table(name="Currencies_Rates", uniqueConstraints={@ORM\UniqueConstraint(name="Currencies_H_Date_CurrencyU", columns={"Date_Rate", "ID_CURRENCIES"})}, indexes={@ORM\Index(name="FK_8C585099329E4B76", columns={"ID_CURRENCIES"})})
  * @ORM\Entity
  */
 class CurrenciesRates
@@ -15,7 +15,7 @@ class CurrenciesRates
     /**
      * @var string
      *
-     * @ORM\Column(name="Conversion_Rate", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="Conversion_Rate", type="decimal", precision=10, scale=6, nullable=false)
      */
     private $conversionRate;
 

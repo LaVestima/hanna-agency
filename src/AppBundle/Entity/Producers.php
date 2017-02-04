@@ -2,75 +2,118 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Producers
+ *
+ * @ORM\Table(name="Producers", indexes={@ORM\Index(name="FK_160DB71E741523F5", columns={"ID_CITIES"}), @ORM\Index(name="FK_160DB71E73C1D4A", columns={"ID_COUNTRIES"}), @ORM\Index(name="FK_160DB71E3B997DA3", columns={"ID_USERS"})})
+ * @ORM\Entity
  */
 class Producers
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="Short_Name", type="string", length=50, nullable=false)
      */
     private $shortName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Full_Name", type="string", length=200, nullable=false)
      */
     private $fullName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="First_Name", type="string", length=50, nullable=true)
      */
     private $firstName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Last_Name", type="string", length=50, nullable=true)
      */
     private $lastName;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="VAT", type="string", length=50, nullable=true)
      */
     private $vat;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Street", type="string", length=200, nullable=false)
      */
     private $street;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Postal_Code", type="string", length=20, nullable=false)
      */
     private $postalCode;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Email", type="string", length=200, nullable=false)
      */
     private $email;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="Phone", type="string", length=50, nullable=false)
      */
     private $phone;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Cities
+     * @var \AppBundle\Entity\Users
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
+     * })
      */
-    private $idCities;
+    private $idUsers;
 
     /**
      * @var \AppBundle\Entity\Countries
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Countries")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
+     * })
      */
     private $idCountries;
 
     /**
-     * @var \AppBundle\Entity\Users
+     * @var \AppBundle\Entity\Cities
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cities")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
+     * })
      */
-    private $idUsers;
+    private $idCities;
+
 
 
     /**
@@ -300,27 +343,27 @@ class Producers
     }
 
     /**
-     * Set idCities
+     * Set idUsers
      *
-     * @param \AppBundle\Entity\Cities $idCities
+     * @param \AppBundle\Entity\Users $idUsers
      *
      * @return Producers
      */
-    public function setIdCities(\AppBundle\Entity\Cities $idCities = null)
+    public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
     {
-        $this->idCities = $idCities;
+        $this->idUsers = $idUsers;
 
         return $this;
     }
 
     /**
-     * Get idCities
+     * Get idUsers
      *
-     * @return \AppBundle\Entity\Cities
+     * @return \AppBundle\Entity\Users
      */
-    public function getIdCities()
+    public function getIdUsers()
     {
-        return $this->idCities;
+        return $this->idUsers;
     }
 
     /**
@@ -348,26 +391,26 @@ class Producers
     }
 
     /**
-     * Set idUsers
+     * Set idCities
      *
-     * @param \AppBundle\Entity\Users $idUsers
+     * @param \AppBundle\Entity\Cities $idCities
      *
      * @return Producers
      */
-    public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
+    public function setIdCities(\AppBundle\Entity\Cities $idCities = null)
     {
-        $this->idUsers = $idUsers;
+        $this->idCities = $idCities;
 
         return $this;
     }
 
     /**
-     * Get idUsers
+     * Get idCities
      *
-     * @return \AppBundle\Entity\Users
+     * @return \AppBundle\Entity\Cities
      */
-    public function getIdUsers()
+    public function getIdCities()
     {
-        return $this->idUsers;
+        return $this->idCities;
     }
 }
