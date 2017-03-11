@@ -1,0 +1,57 @@
+.left-menu {
+    width: 150px;
+    position: fixed;
+    top: 10px;
+    left: -150px;
+    opacity: 1;
+    z-index: 100;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+
+            &:hover {
+                background: #7777FF;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+.left-menu-option {
+    width: 150px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #888888;
+    color: #FFFFFF;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.left-menu-header {
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #444444;
+    color: #33FF33;
+}
+
+.left-menu-button {
+    background: #663399;
+    height: 50px;
+    line-height: 55px;
+    width: 50px;
+    position: fixed;
+    top: 10px;
+    left: 0;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    z-index: 100;
+}

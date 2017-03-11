@@ -1,0 +1,7 @@
+access_control_homepage:
+    path:     /
+    defaults: { _controller: AccessControlBundle:Default:index }
+
+access_control_login:
+    path: /login
+    defaults: { _controller: AccessControlBundle:Login:index }

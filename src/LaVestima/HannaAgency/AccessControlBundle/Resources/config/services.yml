@@ -1,0 +1,4 @@
+services:
+#    access_control.example:
+#        class: LaVestima\HannaAgency\AccessControlBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

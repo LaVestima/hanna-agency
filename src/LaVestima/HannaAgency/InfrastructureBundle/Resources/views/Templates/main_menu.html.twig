@@ -1,0 +1,73 @@
+<div class="left-menu-button">
+    <span class="glyphicon glyphicon-menu-hamburger"></span>
+</div>
+<div class="left-menu">
+    <ul>
+        <div class="left-menu-header">
+            <b>MENU</b>
+        </div>
+        <li>
+            aaaaaaaaaaaaaa
+        </li>
+        {#<a href="{{ path('homepage') }}">#}
+            {#<li class="left-menu-option">#}
+                {#<span class="glyphicon glyphicon-home"></span> Homepage#}
+            {#</li>#}
+        {#</a>#}
+        {#<a href="{{ path('product_list') }}">#}
+            {#<li class="left-menu-option">#}
+                {#Products#}
+            {#</li>#}
+        {#</a>#}
+        {#{% if app.user %}#}
+            {#<a href="{{ path('user_order_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Orders#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('user_invoice_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Invoices#}
+                {#</li>#}
+            {#</a>#}
+        {#{% endif %}#}
+
+        {#{% if is_granted('ROLE_ADMIN') %}#}
+            {#<a href="{{ path('admin_panel') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Admin Panel#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('admin_customer_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#<span class="glyphicon glyphicon-briefcase"></span> Customers#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('admin_country_city_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#<span class="glyphicon glyphicon-road"></span> Countries/Cities#}
+                {#</li>#}
+            {#</a>#}
+        {#{% endif %}#}
+        {#{% if not app.user %}#}
+            {#<a href="{{ path('security_login') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Log in <span class="glyphicon glyphicon-log-in"></span>#}
+                {#</li>#}
+            {#</a>#}
+        {#{% elseif app.user %}#}
+            {#<li class="left-menu-option">- {{ app.user }} -</li>#}
+            {#<a href="{{ path('logout') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Log out <span class="glyphicon glyphicon-log-out"></span>#}
+                {#</li>#}
+            {#</a>#}
+        {#{% endif %}#}
+    </ul>
+</div>
+
+{% stylesheets filter='scssphp' output='css/app.css'
+'@InfrastructureBundle/Resources/public/css/main_menu.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}

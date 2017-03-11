@@ -1,31 +1,43 @@
-app:
-    resource: "@AppBundle/Controller/DefaultController.php"
+infrastructure:
+    resource: "@InfrastructureBundle/Resources/config/routing.yml"
     prefix:   /
-    type:     annotation
 
-user:
-    resource: "@AppBundle/Controller/UserController.php"
-    prefix:   /user
-    type:     annotation
-admin:
-    resource: "@AppBundle/Controller/AdminController.php"
-    prefix:   /admin
-    type:     annotation
+access_control:
+    resource: "@AccessControlBundle/Resources/config/routing.yml"
+    prefix:   /
 
-super_admin:
-    resource: "@AppBundle/Controller/SuperAdminController.php"
-    prefix:   /super_admin
-    type:     annotation
+invoice:
+    resource: "@InvoiceBundle/Resources/config/routing.yml"
+    prefix:   /
 
-login:
-    resource: "@AppBundle/Controller/SecurityController.php"
-    prefix:   /security
-    type:     annotation
-
-faker:
-    resource: "@AppBundle/Controller/FakerController.php"
-    prefix:   /faker
-    type:     annotation
+#app:
+#    resource: "@AppBundle/Controller/DefaultController.php"
+#    prefix:   /
+#    type:     annotation
+#
+#user:
+#    resource: "@AppBundle/Controller/UserController.php"
+#    prefix:   /user
+#    type:     annotation
+#admin:
+#    resource: "@AppBundle/Controller/AdminController.php"
+#    prefix:   /admin
+#    type:     annotation
+#
+#super_admin:
+#    resource: "@AppBundle/Controller/SuperAdminController.php"
+#    prefix:   /super_admin
+#    type:     annotation
+#
+#login:
+#    resource: "@AppBundle/Controller/SecurityController.php"
+#    prefix:   /security
+#    type:     annotation
+#
+#faker:
+#    resource: "@AppBundle/Controller/FakerController.php"
+#    prefix:   /faker
+#    type:     annotation
 
 logout:
     path: /logout
