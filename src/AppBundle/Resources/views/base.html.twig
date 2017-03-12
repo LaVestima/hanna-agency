@@ -11,12 +11,12 @@
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
     <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            /*padding: 5px;*/
-            font-family: 'Dosis', sans-serif;
-            font-size: 20px;
-        }
+        /*body {*/
+            /*margin: 0;*/
+            /*!*padding: 5px;*!*/
+            /*font-family: 'Dosis', sans-serif;*/
+            /*font-size: 20px;*/
+        /*}*/
         a {
             color: #1b6d85;
             text-decoration: none;
@@ -34,66 +34,66 @@
             margin-top: 10px;
             margin-bottom: 5px;
         }
-        .hidden {
-            max-width: 0;
-            max-height: 0;
-            visibility: hidden;
-            display: none;
-            opacity: 0;
-        }
+        /*.hidden {*/
+            /*max-width: 0;*/
+            /*max-height: 0;*/
+            /*visibility: hidden;*/
+            /*display: none;*/
+            /*opacity: 0;*/
+        /*}*/
         .container {
             width: 100%;
             margin: 0;
         }
-        #left-menu {
-            width: 150px;
-            position: fixed;
-            top: 10px;
-            left: -150px;
-            opacity: 1;
-            z-index: 100;
-        }
-        #left-menu ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .left-menu-option {
-            width: 150px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            background: #888888;
-            color: #FFFFFF;
-            /*color: #000000;*/
-            font-weight: bold;
-            cursor: pointer;
-        }
-        #left-menu ul li:hover {
-            background: #7777FF;
-        }
-        #left-menu-header {
-            width: 150px;
-            height: 50px;
-            line-height: 50px;
-            text-align: center;
-            background: #444444;
-            color: #33FF33;
-        }
-        #left-menu-button {
-            background: #663399;
-            height: 50px;
-            line-height: 55px;
-            width: 50px;
-            position: fixed;
-            top: 10px;
-            left: 0;
-            font-size: 25px;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-            z-index: 100;
-        }
+        /*#left-menu {*/
+            /*width: 150px;*/
+            /*position: fixed;*/
+            /*top: 10px;*/
+            /*left: -150px;*/
+            /*opacity: 1;*/
+            /*z-index: 100;*/
+        /*}*/
+        /*#left-menu ul {*/
+            /*list-style-type: none;*/
+            /*padding: 0;*/
+            /*margin: 0;*/
+        /*}*/
+        /*.left-menu-option {*/
+            /*width: 150px;*/
+            /*height: 40px;*/
+            /*line-height: 40px;*/
+            /*text-align: center;*/
+            /*background: #888888;*/
+            /*color: #FFFFFF;*/
+            /*!*color: #000000;*!*/
+            /*font-weight: bold;*/
+            /*cursor: pointer;*/
+        /*}*/
+        /*#left-menu ul li:hover {*/
+            /*background: #7777FF;*/
+        /*}*/
+        /*#left-menu-header {*/
+            /*width: 150px;*/
+            /*height: 50px;*/
+            /*line-height: 50px;*/
+            /*text-align: center;*/
+            /*background: #444444;*/
+            /*color: #33FF33;*/
+        /*}*/
+        /*#left-menu-button {*/
+            /*background: #663399;*/
+            /*height: 50px;*/
+            /*line-height: 55px;*/
+            /*width: 50px;*/
+            /*position: fixed;*/
+            /*top: 10px;*/
+            /*left: 0;*/
+            /*font-size: 25px;*/
+            /*color: white;*/
+            /*text-align: center;*/
+            /*cursor: pointer;*/
+            /*z-index: 100;*/
+        /*}*/
         #body-overlay {
             position: fixed;
             background: #000000;
@@ -265,29 +265,29 @@
     </style>
     {% block stylesheets %}{% endblock %}
     <script>
-        var isLeftMenuActive = 0;
-
-        function showLeftMenu() {
-            $("#left-menu").animate({
-                left: "0px"
-            }, 500);
-            $("#left-menu-button").animate({
-                left: "150px"
-            }, 500);
-            $("#body-overlay").fadeIn("fast");
-            isLeftMenuActive = 1;
-        }
-
-        function hideLeftMenu() {
-            $("#left-menu").animate({
-                left: "-150px"
-            }, 500);
-            $("#left-menu-button").animate({
-                left: "0px"
-            }, 500);
-            $("#body-overlay").fadeOut("fast");
-            isLeftMenuActive = 0;
-        }
+//        var isLeftMenuActive = 0;
+//
+//        function showLeftMenu() {
+//            $("#left-menu").animate({
+//                left: "0px"
+//            }, 500);
+//            $("#left-menu-button").animate({
+//                left: "150px"
+//            }, 500);
+//            $("#body-overlay").fadeIn("fast");
+//            isLeftMenuActive = 1;
+//        }
+//
+//        function hideLeftMenu() {
+//            $("#left-menu").animate({
+//                left: "-150px"
+//            }, 500);
+//            $("#left-menu-button").animate({
+//                left: "0px"
+//            }, 500);
+//            $("#body-overlay").fadeOut("fast");
+//            isLeftMenuActive = 0;
+//        }
 
         function tableSearch(tableName, inputName, columnNumber) {
             var input, filter, table, tr, td, i;
@@ -310,31 +310,31 @@
         }
 
         $(document).ready(function() {
-            $("#body-overlay").fadeOut(0);
-            $("#body-overlay").css("visibility", "visible");
-
-            $("#left-menu-button").click(function() {
-                if (!isLeftMenuActive) {
-                    showLeftMenu();
-                }
-                else {
-                    hideLeftMenu();
-                }
-            });
-
-            $("#body-overlay").click(function() {
-                if(isLeftMenuActive) {
-                    hideLeftMenu();
-                }
-            });
-
-            $(document).keydown(function(event) {
-                if (event.keyCode == 27) {
-                    if (isLeftMenuActive) {
-                        hideLeftMenu();
-                    }
-                }
-            });
+//            $("#body-overlay").fadeOut(0);
+//            $("#body-overlay").css("visibility", "visible");
+//
+//            $("#left-menu-button").click(function() {
+//                if (!isLeftMenuActive) {
+//                    showLeftMenu();
+//                }
+//                else {
+//                    hideLeftMenu();
+//                }
+//            });
+//
+//            $("#body-overlay").click(function() {
+//                if(isLeftMenuActive) {
+//                    hideLeftMenu();
+//                }
+//            });
+//
+//            $(document).keydown(function(event) {
+//                if (event.keyCode == 27) {
+//                    if (isLeftMenuActive) {
+//                        hideLeftMenu();
+//                    }
+//                }
+//            });
 
             $(".add-entity-body tr td input").each(function() {
                 $(this).keyup(function() {
@@ -355,72 +355,72 @@
     {% block scripts %}{% endblock %}
 </head>
 <body>
-    <div id="left-menu-button">
-        <span class="glyphicon glyphicon-menu-hamburger"></span>
-    </div>
-    <div id="left-menu">
-        <ul>
-            <div id="left-menu-header">
-                <b>MENU</b>
-            </div>
-            <a href="{{ path('homepage') }}">
-                <li class="left-menu-option">
-                    <span class="glyphicon glyphicon-home"></span> Homepage
-                </li>
-            </a>
-            <a href="{{ path('product_list') }}">
-                <li class="left-menu-option">
-                    Products
-                </li>
-            </a>
-            {% if app.user %}
-            <a href="{{ path('user_order_list') }}">
-                <li class="left-menu-option">
-                    Orders
-                </li>
-            </a>
-            <a href="{{ path('user_invoice_list') }}">
-                <li class="left-menu-option">
-                    Invoices
-                </li>
-            </a>
-            {% endif %}
+    {#<div id="left-menu-button">#}
+        {#<span class="glyphicon glyphicon-menu-hamburger"></span>#}
+    {#</div>#}
+    {#<div id="left-menu">#}
+        {#<ul>#}
+            {#<div id="left-menu-header">#}
+                {#<b>MENU</b>#}
+            {#</div>#}
+            {#<a href="{{ path('homepage') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#<span class="glyphicon glyphicon-home"></span> Homepage#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('product_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Products#}
+                {#</li>#}
+            {#</a>#}
+            {#{% if app.user %}#}
+            {#<a href="{{ path('user_order_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Orders#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('user_invoice_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Invoices#}
+                {#</li>#}
+            {#</a>#}
+            {#{% endif %}#}
 
-            {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('admin_panel') }}">
-                <li class="left-menu-option">
-                    Admin Panel
-                </li>
-            </a>
-            <a href="{{ path('admin_customer_list') }}">
-                <li class="left-menu-option">
-                    <span class="glyphicon glyphicon-briefcase"></span> Customers
-                </li>
-            </a>
-            <a href="{{ path('admin_country_city_list') }}">
-                <li class="left-menu-option">
-                    <span class="glyphicon glyphicon-road"></span> Countries/Cities
-                </li>
-            </a>
-            {% endif %}
-            {% if not app.user %}
-            <a href="{{ path('security_login') }}">
-                <li class="left-menu-option">
-                    Log in <span class="glyphicon glyphicon-log-in"></span>
-                </li>
-            </a>
-            {% elseif app.user %}
-            <li class="left-menu-option">- {{ app.user }} -</li>
-            <a href="{{ path('logout') }}">
-                <li class="left-menu-option">
-                    Log out <span class="glyphicon glyphicon-log-out"></span>
-                </li>
-            </a>
-            {% endif %}
-        </ul>
-    </div>
+            {#{% if is_granted('ROLE_ADMIN') %}#}
+            {#<a href="{{ path('admin_panel') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Admin Panel#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('admin_customer_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#<span class="glyphicon glyphicon-briefcase"></span> Customers#}
+                {#</li>#}
+            {#</a>#}
+            {#<a href="{{ path('admin_country_city_list') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#<span class="glyphicon glyphicon-road"></span> Countries/Cities#}
+                {#</li>#}
+            {#</a>#}
+            {#{% endif %}#}
+            {#{% if not app.user %}#}
+            {#<a href="{{ path('security_login') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Log in <span class="glyphicon glyphicon-log-in"></span>#}
+                {#</li>#}
+            {#</a>#}
+            {#{% elseif app.user %}#}
+            {#<li class="left-menu-option">- {{ app.user }} -</li>#}
+            {#<a href="{{ path('logout') }}">#}
+                {#<li class="left-menu-option">#}
+                    {#Log out <span class="glyphicon glyphicon-log-out"></span>#}
+                {#</li>#}
+            {#</a>#}
+            {#{% endif %}#}
+        {#</ul>#}
+    {#</div>#}
 
-    <div id="body-overlay"></div>
+    {#<div id="body-overlay"></div>#}
 
     {% for flash_message in app.session.flashBag.get('notice') %}
         {% for flash_type in app.session.flashBag.get('noticeType') %}

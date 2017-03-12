@@ -1,3 +1,7 @@
-invoice_homepage:
-    path:     /
-    defaults: { _controller: InvoiceBundle:Default:index }
+#invoice_homepage:
+#    path:     /
+#    defaults: { _controller: InvoiceBundle:Default:index }
+
+invoice_list:
+    path: /invoice/list
+    defaults: { _controller: InvoiceBundle:Invoice:list }

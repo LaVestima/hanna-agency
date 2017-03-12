@@ -10,20 +10,19 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
 </head>
 <body>
-{% if app.environment == 'dev' %}
-    <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
-{% endif %}
-{% include '@Infrastructure/Templates/main_menu.html.twig' %}
-{{ block('content') }}
+    {% if app.environment == 'dev' %}
+        <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
+    {% endif %}
+    {% include '@Infrastructure/Templates/main_menu.html.twig' %}
+    {{ block('content') }}
+
+    <div class="body-overlay"></div>
 </body>
-<style>
-    body {
-        margin: 5px;
-        font-family: 'Dosis', sans-serif;
-        font-size: 20px;
-    }
 
-    {% stylesheets %}{% endstylesheets %}
+{% stylesheets filter='scssphp' output='css/app.css'
+'@InfrastructureBundle/Resources/public/css/base.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
 
-</style>
 </html>

@@ -1,0 +1,35 @@
+body {
+  margin: 5px;
+  font-family: 'Dosis', sans-serif;
+  font-size: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: #1b6d85;
+
+  &:hover, &:active {
+    text-decoration: none;
+    color: #AEF2FF;
+  }
+}
+
+.hidden {
+  max-width: 0;
+  max-height: 0;
+  visibility: hidden;
+  display: none;
+  opacity: 0;
+}
+
+.body-overlay {
+  position: fixed;
+  background: #000000;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  visibility: hidden;
+  z-index: 50;
+}
