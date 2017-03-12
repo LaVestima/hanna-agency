@@ -8,10 +8,25 @@
 
 namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Customers;
+use AppBundle\Entity\Invoices;
+use AppBundle\Entity\Users;
+use DateTime;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class InvoiceController extends Controller {
+class InvoiceController extends CrudController {
 	public function listAction() {
 		return $this->render('@Invoice/Invoice/list.html.twig');
+	}
+
+	public function newAction() {
+		$this->createEntity(
+			(new Invoices())
+			->setName('testInvoice')
+			->setIdCustomers(new Customers())
+			->setIdUsers(new Users())
+			->setDateIssued(new DateTime('now'))
+		);
+		return $this->render('@Invoice/Invoice/new.html.twig');
 	}
 }

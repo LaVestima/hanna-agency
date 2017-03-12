@@ -8,23 +8,26 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class CrudController extends Controller {
-	public function createAction() {
+	public function createEntity($entity) {
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($entity);
+		$em->flush();
+	}
+
+	public function readEntity() {
 
 	}
 
-	public function readAction() {
+	public function updateEntity() {
 
 	}
 
-	public function updateAction() {
-
-	}
-
-	public function deleteAction() {
-		
+	public function deleteEntity($entity) {
+		$em = $this->getDoctrine()->getManager();
+		$em->remove($entity);
+		$em->flush();
 	}
 }
