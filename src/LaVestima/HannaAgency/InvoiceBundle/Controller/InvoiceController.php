@@ -12,21 +12,38 @@ use AppBundle\Entity\Customers;
 use AppBundle\Entity\Invoices;
 use AppBundle\Entity\Users;
 use DateTime;
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class InvoiceController extends CrudController {
+class InvoiceController extends InvoiceCrudController {
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function listAction() {
-		return $this->render('@Invoice/Invoice/list.html.twig');
+		$invoices = $this->readAllInvoices();
+		return $this->render('@Invoice/Invoice/list.html.twig', [
+			'invoices' => $invoices
+		]);
+	}
+
+	/**
+	 * @param $invoiceId
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function showAction($invoiceId) {
+		$invoice = $this->readInvoice($invoiceId);
+		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
+			'invoice' => $invoice
+		]);
 	}
 
 	public function newAction() {
-		$this->createEntity(
-			(new Invoices())
-			->setName('testInvoice')
-			->setIdCustomers(new Customers())
-			->setIdUsers(new Users())
-			->setDateIssued(new DateTime('now'))
-		);
+//		$this->createEntity(
+//			(new Invoices())
+//			->setName('testInvoice')
+//			->setIdCustomers(new Customers())
+//			->setIdUsers(new Users())
+//			->setDateIssued(new DateTime('now'))
+//		);
+
 		return $this->render('@Invoice/Invoice/new.html.twig');
 	}
 }
