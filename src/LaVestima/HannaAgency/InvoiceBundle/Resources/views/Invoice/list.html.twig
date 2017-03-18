@@ -1,5 +1,9 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
 {% block content %}
-invoice list...
+    invoice list...
+    {% for invoice in invoices %}
+        {{ invoice.name }}
+        {{ invoice.user.login }}
+    {% endfor %}
 {% endblock %}

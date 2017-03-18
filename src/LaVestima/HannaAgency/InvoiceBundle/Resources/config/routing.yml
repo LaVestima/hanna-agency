@@ -11,3 +11,7 @@ invoice_show:
 invoice_new:
     path: /invoice/new
     defaults: { _controller: InvoiceBundle:Invoice:new }
+
+invoice_delete:
+    path: /invoice/delete/{invoiceId}
+    defaults: { _controller: InvoiceBundle:Invoice:delete, invoiceId: 0 }

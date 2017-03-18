@@ -1,0 +1,28 @@
+{% extends 'InfrastructureBundle::base.html.twig' %}
+
+{% block content %}
+    {{ form_start(form) }}
+    <table>
+        <tr>
+            <td>{{ form_label(form.login) }}</td>
+            <td>{{ form_widget(form.login) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.email) }}</td>
+            <td>{{ form_widget(form.email) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.password.first) }}</td>
+            <td>{{ form_widget(form.password.first) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.password.second) }}</td>
+            <td>{{ form_widget(form.password.second) }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form_widget(form.save) }}</td>
+        </tr>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

@@ -20,6 +20,8 @@ class AppKernel extends Kernel
             new LaVestima\HannaAgency\AccessControlBundle\AccessControlBundle(),
             new LaVestima\HannaAgency\InfrastructureBundle\InfrastructureBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new LaVestima\HannaAgency\UserManagementBundle\UserManagementBundle(),
+            new LaVestima\HannaAgency\ProductBundle\ProductBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

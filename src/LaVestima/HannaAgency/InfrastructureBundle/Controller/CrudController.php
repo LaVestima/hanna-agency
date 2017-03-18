@@ -43,7 +43,10 @@ class CrudController extends Controller {
 	/**
 	 * @param $entityId
 	 */
-	public function deleteEntity($entityId) {
+	public function deleteEntity($entityId = 0) {
+		if ($entityId === 0) {
+			// TODO: throw error
+		}
 		$entity = $this->getDoctrine()
 			->getRepository($this->entityClass)
 			->find($entityId);

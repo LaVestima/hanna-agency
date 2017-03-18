@@ -8,6 +8,7 @@
 
 namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
 
+use LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudController;
 use AppBundle\Entity\Customers;
 use AppBundle\Entity\Invoices;
 use AppBundle\Entity\Users;
@@ -19,7 +20,7 @@ class InvoiceController extends InvoiceCrudController {
 	 */
 	public function listAction() {
 		$invoices = $this->readAllInvoices();
-		return $this->render('@Invoice/Invoice/list.html.twig', [
+		return $this->render('InvoiceBundle:Invoice:list.html.twig', [
 			'invoices' => $invoices
 		]);
 	}
@@ -29,6 +30,10 @@ class InvoiceController extends InvoiceCrudController {
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function showAction($invoiceId) {
+		if ($invoiceId === 0) {
+			// TODO: create flash
+			// TODO: redirect to list
+		}
 		$invoice = $this->readInvoice($invoiceId);
 		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
 			'invoice' => $invoice
@@ -44,6 +49,10 @@ class InvoiceController extends InvoiceCrudController {
 //			->setDateIssued(new DateTime('now'))
 //		);
 
-		return $this->render('@Invoice/Invoice/new.html.twig');
+		return $this->render('InvoiceBundle:Invoice:new.html.twig');
+	}
+
+	public function deleteAction($invoiceId) {
+		$this->deleteInvoice((int)$invoiceId);
 	}
 }

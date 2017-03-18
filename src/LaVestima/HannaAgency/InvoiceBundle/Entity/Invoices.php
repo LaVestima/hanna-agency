@@ -7,11 +7,34 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Invoices
  *
- * @ORM\Table(name="Invoices", uniqueConstraints={@ORM\UniqueConstraint(name="Invoices_NameU", columns={"Name"})}, indexes={@ORM\Index(name="FK_93594DC33809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_93594DC33B997DA3", columns={"ID_USERS"})})
+ * @ORM\Table(name="Invoices", uniqueConstraints={@ORM\UniqueConstraint(name="Invoices_Name_U", columns={"Name"}), @ORM\UniqueConstraint(name="Invoices_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Invoices_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"}), @ORM\Index(name="Invoices_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
 class Invoices
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     */
+    private $dateCreated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="User_Created", type="integer", nullable=false)
+     */
+    private $userCreated = '0';
+
     /**
      * @var string
      *
@@ -27,18 +50,16 @@ class Invoices
     private $dateIssued = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="ID", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
      */
-    private $id;
+    private $pathSlug = '';
 
     /**
-     * @var \AppBundle\Entity\Customers
+     * @var \Customers
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customers")
+     * @ORM\ManyToOne(targetEntity="Customers")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_CUSTOMERS", referencedColumnName="ID")
      * })
@@ -46,9 +67,9 @@ class Invoices
     private $idCustomers;
 
     /**
-     * @var \AppBundle\Entity\Users
+     * @var \Users
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="Users")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
      * })
@@ -56,6 +77,64 @@ class Invoices
     private $idUsers;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     *
+     * @return Invoices
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
+
+    /**
+     * Set userCreated
+     *
+     * @param integer $userCreated
+     *
+     * @return Invoices
+     */
+    public function setUserCreated($userCreated)
+    {
+        $this->userCreated = $userCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get userCreated
+     *
+     * @return integer
+     */
+    public function getUserCreated()
+    {
+        return $this->userCreated;
+    }
 
     /**
      * Set name
@@ -106,23 +185,37 @@ class Invoices
     }
 
     /**
-     * Get id
+     * Set pathSlug
      *
-     * @return integer
+     * @param string $pathSlug
+     *
+     * @return Invoices
      */
-    public function getId()
+    public function setPathSlug($pathSlug)
     {
-        return $this->id;
+        $this->pathSlug = $pathSlug;
+
+        return $this;
+    }
+
+    /**
+     * Get pathSlug
+     *
+     * @return string
+     */
+    public function getPathSlug()
+    {
+        return $this->pathSlug;
     }
 
     /**
      * Set idCustomers
      *
-     * @param \AppBundle\Entity\Customers $idCustomers
+     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Customers $idCustomers
      *
      * @return Invoices
      */
-    public function setIdCustomers(\AppBundle\Entity\Customers $idCustomers = null)
+    public function setIdCustomers(\LaVestima\HannaAgency\InvoiceBundle\Entity\Customers $idCustomers = null)
     {
         $this->idCustomers = $idCustomers;
 
@@ -132,7 +225,7 @@ class Invoices
     /**
      * Get idCustomers
      *
-     * @return \AppBundle\Entity\Customers
+     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Customers
      */
     public function getIdCustomers()
     {
@@ -142,11 +235,11 @@ class Invoices
     /**
      * Set idUsers
      *
-     * @param \AppBundle\Entity\Users $idUsers
+     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Users $idUsers
      *
      * @return Invoices
      */
-    public function setIdUsers(\AppBundle\Entity\Users $idUsers = null)
+    public function setIdUsers(\LaVestima\HannaAgency\InvoiceBundle\Entity\Users $idUsers = null)
     {
         $this->idUsers = $idUsers;
 
@@ -156,7 +249,7 @@ class Invoices
     /**
      * Get idUsers
      *
-     * @return \AppBundle\Entity\Users
+     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Users
      */
     public function getIdUsers()
     {

@@ -6,7 +6,7 @@
  * Time: 19:45
  */
 
-namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
+namespace LaVestima\HannaAgency\InvoiceBundle\Controller\Crud;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
@@ -19,5 +19,9 @@ class InvoiceCrudController extends CrudController {
 	
 	public function readAllInvoices() {
 		return $this->readAllEntities();
+	}
+	
+	public function deleteInvoice($invoice) {
+		return $this->deleteEntity($invoice);
 	}
 }
