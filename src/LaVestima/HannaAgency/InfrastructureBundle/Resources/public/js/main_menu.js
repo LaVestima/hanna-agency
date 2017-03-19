@@ -1,11 +1,12 @@
 var isLeftMenuActive = 0;
+var leftMenuWidth = 0;
 
 function showLeftMenu() {
     $(".left-menu").animate({
         left: "0px"
     }, 500);
     $(".left-menu-button").animate({
-        left: "150px"
+        left: leftMenuWidth + "px"
     }, 500);
     $(".body-overlay").fadeIn("fast");
     isLeftMenuActive = 1;
@@ -13,7 +14,7 @@ function showLeftMenu() {
 
 function hideLeftMenu() {
     $(".left-menu").animate({
-        left: "-150px"
+        left: "-" + leftMenuWidth + "px"
     }, 500);
     $(".left-menu-button").animate({
         left: "0px"
@@ -22,12 +23,23 @@ function hideLeftMenu() {
     isLeftMenuActive = 0;
 }
 
+$('.left-menu').css({
+    "left": "-99999px",
+    "opacity": "0"
+});
+
 $(document).ready(function() {
+    leftMenuWidth = $('.left-menu').width();
+
     $(".body-overlay").fadeOut(0);
     $(".body-overlay").css("visibility", "visible");
 
+    $('.left-menu').css({
+        "left": "-" + leftMenuWidth + "px",
+        "opacity": "1"
+    });
+
     $(".left-menu-button").click(function() {
-        console.log('dddd');
         if (!isLeftMenuActive) {
             showLeftMenu();
         }

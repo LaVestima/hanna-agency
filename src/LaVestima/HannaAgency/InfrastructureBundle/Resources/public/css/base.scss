@@ -1,18 +1,50 @@
 body {
-  margin: 5px;
+  //margin: 5px;
   font-family: 'Dosis', sans-serif;
   font-size: 20px;
+  color: #555555;
 }
 
 a {
   text-decoration: none;
-  color: #1b6d85;
+  color: #555555;
 
   &:hover, &:active {
     text-decoration: none;
-    color: #AEF2FF;
+    color: #222222;
   }
 }
+
+h1 {
+  margin: 0;
+  color: #333333;
+}
+
+.page-title {
+  //width: 500px;
+  margin: 0 auto;
+  height: 70px;
+  overflow: hidden;
+  text-align: center;
+  h1 {
+    line-height: 70px;
+    font-weight: bold;
+  }
+}
+
+.page-content {
+  padding: 10px;
+  //margin-top: 70px;
+  .entity-list {
+    .entity-list-row {
+      padding: 5px 0;
+      .entity-list-cell {
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
 
 .hidden {
   max-width: 0;

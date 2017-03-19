@@ -22,6 +22,11 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new LaVestima\HannaAgency\UserManagementBundle\UserManagementBundle(),
             new LaVestima\HannaAgency\ProductBundle\ProductBundle(),
+            new LaVestima\HannaAgency\HomepageBundle\HomepageBundle(),
+            new LaVestima\HannaAgency\OrderBundle\OrderBundle(),
+            new LaVestima\HannaAgency\CustomerBundle\CustomerBundle(),
+            new LaVestima\HannaAgency\LocationBundle\LocationBundle(),
+            new LaVestima\HannaAgency\MoneyBundle\MoneyBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

@@ -3,6 +3,8 @@
 namespace LaVestima\HannaAgency\InvoiceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
+use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 
 /**
  * Invoices
@@ -57,9 +59,9 @@ class Invoices
     private $pathSlug = '';
 
     /**
-     * @var \Customers
+     * @var Customers
      *
-     * @ORM\ManyToOne(targetEntity="Customers")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\CustomerBundle\Entity\Customers")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_CUSTOMERS", referencedColumnName="ID")
      * })
@@ -67,9 +69,9 @@ class Invoices
     private $idCustomers;
 
     /**
-     * @var \Users
+     * @var Users
      *
-     * @ORM\ManyToOne(targetEntity="Users")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
      * })
@@ -211,11 +213,11 @@ class Invoices
     /**
      * Set idCustomers
      *
-     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Customers $idCustomers
+     * @param Customers $idCustomers
      *
      * @return Invoices
      */
-    public function setIdCustomers(\LaVestima\HannaAgency\InvoiceBundle\Entity\Customers $idCustomers = null)
+    public function setIdCustomers(Customers $idCustomers = null)
     {
         $this->idCustomers = $idCustomers;
 
@@ -225,7 +227,7 @@ class Invoices
     /**
      * Get idCustomers
      *
-     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Customers
+     * @return Customers
      */
     public function getIdCustomers()
     {
@@ -235,11 +237,11 @@ class Invoices
     /**
      * Set idUsers
      *
-     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Users $idUsers
+     * @param Users $idUsers
      *
      * @return Invoices
      */
-    public function setIdUsers(\LaVestima\HannaAgency\InvoiceBundle\Entity\Users $idUsers = null)
+    public function setIdUsers(Users $idUsers = null)
     {
         $this->idUsers = $idUsers;
 
@@ -249,7 +251,7 @@ class Invoices
     /**
      * Get idUsers
      *
-     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Users
+     * @return Users
      */
     public function getIdUsers()
     {

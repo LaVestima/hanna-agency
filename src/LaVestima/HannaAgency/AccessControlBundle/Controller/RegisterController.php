@@ -16,7 +16,7 @@ class RegisterController extends Controller {
 
 		$form->handleRequest($request);
 
-		if ($form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			$doctrine = $this->getDoctrine();
 			$user = $form->getData();
 
@@ -26,7 +26,8 @@ class RegisterController extends Controller {
 			$user->setDateCreated(new \DateTime('now'));
 			$user->setPasswordHash($passwordHash);
 			$defaultRole = $doctrine->getRepository('UserManagementBundle:Roles')
-				->findOneBy(['code' => 'ROLE_GUEST']);
+				->findOneBy(['code' => 'ROLE_USER']);
+			// TODO: first ROLE_GUEST then when authenticated through he email ROLE_USER
 
 			$user->setIdRoles($defaultRole);
 
@@ -34,10 +35,26 @@ class RegisterController extends Controller {
 			$em->persist($user);
 			try {
 				$em->flush();
+//				return $this->redirectToRoute('homepage_homepage');
 			} catch (UniqueConstraintViolationException $e) {
 				// TODO: add a flash
 				var_dump('User with these credentials already exists!');
 				die();
+			} finally {
+				$message = \Swift_Message::newInstance()
+					->setSubject('Registration confirmation')
+					->setFrom('lavestima@lavestima.com')
+					->setTo($form->get('email')->getData())
+//					->setTo('test@lavestima.com')
+//					->setBody('aaaaaaaa');
+					->setBody('
+						User has just been registered with this email.<br>
+						To confirm it click the following link:<br>
+						<a href="http://127.0.0.1:8000/app_dev.php/homepage">Confirm</a>
+					', 'text/html');
+				$this->get('mailer')->send($message);
+				var_dump('Sent to '.$form->get('email')->getData());
+//				die();
 			}
 		}
 

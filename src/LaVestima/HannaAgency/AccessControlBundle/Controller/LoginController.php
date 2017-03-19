@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lavestima
- * Date: 11.03.17
- * Time: 10:24
- */
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 

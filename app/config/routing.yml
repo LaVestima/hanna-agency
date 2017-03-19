@@ -1,3 +1,23 @@
+money:
+    resource: "@MoneyBundle/Resources/config/routing.yml"
+    prefix:   /
+
+location:
+    resource: "@LocationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+customer:
+    resource: "@CustomerBundle/Resources/config/routing.yml"
+    prefix:   /
+
+order:
+    resource: "@OrderBundle/Resources/config/routing.yml"
+    prefix:   /
+
+homepage:
+    resource: "@HomepageBundle/Resources/config/routing.yml"
+    prefix:   /
+
 product:
     resource: "@ProductBundle/Resources/config/routing.yml"
     prefix:   /

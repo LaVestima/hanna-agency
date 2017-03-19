@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        {% if block('pageTitle') is defined %}
-            {{ block('pageTitle') }}
+        {% if block('title') is defined %}
+            {{ block('title') }}
         {% else %}
             Hanna Agency
         {% endif %}
     </title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
 </head>
 <body>
     {% if app.environment == 'dev' %}
         <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
     {% endif %}
-    {% include '@Infrastructure/Templates/main_menu.html.twig' %}
-    <br><br><br>
-    {{ block('content') }}
+    <div class="main-menu">
+        {% include '@Infrastructure/Templates/main_menu.html.twig' %}
+    </div>
+    <div class="page-title">
+        <h1>{{ block('title') }}</h1>
+    </div>
+    <div class="page-content">
+        {{ block('content') }}
+    </div>
 
     <div class="body-overlay"></div>
 </body>
 
 {% stylesheets filter='scssphp' output='css/app.css'
-'@InfrastructureBundle/Resources/public/css/base.scss'
+    '@InfrastructureBundle/Resources/public/css/base.scss'
+    '@InfrastructureBundle/Resources/public/css/main_menu.scss'
 %}
 <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}

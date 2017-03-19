@@ -235,7 +235,7 @@ class Users implements UserInterface, \Serializable
 	}
 
 	public function getRoles() {
-		return $this->getIdRoles()->getCode();
+		return [$this->getIdRoles()->getCode()];
 	}
 
 	public function eraseCredentials() {

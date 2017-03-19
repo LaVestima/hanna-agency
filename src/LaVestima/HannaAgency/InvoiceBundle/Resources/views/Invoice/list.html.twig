@@ -1,9 +1,17 @@
 {% extends '@Infrastructure/base.html.twig' %}
+{% block title %}Invoice List{% endblock %}
 
 {% block content %}
-    invoice list...
+    <table class="entity-list">
     {% for invoice in invoices %}
-        {{ invoice.name }}
-        {{ invoice.user.login }}
+        <tr class="entity-list-row">
+            <td class="entity-list-cell">
+                {{ invoice.name }}
+            </td>
+            <td class="entity-list-cell">
+                {{ invoice.idUsers.login }}
+            </td>
+        </tr>
     {% endfor %}
+    </table>
 {% endblock %}
