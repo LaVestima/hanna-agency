@@ -10,7 +10,7 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class CrudController extends Controller {
+abstract class CrudController extends Controller {
 	protected $entityClass;
 
 	/**

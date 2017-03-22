@@ -5,3 +5,7 @@ access_control_login:
 access_control_register:
     path: /register
     defaults: { _controller: AccessControlBundle:Register:index }
+
+access_control_account_activation:
+    path: /account_activation/{activationToken}
+    defaults: { _controller: AccessControlBundle:AccountActivation:index, activationToken: '' }
