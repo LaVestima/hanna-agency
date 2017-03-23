@@ -202,11 +202,11 @@ class Users implements UserInterface, \Serializable
     /**
      * Set idRoles
      *
-     * @param \LaVestima\HannaAgency\UserManagementBundle\Entity\Roles $idRoles
+     * @param Roles $idRoles
      *
      * @return Users
      */
-    public function setIdRoles(\LaVestima\HannaAgency\UserManagementBundle\Entity\Roles $idRoles = null)
+    public function setIdRoles(Roles $idRoles = null)
     {
         $this->idRoles = $idRoles;
 
@@ -216,7 +216,7 @@ class Users implements UserInterface, \Serializable
     /**
      * Get idRoles
      *
-     * @return \LaVestima\HannaAgency\UserManagementBundle\Entity\Roles
+     * @return Roles
      */
     public function getIdRoles() {
         return $this->idRoles;
@@ -246,8 +246,6 @@ class Users implements UserInterface, \Serializable
 			$this->id,
 			$this->login,
 			$this->passwordHash,
-			// see section on salt below
-			// $this->salt,
 		));
 	}
 
@@ -256,8 +254,6 @@ class Users implements UserInterface, \Serializable
 			$this->id,
 			$this->login,
 			$this->passwordHash,
-			// see section on salt below
-			// $this->salt
 			) = unserialize($serialized);
 	}
 }

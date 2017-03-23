@@ -13,8 +13,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AccountActivationController extends Controller {
 	public function indexAction(string $activationToken) {
-		var_dump($activationToken);
+		$token = $this->getDoctrine()->getRepository('AccessControlBundle:Tokens')
+			->findOneBy(['token' => $activationToken]);
 
-		return $this->render('@AccessControl/AccountActivation/index.html.twig');
+		if ($token) {
+			$user = $token->getIdUsers();
+			$user->setIdRoles($this->getDoctrine()
+				->getRepository('UserManagementBundle:Roles')
+				->findOneBy(['code' => 'ROLE_USER'])
+			);
+			
+			$em = $this->getDoctrine()->getManager();
+			$token->setDateExpired(new \DateTime('now'));
+			$em->flush();
+
+			$message = 'User ok!';
+		}
+		else {
+			$message = 'Wrong token!';
+		}
+
+		return $this->render('@AccessControl/AccountActivation/index.html.twig', [
+			'message' => $message
+		]);
 	}
 }

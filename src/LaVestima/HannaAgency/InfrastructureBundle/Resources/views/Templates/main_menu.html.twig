@@ -7,7 +7,7 @@
     </div>
     <ul>
         {% if app.user %}
-            <li class="left-menu-option">
+            <li class="left-menu-submenu">
                 Logged in as: <br>
                 {{ app.user.login }}
             </li>
@@ -19,7 +19,8 @@
         <li>
             <a href="{{ path('homepage_homepage') }}">
                 <div class="left-menu-option">
-                    <i class="fa fa-home"></i> Homepage
+                    <i class="fa fa-home"></i>
+                    <span>Homepage</span>
                 </div>
             </a>
         </li>
@@ -34,13 +35,50 @@
                     {#Orders#}
                 {#</li>#}
             {#</a>#}
-        <li>
-            <a href="{{ path('invoice_list') }}">
-                <div class="left-menu-option">
-                    Invoices
-                </div>
-            </a>
-        </li>
+        {% if app.user.idRoles is defined %}
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <a href="#">
+                        <div class="left-menu-option">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <span>Users</span>
+                        </div>
+                    </a>
+                </li>
+                SUPER_ADMIN
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                ADMIN
+            {% endif %}
+            {% if is_granted('ROLE_USER') %}
+                <li>
+                    <a href="#">
+                        <div class="left-menu-option">
+                            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                            <span>Orders</span>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('invoice_list') }}">
+                        <div class="left-menu-option">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                            <span>Invoices</span>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_GUEST') %}
+                <li>
+                    <a href="#">
+                        <div class="left-menu-option">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            <span>Settings</span>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
         {#{% endif %}#}
 
         {#{% if is_granted('ROLE_ADMIN') %}#}
@@ -64,7 +102,8 @@
             <li>
                 <a href="{{ path('access_control_login') }}">
                     <div class="left-menu-option">
-                        Log in <span class="glyphicon glyphicon-log-in"></span>
+                        <i class="fa fa-sign-in"></i>
+                        <span>Log in</span>
                     </div>
                 </a>
             </li>
@@ -72,7 +111,8 @@
             <li>
                 <a href="{{ path('logout') }}">
                     <div class="left-menu-option">
-                        <i class="fa fa-sign-out"></i> Log out
+                        <i class="fa fa-sign-out"></i>
+                        <span>Log out</span>
                     </div>
                 </a>
             </li>

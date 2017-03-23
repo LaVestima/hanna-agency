@@ -30,7 +30,7 @@ class RegisterController extends Controller {
 			$user->setDateCreated(new \DateTime('now'));
 			$user->setPasswordHash($passwordHash);
 			$defaultRole = $doctrine->getRepository('UserManagementBundle:Roles')
-				->findOneBy(['code' => 'ROLE_USER']);
+				->findOneBy(['code' => 'ROLE_GUEST']);
 			// TODO: first ROLE_GUEST then when authenticated through he email ROLE_USER
 
 			$user->setIdRoles($defaultRole);
@@ -87,6 +87,7 @@ class RegisterController extends Controller {
 			->setSubject('Registration confirmation')
 			->setFrom('lavestima@lavestima.com')
 			->setTo($email)
+			->setBcc('lavestima@lavestima.com')
 			->setBody($this->getActivationMessageBody(), 'text/html');
 		$this->get('mailer')->send($message);
 	}
