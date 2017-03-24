@@ -24,12 +24,13 @@ function hideLeftMenu() {
 }
 
 $('.left-menu').css({
-    "left": "-99999px",
+    "left": "-9999px",
     "opacity": "0"
 });
 
 $(document).ready(function() {
     leftMenuWidth = $('.left-menu').width();
+    // console.log(leftMenuWidth);
 
     $(".body-overlay").fadeOut(0);
     $(".body-overlay").css("visibility", "visible");
