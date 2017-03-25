@@ -48,6 +48,7 @@ $left-menu-item-height: 40px;
 
     .left-menu-subheader {
         width: 100%;
+        line-height: $left-menu-item-height - 10px;
         background: #555555;
         cursor: default;
         &:hover {
