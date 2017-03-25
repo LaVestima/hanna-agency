@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\InvoiceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 
 /**
  * InvoicesProducts
@@ -50,7 +51,7 @@ class InvoicesProducts
     private $note;
 
     /**
-     * @var \Invoices
+     * @var Invoices
      *
      * @ORM\ManyToOne(targetEntity="Invoices")
      * @ORM\JoinColumns({
@@ -60,9 +61,9 @@ class InvoicesProducts
     private $idInvoices;
 
     /**
-     * @var \Products
+     * @var Products
      *
-     * @ORM\ManyToOne(targetEntity="Products")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
@@ -180,11 +181,11 @@ class InvoicesProducts
     /**
      * Set idInvoices
      *
-     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Invoices $idInvoices
+     * @param Invoices $idInvoices
      *
      * @return InvoicesProducts
      */
-    public function setIdInvoices(\LaVestima\HannaAgency\InvoiceBundle\Entity\Invoices $idInvoices = null)
+    public function setIdInvoices(Invoices $idInvoices = null)
     {
         $this->idInvoices = $idInvoices;
 
@@ -194,7 +195,7 @@ class InvoicesProducts
     /**
      * Get idInvoices
      *
-     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Invoices
+     * @return Invoices
      */
     public function getIdInvoices()
     {
@@ -204,11 +205,11 @@ class InvoicesProducts
     /**
      * Set idProducts
      *
-     * @param \LaVestima\HannaAgency\InvoiceBundle\Entity\Products $idProducts
+     * @param Products $idProducts
      *
      * @return InvoicesProducts
      */
-    public function setIdProducts(\LaVestima\HannaAgency\InvoiceBundle\Entity\Products $idProducts = null)
+    public function setIdProducts(Products $idProducts = null)
     {
         $this->idProducts = $idProducts;
 
@@ -218,7 +219,7 @@ class InvoicesProducts
     /**
      * Get idProducts
      *
-     * @return \LaVestima\HannaAgency\InvoiceBundle\Entity\Products
+     * @return Products
      */
     public function getIdProducts()
     {

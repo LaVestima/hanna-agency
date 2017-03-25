@@ -1,42 +1,39 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lavestima
- * Date: 12.03.17
- * Time: 14:34
- */
 
 namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
 
-use LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudController;
-use AppBundle\Entity\Customers;
-use AppBundle\Entity\Invoices;
-use AppBundle\Entity\Users;
-use DateTime;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class InvoiceController extends InvoiceCrudController {
+class InvoiceController extends Controller {
 	/**
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function listAction() {
-		$invoices = $this->readAllInvoices();
+		$invoices = $this->get('invoice_crud_controller')->readAllEntities();
 		return $this->render('InvoiceBundle:Invoice:list.html.twig', [
 			'invoices' => $invoices
 		]);
 	}
 
 	/**
-	 * @param $invoiceId
+	 * @param $pathSlug
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function showAction($invoiceId) {
-		if ($invoiceId === 0) {
+	public function showAction($pathSlug) {
+		if ($pathSlug === '') {
+			var_dump('No path slug!');
 			// TODO: create flash
 			// TODO: redirect to list
 		}
-		$invoice = $this->readInvoice($invoiceId);
+
+		$invoice = $this->get('invoice_crud_controller')
+			->readOneEntityBy(['pathSlug' => $pathSlug]);
+		$invoicesProducts = $this->get('invoice_product_crud_controller')
+			->readEntitiesBy(['idInvoices' => $invoice]);
+
 		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
-			'invoice' => $invoice
+			'invoice' => $invoice,
+			'invoicesProducts' => $invoicesProducts,
 		]);
 	}
 
@@ -53,6 +50,6 @@ class InvoiceController extends InvoiceCrudController {
 	}
 
 	public function deleteAction($invoiceId) {
-		$this->deleteInvoice((int)$invoiceId);
+		$this->get('invoice_crud_controller')->deleteEntity((int)$invoiceId);
 	}
 }

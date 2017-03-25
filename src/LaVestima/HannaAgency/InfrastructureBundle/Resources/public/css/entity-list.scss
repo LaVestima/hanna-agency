@@ -1,0 +1,14 @@
+.entity-list {
+  margin: 0 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.entity-list-row {
+  //display: flex;
+  //justify-content: space-between;
+  //flex-direction: row;
+  &:hover {
+    background: #9acfea;
+  }
+}

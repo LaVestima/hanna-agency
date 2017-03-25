@@ -3,10 +3,8 @@ invoice_list:
     defaults: { _controller: InvoiceBundle:Invoice:list }
 
 invoice_show:
-    path: /invoice/show/{invoiceId}
-    defaults: { _controller: InvoiceBundle:Invoice:show, invoiceId: 0 }
-    requirements:
-        invoiceId: '\d+'
+    path: /invoice/show/{pathSlug}
+    defaults: { _controller: InvoiceBundle:Invoice:show, pathSlug: '' }
 
 invoice_new:
     path: /invoice/new

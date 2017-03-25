@@ -85,7 +85,7 @@ class Products
     private $pathSlug = '';
 
     /**
-     * @var \Categories
+     * @var Categories
      *
      * @ORM\ManyToOne(targetEntity="Categories")
      * @ORM\JoinColumns({
@@ -94,18 +94,18 @@ class Products
      */
     private $idCategories;
 
-    /**
-     * @var \Producers
-     *
-     * @ORM\ManyToOne(targetEntity="Producers")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
-     * })
-     */
-    private $idProducers;
+//    /**
+//     * @var \Producers
+//     *
+//     * @ORM\ManyToOne(targetEntity="Producers")
+//     * @ORM\JoinColumns({
+//     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
+//     * })
+//     */
+//    private $idProducers;
 
     /**
-     * @var \Sizes
+     * @var Sizes
      *
      * @ORM\ManyToOne(targetEntity="Sizes")
      * @ORM\JoinColumns({
@@ -345,11 +345,11 @@ class Products
     /**
      * Set idCategories
      *
-     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Categories $idCategories
+     * @param Categories $idCategories
      *
      * @return Products
      */
-    public function setIdCategories(\LaVestima\HannaAgency\ProductBundle\Entity\Categories $idCategories = null)
+    public function setIdCategories(Categories $idCategories = null)
     {
         $this->idCategories = $idCategories;
 
@@ -359,45 +359,45 @@ class Products
     /**
      * Get idCategories
      *
-     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Categories
+     * @return Categories
      */
     public function getIdCategories()
     {
         return $this->idCategories;
     }
 
-    /**
-     * Set idProducers
-     *
-     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers
-     *
-     * @return Products
-     */
-    public function setIdProducers(\LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers = null)
-    {
-        $this->idProducers = $idProducers;
+//    /**
+//     * Set idProducers
+//     *
+//     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers
+//     *
+//     * @return Products
+//     */
+//    public function setIdProducers(\LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers = null)
+//    {
+//        $this->idProducers = $idProducers;
+//
+//        return $this;
+//    }
 
-        return $this;
-    }
-
-    /**
-     * Get idProducers
-     *
-     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Producers
-     */
-    public function getIdProducers()
-    {
-        return $this->idProducers;
-    }
+//    /**
+//     * Get idProducers
+//     *
+//     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Producers
+//     */
+//    public function getIdProducers()
+//    {
+//        return $this->idProducers;
+//    }
 
     /**
      * Set idSizes
      *
-     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Sizes $idSizes
+     * @param Sizes $idSizes
      *
      * @return Products
      */
-    public function setIdSizes(\LaVestima\HannaAgency\ProductBundle\Entity\Sizes $idSizes = null)
+    public function setIdSizes(Sizes $idSizes = null)
     {
         $this->idSizes = $idSizes;
 
@@ -407,7 +407,7 @@ class Products
     /**
      * Get idSizes
      *
-     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Sizes
+     * @return Sizes
      */
     public function getIdSizes()
     {
