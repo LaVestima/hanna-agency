@@ -1,3 +1,5 @@
+$main-theme-color: #663399;
+
 body {
   //margin: 5px;
   font-family: 'Dosis', sans-serif;
@@ -20,16 +22,33 @@ h1 {
   color: #333333;
 }
 
+.button {
+  display: inline-block;
+  padding: 10px;
+  margin: 10px;
+  background: $main-theme-color;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 .page-title {
   //width: 500px;
   margin: 0 auto;
   height: 70px;
   overflow: hidden;
   text-align: center;
+  background: #ccc;
   h1 {
     line-height: 70px;
     font-weight: bold;
   }
+}
+
+.action-bar {
+  padding: 10px;
+  background: #ddd;
 }
 
 .page-content {

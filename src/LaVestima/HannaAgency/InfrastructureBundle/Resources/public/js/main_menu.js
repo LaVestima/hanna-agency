@@ -8,6 +8,10 @@ function showLeftMenu() {
     $(".left-menu-button").animate({
         left: leftMenuWidth + "px"
     }, 500);
+    $('.left-menu-button > span').animate({
+        width: 0,
+        opacity: 0
+    }, 500);
     $(".body-overlay").fadeIn("fast");
     isLeftMenuActive = 1;
 }
@@ -18,6 +22,10 @@ function hideLeftMenu() {
     }, 500);
     $(".left-menu-button").animate({
         left: "0px"
+    }, 500);
+    $('.left-menu-button > span').animate({
+        width: '50px',
+        opacity: 1
     }, 500);
     $(".body-overlay").fadeOut("fast");
     isLeftMenuActive = 0;

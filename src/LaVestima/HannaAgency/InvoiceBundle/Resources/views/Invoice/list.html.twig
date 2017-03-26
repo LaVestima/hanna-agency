@@ -1,6 +1,19 @@
 {% extends '@Infrastructure/entity-list.html.twig' %}
 {% block title %}Invoice List{% endblock %}
 
+{% block actionBar %}
+    <a href="{{ path('invoice_new') }}">
+        <div class="button action-bar-button">
+            New invoice
+        </div>
+    </a>
+    <a href="">
+        <div class="button action-bar-button">
+            Deleted invoices
+        </div>
+    </a>
+{% endblock %}
+
 {% block content %}
     <table class="entity-list invoices-list">
     <th>
