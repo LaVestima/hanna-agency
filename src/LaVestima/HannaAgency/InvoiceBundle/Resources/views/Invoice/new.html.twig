@@ -3,5 +3,17 @@
 {% block title %}New invoice{% endblock %}
 
 {% block content %}
-new invoice...
+    new invoice...
+    {{ form_start(form) }}
+        <table>
+            <tr>
+                <td>
+                    {{ form_label(form['name']) }}
+                </td>
+                <td>
+                    {{ form_widget(form['name']) }}
+                </td>
+            </tr>
+        </table>
+    {{ form_end(form) }}
 {% endblock %}

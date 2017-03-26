@@ -5,6 +5,7 @@ namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
 use LaVestima\HannaAgency\AccessControlBundle\Form\RegisterType;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Roles;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use RandomLib\Factory;
@@ -21,7 +22,7 @@ class RegisterController extends Controller {
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$doctrine = $this->getDoctrine();
+//			$doctrine = $this->getDoctrine();
 			$user = $form->getData();
 
 			$passwordHash = $this->get('security.password_encoder')
@@ -29,38 +30,41 @@ class RegisterController extends Controller {
 
 			$user->setDateCreated(new \DateTime('now'));
 			$user->setPasswordHash($passwordHash);
-			$defaultRole = $doctrine->getRepository('UserManagementBundle:Roles')
-				->findOneBy(['code' => 'ROLE_GUEST']);
-			// TODO: first ROLE_GUEST then when authenticated through he email ROLE_USER
+
+//			$defaultRole = $doctrine->getRepository('UserManagementBundle:Roles')
+//				->findOneBy(['code' => 'ROLE_GUEST']);
+			$defaultRole = $this->get('role_crud_controller')
+				->readOneEntityBy(['code' => 'ROLE_GUEST']);
 
 			$user->setIdRoles($defaultRole);
+			$user->setPathSlug((new CrudHelper())->generatePathSlug());
 
-			$em = $doctrine->getManager();
-			$em->persist($user);
 			try {
-				$em->flush();
+				$this->get('user_crud_controller')
+					->createEntity($user);
 //				return $this->redirectToRoute('homepage_homepage');
 			} catch (UniqueConstraintViolationException $e) {
 				// TODO: add a flash
 				var_dump('User with these credentials already exists!');
+				var_dump($e->getMessage());
 				die();
+//				return $this->redirectToRoute('access_control_register');
 				// TODO: redirect to error page
-			} finally {
-				$this->setActivationToken($this->generateActivationToken());
-
-				$this->sendActivationEmail($form->get('email')->getData());
-
-				$token = new Tokens();
-				$token->setIdUsers($user);
-				$token->setDateCreated(new \DateTime('now'));
-				$token->setDateExpired(new \DateTime('now +1 day'));
-				$token->setToken($this->activationToken);
-
-				$em->persist($token);
-				$em->flush();
-
-				var_dump('Sent to '.$form->get('email')->getData());
 			}
+			
+			$this->setActivationToken($this->generateActivationToken());
+
+			$token = new Tokens();
+			$token->setIdUsers($user);
+			$token->setDateCreated(new \DateTime('now'));
+			$token->setDateExpired(new \DateTime('now +1 day'));
+			$token->setToken($this->activationToken);
+
+			$this->get('token_crud_controller')
+				->createEntity($token);
+
+			$this->sendActivationEmail($form->get('email')->getData());
+			var_dump('Sent to '.$form->get('email')->getData());
 		}
 
 		return $this->render('AccessControlBundle:Register:index.html.twig', array(
@@ -87,7 +91,7 @@ class RegisterController extends Controller {
 			->setSubject('Registration confirmation')
 			->setFrom('lavestima@lavestima.com')
 			->setTo($email)
-			->setBcc('lavestima@lavestima.com')
+			->setBcc('test@lavestima.com')
 			->setBody($this->getActivationMessageBody(), 'text/html');
 		$this->get('mailer')->send($message);
 	}

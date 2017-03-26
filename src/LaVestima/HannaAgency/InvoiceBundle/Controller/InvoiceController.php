@@ -2,7 +2,10 @@
 
 namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
 
+use LaVestima\HannaAgency\InvoiceBundle\Entity\Invoices;
+use LaVestima\HannaAgency\InvoiceBundle\Form\InvoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class InvoiceController extends Controller {
 	/**
@@ -37,16 +40,27 @@ class InvoiceController extends Controller {
 		]);
 	}
 
-	public function newAction() {
-//		$this->createEntity(
-//			(new Invoices())
-//			->setName('testInvoice')
-//			->setIdCustomers(new Customers())
-//			->setIdUsers(new Users())
-//			->setDateIssued(new DateTime('now'))
-//		);
+	public function newAction(Request $request) {
+		$invoice = new Invoices();
+		$form = $this->createForm(InvoiceType::class, $invoice);
+		$form->handleRequest($request);
 
-		return $this->render('InvoiceBundle:Invoice:new.html.twig');
+		if ($form->isSubmitted() && $form->isValid()) {
+			$invoice = $form->getData();
+
+
+		}
+		
+		
+//		$invoice->setDateIssued(new \DateTime('now')); // TODO: change??
+//
+//		$this->get('invoice_crud_controller')
+//			->createEntity($invoice);
+//
+
+		return $this->render('InvoiceBundle:Invoice:new.html.twig', [
+			'form' => $form->createView(),
+		]);
 	}
 
 	public function deleteAction($invoiceId) {

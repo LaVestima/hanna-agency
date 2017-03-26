@@ -1,14 +1,17 @@
+@import "base";
+
 .entity-list {
-  margin: 0 10px;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   text-align: center;
+  th {
+    text-align: center;
+  }
 }
 
 .entity-list-row {
-  //display: flex;
-  //justify-content: space-between;
-  //flex-direction: row;
   &:hover {
-    background: #9acfea;
+    background: $main-theme-color-lighter;
   }
 }

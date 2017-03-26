@@ -78,8 +78,6 @@ class Invoices
      */
     private $idUsers;
 
-
-
     /**
      * Get id
      *

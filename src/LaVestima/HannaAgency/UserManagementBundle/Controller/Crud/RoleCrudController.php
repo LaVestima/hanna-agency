@@ -4,6 +4,8 @@ namespace LaVestima\HannaAgency\UserManagementBundle\Controller\Crud;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class UserCrudController extends CrudController {
-	protected $entityClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Users';
+class RoleCrudController extends CrudController {
+	protected $entityClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Roles';
+	
+	
 }

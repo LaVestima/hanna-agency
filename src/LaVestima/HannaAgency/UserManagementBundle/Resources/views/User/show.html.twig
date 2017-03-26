@@ -1,0 +1,17 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
+    {{ user.login }}
+
+    <br><br>
+
+    {% if customer is defined and customer is not null %}
+        Customer<br>
+        {{ customer.fullName }}
+    {% endif %}
+    <br><br>
+    Name <br>
+    Surname <br>
+{% endblock %}

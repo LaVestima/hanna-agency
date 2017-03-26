@@ -7,9 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 abstract class CrudController extends Controller {
 	protected $doctrine;
 	protected $manager;
+
+	private $userClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Users';
 	protected $entityClass;
 
-	public function __construct() {
+	public function __construct($doctrine) {
+		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
 	}
 
@@ -17,8 +20,9 @@ abstract class CrudController extends Controller {
 	 * @param $entity
 	 */
 	public function createEntity($entity) {
+		$entity->setDateCreated(new \DateTime('now'));
 		// TODO: add user and date created
-		$em = $this->doctrine->getManager();
+		$em = $this->manager;
 		$em->persist($entity);
 		$em->flush();
 	}
@@ -89,7 +93,7 @@ abstract class CrudController extends Controller {
 	 * @param $entity
 	 */
 	protected function purgeEntity($entity) {
-		$em = $this->doctrine->getManager();
+		$em = $this->manager;
 		$em->remove($entity);
 		$em->flush();
 	}
@@ -102,4 +106,9 @@ abstract class CrudController extends Controller {
 			->getRepository($this->entityClass)
 			->findAll();
 	}
+
+//	private function getCurrentUser() {
+//		return $this->get('security.token_storage')
+//			->getToken()->getUser();
+//	}
 }

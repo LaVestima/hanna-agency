@@ -1,7 +1,12 @@
-$main-theme-color: #663399;
+$main-theme-color: #A55800;
+$main-theme-color-light: $main-theme-color + 50;
+$main-theme-color-lighter: $main-theme-color + 100;
+$main-theme-color-dark: $main-theme-color - 50;
+$main-theme-color-darker: $main-theme-color - 100;
+$main-theme-color-hover: $main-theme-color - 50;
+$main-font-color: #ffffff;
 
 body {
-  //margin: 5px;
   font-family: 'Dosis', sans-serif;
   font-size: 20px;
   color: #555555;
@@ -25,12 +30,14 @@ h1 {
 .button {
   display: inline-block;
   padding: 10px;
-  margin: 10px;
+  //margin: 5px;
   background: $main-theme-color;
-  color: #ffffff;
+  color: $main-font-color;
   text-align: center;
-  border-radius: 10px;
   cursor: pointer;
+  &:hover {
+    background: $main-theme-color-hover;
+  }
 }
 
 .page-title {

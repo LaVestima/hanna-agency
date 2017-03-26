@@ -159,6 +159,7 @@ class Customers
      */
     private $idUsers;
 
+    private $fullName;
 
 
     /**
@@ -601,5 +602,9 @@ class Customers
     public function getIdUsers()
     {
         return $this->idUsers;
+    }
+    
+    public function getFullName() {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }

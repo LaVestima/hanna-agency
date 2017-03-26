@@ -45,6 +45,8 @@
 <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
 
-{{ block('stylesheets') }}
+{% if block('stylesheets') is defined %}
+    {{ block('stylesheets') }}
+{% endif %}
 
 </html>

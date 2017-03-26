@@ -2,3 +2,10 @@ services:
 #    user_management.example:
 #        class: LaVestima\HannaAgency\UserManagementBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+    user_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController
+        arguments: ['@doctrine']
+
+    role_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudController
+        arguments: ['@doctrine']
