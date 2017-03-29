@@ -1,3 +1,11 @@
 #order_homepage:
 #    path:     /
 #    defaults: { _controller: OrderBundle:Default:index }
+
+order_list:
+    path: /order/list
+    defaults: { _controller: OrderBundle:Order:list }
+
+order_show:
+    path: /order/show/{pathSlug}
+    defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }

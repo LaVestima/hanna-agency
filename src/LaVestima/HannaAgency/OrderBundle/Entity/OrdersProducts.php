@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 
 /**
  * OrdersProducts
@@ -50,9 +51,9 @@ class OrdersProducts
     private $note;
 
     /**
-     * @var \Orders
+     * @var Orders
      *
-     * @ORM\ManyToOne(targetEntity="Orders")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\Orders")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_ORDERS", referencedColumnName="ID")
      * })
@@ -60,9 +61,9 @@ class OrdersProducts
     private $idOrders;
 
     /**
-     * @var \Products
+     * @var Products
      *
-     * @ORM\ManyToOne(targetEntity="Products")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
@@ -70,9 +71,9 @@ class OrdersProducts
     private $idProducts;
 
     /**
-     * @var \OrdersStatuses
+     * @var OrdersStatuses
      *
-     * @ORM\ManyToOne(targetEntity="OrdersStatuses")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_STATUSES", referencedColumnName="ID")
      * })
@@ -190,11 +191,11 @@ class OrdersProducts
     /**
      * Set idOrders
      *
-     * @param \LaVestima\HannaAgency\OrderBundle\Entity\Orders $idOrders
+     * @param Orders $idOrders
      *
      * @return OrdersProducts
      */
-    public function setIdOrders(\LaVestima\HannaAgency\OrderBundle\Entity\Orders $idOrders = null)
+    public function setIdOrders(Orders $idOrders = null)
     {
         $this->idOrders = $idOrders;
 
@@ -204,7 +205,7 @@ class OrdersProducts
     /**
      * Get idOrders
      *
-     * @return \LaVestima\HannaAgency\OrderBundle\Entity\Orders
+     * @return Orders
      */
     public function getIdOrders()
     {
@@ -214,11 +215,11 @@ class OrdersProducts
     /**
      * Set idProducts
      *
-     * @param \LaVestima\HannaAgency\OrderBundle\Entity\Products $idProducts
+     * @param Products $idProducts
      *
      * @return OrdersProducts
      */
-    public function setIdProducts(\LaVestima\HannaAgency\OrderBundle\Entity\Products $idProducts = null)
+    public function setIdProducts(Products $idProducts = null)
     {
         $this->idProducts = $idProducts;
 
@@ -228,7 +229,7 @@ class OrdersProducts
     /**
      * Get idProducts
      *
-     * @return \LaVestima\HannaAgency\OrderBundle\Entity\Products
+     * @return Products
      */
     public function getIdProducts()
     {
@@ -238,11 +239,11 @@ class OrdersProducts
     /**
      * Set idStatuses
      *
-     * @param \LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses $idStatuses
+     * @param OrdersStatuses $idStatuses
      *
      * @return OrdersProducts
      */
-    public function setIdStatuses(\LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses $idStatuses = null)
+    public function setIdStatuses(OrdersStatuses $idStatuses = null)
     {
         $this->idStatuses = $idStatuses;
 
@@ -252,7 +253,7 @@ class OrdersProducts
     /**
      * Get idStatuses
      *
-     * @return \LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses
+     * @return OrdersStatuses
      */
     public function getIdStatuses()
     {

@@ -17,7 +17,7 @@ class UserController extends Controller {
 	public function showAction($pathSlug) {
 		$user = $this->get('user_crud_controller')
 			->readOneEntityBy(['pathSlug' => $pathSlug]);
-
+		
 		$producer = $customer = null;
 		
 		if ($user->getIdRoles()->getCode() === 'ROLE_PRODUCER') {

@@ -1,0 +1,18 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}Order{% endblock %}
+
+{% block content %}
+    {{ order.datePlaced | date('d.m.Y') }}
+    {{ order.idCustomers.fullName }}
+
+    <br><br>
+    {% if ordersProducts is not empty %}
+        {% for ordersProduct in ordersProducts %}
+            {#<a href="{{ path('') }}"></a>#}
+            {{ ordersProduct.idProducts.name }}
+            {{ ordersProduct.quantity }}
+            <br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

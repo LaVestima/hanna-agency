@@ -1,0 +1,14 @@
+.entity-show {
+  width: 100%;
+  max-width: 800px;
+  td {
+    padding: 10px;
+    &:first-child {
+      text-align: right;
+      font-weight: bold;
+    }
+    &:last-child {
+      text-align: left;
+    }
+  }
+}

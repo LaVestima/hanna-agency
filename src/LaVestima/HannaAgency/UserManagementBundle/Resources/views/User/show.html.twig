@@ -1,17 +1,40 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/entity-show.html.twig' %}
 
 {% block title %}User{% endblock %}
 
 {% block content %}
-    {{ user.login }}
+    {{ user.login }}<br>
+    {{ user.email }}<br>
+    {{ user.idRoles.name }}
 
     <br><br>
 
     {% if customer is defined and customer is not null %}
-        Customer<br>
-        {{ customer.fullName }}
+        <table class="entity-show">
+            <tr>
+                <td>
+                    Identification Number
+                </td>
+                <td>
+                    {{ customer.identificationNumber }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Gender
+                </td>
+                <td>
+                    {{ customer.gender }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Full Name
+                </td>
+                <td>
+                    {{ customer.fullName }}
+                </td>
+            </tr>
+        </table>
     {% endif %}
-    <br><br>
-    Name <br>
-    Surname <br>
 {% endblock %}
