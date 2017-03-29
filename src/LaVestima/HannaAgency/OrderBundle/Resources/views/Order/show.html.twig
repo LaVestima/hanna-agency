@@ -1,4 +1,4 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/entity-list.html.twig' %}
 
 {% block title %}Order{% endblock %}
 
@@ -8,11 +8,25 @@
 
     <br><br>
     {% if ordersProducts is not empty %}
-        {% for ordersProduct in ordersProducts %}
-            {#<a href="{{ path('') }}"></a>#}
-            {{ ordersProduct.idProducts.name }}
-            {{ ordersProduct.quantity }}
-            <br>
-        {% endfor %}
+        <table class="entity-list orders-products-list">
+            {% for ordersProduct in ordersProducts %}
+                <tr>
+                    <td>
+                        <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProducts.pathSlug}) }}">
+                            {{ ordersProduct.idProducts.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ ordersProduct.quantity }}
+                    </td>
+                    <td>
+                        {{ ordersProduct.discount }}
+                    </td>
+                    <td>
+                        {{ ordersProduct.idStatuses.name }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     {% endif %}
 {% endblock %}

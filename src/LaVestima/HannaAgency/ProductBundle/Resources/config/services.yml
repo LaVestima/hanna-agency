@@ -2,3 +2,6 @@ services:
 #    product.example:
 #        class: LaVestima\HannaAgency\ProductBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+    product_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
+        arguments: ['@doctrine']

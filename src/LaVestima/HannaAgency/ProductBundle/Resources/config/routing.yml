@@ -1,3 +1,6 @@
 #product_homepage:
 #    path:     /
 #    defaults: { _controller: ProductBundle:Default:index }
+product_show:
+    path: /product/show/{pathSlug}
+    defaults: { _controller: ProductBundle:Product:show, pathSlug: '' }
