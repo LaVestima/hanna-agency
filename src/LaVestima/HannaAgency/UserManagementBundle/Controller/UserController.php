@@ -27,11 +27,18 @@ class UserController extends Controller {
 			$customer = $this->get('customer_crud_controller')
 				->readOneEntityBy(['idUsers' => $user]);
 		}
+
+		$configuration = $this->get('configuration_crud_controller')
+            ->readOneEntityBy(['idUsers' => $user]);
+		if ($configuration) {
+		    $configuration = json_decode($configuration->getConfiguration());
+        }
 		
 		return $this->render('@UserManagement/User/show.html.twig', [
 			'user' => $user,
 			'producer' => $producer,
 			'customer' => $customer,
+            'configuration' => $configuration,
 		]);
 	}
 }

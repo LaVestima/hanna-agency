@@ -9,3 +9,7 @@ services:
     role_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudController
         arguments: ['@doctrine']
+
+    configuration_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\ConfigurationCrudController
+        arguments: ['@doctrine']

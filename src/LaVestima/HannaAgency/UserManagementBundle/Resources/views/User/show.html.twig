@@ -37,4 +37,11 @@
             </tr>
         </table>
     {% endif %}
+
+    {% if configuration is defined and configuration is not null %}
+        Configuration:
+        <br>
+        Dark mode:
+        {{ configuration.dark_mode ? 'true' : 'false' }}
+    {% endif %}
 {% endblock %}
