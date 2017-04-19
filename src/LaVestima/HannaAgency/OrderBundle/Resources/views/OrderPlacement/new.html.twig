@@ -4,7 +4,7 @@
 
 {% block content %}
     {{ form_start(form) }}
-        {% for key, product in products %}
+        {% for key, product in form.products %}
             {{ form_widget(form.products[key]) }}
             {{ form_label(form.products[key]) }}
             <br>

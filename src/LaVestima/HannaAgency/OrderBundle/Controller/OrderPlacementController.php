@@ -9,20 +9,32 @@
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 
+use LaVestima\HannaAgency\OrderBundle\Form\Helper\ProductPlacementHelper;
 use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class OrderPlacementController extends Controller {
-    public function newAction() {
+    public function newAction(Request $request) {
         $products = $this->get('product_crud_controller')
             ->readAllEntities();
 
-        $form = $this->createForm(PlaceOrderType::class, $products, [
+        $productPlacement = new ProductPlacementHelper();
+
+        $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
             'products' => $products
         ]);
 
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $selectedProducts = $form->getData();
+
+            foreach ($productPlacement->products as $selectedProduct) {
+                echo $selectedProduct->getId();
+            }
+        }
+
         return $this->render('@Order/OrderPlacement/new.html.twig', [
-            'products' => $products,
             'form' => $form->createView(),
         ]);
     }
