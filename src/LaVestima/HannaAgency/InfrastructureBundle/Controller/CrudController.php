@@ -8,7 +8,7 @@ abstract class CrudController extends Controller {
 	protected $doctrine;
 	protected $manager;
 
-	private $userClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Users';
+//	private $userClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Users';
 	protected $entityClass;
 
 	public function __construct($doctrine) {
@@ -16,13 +16,17 @@ abstract class CrudController extends Controller {
 		$this->manager = $this->doctrine->getManager();
 	}
 
-	/**
+    /**
 	 * @param $entity
 	 */
 	public function createEntity($entity) {
-		$entity->setDateCreated(new \DateTime('now'));
+	    if (method_exists($entity, 'setDateCreated')) {
+            $entity->setDateCreated(new \DateTime('now'));
+        }
 		// TODO: add user and date created
+
 		$em = $this->manager;
+	    $entity = $em->merge($entity);
 		$em->persist($entity);
 		$em->flush();
 	}

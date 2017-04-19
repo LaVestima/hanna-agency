@@ -63,7 +63,7 @@ class OrdersProducts
     /**
      * @var Products
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
