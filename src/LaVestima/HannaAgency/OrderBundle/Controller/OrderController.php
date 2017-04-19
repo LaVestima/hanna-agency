@@ -26,4 +26,9 @@ class OrderController extends Controller {
 			'ordersProducts' => $ordersProducts,
 		]);
 	}
+
+	public function newAction() {
+
+	    return $this->render('@Order/Order/new.html.twig');
+    }
 }

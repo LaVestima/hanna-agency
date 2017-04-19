@@ -9,3 +9,15 @@ order_list:
 order_show:
     path: /order/show/{pathSlug}
     defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
+
+order_new:
+    path: /order/new
+    defaults: { _controller: OrderBundle:Order:new }
+
+order_placement_new:
+    path: /order_placement/new
+    defaults: { _controller: OrderBundle:OrderPlacement:new }
+
+order_placement_summary:
+    path: /order_placement/summary
+    defaults: { _controller: OrderBundle:OrderPlacement:summary }

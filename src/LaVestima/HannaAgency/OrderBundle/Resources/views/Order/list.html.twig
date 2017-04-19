@@ -2,6 +2,19 @@
 
 {% block title %}Order list{% endblock %}
 
+{% block actionBar %}
+    <a href="{{ path('order_new') }}">
+        <div class="button action-bar-button">
+            New order
+        </div>
+    </a>
+    <a href="">
+        <div class="button action-bar-button">
+            Deleted orders
+        </div>
+    </a>
+{% endblock %}
+
 {% block content %}
     <table class="entity-list order-list">
         <tr>
