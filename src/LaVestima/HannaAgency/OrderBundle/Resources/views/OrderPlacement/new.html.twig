@@ -9,5 +9,9 @@
             {{ form_label(form.products[key]) }}
             <br>
         {% endfor %}
+        {% for quantity in form.quantities %}
+            {{ form_widget(quantity) }}
+            <br>
+        {% endfor %}
     {{ form_end(form) }}
 {% endblock %}

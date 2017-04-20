@@ -7,6 +7,7 @@ use LaVestima\HannaAgency\OrderBundle\Form\Helper\ProductPlacementHelper;
 use LaVestima\HannaAgency\OrderBundle\Form\OrderSummaryType;
 use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrderPlacementController extends Controller {
@@ -19,6 +20,13 @@ class OrderPlacementController extends Controller {
         $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
             'products' => $products
         ]);
+
+        foreach ($products as $product) {
+            $form->get('quantities')->add('quantity_' . $product->getId(), IntegerType::class, [
+                'data' => 0,
+                'empty_data' => 0,
+            ]);
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -36,7 +44,9 @@ class OrderPlacementController extends Controller {
     }
 
     public function summaryAction(Request $request) {
+//        $productPlacement = $request->getSession()->get('productPlacement');
         $selectedProducts = $request->getSession()->get('productPlacement')->products;
+        $selectedQuantities = $request->getSession()->get('productPlacement')->quantities;
 
         $form = $this->createForm(OrderSummaryType::class);
 
@@ -56,7 +66,9 @@ class OrderPlacementController extends Controller {
         }
 
         return $this->render('@Order/OrderPlacement/summary.html.twig', [
+//            'productPlacement' => $productPlacement,
             'selectedProducts' => $selectedProducts,
+            'selectedQuantities' => $selectedQuantities,
             'form' => $form->createView(),
         ]);
     }

@@ -7,6 +7,11 @@
     {% for product in selectedProducts %}
         {{ product.name }}<br>
     {% endfor %}
+    {% for quantity in selectedQuantities %}
+        {% if quantity > 0 %}
+            {{ quantity }}<br>
+        {% endif %}
+    {% endfor %}
 
     {{ form_start(form) }}
     {{ form_end(form) }}
