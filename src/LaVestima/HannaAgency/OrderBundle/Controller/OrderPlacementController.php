@@ -34,8 +34,11 @@ class OrderPlacementController extends Controller {
                 echo $selectedProduct->getId();
             }
 
-            $request->getSession()->set('productPlacement', $productPlacement);
-            return $this->redirectToRoute('order_placement_summary');
+            if (!empty($productPlacement->products)) {
+                // TODO: Add "Order cannot be empty" flash
+                $request->getSession()->set('productPlacement', $productPlacement);
+                return $this->redirectToRoute('order_placement_summary');
+            }
         }
 
         return $this->render('@Order/OrderPlacement/new.html.twig', [
