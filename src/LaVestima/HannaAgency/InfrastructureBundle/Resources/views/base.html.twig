@@ -49,4 +49,8 @@
     {{ block('stylesheets') }}
 {% endif %}
 
+{% if block('javascripts') is defined %}
+    {{ block('javascripts') }}
+{% endif %}
+
 </html>

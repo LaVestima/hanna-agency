@@ -1,0 +1,16 @@
+.place-order-form {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  .product-list-names {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .product-list-quantities {
+    margin-left: 10px;
+    input {
+      padding: 5px;
+    }
+  }
+}
