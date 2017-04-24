@@ -9,7 +9,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 /**
  * Orders
  *
- * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Orders_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"}), @ORM\Index(name="Orders_ID_USERS_FK", columns={"ID_USERS"})})
+ * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Orders_User_Created_FK", columns={"User_Created"}), @ORM\Index(name="Orders_User_Deleted_FK", columns={"User_Deleted"}), @ORM\Index(name="Orders_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"})})
  * @ORM\Entity
  */
 class Orders
@@ -38,20 +38,6 @@ class Orders
     private $dateDeleted;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="User_Created", type="integer", nullable=false)
-     */
-    private $userCreated = '0';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="User_Deleted", type="integer", nullable=true)
-     */
-    private $userDeleted;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="Date_Placed", type="datetime", nullable=false)
@@ -74,6 +60,27 @@ class Orders
      * })
      */
     private $idCustomers;
+
+    /**
+     * @var Users
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="User_Created", referencedColumnName="ID")
+     * })
+     */
+    private $userCreated;
+
+    /**
+     * @var Users
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="User_Deleted", referencedColumnName="ID")
+     * })
+     */
+    private $userDeleted;
+
 
 
     /**
@@ -132,54 +139,6 @@ class Orders
     public function getDateDeleted()
     {
         return $this->dateDeleted;
-    }
-
-    /**
-     * Set userCreated
-     *
-     * @param integer $userCreated
-     *
-     * @return Orders
-     */
-    public function setUserCreated($userCreated)
-    {
-        $this->userCreated = $userCreated;
-
-        return $this;
-    }
-
-    /**
-     * Get userCreated
-     *
-     * @return integer
-     */
-    public function getUserCreated()
-    {
-        return $this->userCreated;
-    }
-
-    /**
-     * Set userDeleted
-     *
-     * @param integer $userDeleted
-     *
-     * @return Orders
-     */
-    public function setUserDeleted($userDeleted)
-    {
-        $this->userDeleted = $userDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get userDeleted
-     *
-     * @return integer
-     */
-    public function getUserDeleted()
-    {
-        return $this->userDeleted;
     }
 
     /**
@@ -252,5 +211,53 @@ class Orders
     public function getIdCustomers()
     {
         return $this->idCustomers;
+    }
+
+    /**
+     * Set userCreated
+     *
+     * @param Users $userCreated
+     *
+     * @return Orders
+     */
+    public function setUserCreated(Users $userCreated = null)
+    {
+        $this->userCreated = $userCreated;
+
+        return $this;
+    }
+
+    /**
+     * Get userCreated
+     *
+     * @return Users
+     */
+    public function getUserCreated()
+    {
+        return $this->userCreated;
+    }
+
+    /**
+     * Set userDeleted
+     *
+     * @param Users $userDeleted
+     *
+     * @return Orders
+     */
+    public function setUserDeleted(Users $userDeleted = null)
+    {
+        $this->userDeleted = $userDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get userDeleted
+     *
+     * @return Users
+     */
+    public function getUserDeleted()
+    {
+        return $this->userDeleted;
     }
 }

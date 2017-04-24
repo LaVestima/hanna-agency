@@ -42,7 +42,7 @@
                 {{ order.idCustomers.fullName }}
             </td>
             <td>
-                {{ order.idUsers.login }}
+                {{ order.userCreated.login }}
             </td>
             <td class="entity-list-cell">
                 <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
