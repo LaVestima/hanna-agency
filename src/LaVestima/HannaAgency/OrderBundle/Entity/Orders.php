@@ -75,17 +75,6 @@ class Orders
      */
     private $idCustomers;
 
-    /**
-     * @var Users
-     *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
-     */
-    private $idUsers;
-
-
 
     /**
      * Get id
@@ -263,29 +252,5 @@ class Orders
     public function getIdCustomers()
     {
         return $this->idCustomers;
-    }
-
-    /**
-     * Set idUsers
-     *
-     * @param Users $idUsers
-     *
-     * @return Orders
-     */
-    public function setIdUsers(Users $idUsers = null)
-    {
-        $this->idUsers = $idUsers;
-
-        return $this;
-    }
-
-    /**
-     * Get idUsers
-     *
-     * @return Users
-     */
-    public function getIdUsers()
-    {
-        return $this->idUsers;
     }
 }
