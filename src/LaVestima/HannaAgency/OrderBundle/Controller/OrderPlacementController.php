@@ -35,9 +35,11 @@ class OrderPlacementController extends Controller {
             }
 
             if (!empty($productPlacement->products)) {
-                // TODO: Add "Order cannot be empty" flash
                 $request->getSession()->set('productPlacement', $productPlacement);
                 return $this->redirectToRoute('order_placement_summary');
+            }
+            else {
+                // TODO: Add "Order cannot be empty" flash
             }
         }
 

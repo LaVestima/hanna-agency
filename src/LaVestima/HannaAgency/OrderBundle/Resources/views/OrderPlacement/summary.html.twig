@@ -4,15 +4,28 @@
 
 {% block content %}
     Selected products: <br>
-    {% for product in selectedProducts %}
-        {{ product.name }}<br>
-    {% endfor %}
-    {% for quantity in selectedQuantities %}
-        {% if quantity > 0 %}
-            x{{ quantity }}<br>
-        {% endif %}
-    {% endfor %}
-
+    <div class="place-order-summary">
+        <div class="product-list-names">
+            {% for product in selectedProducts %}
+                {{ product.name }}<br>
+            {% endfor %}
+        </div>
+        <div class="product-list-quantities">
+            {% for quantity in selectedQuantities %}
+                {% if quantity > 0 %}
+                    x{{ quantity }}<br>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
     {{ form_start(form) }}
     {{ form_end(form) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter='scssphp' output='css/app.css'
+    '@OrderBundle/Resources/public/css/OrderPlacement/summary.scss'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
