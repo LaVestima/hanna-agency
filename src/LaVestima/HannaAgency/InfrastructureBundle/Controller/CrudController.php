@@ -8,12 +8,14 @@ abstract class CrudController extends Controller {
 	protected $doctrine;
 	protected $manager;
 
-//	private $userClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Users';
+	protected $user;
+
 	protected $entityClass;
 
-	public function __construct($doctrine) {
+	public function __construct($doctrine, $tokenStorage) {
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
+		$this->user = $tokenStorage->getToken()->getUser();
 	}
 
     /**
@@ -23,7 +25,9 @@ abstract class CrudController extends Controller {
 	    if (method_exists($entity, 'setDateCreated')) {
             $entity->setDateCreated(new \DateTime('now'));
         }
-		// TODO: add user and date created
+        if (method_exists($entity, 'setUserCreated')) {
+            $entity->setUserCreated($this->user);
+        }
 
 		$em = $this->manager;
 	    $entity = $em->merge($entity);
@@ -97,6 +101,7 @@ abstract class CrudController extends Controller {
 	 * @param $entity
 	 */
 	protected function purgeEntity($entity) {
+	    // TODO: add user and date deleted
 		$em = $this->manager;
 		$em->remove($entity);
 		$em->flush();
@@ -110,9 +115,4 @@ abstract class CrudController extends Controller {
 			->getRepository($this->entityClass)
 			->findAll();
 	}
-
-//	private function getCurrentUser() {
-//		return $this->get('security.token_storage')
-//			->getToken()->getUser();
-//	}
 }

@@ -4,7 +4,7 @@ services:
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
     order_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudController
-        arguments: ['@doctrine']
+        arguments: ['@doctrine', '@security.token_storage']
 
     order_product_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderProductCrudController

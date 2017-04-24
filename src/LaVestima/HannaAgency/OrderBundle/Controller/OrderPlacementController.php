@@ -2,6 +2,8 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
+use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
+use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts;
 use LaVestima\HannaAgency\OrderBundle\Form\Helper\ProductPlacementHelper;
 use LaVestima\HannaAgency\OrderBundle\Form\OrderSummaryType;
@@ -57,16 +59,29 @@ class OrderPlacementController extends Controller {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $order = new Orders();
+            $order->setDatePlaced(new \DateTime('now'));
+
+            $order->setIdCustomers(
+                $this->get('customer_crud_controller')
+                    ->readOneEntityBy(['lastName' => 'Sanger'])
+            );
+
+//            $order->
+
+                $this->get('order_crud_controller')
+                    ->createEntity($order);
+
             foreach ($selectedProducts as $selectedProduct) {
                 $orderProduct = new OrdersProducts();
-                var_dump($orderProduct);
+//                var_dump($orderProduct);
 
                 $orderProduct->setIdProducts($selectedProduct);
-                var_dump($orderProduct);
+//                var_dump($orderProduct);
 
                 $this->get('order_product_crud_controller')
                     ->createEntity($orderProduct);
-                var_dump($orderProduct);
+//                var_dump($orderProduct);
             }
         }
 

@@ -74,7 +74,9 @@ class Users implements UserInterface, \Serializable
 	 */
 	private $pathSlug = '';
 
-
+    public function __toString() {
+        return (string)$this->id;
+    }
 
     /**
      * Get id
