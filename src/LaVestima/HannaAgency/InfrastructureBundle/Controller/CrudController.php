@@ -2,6 +2,7 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 abstract class CrudController extends Controller {
@@ -27,6 +28,9 @@ abstract class CrudController extends Controller {
         }
         if (method_exists($entity, 'setUserCreated')) {
             $entity->setUserCreated($this->user);
+        }
+        if (method_exists($entity, 'setPathSlug')) {
+	        $entity->setPathSlug(CrudHelper::generatePathSlug());
         }
 
 		$em = $this->manager;

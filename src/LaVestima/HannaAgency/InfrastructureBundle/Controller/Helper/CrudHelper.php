@@ -5,7 +5,7 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper;
 use RandomLib\Factory;
 
 class CrudHelper {
-	public function generatePathSlug() {
+	public static function generatePathSlug() {
 		$factory = new Factory();
 		$generator = $factory->getMediumStrengthGenerator();
 		
