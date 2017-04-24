@@ -1,0 +1,57 @@
+#!/bin/bash
+
+pathToProject="/home/lavestima/Desktop/websites/bachelor"
+counter=( 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 )
+bundles=( "AccessControlBundle" "MoneyBundle" "MoneyBundle" "LocationBundle" "LocationBundle" "LocationBundle" "CustomerBundle" "OrderBundle" "OrderBundle" "OrderBundle" "InvoiceBundle" "InvoiceBundle" "ProductBundle" "ProductBundle" "ProductBundle" "ProductBundle" "UserManagementBundle" "UserManagementBundle" )
+tables=( "Tokens" "Currencies" "CurrenciesRates" "Countries" "Cities" "Addresses" "Customers" "Orders" "OrdersProducts" "OrdersStatuses" "InvoicesProducts" "Invoices" "Categories" "Products" "Sizes" "ProductsSizes" "Users" "Roles" )
+
+for i in "$@"
+do
+	case $i in
+	    -r=*|--reset=*)
+	    RESET="${i#*=}"
+	    shift
+	    ;;
+	esac
+done
+
+if [ ${RESET} ]; then
+	if [ ${RESET} = "true" ]; then
+		echo "RESET is true, deleting entities!"
+		for i in "${counter[@]}"
+		do
+			rm -f $pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Resources/config/doctrine/${tables[$i-1]}.php
+			echo "Deleted $pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Resources/config/doctrine/${tables[$i-1]}.php"
+			rm -f $pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Entity/${tables[$i-1]}.php
+			echo "Deleted $pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Entity/${tables[$i-1]}.php"
+		done	
+	elif [ ${RESET} = "false" ]; then
+		echo "RESET is false, entities will not be deleted!"
+	else
+		echo "Wrong RESET value! Available values: true, false!"
+		exit 1
+	fi
+fi
+
+for i in "${counter[@]}"
+do
+	printf "\n"
+	echo "-------------------------------------------------"
+	echo "\"${tables[$i-1]}\""
+	if [ ! -d "$pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}" ]; then
+		echo "Bundle does not exist!"
+	else
+		if [ ! -f "$pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Entity/${tables[$i-1]}.php" ]; then
+			php $pathToProject/bin/console doctrine:mapping:convert annotation \
+			    $pathToProject/src/LaVestima/HannaAgency/"${bundles[$i-1]}"/Resources/config/doctrine \
+			    --from-database \
+			    --filter="\b${tables[$i-1]}\b"
+			php $pathToProject/bin/console doctrine:mapping:import --force "${bundles[$i-1]}" \
+			    annotation --filter="\b${tables[$i-1]}\b"
+			php $pathToProject/bin/console doctrine:generate:entities --no-backup ${bundles[$i-1]}:${tables[$i-1]}
+			rm -rf $pathToProject/src/LaVestima/HannaAgency/${bundles[$i-1]}/Resources/config/doctrine
+		else
+			echo Entity already exists!
+		fi
+	fi
+done
