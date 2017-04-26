@@ -346,8 +346,7 @@ CREATE TABLE IF NOT EXISTS Orders_Products (
 	ID_PRODUCTS INTEGER NOT NULL,
 	ID_STATUSES INTEGER NOT NULL DEFAULT 1,
 	Quantity INTEGER NOT NULL,
-	Discount INTEGER NOT NULL,
-	Price_Final DECIMAL(10, 2) NOT NULL,
+	Discount INTEGER NOT NULL DEFAULT 0,
 	Note VARCHAR(200),
 	CONSTRAINT Orders_Products_PK PRIMARY KEY (ID),
 	CONSTRAINT Orders_Products_ID_ORDERS_FK FOREIGN KEY (ID_ORDERS) REFERENCES Orders(ID)
@@ -502,5 +501,5 @@ INSERT INTO Orders_Statuses (ID, Name) VALUES (3, 'Completed');
 INSERT INTO Orders_Statuses (ID, Name) VALUES (4, 'Rejected');
 
 -- INSERT INTO Orders_Products () VALUES ();
-INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount, Price_Final) VALUES (1, 1, 1, 1, 5, 10, 72.99);
-INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount, Price_Final) VALUES (2, 1, 2, 1, 12, 0, 12.5);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (1, 1, 1, 1, 5, 10);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (2, 1, 2, 1, 12, 0);

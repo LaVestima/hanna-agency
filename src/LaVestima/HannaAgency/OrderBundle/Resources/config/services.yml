@@ -8,4 +8,8 @@ services:
 
     order_product_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderProductCrudController
-        arguments: ['@doctrine']
+        arguments: ['@doctrine', '@security.token_storage']
+
+    order_status_crud_controller:
+        class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudController
+        arguments: ['@doctrine', '@security.token_storage']

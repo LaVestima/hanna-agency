@@ -34,14 +34,7 @@ class OrdersProducts
      *
      * @ORM\Column(name="Discount", type="integer", nullable=false)
      */
-    private $discount;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Price_Final", type="decimal", precision=10, scale=2, nullable=false)
-     */
-    private $priceFinal;
+    private $discount = 0;
 
     /**
      * @var string
@@ -138,30 +131,6 @@ class OrdersProducts
     public function getDiscount()
     {
         return $this->discount;
-    }
-
-    /**
-     * Set priceFinal
-     *
-     * @param string $priceFinal
-     *
-     * @return OrdersProducts
-     */
-    public function setPriceFinal($priceFinal)
-    {
-        $this->priceFinal = $priceFinal;
-
-        return $this;
-    }
-
-    /**
-     * Get priceFinal
-     *
-     * @return string
-     */
-    public function getPriceFinal()
-    {
-        return $this->priceFinal;
     }
 
     /**

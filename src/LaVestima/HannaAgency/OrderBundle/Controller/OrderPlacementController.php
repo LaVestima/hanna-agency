@@ -32,10 +32,6 @@ class OrderPlacementController extends Controller {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($productPlacement->products as $selectedProduct) {
-                echo $selectedProduct->getId();
-            }
-
             if (!empty($productPlacement->products)) {
                 $request->getSession()->set('productPlacement', $productPlacement);
                 return $this->redirectToRoute('order_placement_summary');
@@ -51,38 +47,44 @@ class OrderPlacementController extends Controller {
     }
 
     public function summaryAction(Request $request) {
-//        $productPlacement = $request->getSession()->get('productPlacement');
-        $selectedProducts = $request->getSession()->get('productPlacement')->products;
-        $selectedQuantities = $request->getSession()->get('productPlacement')->quantities;
+        $productPlacement = $request->getSession()->get('productPlacement');
+        $selectedProducts = $productPlacement->products;
+        $selectedQuantities = array_values(array_filter($productPlacement->quantities, function ($var) {
+            return ($var > 0);
+        }));
+
+        if (count($selectedProducts) != count($selectedQuantities)) {
+            // TODO: products and quantities must be the same length
+            var_dump('No!!!!');
+
+        }
 
         $form = $this->createForm(OrderSummaryType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = new Orders();
-            $order->setDatePlaced(new \DateTime('now'));
+            $order = $this->createNewOrder();
 
-            $order->setIdCustomers(
-                $this->get('customer_crud_controller')
-                    ->readOneEntityBy(['lastName' => 'Sanger'])
-            );
+            $order = $this->get('order_crud_controller')
+                ->createEntity($order);
 
-//            $order->
-
-                $this->get('order_crud_controller')
-                    ->createEntity($order);
-
-            foreach ($selectedProducts as $selectedProduct) {
+            foreach ($selectedProducts as $key => $selectedProduct) {
                 $orderProduct = new OrdersProducts();
-//                var_dump($orderProduct);
 
+                $orderProduct->setIdOrders($order);
                 $orderProduct->setIdProducts($selectedProduct);
-//                var_dump($orderProduct);
+                $orderProduct->setIdStatuses(
+                    $this->get('order_status_crud_controller')
+                        ->readOneEntityBy(['name' => 'Queued'])
+                );
+                $orderProduct->setQuantity($selectedQuantities[$key]);
 
                 $this->get('order_product_crud_controller')
                     ->createEntity($orderProduct);
-//                var_dump($orderProduct);
             }
+            
+            // TODO: success flash
+            return $this->redirectToRoute('order_list');
         }
 
         return $this->render('@Order/OrderPlacement/summary.html.twig', [
@@ -91,5 +93,17 @@ class OrderPlacementController extends Controller {
             'selectedQuantities' => $selectedQuantities,
             'form' => $form->createView(),
         ]);
+    }
+
+    private function createNewOrder() {
+        $order = new Orders();
+
+        $order->setDatePlaced(new \DateTime('now'));
+        $order->setIdCustomers(
+            $this->get('customer_crud_controller')
+                ->readOneEntityBy(['lastName' => 'Sanger'])
+        );
+
+        return $order;
     }
 }
