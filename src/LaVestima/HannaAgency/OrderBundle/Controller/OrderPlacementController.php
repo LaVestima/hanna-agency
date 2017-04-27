@@ -17,9 +17,15 @@ class OrderPlacementController extends Controller {
         $products = $this->get('product_crud_controller')
             ->readAllEntities();
 
+        $customers = $this->get('customer_crud_controller')
+            ->readAllEntities();
+
         $productPlacement = new ProductPlacementHelper();
 
+        $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+
         $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
+            'customers' => $isAdmin ? $customers : null,
             'products' => $products
         ]);
 
@@ -33,7 +39,12 @@ class OrderPlacementController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($productPlacement->products)) {
+                $productPlacement->quantities = array_values(array_filter($productPlacement->quantities, function ($var) {
+                    return ($var > 0);
+                }));
+
                 $request->getSession()->set('productPlacement', $productPlacement);
+
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
@@ -49,14 +60,11 @@ class OrderPlacementController extends Controller {
     public function summaryAction(Request $request) {
         $productPlacement = $request->getSession()->get('productPlacement');
         $selectedProducts = $productPlacement->products;
-        $selectedQuantities = array_values(array_filter($productPlacement->quantities, function ($var) {
-            return ($var > 0);
-        }));
+        $selectedQuantities = $productPlacement->quantities;
 
         if (count($selectedProducts) != count($selectedQuantities)) {
             // TODO: products and quantities must be the same length
             var_dump('No!!!!');
-
         }
 
         $form = $this->createForm(OrderSummaryType::class);
@@ -64,6 +72,7 @@ class OrderPlacementController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $order = $this->createNewOrder();
+            $order->setIdCustomers($productPlacement->customers);
 
             $order = $this->get('order_crud_controller')
                 ->createEntity($order);
@@ -82,15 +91,13 @@ class OrderPlacementController extends Controller {
                 $this->get('order_product_crud_controller')
                     ->createEntity($orderProduct);
             }
-            
+
             // TODO: success flash
             return $this->redirectToRoute('order_list');
         }
 
         return $this->render('@Order/OrderPlacement/summary.html.twig', [
-//            'productPlacement' => $productPlacement,
-            'selectedProducts' => $selectedProducts,
-            'selectedQuantities' => $selectedQuantities,
+            'productPlacement' => $productPlacement,
             'form' => $form->createView(),
         ]);
     }
@@ -99,10 +106,6 @@ class OrderPlacementController extends Controller {
         $order = new Orders();
 
         $order->setDatePlaced(new \DateTime('now'));
-        $order->setIdCustomers(
-            $this->get('customer_crud_controller')
-                ->readOneEntityBy(['lastName' => 'Sanger'])
-        );
 
         return $order;
     }

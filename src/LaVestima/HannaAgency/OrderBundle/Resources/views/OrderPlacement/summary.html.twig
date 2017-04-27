@@ -3,15 +3,18 @@
 {% block title %}Order summary{% endblock %}
 
 {% block content %}
+    Customer:
+    {{ productPlacement.customers.firstName }} {{ productPlacement.customers.lastName }}
+    <br>
     Selected products: <br>
     <div class="place-order-summary">
         <div class="product-list-names">
-            {% for product in selectedProducts %}
+            {% for product in productPlacement.products %}
                 {{ product.name }}<br>
             {% endfor %}
         </div>
         <div class="product-list-quantities">
-            {% for quantity in selectedQuantities %}
+            {% for quantity in productPlacement.quantities %}
                 {% if quantity > 0 %}
                     x{{ quantity }}<br>
                 {% endif %}

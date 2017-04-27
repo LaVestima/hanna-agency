@@ -4,6 +4,10 @@
 
 {% block content %}
     {{ form_start(form) }}
+        <div>
+            {{ form_label(form.customers) }}
+            {{ form_widget(form.customers) }}
+        </div>
         <div class="place-order-form">
             <div class="product-list-names">
                 {% for key, product in form.products %}
@@ -15,8 +19,9 @@
             </div>
             <div class="product-list-quantities">
                 {% for quantity in form.quantities %}
-                    {{ form_widget(quantity) }}
-                    <br>
+                    <div>
+                        {{ form_widget(quantity) }}
+                    </div>
                 {% endfor %}
             </div>
         </div>
