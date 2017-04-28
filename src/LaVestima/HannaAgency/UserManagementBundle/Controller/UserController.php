@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserController extends Controller {
 	public function listAction() {
 		$users = $this->get('user_crud_controller')
-			->readAllEntities();
+			->readAllEntities()->getEntities();
 		
 		return $this->render('@UserManagement/User/list.html.twig', [
 			'users' => $users,

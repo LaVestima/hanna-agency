@@ -2,12 +2,15 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class OrderController extends Controller {
 	public function listAction() {
 		$orders = $this->get('order_crud_controller')
-			->readAllEntities();
+			->readAllEntities()
+            ->sortBy(['datePlaced' => 'DESC'])
+            ->getEntities();
 		
 		return $this->render('@Order/Order/list.html.twig', [
 			'orders' => $orders,
@@ -19,7 +22,8 @@ class OrderController extends Controller {
 			->readOneEntityBy(['pathSlug' => $pathSlug]);
 
 		$ordersProducts = $this->get('order_product_crud_controller')
-			->readEntitiesBy(['idOrders' => $order]);
+			->readEntitiesBy(['idOrders' => $order])
+            ->getEntities();
 		
 		return $this->render('@Order/Order/show.html.twig', [
 			'order' => $order,

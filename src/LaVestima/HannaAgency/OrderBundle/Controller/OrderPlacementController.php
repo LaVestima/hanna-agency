@@ -15,10 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 class OrderPlacementController extends Controller {
     public function newAction(Request $request) {
         $products = $this->get('product_crud_controller')
-            ->readAllEntities();
+            ->readAllEntities()->getEntities();
 
         $customers = $this->get('customer_crud_controller')
-            ->readAllEntities();
+            ->readAllEntities()->getEntities();
 
         $productPlacement = new ProductPlacementHelper();
 

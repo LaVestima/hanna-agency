@@ -31,8 +31,10 @@ class InvoiceController extends Controller {
 
 		$invoice = $this->get('invoice_crud_controller')
 			->readOneEntityBy(['pathSlug' => $pathSlug]);
+
 		$invoicesProducts = $this->get('invoice_product_crud_controller')
-			->readEntitiesBy(['idInvoices' => $invoice]);
+			->readEntitiesBy(['idInvoices' => $invoice])
+            ->getEntities();
 
 		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
 			'invoice' => $invoice,

@@ -13,7 +13,11 @@ abstract class CrudController extends Controller {
 
 	protected $entityClass;
 
-	public function __construct($doctrine, $tokenStorage) {
+	protected $entities = [];
+
+	public function __construct(/*$entityClass, */$doctrine, $tokenStorage) {
+//	    var_dump($entityClass);
+//	    $this->entityClass = $entityClass;
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
 		$this->user = $tokenStorage->getToken()->getUser();
@@ -78,9 +82,10 @@ abstract class CrudController extends Controller {
 	 * @return mixed
 	 */
 	public function readEntitiesBy(array $keyValueArray) {
-		return $this->doctrine
+		$this->entities = $this->doctrine
 			->getRepository($this->entityClass)
 			->findBy($keyValueArray);
+		return $this;
 	}
 
 	/**
@@ -92,6 +97,16 @@ abstract class CrudController extends Controller {
 			->getRepository($this->entityClass)
 			->findOneBy($keyValueArray);
 	}
+
+    /**
+     * @return object
+     */
+    public function readAllEntities() {
+        $this->entities = $this->doctrine
+            ->getRepository($this->entityClass)
+            ->findAll();
+        return $this;
+    }
 
 	/**
 	 * @param $entityId
@@ -113,12 +128,28 @@ abstract class CrudController extends Controller {
 		$em->flush();
 	}
 
-	/**
-	 * @return array
-	 */
-	public function readAllEntities() {
-		return $this->doctrine
-			->getRepository($this->entityClass)
-			->findAll();
-	}
+	public function getEntities() {
+	    return $this->entities;
+    }
+
+	public function sortBy(array $keyValueArray) { // TODO: finish
+        foreach ($keyValueArray as $key => $item) {
+            $func = 'get' . $key;
+
+            usort($this->entities, function($a, $b) use ($key, $item, $func) {
+                if ($item == 'ASC') {
+                    return $a->$func() <=> $b->$func();
+                }
+                else if ($item == 'DESC') {
+                    return $b->$func() <=> $a->$func();
+                }
+                else {
+                    // TODO: throw exception
+                }
+
+//                return $a->getDatePlaced() <=> $b->getDatePlaced();
+            });
+        }
+	    return $this;
+    }
 }
