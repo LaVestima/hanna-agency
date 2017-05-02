@@ -7,9 +7,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class OrderController extends Controller {
 	public function listAction() {
-		$orders = $this->get('order_crud_controller')
-			->readAllEntities()
-            ->sortBy(['datePlaced' => 'DESC'])
+	    $authChecker = $this->get('security.authorization_checker');
+
+        $orderCrudController = $this->get('order_crud_controller');
+        $orders = null;
+
+	    if ($authChecker->isGranted('ROLE_ADMIN')) {
+            $orders = $orderCrudController->readAllEntities();
+        }
+        else if ($authChecker->isGranted('ROLE_CUSTOMER')) {
+	        // TODO: change user to customer checking
+            $currentCustomer = $this->get('customer_crud_controller')
+                ->readOneEntityBy(['idUsers' => $this->getUser()]);
+	        $orders = $orderCrudController
+                ->readEntitiesBy(['idCustomers' => $currentCustomer]);
+        }
+        else {
+	        // TODO: exception ?? for ROLE_USER and lower
+        }
+
+        $orders = $orders->sortBy(['datePlaced' => 'DESC'])
             ->getEntities();
 		
 		return $this->render('@Order/Order/list.html.twig', [

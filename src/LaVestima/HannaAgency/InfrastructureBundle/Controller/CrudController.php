@@ -132,7 +132,7 @@ abstract class CrudController extends Controller {
 	    return $this->entities;
     }
 
-	public function sortBy(array $keyValueArray) { // TODO: finish
+	public function sortBy(array $keyValueArray) {
         foreach ($keyValueArray as $key => $item) {
             $func = 'get' . $key;
 
@@ -146,8 +146,6 @@ abstract class CrudController extends Controller {
                 else {
                     // TODO: throw exception
                 }
-
-//                return $a->getDatePlaced() <=> $b->getDatePlaced();
             });
         }
 	    return $this;
