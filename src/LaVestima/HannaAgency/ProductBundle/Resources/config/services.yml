@@ -5,3 +5,7 @@ services:
     product_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
         arguments: ['@doctrine', '@security.token_storage']
+
+    size_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudController
+        arguments: ['@doctrine', '@security.token_storage']

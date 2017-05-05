@@ -20,7 +20,9 @@ abstract class CrudController extends Controller {
 //	    $this->entityClass = $entityClass;
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
-		$this->user = $tokenStorage->getToken()->getUser();
+		if ($tokenStorage->getToken()) {
+            $this->user = $tokenStorage->getToken()->getUser();
+        }
 	}
 
     /**
