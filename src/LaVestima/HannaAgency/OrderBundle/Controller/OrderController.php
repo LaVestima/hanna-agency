@@ -36,7 +36,15 @@ class OrderController extends Controller {
 
 	public function showAction($pathSlug) {
 		$order = $this->get('order_crud_controller')
-			->readOneEntityBy(['pathSlug' => $pathSlug]);
+			->readOneEntityBy([
+			    'pathSlug' => $pathSlug,
+                'idCustomers' => $this->getCustomer() // TODO: not for admin+
+            ]);
+
+		if (!$order) {
+		    // TODO: 'no order found' flash
+		    return $this->redirectToRoute('order_list');
+        }
 
 		$ordersProducts = $this->get('order_product_crud_controller')
 			->readEntitiesBy(['idOrders' => $order])
@@ -51,5 +59,10 @@ class OrderController extends Controller {
 	public function newAction() {
 
 	    return $this->render('@Order/Order/new.html.twig');
+    }
+
+    public function getCustomer() {
+	    return $this->get('customer_crud_controller')
+            ->readOneEntityBy(['idUsers' => $this->getUser()]);
     }
 }

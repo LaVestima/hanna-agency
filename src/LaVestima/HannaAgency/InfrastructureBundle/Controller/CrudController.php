@@ -11,9 +11,11 @@ abstract class CrudController extends Controller {
 
 	protected $user;
 
-	protected $entityClass;
+	protected $entityClass = '';
 
 	protected $entities = [];
+
+	protected $query = '';
 
 	public function __construct(/*$entityClass, */$doctrine, $tokenStorage) {
 //	    var_dump($entityClass);
@@ -24,6 +26,10 @@ abstract class CrudController extends Controller {
             $this->user = $tokenStorage->getToken()->getUser();
         }
 	}
+
+	public function setEntityClass($entityClass) {
+	    $this->entityClass = $entityClass;
+    }
 
     /**
 	 * @param $entity
@@ -70,6 +76,7 @@ abstract class CrudController extends Controller {
 	 * @param $entityId
 	 */
 	public function deleteEntity($entityId = 0) {
+        // TODO: add user and date deleted
 		if ($entityId === 0) {
 			// TODO: throw error
 		}
@@ -124,14 +131,18 @@ abstract class CrudController extends Controller {
 	 * @param $entity
 	 */
 	protected function purgeEntity($entity) {
-	    // TODO: add user and date deleted
 		$em = $this->manager;
 		$em->remove($entity);
 		$em->flush();
 	}
 
 	public function getEntities() {
+	    // TODO: finish SELECT query here
 	    return $this->entities;
+    }
+
+    public function filterBy() {
+
     }
 
 	public function sortBy(array $keyValueArray) {
