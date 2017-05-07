@@ -136,6 +136,10 @@ abstract class CrudController extends Controller {
 		$em->flush();
 	}
 
+	// setEntities()
+
+    // addEntity()
+
 	public function getEntities() {
 	    // TODO: finish SELECT query here
 	    return $this->entities;

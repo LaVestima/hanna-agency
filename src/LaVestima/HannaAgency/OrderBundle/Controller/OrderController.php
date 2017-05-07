@@ -35,11 +35,27 @@ class OrderController extends Controller {
 	}
 
 	public function showAction($pathSlug) {
-		$order = $this->get('order_crud_controller')
-			->readOneEntityBy([
-			    'pathSlug' => $pathSlug,
-                'idCustomers' => $this->getCustomer() // TODO: not for admin+
-            ]);
+        $authChecker = $this->get('security.authorization_checker');
+        $orderCrudController = $this->get('order_crud_controller');
+
+        $order = null;
+
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            $order = $orderCrudController
+                ->readOneEntityBy([
+                    'pathSlug' => $pathSlug
+                ]);
+        }
+        else if ($authChecker->isGranted('ROLE_CUSTOMER')) {
+            $order = $orderCrudController
+                ->readOneEntityBy([
+                    'pathSlug' => $pathSlug,
+                    'idCustomers' => $this->getCustomer()
+                ]);
+        }
+        else {
+            // TODO: exception ?? for ROLE_USER and lower
+        }
 
 		if (!$order) {
 		    // TODO: 'no order found' flash
