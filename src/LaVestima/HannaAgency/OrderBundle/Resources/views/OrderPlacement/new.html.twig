@@ -5,8 +5,10 @@
 {% block content %}
     {{ form_start(form) }}
         <div>
-            {{ form_label(form.customers) }}
-            {{ form_widget(form.customers) }}
+            {% if form.customers is defined and form.customers is not null  %}
+                {{ form_label(form.customers) }}
+                {{ form_widget(form.customers) }}
+            {% endif %}
         </div>
         <div class="place-order-form">
             <div class="product-list-names">

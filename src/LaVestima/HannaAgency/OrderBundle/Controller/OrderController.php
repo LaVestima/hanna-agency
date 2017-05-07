@@ -2,10 +2,10 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OrderController extends Controller {
+class OrderController extends BaseController {
 	public function listAction() {
 	    $authChecker = $this->get('security.authorization_checker');
 
@@ -75,10 +75,5 @@ class OrderController extends Controller {
 	public function newAction() {
 
 	    return $this->render('@Order/Order/new.html.twig');
-    }
-
-    public function getCustomer() {
-	    return $this->get('customer_crud_controller')
-            ->readOneEntityBy(['idUsers' => $this->getUser()]);
     }
 }

@@ -2,17 +2,16 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
-use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts;
 use LaVestima\HannaAgency\OrderBundle\Form\Helper\ProductPlacementHelper;
 use LaVestima\HannaAgency\OrderBundle\Form\OrderSummaryType;
 use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 
-class OrderPlacementController extends Controller {
+class OrderPlacementController extends BaseController {
     public function newAction(Request $request) {
         $products = $this->get('product_crud_controller')
             ->readAllEntities()->getEntities();
@@ -22,7 +21,7 @@ class OrderPlacementController extends Controller {
 
         $productPlacement = new ProductPlacementHelper();
 
-        $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isAdmin();
 
         $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
             'customers' => $isAdmin ? $customers : null,
@@ -30,15 +29,20 @@ class OrderPlacementController extends Controller {
         ]);
 
         foreach ($products as $product) {
-            $form->get('quantities')->add('quantity_' . $product->getId(), IntegerType::class, [
-                'data' => 0,
-                'empty_data' => 0,
-            ]);
+            $form->get('quantities')
+                ->add('quantity_' . $product->getId(), IntegerType::class, [
+                    'data' => 0,
+                    'empty_data' => 0,
+                ]);
         }
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($productPlacement->products)) {
+                if (!$isAdmin) {
+                    $productPlacement->customers = $this->getCustomer();
+                }
+
                 $productPlacement->quantities = array_values(array_filter($productPlacement->quantities, function ($var) {
                     return ($var > 0);
                 }));
