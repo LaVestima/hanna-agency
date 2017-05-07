@@ -96,7 +96,11 @@ class OrderPlacementController extends BaseController {
                     ->createEntity($orderProduct);
             }
 
-            // TODO: success flash
+            $this->addFlash(
+                'success',
+                'Order placed successfully!'
+            );
+
             return $this->redirectToRoute('order_list');
         }
 

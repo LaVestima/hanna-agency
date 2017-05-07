@@ -35,6 +35,16 @@
         {{ block('content') }}
     </div>
 
+    <div class="flash-message-list">
+        {% for type, flash_messages in app.session.flashBag.all %}
+            {% for flash_message in flash_messages %}
+                <div class="flash-message flash-{{ type }}">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
     <div class="body-overlay"></div>
 </body>
 
@@ -48,6 +58,12 @@
 {% if block('stylesheets') is defined %}
     {{ block('stylesheets') }}
 {% endif %}
+
+{% javascripts
+    '@InfrastructureBundle/Resources/public/js/base.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
 
 {% if block('javascripts') is defined %}
     {{ block('javascripts') }}

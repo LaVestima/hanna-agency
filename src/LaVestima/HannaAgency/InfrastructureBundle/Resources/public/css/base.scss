@@ -1,4 +1,4 @@
-$main-theme-color: #A55800;
+$main-theme-color: #663399;
 $main-theme-color-light: $main-theme-color + 50;
 $main-theme-color-lighter: $main-theme-color + 100;
 $main-theme-color-dark: $main-theme-color - 50;
@@ -60,7 +60,6 @@ h1 {
 
 .page-content {
   padding: 10px;
-  //margin-top: 70px;
   .entity-list {
     .entity-list-row {
       padding: 5px 0;
@@ -71,6 +70,32 @@ h1 {
   }
 }
 
+.flash-message-list {
+  position: fixed;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  .flash-message {
+    height: 50px;
+    line-height: 50px;
+    border-radius: 10px;
+    width: 70%;
+    margin: 0 auto;
+    box-shadow: 0 0 10px #000;
+  }
+  .flash-success {
+    background-color: #00FF26;
+  }
+  .flash-notice {
+    background-color: #00EFFF;
+  }
+  .flash-warning {
+    background-color: #FFC900;
+  }
+  .flash-error {
+    background-color: #F21515;
+  }
+}
 
 .hidden {
   max-width: 0;

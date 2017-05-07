@@ -58,7 +58,11 @@ class OrderController extends BaseController {
         }
 
 		if (!$order) {
-		    // TODO: 'no order found' flash
+            $this->addFlash(
+                'warning',
+                'No order found!'
+            );
+
 		    return $this->redirectToRoute('order_list');
         }
 
