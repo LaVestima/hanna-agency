@@ -1,3 +1,10 @@
 #customer_homepage:
 #    path:     /
 #    defaults: { _controller: CustomerBundle:Default:index }
+customer_list:
+    path: /customer/list
+    defaults: { _controller: CustomerBundle:Customer:list }
+
+customer_show:
+    path: /customer/show/{pathSlug}
+    defaults: { _controller: CustomerBundle:Customer:show, pathSlug: '' }

@@ -34,7 +34,7 @@ class OrderController extends BaseController {
 		]);
 	}
 
-	public function showAction($pathSlug) {
+	public function showAction(string $pathSlug) {
         $authChecker = $this->get('security.authorization_checker');
         $orderCrudController = $this->get('order_crud_controller');
 

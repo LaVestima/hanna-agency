@@ -455,7 +455,7 @@ INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES 
 -- INSERT INTO Tokens () VALUES ();
 
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (1, '9276156937', 'Richard', 'McFarlin', 'M', 1, 'RichardRMcFarlin@teleworm.us', '479-316-2396', 2, 5, 'tt53zAw6IewAKQqhLT3tK3Bm4jxYRAOJ48aCif4p6T7BkCQW8v');
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, Path_Slug) VALUES (2, '1132466159', 'Lisa', 'Sanger', 'F', 2, 'LisaSanger@teleworm.us', '09805 81 50 95', 1, 'WNyPJ0er9sbE2V5vA2x0cTNPDovu35xdlJEt38BTDCGDLiiVY6');
+INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (2, '1132466159', 'Lisa', 'Sanger', 'F', 2, 'LisaSanger@teleworm.us', '09805 81 50 95', 1, 1, 'WNyPJ0er9sbE2V5vA2x0cTNPDovu35xdlJEt38BTDCGDLiiVY6');
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (3, '5438663546', 'Isobel', 'Briggs', 'F', 3, 'MeganHicks@teleworm.us', '077 3928 7528', 3, 3, 'F2zMfO7T0P0ilZDedkCuhPlq646b8XcfBHIfhzSIH42fsU4cxk');
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (4, '2211239911', 'Puck', 'van Uitert', 'O', 4, 'PuckvanUitert@rhyta.com', '06-15368249', 1, 4, 'PN2dJhsPz0h9tonhT3H5dWtkuOWBhZXpHr1h4y6QT4KotU7q9G');
 

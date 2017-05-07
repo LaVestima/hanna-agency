@@ -1,0 +1,68 @@
+{% extends '@Infrastructure/entity-list.html.twig' %}
+
+{% block title %}Customer list{% endblock %}
+
+{% block actionBar %}
+    g
+    {#<a href="{{ path('order_placement_new') }}">#}
+        {#<div class="button action-bar-button">#}
+            {#Place order#}
+        {#</div>#}
+    {#</a>#}
+    {#<a href="{{ path('order_new') }}">#}
+        {#<div class="button action-bar-button">#}
+            {#New order#}
+        {#</div>#}
+    {#</a>#}
+    {#<a href="">#}
+        {#<div class="button action-bar-button">#}
+            {#Deleted orders#}
+        {#</div>#}
+    {#</a>#}
+{% endblock %}
+
+{% block content %}
+    <table class="entity-list">
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Login
+            </th>
+        </tr>
+    {% for customer in customers %}
+        <tr class="entity-list-row">
+            <td>
+                {{ customer.identificationNumber }}
+            </td>
+            <td>
+                {{ customer.firstName }}
+            </td>
+            <td>
+                {{ customer.lastName }}
+            </td>
+            <td>
+                {{ customer.email }}
+            </td>
+            <td>
+                {{ customer.idUsers.login }}
+            </td>
+            <td class="entity-list-cell">
+                <a href="{{ path('customer_show', {'pathSlug': customer.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
