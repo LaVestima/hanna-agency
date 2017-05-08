@@ -19,8 +19,28 @@ class CustomerController extends BaseController {
         $customer = $this->get('customer_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
 
+        if (!$customer) {
+            $this->addFlash(
+                'warning',
+                'No customer found!'
+            );
+
+            return $this->redirectToRoute('customer_list');
+        }
+
+        $orders = $this->get('order_crud_controller')
+            ->readEntitiesBy(['idCustomers' => $customer])
+            ->getEntities();
+
+        // TODO: $invoices
+
         return $this->render('@Customer/Customer/show.html.twig', [
             'customer' => $customer,
+            'orders' => $orders,
         ]);
+    }
+
+    public function newAction() {
+
     }
 }

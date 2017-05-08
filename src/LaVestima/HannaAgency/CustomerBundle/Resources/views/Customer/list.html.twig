@@ -3,12 +3,11 @@
 {% block title %}Customer list{% endblock %}
 
 {% block actionBar %}
-    g
-    {#<a href="{{ path('order_placement_new') }}">#}
-        {#<div class="button action-bar-button">#}
-            {#Place order#}
-        {#</div>#}
-    {#</a>#}
+    <a href="{{ path('customer_new') }}">
+        <div class="button action-bar-button">
+            New Customer
+        </div>
+    </a>
     {#<a href="{{ path('order_new') }}">#}
         {#<div class="button action-bar-button">#}
             {#New order#}
