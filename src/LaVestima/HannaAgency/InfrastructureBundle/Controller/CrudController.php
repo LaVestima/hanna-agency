@@ -15,6 +15,7 @@ abstract class CrudController extends Controller {
 
 	protected $entities = [];
 
+	// TODO: realize the whole connection with custom queries
 	protected $query = '';
 
 	public function __construct(/*$entityClass, */$doctrine, $tokenStorage) {
@@ -27,9 +28,9 @@ abstract class CrudController extends Controller {
         }
 	}
 
-	public function setEntityClass($entityClass) {
-	    $this->entityClass = $entityClass;
-    }
+//	public function setEntityClass($entityClass) {
+//	    $this->entityClass = $entityClass;
+//    }
 
     /**
 	 * @param $entity
@@ -64,26 +65,38 @@ abstract class CrudController extends Controller {
 	}
 
 	/**
-	 * @param $entityId
+	 * @param $entity
+     * @param array $keyValueArray
 	 */
-	public function updateEntity($entityId) {
+	public function updateEntity($entity, array $keyValueArray) {
+        if (!$entity) {
+            // TODO: throw error
+        }
+
+        foreach ($keyValueArray as $key => $value) {
+            $methodName = 'set' . $key;
+            $entity->$methodName($value);
+        }
+
+        $this->manager->flush();
+
 		// TODO: add user and date updated
-		$entity = $this->readEntity($entityId);
 		// TODO: ...
 	}
 
 	/**
-	 * @param $entityId
+	 * @param $entity
 	 */
-	public function deleteEntity($entityId = 0) {
-        // TODO: add user and date deleted
-		if ($entityId === 0) {
+	public function deleteEntity($entity) {
+		if (!$entity) {
 			// TODO: throw error
 		}
-		$entity = $this->doctrine
-			->getRepository($this->entityClass)
-			->find($entityId);
+
+		// TODO: add method_exists ??
 		$entity->setDateDeleted(new \DateTime('now'));
+		$entity->setUserDeleted($this->user);
+
+		$this->manager->flush();
 	}
 
 	/**
@@ -111,20 +124,30 @@ abstract class CrudController extends Controller {
      * @return object
      */
     public function readAllEntities() {
+        // TODO: if dateDeleted and userDeleted are null
         $this->entities = $this->doctrine
             ->getRepository($this->entityClass)
             ->findAll();
         return $this;
     }
 
+    public function readAllDeletedEntities() {
+
+    }
+
 	/**
-	 * @param $entityId
+	 * @param $entity
 	 */
-	public function restoreEntity($entityId) {
-		$entity = $this->doctrine
-			->getRepository($this->entityClass)
-			->find($entityId);
+	public function restoreEntity($entity) {
+        if (!$entity) {
+            // TODO: throw error
+        }
+
+        // TODO: add method_exists ??
 		$entity->setDateDeleted(null);
+		$entity->setUserDeleted(null);
+
+		$this->manager->flush();
 	}
 
 	/**
@@ -145,25 +168,21 @@ abstract class CrudController extends Controller {
 	    return $this->entities;
     }
 
-    public function filterBy() {
-
-    }
-
 	public function sortBy(array $keyValueArray) {
-        foreach ($keyValueArray as $key => $item) {
-            $func = 'get' . $key;
+	    if (is_array($this->entities)) {
+            foreach ($keyValueArray as $key => $item) {
+                $methodName = 'get' . $key;
 
-            usort($this->entities, function($a, $b) use ($key, $item, $func) {
-                if ($item == 'ASC') {
-                    return $a->$func() <=> $b->$func();
-                }
-                else if ($item == 'DESC') {
-                    return $b->$func() <=> $a->$func();
-                }
-                else {
-                    // TODO: throw exception
-                }
-            });
+                usort($this->entities, function ($a, $b) use ($key, $item, $methodName) {
+                    if ($item == 'ASC') {
+                        return $a->$methodName() <=> $b->$methodName();
+                    } else if ($item == 'DESC') {
+                        return $b->$methodName() <=> $a->$methodName();
+                    } else {
+                        // TODO: throw exception
+                    }
+                });
+            }
         }
 	    return $this;
     }
