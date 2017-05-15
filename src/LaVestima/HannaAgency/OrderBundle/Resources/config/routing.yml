@@ -14,6 +14,10 @@ order_new:
     path: /order/new
     defaults: { _controller: OrderBundle:Order:new }
 
+order_delete:
+    path: /order/delete/{pathSlug}
+    defaults: { _controller: OrderBundle:Order:delete, pathSlug: '' }
+
 order_placement_new:
     path: /order_placement/new
     defaults: { _controller: OrderBundle:OrderPlacement:new }

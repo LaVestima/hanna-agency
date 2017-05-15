@@ -5,6 +5,12 @@
 {% block content %}
     {{ order.datePlaced | date('d.m.Y') }}
     {{ order.idCustomers.fullName }}
+    <br>
+    <a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">
+        <div class="button action-bar-button">
+            Delete Order
+        </div>
+    </a>
 
     <br><br>
     {% if ordersProducts is not empty %}
