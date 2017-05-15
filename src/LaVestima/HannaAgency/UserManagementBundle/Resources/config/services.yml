@@ -4,12 +4,12 @@ services:
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
     user_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController
-        arguments: ['@doctrine']
+        arguments: ['@doctrine', '@security.token_storage']
 
     role_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudController
-        arguments: ['@doctrine']
+        arguments: ['@doctrine', '@security.token_storage']
 
     configuration_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\ConfigurationCrudController
-        arguments: ['@doctrine']
+        arguments: ['@doctrine', '@security.token_storage']

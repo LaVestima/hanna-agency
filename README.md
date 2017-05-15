@@ -1,24 +1,23 @@
-Symfony Standard Edition
-========================
+# Hanna Agency (CRM)
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+## Content
+- Orders
+- Customers
+- Users
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+## TODO
+- Invoices
+- Products
+- Homepage / News
+- Settings
+- Forgot Password
+- Shopping Cart
+- QR Codes generation
+- Newsletter / Mailing list
+- API
 
-What's inside?
---------------
+## API
+coming soon
 
-The Symfony Standard Edition is configured with the following defaults:
 
-  * An AppBundle you can use to start coding;
-
-  * Twig as the only configured template engine;
-
-  * Doctrine ORM/DBAL;
-
-  * Swiftmailer;
-
-  * Annotations enabled for everything.
 
