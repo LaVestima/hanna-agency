@@ -2,8 +2,10 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 abstract class CrudController extends Controller {
 	protected $doctrine;
@@ -18,19 +20,16 @@ abstract class CrudController extends Controller {
 	// TODO: realize the whole connection with custom queries
 	protected $query = '';
 
-	public function __construct(/*$entityClass, */$doctrine, $tokenStorage) {
-//	    var_dump($entityClass);
-//	    $this->entityClass = $entityClass;
+	public function __construct(
+            Registry $doctrine,
+            TokenStorageInterface $tokenStorage) {
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
+
 		if ($tokenStorage->getToken()) {
             $this->user = $tokenStorage->getToken()->getUser();
         }
 	}
-
-//	public function setEntityClass($entityClass) {
-//	    $this->entityClass = $entityClass;
-//    }
 
     /**
 	 * @param $entity

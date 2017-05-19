@@ -44,6 +44,7 @@ class AccountActivationController extends Controller {
 	}
 
 	private function disableToken(Tokens $token) {
+        // TODO: change to CrudController's update method
 		$token->setDateExpired(new \DateTime('now'));
 		$this->getDoctrine()->getManager()->flush();
 	}

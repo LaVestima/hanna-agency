@@ -6,8 +6,4 @@ use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
 class TokenCrudController extends CrudController {
 	protected $entityClass = 'LaVestima\\HannaAgency\\AccessControlBundle\\Entity\\Tokens';
-
-	public function __construct($doctrine) {
-		$this->doctrine = $doctrine;
-	}
 }

@@ -4,8 +4,8 @@ services:
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
     invoice_crud_controller:
         class: LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudController
-        arguments: ['@doctrine']
+        autowire: true
 
     invoice_product_crud_controller:
         class: LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceProductCrudController
-        arguments: ['@doctrine']
+        autowire: true
