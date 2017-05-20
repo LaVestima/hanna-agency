@@ -139,8 +139,7 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Configurations (
 	ID INTEGER NOT NULL AUTO_INCREMENT,
 	ID_USERS INTEGER NOT NULL,
-	Locale VARCHAR(5) NOT NULL,
-	Dark_Mode TINYINT(1) DEFAULT 0,
+	Configuration JSON NOT NULL,
 	CONSTRAINT Configurations_PK PRIMARY KEY (ID),
 	CONSTRAINT Configurations_ID_USERS_U UNIQUE(ID_USERS),
 	CONSTRAINT Configurations_ID_USERS_FK FOREIGN KEY (ID_USERS) REFERENCES Users(ID)
@@ -449,6 +448,7 @@ INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
 
 -- INSERT INTO Configurations () VALUES ();
+INSERT INTO Configurations (ID, ID_USERS, Configuration) VALUES (1, 4, '{"locale": "en", "darkMode": false}');
 
 -- INSERT INTO Login_Attempts () VALUES ();
 

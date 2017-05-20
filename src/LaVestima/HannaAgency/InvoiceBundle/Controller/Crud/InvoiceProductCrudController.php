@@ -13,8 +13,4 @@ use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
 class InvoiceProductCrudController extends CrudController {
 	protected $entityClass = 'LaVestima\\HannaAgency\\InvoiceBundle\\Entity\\InvoicesProducts';
-	
-	public function __construct($doctrine) {
-		$this->doctrine = $doctrine;
-	}
 }

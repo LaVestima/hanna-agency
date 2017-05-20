@@ -41,7 +41,9 @@
     {% if configuration is defined and configuration is not null %}
         Configuration:
         <br>
+        Locale:
+        {{ configuration.locale }} <br>
         Dark mode:
-        {{ configuration.dark_mode ? 'true' : 'false' }}
+        {{ configuration.darkMode ? 'true' : 'false' }}
     {% endif %}
 {% endblock %}
