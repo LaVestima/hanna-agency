@@ -364,6 +364,11 @@ class Customers
         return $this->gender;
     }
 
+    public function getFullGender() {
+        return $this->gender == 'M' ? 'Male' :
+            ($this->gender == 'F' ? 'Female' : 'Other');
+    }
+
     /**
      * Set companyName
      *

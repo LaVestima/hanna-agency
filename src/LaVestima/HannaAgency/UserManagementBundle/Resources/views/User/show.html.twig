@@ -3,47 +3,74 @@
 {% block title %}User{% endblock %}
 
 {% block content %}
-    {{ user.login }}<br>
-    {{ user.email }}<br>
-    {{ user.idRoles.name }}
-
-    <br><br>
-
-    {% if customer is defined and customer is not null %}
-        <table class="entity-show">
+    <div class="module-box">
+        <div class="module-box-title">
+            General Information
+        </div>
+        <table class="entity-show-table">
             <tr>
                 <td>
-                    Identification Number
+                    Login
                 </td>
                 <td>
-                    {{ customer.identificationNumber }}
+                    {{ user.login }}
                 </td>
             </tr>
             <tr>
-                <td>
-                    Gender
-                </td>
-                <td>
-                    {{ customer.gender }}
-                </td>
+                <td>Email</td>
+                <td>{{ user.email }}</td>
             </tr>
             <tr>
-                <td>
-                    Full Name
-                </td>
-                <td>
-                    {{ customer.fullName }}
-                </td>
+                <td>Role</td>
+                <td>{{ user.idRoles.name }}</td>
             </tr>
         </table>
+    </div>
+
+
+    {% if customer is defined and customer is not null %}
+        <div class="module-box">
+            <div class="module-box-title">
+                Customer Information
+            </div>
+            <table class="entity-show-table">
+                <tr>
+                    <td>
+                        Identification Number
+                    </td>
+                    <td>
+                        {{ customer.identificationNumber }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Gender
+                    </td>
+                    <td>
+                        {{ customer.fullGender }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Full Name
+                    </td>
+                    <td>
+                        {{ customer.fullName }}
+                    </td>
+                </tr>
+            </table>
+        </div>
     {% endif %}
 
+
     {% if configuration is defined and configuration is not null %}
-        Configuration:
-        <br>
-        Locale:
-        {{ configuration.locale }} <br>
-        Dark mode:
-        {{ configuration.darkMode ? 'true' : 'false' }}
+        <div class="module-box">
+            Configuration:
+            <br>
+            Locale:
+            {{ configuration.locale }} <br>
+            Dark mode:
+            {{ configuration.darkMode ? 'true' : 'false' }}
+        </div>
     {% endif %}
 {% endblock %}

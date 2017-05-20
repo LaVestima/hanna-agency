@@ -41,12 +41,12 @@ h1 {
 }
 
 .page-title {
-  //width: 500px;
   margin: 0 auto;
   height: 70px;
   overflow: hidden;
   text-align: center;
   background: #ccc;
+  box-shadow: 0 0 40px black;
   h1 {
     line-height: 70px;
     font-weight: bold;
@@ -59,6 +59,8 @@ h1 {
 }
 
 .page-content {
+  max-width: 1200px;
+  margin: 10px auto 0 auto;
   padding: 10px;
   .entity-list {
     .entity-list-row {
@@ -67,6 +69,23 @@ h1 {
         padding: 0 10px;
       }
     }
+  }
+}
+
+.module-box {
+  background: #ccc;
+  margin: 10px 0 20px 0;
+  box-shadow: 3px 3px 10px black;
+  .module-box-title {
+    width: 100%;
+    text-align: center;
+    color: #333333;
+    padding: 5px;
+    background: #AAAAAA;
+    font-weight: bold;
+  }
+  .module-box-content {
+    padding: 10px;
   }
 }
 
