@@ -1,0 +1,8 @@
+.place-order-summary {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  .product-list-quantities {
+    margin-left: 10px;
+  }
+}

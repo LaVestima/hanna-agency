@@ -1,31 +1,71 @@
-app:
-    resource: "@AppBundle/Controller/DefaultController.php"
+money:
+    resource: "@MoneyBundle/Resources/config/routing.yml"
     prefix:   /
-    type:     annotation
 
-user:
-    resource: "@AppBundle/Controller/UserController.php"
-    prefix:   /user
-    type:     annotation
-admin:
-    resource: "@AppBundle/Controller/AdminController.php"
-    prefix:   /admin
-    type:     annotation
+location:
+    resource: "@LocationBundle/Resources/config/routing.yml"
+    prefix:   /
 
-super_admin:
-    resource: "@AppBundle/Controller/SuperAdminController.php"
-    prefix:   /super_admin
-    type:     annotation
+customer:
+    resource: "@CustomerBundle/Resources/config/routing.yml"
+    prefix:   /
 
-login:
-    resource: "@AppBundle/Controller/SecurityController.php"
-    prefix:   /security
-    type:     annotation
+order:
+    resource: "@OrderBundle/Resources/config/routing.yml"
+    prefix:   /
 
-faker:
-    resource: "@AppBundle/Controller/FakerController.php"
-    prefix:   /faker
-    type:     annotation
+homepage:
+    resource: "@HomepageBundle/Resources/config/routing.yml"
+    prefix:   /
+
+product:
+    resource: "@ProductBundle/Resources/config/routing.yml"
+    prefix:   /
+
+user_management:
+    resource: "@UserManagementBundle/Resources/config/routing.yml"
+    prefix:   /
+
+infrastructure:
+    resource: "@InfrastructureBundle/Resources/config/routing.yml"
+    prefix:   /
+
+access_control:
+    resource: "@AccessControlBundle/Resources/config/routing.yml"
+    prefix:   /
+
+invoice:
+    resource: "@InvoiceBundle/Resources/config/routing.yml"
+    prefix:   /
+
+#app:
+#    resource: "@AppBundle/Controller/DefaultController.php"
+#    prefix:   /
+#    type:     annotation
+#
+#user:
+#    resource: "@AppBundle/Controller/UserController.php"
+#    prefix:   /user
+#    type:     annotation
+#admin:
+#    resource: "@AppBundle/Controller/AdminController.php"
+#    prefix:   /admin
+#    type:     annotation
+#
+#super_admin:
+#    resource: "@AppBundle/Controller/SuperAdminController.php"
+#    prefix:   /super_admin
+#    type:     annotation
+#
+#login:
+#    resource: "@AppBundle/Controller/SecurityController.php"
+#    prefix:   /security
+#    type:     annotation
+#
+#faker:
+#    resource: "@AppBundle/Controller/FakerController.php"
+#    prefix:   /faker
+#    type:     annotation
 
 logout:
     path: /logout

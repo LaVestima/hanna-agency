@@ -1,0 +1,17 @@
+@import "base";
+
+.entity-list {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  th {
+    text-align: center;
+  }
+}
+
+.entity-list-row {
+  &:hover {
+    background: $main-theme-color-lighter;
+  }
+}

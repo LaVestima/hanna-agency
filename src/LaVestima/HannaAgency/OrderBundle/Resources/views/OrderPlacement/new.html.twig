@@ -1,0 +1,47 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}Place order{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <div>
+            {% if form.customers is defined and form.customers is not null  %}
+                {{ form_label(form.customers) }}
+                {{ form_widget(form.customers) }}
+            {% endif %}
+        </div>
+        <div class="place-order-form">
+            <div class="product-list-names">
+                {% for key, product in form.products %}
+                    <div class="product-list-name-item">
+                        {{ form_widget(form.products[key]) }}
+                        {{ form_label(form.products[key]) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="product-list-quantities">
+                {% for quantity in form.quantities %}
+                    <div>
+                        {{ form_widget(quantity) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter='scssphp' output='css/app.css'
+    '@OrderBundle/Resources/public/css/OrderPlacement/new.scss'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+    '@OrderBundle/Resources/public/js/OrderPlacement/new.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

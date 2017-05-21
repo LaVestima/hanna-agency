@@ -1,0 +1,34 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}Order summary{% endblock %}
+
+{% block content %}
+    Customer:
+    {{ productPlacement.customers.firstName }} {{ productPlacement.customers.lastName }}
+    <br>
+    Selected products: <br>
+    <div class="place-order-summary">
+        <div class="product-list-names">
+            {% for product in productPlacement.products %}
+                {{ product.name }}<br>
+            {% endfor %}
+        </div>
+        <div class="product-list-quantities">
+            {% for quantity in productPlacement.quantities %}
+                {% if quantity > 0 %}
+                    x{{ quantity }}<br>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block stylesheets %}
+    {% stylesheets filter='scssphp' output='css/app.css'
+    '@OrderBundle/Resources/public/css/OrderPlacement/summary.scss'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}

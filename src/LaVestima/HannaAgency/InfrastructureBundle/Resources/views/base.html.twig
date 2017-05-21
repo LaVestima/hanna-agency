@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% if block('title') is defined %}
+            {{ block('title') }}
+        {% else %}
+            Hanna Agency
+        {% endif %}
+    </title>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
+</head>
+<body>
+    {% if app.environment == 'dev' %}
+        <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
+    {% endif %}
+    <div class="main-menu">
+        {% include '@Infrastructure/Parts/main_menu.html.twig' %}
+    </div>
+    <div class="page-title">
+        <h1>{{ block('title') }}</h1>
+    </div>
+    {% if block('actionBar') is defined %}
+        <div class="action-bar">
+            {{ block('actionBar') }}
+        </div>
+    {% endif %}
+    <div class="page-content">
+        {{ block('content') }}
+    </div>
+
+    <div class="flash-message-list">
+        {% for type, flash_messages in app.session.flashBag.all %}
+            {% for flash_message in flash_messages %}
+                <div class="flash-message flash-{{ type }}">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="body-overlay"></div>
+</body>
+
+{% stylesheets filter='scssphp' output='css/app.css'
+    '@InfrastructureBundle/Resources/public/css/base.scss'
+    '@InfrastructureBundle/Resources/public/css/main_menu.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+
+{% if block('stylesheets') is defined %}
+    {{ block('stylesheets') }}
+{% endif %}
+
+{% javascripts
+    '@InfrastructureBundle/Resources/public/js/base.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{% if block('javascripts') is defined %}
+    {{ block('javascripts') }}
+{% endif %}
+
+</html>

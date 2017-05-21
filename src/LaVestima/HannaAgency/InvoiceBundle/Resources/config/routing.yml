@@ -1,0 +1,15 @@
+invoice_list:
+    path: /invoice/list
+    defaults: { _controller: InvoiceBundle:Invoice:list }
+
+invoice_show:
+    path: /invoice/show/{pathSlug}
+    defaults: { _controller: InvoiceBundle:Invoice:show, pathSlug: '' }
+
+invoice_new:
+    path: /invoice/new
+    defaults: { _controller: InvoiceBundle:Invoice:new }
+
+invoice_delete:
+    path: /invoice/delete/{invoiceId}
+    defaults: { _controller: InvoiceBundle:Invoice:delete, invoiceId: 0 }

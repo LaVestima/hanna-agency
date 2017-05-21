@@ -1,0 +1,140 @@
+$main-theme-color: #663399;
+$main-theme-color-light: $main-theme-color + 50;
+$main-theme-color-lighter: $main-theme-color + 100;
+$main-theme-color-dark: $main-theme-color - 50;
+$main-theme-color-darker: $main-theme-color - 100;
+$main-theme-color-hover: $main-theme-color - 50;
+$main-font-color: #ffffff;
+
+body {
+  font-family: 'Dosis', sans-serif;
+  font-size: 20px;
+  color: #555555;
+}
+
+a {
+  text-decoration: none;
+  color: #555555;
+
+  &:hover, &:active {
+    text-decoration: none;
+    color: #222222;
+  }
+}
+
+h1 {
+  margin: 0;
+  color: #333333;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px;
+  //margin: 5px;
+  background: $main-theme-color;
+  color: $main-font-color;
+  text-align: center;
+  cursor: pointer;
+  &:hover {
+    background: $main-theme-color-hover;
+  }
+}
+
+.page-title {
+  margin: 0 auto;
+  height: 70px;
+  overflow: hidden;
+  text-align: center;
+  background: #ccc;
+  h1 {
+    line-height: 70px;
+    font-weight: bold;
+  }
+}
+
+.action-bar {
+  padding: 10px;
+  background: #ddd;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 10px auto 0 auto;
+  padding: 10px;
+  .entity-list {
+    .entity-list-row {
+      padding: 5px 0;
+      .entity-list-cell {
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
+.module-box {
+  background: #ccc;
+  margin: 10px 0 20px 0;
+  box-shadow: 3px 3px 10px black;
+  min-height: 40px;
+  overflow: hidden;
+  .module-box-title {
+    height: 40px;
+    line-height: 30px;
+    width: 100%;
+    text-align: center;
+    color: #333333;
+    padding: 5px;
+    background: #AAAAAA;
+    font-weight: bold;
+  }
+  //.module-box-content {
+  //
+  //}
+}
+
+.flash-message-list {
+  position: fixed;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  .flash-message {
+    height: 50px;
+    line-height: 50px;
+    border-radius: 10px;
+    width: 70%;
+    margin: 0 auto;
+    box-shadow: 0 0 10px #000;
+  }
+  .flash-success {
+    background-color: #00FF26;
+  }
+  .flash-notice {
+    background-color: #00EFFF;
+  }
+  .flash-warning {
+    background-color: #FFC900;
+  }
+  .flash-error {
+    background-color: #F21515;
+  }
+}
+
+.hidden {
+  max-width: 0;
+  max-height: 0;
+  visibility: hidden;
+  display: none;
+  opacity: 0;
+}
+
+.body-overlay {
+  position: fixed;
+  background: #000000;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  visibility: hidden;
+  z-index: 50;
+}

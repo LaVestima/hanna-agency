@@ -1,0 +1,3 @@
+money_homepage:
+    path:     /
+    defaults: { _controller: MoneyBundle:Default:index }

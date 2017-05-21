@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Invoices", uniqueConstraints={@ORM\UniqueConstraint(name="Invoices_NameU", columns={"Name"})}, indexes={@ORM\Index(name="FK_93594DC33809B8C6", columns={"ID_CUSTOMERS"}), @ORM\Index(name="FK_93594DC33B997DA3", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Invoices
-{
+class Invoices {
     /**
      * @var string
      *
@@ -64,8 +63,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;

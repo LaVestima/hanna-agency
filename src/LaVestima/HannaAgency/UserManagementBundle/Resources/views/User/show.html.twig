@@ -1,0 +1,89 @@
+{% extends '@Infrastructure/entity-show.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
+    <div class="module-box">
+        <div class="module-box-title">
+            General Information
+        </div>
+        <div class="module-box-content">
+            <table class="entity-show-table">
+                <tr>
+                    <td>
+                        Login
+                    </td>
+                    <td>
+                        {{ user.login }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <td>Role</td>
+                    <td>{{ user.idRoles.name }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+    {% if customer is defined and customer is not null %}
+        <div class="module-box">
+            <div class="module-box-title">
+                Customer Information
+            </div>
+            <div class="module-box-content">
+                <table class="entity-show-table">
+                    <tr>
+                        <td>
+                            Identification Number
+                        </td>
+                        <td>
+                            {{ customer.identificationNumber }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Gender
+                        </td>
+                        <td>
+                            {{ customer.fullGender }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Full Name
+                        </td>
+                        <td>
+                            {{ customer.fullName }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {% if configuration is defined and configuration is not null %}
+        <div class="module-box">
+            <div class="module-box-title">
+                User Configuration
+            </div>
+            <div class="module-box-content">
+                <table class="entity-show-table">
+                    <tr>
+                        <td>Locale</td>
+                        <td>{{ configuration.locale }}</td>
+                    </tr>
+                    <tr>
+                        <td>Dark Mode</td>
+                        <td>{{ configuration.darkMode ? 'True' : 'False' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

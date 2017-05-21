@@ -1,0 +1,12 @@
+services:
+    order_crud_controller:
+        class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudController
+        autowire: true
+
+    order_product_crud_controller:
+        class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderProductCrudController
+        autowire: true
+
+    order_status_crud_controller:
+        class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudController
+        autowire: true

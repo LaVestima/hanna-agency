@@ -1,0 +1,12 @@
+services:
+    user_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController
+        autowire: true
+
+    role_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudController
+        autowire: true
+
+    configuration_crud_controller:
+        class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\ConfigurationCrudController
+        autowire: true

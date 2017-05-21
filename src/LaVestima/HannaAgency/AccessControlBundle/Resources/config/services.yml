@@ -1,0 +1,12 @@
+services:
+    token_crud_controller:
+        class: LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudController
+        autowire: true
+
+    login_attempt_crud_controller:
+        class: LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudController
+        autowire: true
+
+    authentication_handler:
+        class: LaVestima\HannaAgency\AccessControlBundle\Handler\AuthenticationHandler
+        arguments: ['@login_attempt_crud_controller', '@router']

@@ -1,0 +1,93 @@
+{% extends '@Infrastructure/entity-show.html.twig' %}
+
+{% block title %}Customer{% endblock %}
+
+{% block content %}
+    Personal Data
+    <table>
+        <tr>
+            <td>
+                Full Name
+            </td>
+            <td>
+                {{ customer.firstName }} {{ customer.lastName }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Email
+            </td>
+            <td>
+                {{ customer.email }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Phone
+            </td>
+            <td>
+                {{ customer.phone }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ID
+            </td>
+            <td>
+                {{ customer.identificationNumber }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Address
+            </td>
+            <td>
+                {{ customer.idAddresses.street }}<br>
+                {{ customer.idAddresses.postalCode }} {{ customer.idAddresses.idCities.name }}<br>
+                {{ customer.idAddresses.idCountries.name }}
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    User Data
+    <table>
+        <tr>
+            <td>
+                Login
+            </td>
+            <td>
+                {{ customer.idUsers.login }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Email
+            </td>
+            <td>
+                {{ customer.idUsers.email }}
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    Orders
+    <table class="entity-list">
+    {% for order in orders %}
+        <tr>
+            <td>
+                {{ order.datePlaced | date('d.m.Y') }}
+            </td>
+            <td>
+                <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <br>
+    Invoices
+    ............................. // TODO
+{% endblock %}

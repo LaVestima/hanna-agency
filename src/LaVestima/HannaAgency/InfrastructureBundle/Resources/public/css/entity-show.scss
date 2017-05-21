@@ -1,0 +1,17 @@
+.entity-show-table {
+  //width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  td {
+    padding: 5px;
+    &:first-child {
+      width: 50%;
+      text-align: right;
+      font-weight: bold;
+    }
+    &:last-child {
+      width: 50%;
+      text-align: left;
+    }
+  }
+}

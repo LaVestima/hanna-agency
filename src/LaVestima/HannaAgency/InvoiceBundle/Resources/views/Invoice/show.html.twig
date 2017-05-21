@@ -1,0 +1,48 @@
+{% extends '@Infrastructure/entity-list.html.twig' %}
+
+{% block pageTitle %}Show Invoice{% endblock %}
+
+{% block content %}
+    {{ invoice.name }}<br>
+    {{ invoice.dateIssued | date('d.m.Y') }}<br>
+    {{ invoice.idCustomers.firstName }} {{ invoice.idCustomers.lastName }}
+    <br>
+    {% if invoicesProducts is empty %}
+        No Products!
+    {% endif %}
+
+    <table class="entity-list">
+    {% for invoiceProduct in invoicesProducts %}
+        {% set product = invoiceProduct.idProducts %}
+        {% set productTotalPrice = invoiceProduct.quantity * invoiceProduct.priceFinal %}
+        <tr>
+            <td>
+                {{ product.name }}
+            </td>
+            <td>
+                {{ product.idSizes.name }}
+            </td>
+            <td>
+                {{ product.priceProducer }}
+            </td>
+            <td>
+                {{ product.priceCustomer }}
+            </td>
+            <td>
+                x {{ invoiceProduct.quantity }}
+            </td>
+            <td>
+                {{ invoiceProduct.discount }}%
+            </td>
+            <td>
+                {{ invoiceProduct.priceFinal }}
+            </td>
+            <td>
+                <b>
+                    {{ productTotalPrice }}
+                </b>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

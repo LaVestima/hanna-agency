@@ -1,0 +1,55 @@
+{% extends '@Infrastructure/entity-list.html.twig' %}
+
+{% block title %}Order list{% endblock %}
+
+{% block actionBar %}
+    <a href="{{ path('order_placement_new') }}">
+        <div class="button action-bar-button">
+            Place order
+        </div>
+    </a>
+    <a href="{{ path('order_new') }}">
+        <div class="button action-bar-button">
+            New order
+        </div>
+    </a>
+    <a href="">
+        <div class="button action-bar-button">
+            Deleted orders
+        </div>
+    </a>
+{% endblock %}
+
+{% block content %}
+    <table class="entity-list order-list">
+        <tr>
+            <th>
+                Date placed
+            </th>
+            <th>
+                Customer
+            </th>
+            <th>
+                User
+            </th>
+        </tr>
+    {% for order in orders %}
+        <tr class="entity-list-row">
+            <td>
+                {{ order.datePlaced | date('d.m.Y') }}
+            </td>
+            <td>
+                {{ order.idCustomers.fullName }}
+            </td>
+            <td>
+                {{ order.userCreated.login }}
+            </td>
+            <td class="entity-list-cell">
+                <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends '@Infrastructure/entity-show.html.twig' %}
+
+{% block title %}Order{% endblock %}
+
+{% block content %}
+    {{ order.datePlaced | date('d.m.Y') }}
+    {{ order.idCustomers.fullName }}
+    <br>
+    <a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">
+        <div class="button action-bar-button">
+            Delete Order
+        </div>
+    </a>
+
+    <br><br>
+    {% if ordersProducts is not empty %}
+        <table class="entity-list orders-products-list">
+            {% for ordersProduct in ordersProducts %}
+                <tr>
+                    <td>
+                        <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProducts.pathSlug}) }}">
+                            {{ ordersProduct.idProducts.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ ordersProduct.quantity }}
+                    </td>
+                    <td>
+                        {{ ordersProduct.discount }}
+                    </td>
+                    <td>
+                        {{ ordersProduct.idStatuses.name }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

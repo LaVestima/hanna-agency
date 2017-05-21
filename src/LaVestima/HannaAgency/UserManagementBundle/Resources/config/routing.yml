@@ -1,0 +1,10 @@
+#user_management_homepage:
+#    path:     /
+#    defaults: { _controller: UserManagementBundle:Default:index }
+user_list:
+    path: /user/list
+    defaults: { _controller: UserManagementBundle:User:list }
+
+user_show:
+    path: /user/show/{pathSlug}
+    defaults: { _controller: UserManagementBundle:User:show, pathSlug: '' }

@@ -1,0 +1,8 @@
+services:
+    product_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
+        autowire: true
+
+    size_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudController
+        autowire: true

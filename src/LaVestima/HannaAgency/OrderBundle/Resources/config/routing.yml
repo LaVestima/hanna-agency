@@ -1,0 +1,27 @@
+#order_homepage:
+#    path:     /
+#    defaults: { _controller: OrderBundle:Default:index }
+
+order_list:
+    path: /order/list
+    defaults: { _controller: OrderBundle:Order:list }
+
+order_show:
+    path: /order/show/{pathSlug}
+    defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
+
+order_new:
+    path: /order/new
+    defaults: { _controller: OrderBundle:Order:new }
+
+order_delete:
+    path: /order/delete/{pathSlug}
+    defaults: { _controller: OrderBundle:Order:delete, pathSlug: '' }
+
+order_placement_new:
+    path: /order_placement/new
+    defaults: { _controller: OrderBundle:OrderPlacement:new }
+
+order_placement_summary:
+    path: /order_placement/summary
+    defaults: { _controller: OrderBundle:OrderPlacement:summary }
