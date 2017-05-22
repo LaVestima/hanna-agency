@@ -1,0 +1,25 @@
+{% extends '@Infrastructure/entity-list.html.twig' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block content %}
+    <table class="entity-list">
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Size</th>
+        </tr>
+    {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.idCategories.name }}</td>
+            <td>{{ product.idSizes.name }}</td>
+            <td class="entity-list-cell">
+                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,1 +1,22 @@
-product
+{% extends '@Infrastructure/entity-show.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+    <table class="entity-show-table">
+        <tr>
+            <td>Name</td>
+            <td>{{ product.name }}</td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>{{ product.idCategories.name }}</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>{{ product.idSizes.name }}</td>
+        </tr>
+    </table>
+
+
+{% endblock %}
