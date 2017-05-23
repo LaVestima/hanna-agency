@@ -24,12 +24,14 @@
     <table class="entity-list order-list">
         <tr>
             <th>Date placed</th>
+            <th>Status</th>
             <th>Customer</th>
             <th>User</th>
         </tr>
     {% for order in orders %}
         <tr class="entity-list-row">
             <td>{{ order.datePlaced | date('d.m.Y') }}</td>
+            <td>{{ order.status.name }}</td>
             <td>{{ order.idCustomers.fullName }}</td>
             <td>{{ order.userCreated.login }}</td>
             <td class="entity-list-cell">

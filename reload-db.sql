@@ -496,10 +496,14 @@ INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS, Quantity, Discount,
 INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS, Quantity, Discount, Price_Final) VALUES (5, 3, 3, 22, 0, 65.99);
 
 INSERT INTO Orders_Statuses (ID, Name) VALUES (1, 'Queued');
-INSERT INTO Orders_Statuses (ID, Name) VALUES (2, 'In Progress');
+INSERT INTO Orders_Statuses (ID, Name) VALUES (2, 'Pending');
 INSERT INTO Orders_Statuses (ID, Name) VALUES (3, 'Completed');
 INSERT INTO Orders_Statuses (ID, Name) VALUES (4, 'Rejected');
 
 -- INSERT INTO Orders_Products () VALUES ();
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (1, 1, 1, 1, 5, 10);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (2, 1, 2, 1, 12, 0);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (3, 2, 2, 2, 1, 0);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (4, 2, 1, 3, 1, 0);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (5, 3, 1, 2, 1, 0);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (6, 3, 2, 4, 1, 0);

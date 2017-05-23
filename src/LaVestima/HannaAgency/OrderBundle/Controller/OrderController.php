@@ -3,7 +3,7 @@
 namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
+use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 
 class OrderController extends BaseController {
 	public function listAction() {
@@ -26,6 +26,12 @@ class OrderController extends BaseController {
 
         $orders = $orders->sortBy(['datePlaced' => 'DESC'])
             ->getEntities();
+
+        foreach ($orders as $order) {
+            $order->setStatus(
+                $this->generateOrderStatus($order)
+            );
+        }
 		
 		return $this->render('@Order/Order/list.html.twig', [
 			'orders' => $orders,
@@ -117,5 +123,39 @@ class OrderController extends BaseController {
         }
 
         return $this->redirectToRoute('order_list');
+    }
+
+    protected function generateOrderStatus(Orders $order) {
+	    $ordersProducts = $this->get('order_product_crud_controller')
+            ->readEntitiesBy(['idOrders' => $order])
+            ->getEntities();
+
+	    $orderStatusName = 'Queued';
+	    $isOrderCompleted = true;
+
+	    foreach ($ordersProducts as $ordersProduct) {
+            $ordersProductStatus = $ordersProduct->getIdStatuses()->getName();
+            if ($ordersProductStatus === 'Rejected') {
+                $orderStatusName = $ordersProductStatus;
+                $isOrderCompleted = false;
+                break;
+            }
+            else if ($ordersProductStatus === 'Pending') {
+                $orderStatusName = $ordersProductStatus;
+                $isOrderCompleted = false;
+//                break;
+            }
+            else if ($ordersProductStatus === 'Queued') {
+                $isOrderCompleted = false;
+            }
+        }
+
+        if ($isOrderCompleted) {
+	        $orderStatusName = 'Completed';
+        }
+
+        $orderStatus = $this->get('order_status_crud_controller')
+            ->readOneEntityBy(['name' => $orderStatusName]);
+        return $orderStatus;
     }
 }

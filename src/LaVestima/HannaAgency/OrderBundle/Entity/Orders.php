@@ -81,6 +81,7 @@ class Orders
      */
     private $userDeleted;
 
+    private $status;
 
 
     /**
@@ -88,8 +89,7 @@ class Orders
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -100,8 +100,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setDateCreated($dateCreated)
-    {
+    public function setDateCreated($dateCreated) {
         $this->dateCreated = $dateCreated;
 
         return $this;
@@ -112,8 +111,7 @@ class Orders
      *
      * @return \DateTime
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated() {
         return $this->dateCreated;
     }
 
@@ -124,8 +122,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setDateDeleted($dateDeleted)
-    {
+    public function setDateDeleted($dateDeleted) {
         $this->dateDeleted = $dateDeleted;
 
         return $this;
@@ -136,8 +133,7 @@ class Orders
      *
      * @return \DateTime
      */
-    public function getDateDeleted()
-    {
+    public function getDateDeleted() {
         return $this->dateDeleted;
     }
 
@@ -148,8 +144,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setDatePlaced($datePlaced)
-    {
+    public function setDatePlaced($datePlaced) {
         $this->datePlaced = $datePlaced;
 
         return $this;
@@ -160,8 +155,7 @@ class Orders
      *
      * @return \DateTime
      */
-    public function getDatePlaced()
-    {
+    public function getDatePlaced() {
         return $this->datePlaced;
     }
 
@@ -172,8 +166,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setPathSlug($pathSlug)
-    {
+    public function setPathSlug($pathSlug) {
         $this->pathSlug = $pathSlug;
 
         return $this;
@@ -184,8 +177,7 @@ class Orders
      *
      * @return string
      */
-    public function getPathSlug()
-    {
+    public function getPathSlug() {
         return $this->pathSlug;
     }
 
@@ -196,8 +188,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setIdCustomers(Customers $idCustomers = null)
-    {
+    public function setIdCustomers(Customers $idCustomers = null) {
         $this->idCustomers = $idCustomers;
 
         return $this;
@@ -208,8 +199,7 @@ class Orders
      *
      * @return Customers
      */
-    public function getIdCustomers()
-    {
+    public function getIdCustomers() {
         return $this->idCustomers;
     }
 
@@ -220,8 +210,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setUserCreated(Users $userCreated = null)
-    {
+    public function setUserCreated(Users $userCreated = null) {
         $this->userCreated = $userCreated;
 
         return $this;
@@ -232,8 +221,7 @@ class Orders
      *
      * @return Users
      */
-    public function getUserCreated()
-    {
+    public function getUserCreated() {
         return $this->userCreated;
     }
 
@@ -244,8 +232,7 @@ class Orders
      *
      * @return Orders
      */
-    public function setUserDeleted(Users $userDeleted = null)
-    {
+    public function setUserDeleted(Users $userDeleted = null) {
         $this->userDeleted = $userDeleted;
 
         return $this;
@@ -256,8 +243,17 @@ class Orders
      *
      * @return Users
      */
-    public function getUserDeleted()
-    {
+    public function getUserDeleted() {
         return $this->userDeleted;
+    }
+
+    public function setStatus(OrdersStatuses $status) {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatus() {
+        return $this->status;
     }
 }
