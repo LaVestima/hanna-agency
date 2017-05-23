@@ -13,14 +13,12 @@ class OrderController extends BaseController {
         $orders = null;
 
 	    if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $orders = $orderCrudController->readAllEntities();
+            $orders = $orderCrudController->readAllUndeletedEntities();
         }
         else if ($authChecker->isGranted('ROLE_CUSTOMER')) {
-	        // TODO: change user to customer checking
-            $currentCustomer = $this->get('customer_crud_controller')
-                ->readOneEntityBy(['idUsers' => $this->getUser()]);
+	        // TODO: only undeleted
 	        $orders = $orderCrudController
-                ->readEntitiesBy(['idCustomers' => $currentCustomer]);
+                ->readEntitiesBy(['idCustomers' => $this->getCustomer()]);
         }
         else {
 	        // TODO: exception ?? for ROLE_USER and lower
@@ -33,6 +31,16 @@ class OrderController extends BaseController {
 			'orders' => $orders,
 		]);
 	}
+
+	public function deletedListAction() {
+	    $orders = $this->get('order_crud_controller')
+            ->readAllDeletedEntities()
+            ->getEntities();
+
+	    return $this->render('@Order/Order/deletedList.html.twig', [
+	        'orders' => $orders,
+        ]);
+    }
 
 	public function showAction(string $pathSlug) {
         $authChecker = $this->get('security.authorization_checker');

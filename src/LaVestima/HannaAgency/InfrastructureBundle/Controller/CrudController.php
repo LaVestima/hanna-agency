@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 abstract class CrudController extends Controller {
 	protected $doctrine;
 	protected $manager;
-
 	protected $user;
 
 	protected $entityClass = '';
@@ -123,15 +122,36 @@ abstract class CrudController extends Controller {
      * @return object
      */
     public function readAllEntities() {
-        // TODO: if dateDeleted and userDeleted are null
-        $this->entities = $this->doctrine
-            ->getRepository($this->entityClass)
-            ->findAll();
+        $this->query = 'SELECT ent FROM ' . $this->entityClass . ' ent';
+
+        $this->executeQuery();
+
+//        $this->entities = $this->doctrine
+//            ->getRepository($this->entityClass)
+//            ->findAll();
+        return $this;
+    }
+
+    public function readAllUndeletedEntities() {
+        $this->query = '
+            SELECT ent FROM ' . $this->entityClass . ' ent
+            WHERE ent.dateDeleted IS NULL
+            ';
+
+        $this->executeQuery();
+
         return $this;
     }
 
     public function readAllDeletedEntities() {
+        $this->query = '
+            SELECT ent FROM ' . $this->entityClass . ' ent
+            WHERE ent.dateDeleted IS NOT NULL
+            ';
 
+        $this->executeQuery();
+
+        return $this;
     }
 
 	/**
@@ -163,6 +183,7 @@ abstract class CrudController extends Controller {
     // addEntity()
 
 	public function getEntities() {
+//        $this->executeQuery();
 	    // TODO: finish SELECT query here
 	    return $this->entities;
     }
@@ -184,5 +205,9 @@ abstract class CrudController extends Controller {
             }
         }
 	    return $this;
+    }
+
+    private function executeQuery() {
+        $this->entities = $this->manager->createQuery($this->query)->getResult();
     }
 }

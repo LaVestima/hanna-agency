@@ -55,6 +55,9 @@ h1 {
 .action-bar {
   padding: 10px;
   background: #ddd;
+  .action-bar-button {
+    font-weight: bold;
+  }
 }
 
 .page-content {

@@ -1,27 +1,18 @@
 {% extends '@Infrastructure/entity-list.html.twig' %}
 
-{% block title %}Order list{% endblock %}
+{% block title %}Deleted Orders{% endblock %}
 
 {% block actionBar %}
-    <a href="{{ path('order_placement_new') }}">
+    <a href="{{ path('order_list') }}">
         <div class="button action-bar-button">
-            Place order
-        </div>
-    </a>
-    <a href="{{ path('order_new') }}">
-        <div class="button action-bar-button">
-            New order
-        </div>
-    </a>
-    <a href="{{ path('order_deleted_list') }}">
-        <div class="button action-bar-button">
-            Deleted orders
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            Back
         </div>
     </a>
 {% endblock %}
 
 {% block content %}
-    <table class="entity-list order-list">
+    <table class="entity-list">
         <tr>
             <th>Date placed</th>
             <th>Customer</th>

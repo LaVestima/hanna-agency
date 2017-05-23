@@ -6,6 +6,10 @@ order_list:
     path: /order/list
     defaults: { _controller: OrderBundle:Order:list }
 
+order_deleted_list:
+    path: /order/deleted_list
+    defaults: { _controller: OrderBundle:Order:deletedList }
+
 order_show:
     path: /order/show/{pathSlug}
     defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
