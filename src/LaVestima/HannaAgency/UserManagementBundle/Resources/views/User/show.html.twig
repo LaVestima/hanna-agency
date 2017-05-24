@@ -1,4 +1,4 @@
-{% extends '@Infrastructure/entity-show.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
 
 {% block title %}User{% endblock %}
 
@@ -10,12 +10,8 @@
         <div class="module-box-content">
             <table class="entity-show-table">
                 <tr>
-                    <td>
-                        Login
-                    </td>
-                    <td>
-                        {{ user.login }}
-                    </td>
+                    <td>Login</td>
+                    <td>{{ user.login }}</td>
                 </tr>
                 <tr>
                     <td>Email</td>

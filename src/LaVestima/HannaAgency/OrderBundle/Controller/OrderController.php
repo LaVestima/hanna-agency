@@ -143,7 +143,6 @@ class OrderController extends BaseController {
             else if ($ordersProductStatus === 'Pending') {
                 $orderStatusName = $ordersProductStatus;
                 $isOrderCompleted = false;
-//                break;
             }
             else if ($ordersProductStatus === 'Queued') {
                 $isOrderCompleted = false;
