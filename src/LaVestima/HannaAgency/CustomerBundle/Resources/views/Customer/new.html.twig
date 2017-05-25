@@ -4,7 +4,65 @@
 
 {% block content %}
     {#// TODO: make it beautiful  #}
-    {{ form_start(form) }}
 
+    {{ form_start(form) }}
+    <table class="entity-new-table">
+        <tr>
+            <td>{{ form_label(form.firstName) }}</td>
+            <td>{{ form_widget(form.firstName) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.lastName) }}</td>
+            <td>{{ form_widget(form.lastName) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.gender) }}</td>
+            <td>{{ form_widget(form.gender) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.companyName) }}</td>
+            <td>{{ form_widget(form.companyName) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.vat) }}</td>
+            <td>{{ form_widget(form.vat) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.idCountries) }}</td>
+            <td>{{ form_widget(form.idCountries) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.idCities) }}</td>
+            <td>{{ form_widget(form.idCities) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.postalCode) }}</td>
+            <td>{{ form_widget(form.postalCode) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.street) }}</td>
+            <td>{{ form_widget(form.street) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.email) }}</td>
+            <td>{{ form_widget(form.email) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.phone) }}</td>
+            <td>{{ form_widget(form.phone) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.idCurrencies) }}</td>
+            <td>{{ form_widget(form.idCurrencies) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.idUsers) }}</td>
+            <td>{{ form_widget(form.idUsers) }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form_widget(form.save) }}</td>
+        </tr>
+    </table>
     {{ form_end(form) }}
 {% endblock %}

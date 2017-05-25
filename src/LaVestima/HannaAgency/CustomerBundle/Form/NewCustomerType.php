@@ -21,22 +21,38 @@ class NewCustomerType extends AbstractType {
                     'Female' => 'F',
                     'Other' => 'O',
                 ],
+                'placeholder' => 'Choose a gender'
             ])
+            ->add('companyName', TextType::class)
+            ->add('vat', TextType::class)
             ->add('idCountries', ChoiceType::class, [
+                'label' => 'Country',
                 'choices' => $options['countries'],
                 'choice_label' => 'name',
+                'placeholder' => 'Choose a country'
             ])
             ->add('idCities', ChoiceType::class, [
+                'label' => 'City',
                 'choices' => $options['cities'],
                 'choice_label' => 'name',
+                'placeholder' => 'Choose a city'
             ])
             ->add('postalCode', TextType::class)
             ->add('street', TextType::class)
             ->add('email', EmailType::class)
             ->add('phone', TextType::class)
             ->add('idCurrencies', ChoiceType::class, [
+                'label' => 'Currency',
                 'choices' => $options['currencies'],
                 'choice_label' => 'name',
+                'placeholder' => 'Choose a currency'
+            ])
+            ->add('idUsers', ChoiceType::class, [
+                'label' => 'User',
+                'choices' => $options['users'],
+                'choice_label' => 'login',
+                'placeholder' => 'Choose a user',
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Add Customer'
@@ -59,6 +75,11 @@ class NewCustomerType extends AbstractType {
             ->setDefault('currencies', null)
             ->setRequired('currencies')
             ->setAllowedTypes('currencies', array('array'))
+        ;
+        $resolver
+            ->setDefault('users', null)
+            ->setRequired('users')
+            ->setAllowedTypes('users', array('array'))
         ;
     }
 }
