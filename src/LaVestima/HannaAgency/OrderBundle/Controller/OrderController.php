@@ -125,6 +125,12 @@ class OrderController extends BaseController {
         return $this->redirectToRoute('order_list');
     }
 
+    public function restoreAction(string $pathSlug) {
+	    $order = $this->get('order_crud_controller')
+            ->readOneEntityBy(['pathSlug' => $pathSlug]);
+	    // TODO: finish
+    }
+
     protected function generateOrderStatus(Orders $order) {
 	    $ordersProducts = $this->get('order_product_crud_controller')
             ->readEntitiesBy(['idOrders' => $order])

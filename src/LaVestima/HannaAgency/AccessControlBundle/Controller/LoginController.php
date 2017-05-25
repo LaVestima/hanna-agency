@@ -17,6 +17,7 @@ class LoginController extends Controller {
 		$lastUsername = $authenticationUtils->getLastUsername();
 
 		if (!$error) {
+
 		    // TODO: success flash
 //			$this->addFlash('notice', 'Logged in!');
 //			$this->addFlash('noticeType', 'positive');

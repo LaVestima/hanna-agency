@@ -43,8 +43,9 @@ class OrderPlacementController extends BaseController {
                     $productPlacement->customers = $this->getCustomer();
                 }
 
-                $productPlacement->quantities = array_values(array_filter($productPlacement->quantities, function ($var) {
-                    return ($var > 0);
+                $productPlacement->quantities = array_values(
+                    array_filter($productPlacement->quantities, function ($var) {
+                        return ($var > 0);
                 }));
 
                 $request->getSession()->set('productPlacement', $productPlacement);
@@ -52,7 +53,10 @@ class OrderPlacementController extends BaseController {
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
-                $this->addFlash('warning', 'Order cannot be empty!');
+                $this->addFlash(
+                    'warning',
+                    'Order cannot be empty!'
+                );
             }
         }
 

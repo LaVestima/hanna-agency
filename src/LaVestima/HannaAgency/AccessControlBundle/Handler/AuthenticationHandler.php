@@ -2,7 +2,9 @@
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Handler;
 
+use LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudController;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\LoginAttempts;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +19,9 @@ AuthenticationFailureHandlerInterface {
     private $loginAttemptCrudController;
     private $router;
 
-    public function __construct($loginAttemptCrudController, $router) {
+    public function __construct(
+            LoginAttemptCrudController $loginAttemptCrudController,
+            Router $router) {
         $this->loginAttemptCrudController = $loginAttemptCrudController;
         $this->router = $router;
     }

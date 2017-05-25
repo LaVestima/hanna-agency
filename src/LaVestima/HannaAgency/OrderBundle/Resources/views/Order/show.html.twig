@@ -4,11 +4,19 @@
 
 {% block actionBar %}
     {#// TODO: add confirmation window #}
+    {% if order.dateDeleted is null %}
     <a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">
         <div class="button action-bar-button">
             Delete Order
         </div>
     </a>
+    {% else %}
+    <a href="{{ path('order_restore', {'pathSlug': order.pathSlug}) }}">
+        <div class="button action-bar-button">
+            Restore Order
+        </div>
+    </a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
