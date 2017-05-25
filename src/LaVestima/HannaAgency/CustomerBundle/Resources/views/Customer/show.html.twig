@@ -26,30 +26,36 @@
                 <tr>
                     <td>Address</td>
                     <td>
-                        {{ customer.idAddresses.street }}<br>
-                        {{ customer.idAddresses.postalCode }} {{ customer.idAddresses.idCities.name }}<br>
-                        {{ customer.idAddresses.idCountries.name }}
+                        {{ customer.street }}<br>
+                        {{ customer.postalCode }} {{ customer.idCities.name }}<br>
+                        {{ customer.idCountries.name }}
                     </td>
                 </tr>
             </table>
         </div>
     </div>
 
+    {% if customer.idUsers is not null %}
     <div class="module-box">
         <div class="module-box-title">User Information</div>
         <div class="module-box-content">
             <table class="entity-show-table">
                 <tr>
                     <td>Login</td>
-                    <td>{{ customer.idUsers.login }}</td>
+                    <td>
+                        {{ customer.idUsers.login }}
+                    </td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>{{ customer.idUsers.email }}</td>
+                    <td>
+                        {{ customer.idUsers.email }}
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
+    {% endif %}
 
     {% if orders is not empty %}
     <div class="module-box">

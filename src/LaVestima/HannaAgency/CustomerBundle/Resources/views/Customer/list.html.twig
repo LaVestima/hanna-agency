@@ -54,7 +54,9 @@
                 {{ customer.email }}
             </td>
             <td>
-                {{ customer.idUsers.login }}
+                {% if customer.idUsers is not null %}
+                    {{ customer.idUsers.login }}
+                {% endif %}
             </td>
             <td class="entity-list-cell">
                 <a href="{{ path('customer_show', {'pathSlug': customer.pathSlug}) }}">

@@ -4,6 +4,8 @@ namespace LaVestima\HannaAgency\CustomerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\LocationBundle\Entity\Addresses;
+use LaVestima\HannaAgency\LocationBundle\Entity\Cities;
+use LaVestima\HannaAgency\LocationBundle\Entity\Countries;
 use LaVestima\HannaAgency\MoneyBundle\Entity\Currencies;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 
@@ -130,14 +132,38 @@ class Customers
     private $pathSlug = '';
 
     /**
-     * @var Addresses
+     * @var Countries
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\LocationBundle\Entity\Addresses")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\LocationBundle\Entity\Countries")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_ADDRESSES", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
      * })
      */
-    private $idAddresses;
+    private $idCountries;
+
+    /**
+     * @var Cities
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\LocationBundle\Entity\Cities")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
+     * })
+     */
+    private $idCities;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Postal_Code", type="string", length=20, nullable=false)
+     */
+    private $postalCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Street", type="string", length=200, nullable=false)
+     */
+    private $street;
 
     /**
      * @var Currencies
@@ -364,6 +390,11 @@ class Customers
         return $this->gender;
     }
 
+    /**
+     * Get full gender name
+     *
+     * @return string
+     */
     public function getFullGender() {
         return $this->gender == 'M' ? 'Male' :
             ($this->gender == 'F' ? 'Female' : 'Other');
@@ -508,8 +539,7 @@ class Customers
      *
      * @return integer
      */
-    public function getDefaultDiscount()
-    {
+    public function getDefaultDiscount() {
         return $this->defaultDiscount;
     }
 
@@ -520,8 +550,7 @@ class Customers
      *
      * @return Customers
      */
-    public function setPathSlug($pathSlug)
-    {
+    public function setPathSlug($pathSlug) {
         $this->pathSlug = $pathSlug;
 
         return $this;
@@ -532,33 +561,96 @@ class Customers
      *
      * @return string
      */
-    public function getPathSlug()
-    {
+    public function getPathSlug() {
         return $this->pathSlug;
     }
 
     /**
-     * Set idAddresses
+     * Set idCountries
      *
-     * @param Addresses $idAddresses
+     * @param Countries $idCountries
      *
-     * @return Customers
+     * @return $this
      */
-    public function setIdAddresses(Addresses $idAddresses = null)
-    {
-        $this->idAddresses = $idAddresses;
+    public function setIdCountries(Countries $idCountries) {
+        $this->idCountries = $idCountries;
 
         return $this;
     }
 
     /**
-     * Get idAddresses
+     * Get idCountries
      *
-     * @return Addresses
+     * @return Countries
      */
-    public function getIdAddresses()
-    {
-        return $this->idAddresses;
+    public function getIdCountries() {
+        return $this->idCountries;
+    }
+
+    /**
+     * Set idCities
+     *
+     * @param Cities $idCities
+     *
+     * @return $this
+     */
+    public function setIdCities(Cities $idCities) {
+        $this->idCities = $idCities;
+
+        return $this;
+    }
+
+    /**
+     * Get idCities
+     *
+     * @return Cities
+     */
+    public function getIdCities() {
+        return $this->idCities;
+    }
+
+    /**
+     * Set postalCode
+     *
+     * @param string $postalCode
+     *
+     * @return $this
+     */
+    public function setPostalCode(string $postalCode) {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    /**
+     * Get postalCode
+     *
+     * @return string
+     */
+    public function getPostalCode() {
+        return $this->postalCode;
+    }
+
+    /**
+     * Set street
+     *
+     * @param string $street
+     *
+     * @return $this
+     */
+    public function setStreet(string $street) {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * Get street
+     *
+     * @return string
+     */
+    public function getStreet() {
+        return $this->street;
     }
 
     /**

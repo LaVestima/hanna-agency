@@ -181,7 +181,11 @@ CREATE TABLE IF NOT EXISTS Customers (
 	Gender VARCHAR(1) NOT NULL,
 	Company_Name VARCHAR(200),
 	VAT VARCHAR(50),
-	ID_ADDRESSES INTEGER NOT NULL,
+# 	ID_ADDRESSES INTEGER NOT NULL,
+	ID_COUNTRIES INTEGER NOT NULL,
+	ID_CITIES INTEGER NOT NULL,
+	Postal_Code VARCHAR(20) NOT NULL,
+	Street VARCHAR(200) NOT NULL,
 	Email VARCHAR(200) NOT NULL,
 	Newsletter TINYINT(1) NOT NULL DEFAULT 1,
 	Phone VARCHAR(50) NOT NULL,
@@ -193,7 +197,11 @@ CREATE TABLE IF NOT EXISTS Customers (
 	CONSTRAINT Customers_Identification_Number_U UNIQUE(Identification_Number),
 	CONSTRAINT Customers_Gender_CH CHECK (Gender='M' OR Gender='F' OR Gender='O'),
 	CONSTRAINT Customers_Path_Slug_U UNIQUE(Path_Slug),
-	CONSTRAINT Customers_ID_ADDRESSES_FK FOREIGN KEY (ID_ADDRESSES) REFERENCES Addresses(ID)
+# 	CONSTRAINT Customers_ID_ADDRESSES_FK FOREIGN KEY (ID_ADDRESSES) REFERENCES Addresses(ID)
+# 	ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT Customers_ID_COUNTRIES_FK FOREIGN KEY (ID_COUNTRIES) REFERENCES Countries(ID)
+	ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT Customers_ID_CITIES_FK FOREIGN KEY (ID_CITIES) REFERENCES Cities(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT Customers_ID_CURRENCIES_FK FOREIGN KEY (ID_CURRENCIES) REFERENCES Currencies(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
@@ -386,15 +394,6 @@ INSERT INTO Cities (ID, Name, ID_COUNTRIES) VALUES (13, 'Garvan', 9);
 INSERT INTO Cities (ID, Name, ID_COUNTRIES) VALUES (14, 'Annemasse', 3);
 INSERT INTO Cities (ID, Name, ID_COUNTRIES) VALUES (15, 'Toronto', 4);
 
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (1, 5, 6, 'AR 72764', '3240 Green Hill Road');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (2, 2, 7, '91595', 'Heiligengeistbrücke 65');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (3, 9, 10, 'AL9 0LY', '66 Red Lane');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (4, 6, 11, '7605 XX', 'Spreeuwenstraat 73');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (5, 5, 12, 'CA 92121', '331 Hamill Avenue');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (6, 9, 13, 'PH33 3AF', '50 Old Chapel Road');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (7, 3, 14, '74100', '65, Avenue De Marlioz');
-INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (8, 4, 15, 'ON M5H 1P6', '4370 Adelaide St');
-
 INSERT INTO Currencies (ID, Name, Symbol) VALUES (1, 'Euro', 'EUR');
 INSERT INTO Currencies (ID, Name, Symbol) VALUES (2, 'US Dollar', 'USD');
 INSERT INTO Currencies (ID, Name, Symbol) VALUES (3, 'British Pound', 'GBP');
@@ -454,10 +453,19 @@ INSERT INTO Configurations (ID, ID_USERS, Configuration) VALUES (1, 4, '{"locale
 
 -- INSERT INTO Tokens () VALUES ();
 
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (1, '9276156937', 'Richard', 'McFarlin', 'M', 1, 'RichardRMcFarlin@teleworm.us', '479-316-2396', 2, 5, 'tt53zAw6IewAKQqhLT3tK3Bm4jxYRAOJ48aCif4p6T7BkCQW8v');
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (2, '1132466159', 'Lisa', 'Sanger', 'F', 2, 'LisaSanger@teleworm.us', '09805 81 50 95', 1, 1, 'WNyPJ0er9sbE2V5vA2x0cTNPDovu35xdlJEt38BTDCGDLiiVY6');
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (3, '5438663546', 'Isobel', 'Briggs', 'F', 3, 'MeganHicks@teleworm.us', '077 3928 7528', 3, 3, 'F2zMfO7T0P0ilZDedkCuhPlq646b8XcfBHIfhzSIH42fsU4cxk');
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_ADDRESSES, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (4, '2211239911', 'Puck', 'van Uitert', 'O', 4, 'PuckvanUitert@rhyta.com', '06-15368249', 1, 4, 'PN2dJhsPz0h9tonhT3H5dWtkuOWBhZXpHr1h4y6QT4KotU7q9G');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (1, 5, 6, 'AR 72764', '3240 Green Hill Road');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (2, 2, 7, '91595', 'Heiligengeistbrücke 65');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (3, 9, 10, 'AL9 0LY', '66 Red Lane');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (4, 6, 11, '7605 XX', 'Spreeuwenstraat 73');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (5, 5, 12, 'CA 92121', '331 Hamill Avenue');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (6, 9, 13, 'PH33 3AF', '50 Old Chapel Road');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (7, 3, 14, '74100', '65, Avenue De Marlioz');
+INSERT INTO Addresses (ID, ID_COUNTRIES, ID_CITIES, Postal_Code, Street) VALUES (8, 4, 15, 'ON M5H 1P6', '4370 Adelaide St');
+
+INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (1, '9276156937', 'Richard', 'McFarlin', 'M', 5, 6, 'AR 72764', '3240 Green Hill Road', 'RichardRMcFarlin@teleworm.us', '479-316-2396', 2, 5, 'tt53zAw6IewAKQqhLT3tK3Bm4jxYRAOJ48aCif4p6T7BkCQW8v');
+INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (2, '1132466159', 'Lisa', 'Sanger', 'F', 2, 7, '91595', 'Heiligengeistbrücke 65', 'LisaSanger@teleworm.us', '09805 81 50 95', 1, 1, 'WNyPJ0er9sbE2V5vA2x0cTNPDovu35xdlJEt38BTDCGDLiiVY6');
+INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (3, '5438663546', 'Isobel', 'Briggs', 'F', 9, 10, 'AL9 0LY', '66 Red Lane', 'MeganHicks@teleworm.us', '077 3928 7528', 3, 3, 'F2zMfO7T0P0ilZDedkCuhPlq646b8XcfBHIfhzSIH42fsU4cxk');
+INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (4, '2211239911', 'Puck', 'van Uitert', 'O', 6, 11, '7605 XX', 'Spreeuwenstraat 73', 'PuckvanUitert@rhyta.com', '06-15368249', 1, 4, 'PN2dJhsPz0h9tonhT3H5dWtkuOWBhZXpHr1h4y6QT4KotU7q9G');
 
 INSERT INTO Producers (ID, Short_Name, Full_Name, VAT, ID_ADDRESSES, Email, Phone, Path_Slug) VALUES (1, 'Opticomp', 'Opticomp Clothing', 'US773365342', 5, 'LarrySLowell@armyspy.com', '858-401-5106', 'ogZ3y7fN2bRYa8nNpBHnB6nNgAKveqxUQTIeZ8fE4NARoGCNic');
 INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID_ADDRESSES, Email, Phone, Path_Slug) VALUES (2, 'Omni', 'Omni Architectural Designs', 'Christopher', 'Harris', 'GB028338520', 6, 'RileyCraig@teleworm.us', '078 2966 5839', 'tRtLZ93FMfzrS4UpUegAQRkCTKgk3NYBiISNwluyleFJx7lV0u');
