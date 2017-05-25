@@ -32,11 +32,16 @@ class CustomerController extends BaseController {
             ->readEntitiesBy(['idCustomers' => $customer])
             ->getEntities();
 
+        $invoices = $this->get('invoice_crud_controller')
+            ->readEntitiesBy(['idCustomers' => $customer])
+            ->getEntities();
+
         // TODO: $invoices
 
         return $this->render('@Customer/Customer/show.html.twig', [
             'customer' => $customer,
             'orders' => $orders,
+            'invoices' => $invoices,
         ]);
     }
 
