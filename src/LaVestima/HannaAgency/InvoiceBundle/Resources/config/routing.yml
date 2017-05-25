@@ -2,6 +2,10 @@ invoice_list:
     path: /invoice/list
     defaults: { _controller: InvoiceBundle:Invoice:list }
 
+invoice_deleted_list:
+    path: /invoice/deleted_list
+    defaults: { _controller: InvoiceBundle:Invoice:deletedList }
+
 invoice_show:
     path: /invoice/show/{pathSlug}
     defaults: { _controller: InvoiceBundle:Invoice:show, pathSlug: '' }

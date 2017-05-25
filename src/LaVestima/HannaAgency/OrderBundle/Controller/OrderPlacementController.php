@@ -52,7 +52,7 @@ class OrderPlacementController extends BaseController {
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
-                // TODO: Add "Order cannot be empty" flash
+                $this->addFlash('warning', 'Order cannot be empty!');
             }
         }
 
