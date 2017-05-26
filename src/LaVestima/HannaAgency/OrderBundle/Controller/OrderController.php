@@ -128,6 +128,13 @@ class OrderController extends BaseController {
     public function restoreAction(string $pathSlug) {
 	    $order = $this->get('order_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
+
+	    $this->get('order_crud_controller')
+            ->restoreEntity($order);
+
+	    $this->addFlash('success', 'Order restored!');
+
+	    return $this->redirectToRoute('order_list');
 	    // TODO: finish
     }
 
