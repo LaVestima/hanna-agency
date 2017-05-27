@@ -5,14 +5,13 @@ namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
 use LaVestima\HannaAgency\AccessControlBundle\Form\RegisterType;
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
-use LaVestima\HannaAgency\UserManagementBundle\Entity\Roles;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use RandomLib\Factory;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegisterController extends Controller {
+class RegisterController extends BaseController {
+    private $baseUrl;
 	private $activationToken;
 
 	public function indexAction(Request $request) {
@@ -22,27 +21,21 @@ class RegisterController extends Controller {
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-//			$doctrine = $this->getDoctrine();
 			$user = $form->getData();
 
 			$passwordHash = $this->get('security.password_encoder')
 				->encodePassword($user, $form->get('password')->getData());
 
-			$user->setDateCreated(new \DateTime('now'));
 			$user->setPasswordHash($passwordHash);
 
-//			$defaultRole = $doctrine->getRepository('UserManagementBundle:Roles')
-//				->findOneBy(['code' => 'ROLE_GUEST']);
 			$defaultRole = $this->get('role_crud_controller')
 				->readOneEntityBy(['code' => 'ROLE_GUEST']);
 
 			$user->setIdRoles($defaultRole);
-			$user->setPathSlug((new CrudHelper())->generatePathSlug());
 
 			try {
 				$this->get('user_crud_controller')
 					->createEntity($user);
-//				return $this->redirectToRoute('homepage_homepage');
 			} catch (UniqueConstraintViolationException $e) {
 				// TODO: add a flash
 				var_dump('User with these credentials already exists!');
@@ -56,14 +49,16 @@ class RegisterController extends Controller {
 
 			$token = new Tokens();
 			$token->setIdUsers($user);
-			$token->setDateCreated(new \DateTime('now'));
-			$token->setDateExpired(new \DateTime('now +1 day'));
 			$token->setToken($this->activationToken);
 
 			$this->get('token_crud_controller')
 				->createEntity($token);
 
+			$this->baseUrl = $request->getSchemeAndHttpHost();
+
 			$this->sendActivationEmail($form->get('email')->getData());
+
+			// TODO: redirect to confirmation page
 			var_dump('Sent to '.$form->get('email')->getData());
 		}
 
@@ -103,7 +98,7 @@ class RegisterController extends Controller {
 	private function getActivationMessageBody() {
 		$body  = 'User has just been registered with this email.' . '<br>';
 		$body .= 'To confirm it click the following link:' . '<br>';
-		$body .= '<a href="http://127.0.0.1:8000/app_dev.php/account_activation/';
+		$body .= '<a href="' . $this->baseUrl . '/account_activation/';
 		$body .= $this->activationToken;
 		$body .= '">Confirm</a>';
 

@@ -45,7 +45,7 @@ abstract class CrudController extends Controller {
         }
 
 		$em = $this->manager;
-	    $entity = $em->merge($entity);
+//	    $entity = $em->merge($entity);
 		$em->persist($entity);
 		$em->flush();
 

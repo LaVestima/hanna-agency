@@ -46,7 +46,7 @@ class Tokens
     /**
      * @var Users
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
      * })

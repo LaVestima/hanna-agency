@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class BaseController extends Controller {
     public function isAdmin() {

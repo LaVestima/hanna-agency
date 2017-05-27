@@ -9,3 +9,15 @@ access_control_register:
 access_control_account_activation:
     path: /account_activation/{activationToken}
     defaults: { _controller: AccessControlBundle:AccountActivation:index, activationToken: '' }
+
+access_control_forgot_password:
+    path: /forgot_password
+    defaults: { _controller: AccessControlBundle:ForgotPassword:index }
+
+access_control_email_sent:
+    path: /forgot_password/email_sent
+    defaults: { _controller: AccessControlBundle:ForgotPassword:emailSent }
+
+access_control_reset_password:
+    path: /reset_password/{resetPasswordToken}
+    defaults: { _controller: AccessControlBundle:ResetPassword:index, resetPasswordToken: '' }

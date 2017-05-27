@@ -8,7 +8,7 @@ $(function() {
     });
 
 
-    $('.flash-message-list').delay(500)
+    $('.flash-message-list').delay(300)
         .animate({
             top: "0px"
         }, 500)

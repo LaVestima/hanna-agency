@@ -1,0 +1,18 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}Forgot Password{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+    <table class="user-input-table">
+        <tr>
+            <td>{{ form_label(form.email) }}</td>
+            <td>{{ form_widget(form.email) }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form_widget(form.save) }}</td>
+        </tr>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}
