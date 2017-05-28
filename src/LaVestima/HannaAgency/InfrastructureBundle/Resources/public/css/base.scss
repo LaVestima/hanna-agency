@@ -80,7 +80,7 @@ h1 {
 
 .module-box {
   background: #ccc;
-  margin: 10px 0 20px 0;
+  margin: 10px 0 10px 0;
   box-shadow: 3px 3px 10px black;
   min-height: 40px;
   overflow: hidden;
@@ -93,6 +93,18 @@ h1 {
     padding: 5px;
     background: #AAAAAA;
     font-weight: bold;
+  }
+  .module-box-content {
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .module-box {
+    width: calc(50% - 12px);
+    display: inline-table;
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 
@@ -146,12 +158,12 @@ h1 {
   td {
     padding: 5px;
     &:first-child {
-      width: 50%;
+      width: 30%;
       text-align: right;
       font-weight: bold;
     }
     &:last-child {
-      width: 50%;
+      width: 70%;
       text-align: left;
     }
   }

@@ -35,10 +35,11 @@
         </div>
     </div>
 
-    {% if customer.idUsers is not null %}
+
     <div class="module-box">
         <div class="module-box-title">User Information</div>
         <div class="module-box-content">
+            {% if customer.idUsers is not null %}
             <table class="entity-show-table">
                 <tr>
                     <td>Login</td>
@@ -53,14 +54,16 @@
                     </td>
                 </tr>
             </table>
+            {% else %}
+                No User
+            {% endif %}
         </div>
     </div>
-    {% endif %}
 
-    {% if orders is not empty %}
     <div class="module-box">
         <div class="module-box-title">Order History</div>
         <div class="module-box-content">
+            {% if orders is not empty %}
             <table class="entity-list">
                 <tr>
                     <th>Date Placed</th>
@@ -82,14 +85,16 @@
                     </tr>
                 {% endfor %}
             </table>
+            {% else %}
+                No Orders
+            {% endif %}
         </div>
     </div>
-    {% endif %}
 
-    {% if invoices is not empty %}
     <div class="module-box">
         <div class="module-box-title">Invoice History</div>
         <div class="module-box-content">
+            {% if invoices is not empty %}
             <table class="entity-list">
                 <tr>
                     <th>Name</th>
@@ -107,7 +112,9 @@
                     </tr>
                 {% endfor %}
             </table>
+            {% else %}
+                No Invoices
+            {% endif %}
         </div>
     </div>
-    {% endif %}
 {% endblock %}
