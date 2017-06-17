@@ -5,6 +5,7 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityNotFoundException;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -21,9 +22,9 @@ abstract class CrudController extends Controller {
 	protected $query = '';
 
 	public function __construct(
-            Registry $doctrine,
-            TokenStorageInterface $tokenStorage)
-    {
+        Registry $doctrine,
+        TokenStorageInterface $tokenStorage
+    ) {
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
 
@@ -35,12 +36,12 @@ abstract class CrudController extends Controller {
     /**
 	 * @param $entity
 	 */
-	public function createEntity($entity)
+	public function createEntity(EntityInterface $entity)
     {
 	    if (method_exists($entity, 'setDateCreated')) {
             $entity->setDateCreated(new \DateTime('now'));
         }
-        if (method_exists($entity, 'setUserCreated')) {
+        if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated()) {
             $entity->setUserCreated($this->user);
         }
         if (method_exists($entity, 'setPathSlug')) {
@@ -53,17 +54,6 @@ abstract class CrudController extends Controller {
 		$em->flush();
 
 		return $entity;
-	}
-
-	/**
-	 * @param $entityId
-	 * @return object
-	 */
-	public function readEntity($entityId)
-    {
-		return $this->doctrine
-			->getRepository($this->entityClass)
-			->find($entityId);
 	}
 
 	/**
@@ -131,7 +121,7 @@ abstract class CrudController extends Controller {
             ->findOneBy($keyValueArray);
 
 	    if (!$entity) {
-	        throw new EntityNotFoundException();
+//	        throw new EntityNotFoundException();
         }
 
 		return $entity;
@@ -155,7 +145,8 @@ abstract class CrudController extends Controller {
     public function readAllUndeletedEntities()
     {
         $this->query = '
-            SELECT ent FROM ' . $this->entityClass . ' ent
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
             WHERE ent.dateDeleted IS NULL
             ';
 
@@ -167,13 +158,49 @@ abstract class CrudController extends Controller {
     public function readAllDeletedEntities()
     {
         $this->query = '
-            SELECT ent FROM ' . $this->entityClass . ' ent
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
             WHERE ent.dateDeleted IS NOT NULL
             ';
 
         $this->executeQuery();
 
         return $this;
+    }
+
+    public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
+    {
+        if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
+            throw new \InvalidArgumentException('Number of randomized entities cannot exceed the row number!');
+        }
+
+        if ($numberOfEntities === null) {
+            $numberOfEntities = rand(1, $this->countRows());
+        }
+
+        if ($numberOfEntities === 1) {
+            do {
+                $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
+            } while (!$entity);
+
+            return $entity;
+        } elseif ($numberOfEntities > 1) {
+            $entities = [];
+
+            for ($i = 0; $i < $numberOfEntities; $i++) {
+                do {
+                    $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
+
+                    if (!$entitiesCanRepeat && in_array($entity, $entities)) {
+                        $entity = null;
+                    }
+                } while (!$entity);
+            }
+
+            return $entities;
+        } else {
+            throw new \InvalidArgumentException();
+        }
     }
 
 	/**
@@ -237,7 +264,36 @@ abstract class CrudController extends Controller {
 	    return $this;
     }
 
-    private function executeQuery() {
-        $this->entities = $this->manager->createQuery($this->query)->getResult();
+    private function executeQuery()
+    {
+        $this->entities = $this->manager
+            ->createQuery($this->query)
+            ->getResult();
+    }
+
+    private function countRows()
+    {
+        $this->query = '
+            SELECT COUNT(ent)
+            FROM ' . $this->entityClass . ' ent
+        ';
+
+        return (int)$this->manager
+            ->createQuery($this->query)
+            ->getSingleScalarResult();
+    }
+
+    private function getLastId()
+    {
+        $this->query = '
+            SELECT ent.id
+            FROM ' . $this->entityClass . ' ent
+            ORDER BY ent.id DESC
+        ';
+
+        return (int)$this->manager
+            ->createQuery($this->query)
+            ->setMaxResults(1)
+            ->getSingleScalarResult();
     }
 }

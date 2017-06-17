@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\CustomerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use LaVestima\HannaAgency\LocationBundle\Entity\Addresses;
 use LaVestima\HannaAgency\LocationBundle\Entity\Cities;
 use LaVestima\HannaAgency\LocationBundle\Entity\Countries;
@@ -15,7 +16,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_Number_U", columns={"Identification_Number"}), @ORM\UniqueConstraint(name="Customers_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Customers_ID_ADDRESSES_FK", columns={"ID_ADDRESSES"}), @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}), @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Customers implements \JsonSerializable
+class Customers implements EntityInterface, \JsonSerializable
 {
     /**
      * @var integer

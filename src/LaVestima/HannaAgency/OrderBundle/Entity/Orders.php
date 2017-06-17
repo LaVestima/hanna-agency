@@ -4,6 +4,7 @@ namespace LaVestima\HannaAgency\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 
 /**
@@ -12,7 +13,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Orders_User_Created_FK", columns={"User_Created"}), @ORM\Index(name="Orders_User_Deleted_FK", columns={"User_Deleted"}), @ORM\Index(name="Orders_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"})})
  * @ORM\Entity
  */
-class Orders implements \JsonSerializable
+class Orders implements EntityInterface, \JsonSerializable
 {
     /**
      * @var integer

@@ -82,11 +82,8 @@ class PDFExportController extends BaseController
         $orders = [];
 
         foreach ($pathSlugs as $pathSlug) {
-            if (!$orders[] = $this->get('order_crud_controller')
-                ->readOneEntityBy(['pathSlug' => $pathSlug])
-            ) {
-                throw new EntityNotFoundException();
-            }
+            $orders[] = $this->get('order_crud_controller')
+                ->readOneEntityBy(['pathSlug' => $pathSlug]);
         }
 
         $this->pdf->DataTable(

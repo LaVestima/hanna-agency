@@ -38,7 +38,6 @@ $('.left-menu').css({
 
 $(document).ready(function() {
     leftMenuWidth = $('.left-menu').width();
-    // console.log(leftMenuWidth);
 
     $(".body-overlay").fadeOut(0);
     $(".body-overlay").css("visibility", "visible");
@@ -64,7 +63,7 @@ $(document).ready(function() {
     });
 
     $(document).keydown(function(event) {
-        if (event.keyCode == 27) {
+        if (event.keyCode === 27) {
             if (isLeftMenuActive) {
                 hideLeftMenu();
             }
