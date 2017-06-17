@@ -11,7 +11,7 @@ use LaVestima\HannaAgency\ProductBundle\Entity\Products;
  * @ORM\Table(name="Orders_Products", indexes={@ORM\Index(name="Orders_Products_ID_ORDERS_FK", columns={"ID_ORDERS"}), @ORM\Index(name="Orders_Products_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}), @ORM\Index(name="Orders_Products_ID_STATUSES_FK", columns={"ID_STATUSES"})})
  * @ORM\Entity
  */
-class OrdersProducts
+class OrdersProducts implements \JsonSerializable
 {
     /**
      * @var integer
@@ -227,5 +227,18 @@ class OrdersProducts
     public function getIdStatuses()
     {
         return $this->idStatuses;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize() // TODO: finish !!!
+    {
+        $json = [];
+        $json['name'] = $this->idProducts->getName();
+        $json['quantity'] = $this->quantity;
+        $json['status'] = $this->idStatuses->getName();
+
+        return $json;
     }
 }

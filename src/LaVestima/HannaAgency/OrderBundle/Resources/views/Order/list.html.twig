@@ -1,5 +1,15 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
+{% set isExportAllowed = true %}
+{% set pdfExportPath = path('export_pdf_order_list') %}
+{% set pdfExportJson = [] %}
+
+{% for order in orders %}
+    {% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}
+{% endfor %}
+
+{% set pdfExportJson = pdfExportJson | json_encode %}
+
 {% block title %}Order list{% endblock %}
 
 {% block actionBar %}

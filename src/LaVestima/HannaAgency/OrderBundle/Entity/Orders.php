@@ -12,7 +12,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Orders", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Orders_User_Created_FK", columns={"User_Created"}), @ORM\Index(name="Orders_User_Deleted_FK", columns={"User_Deleted"}), @ORM\Index(name="Orders_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"})})
  * @ORM\Entity
  */
-class Orders
+class Orders implements \JsonSerializable
 {
     /**
      * @var integer
@@ -255,5 +255,16 @@ class Orders
 
     public function getStatus() {
         return $this->status;
+    }
+
+    public function jsonSerialize() // TODO: finish !!!
+    {
+        $json = [];
+        $json['datePlaced'] = $this->datePlaced->format('d.m.Y');
+        $json['status'] = $this->status;
+        $json['customer'] = $this->idCustomers->getFullName();
+
+
+        return $json;
     }
 }

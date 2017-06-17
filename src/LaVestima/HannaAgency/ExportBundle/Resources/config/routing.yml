@@ -1,0 +1,11 @@
+export_pdf_invoice:
+    path: /export/pdf/invoice/{jsonInvoice}
+    defaults: { _controller: ExportBundle:PDFExport:invoice, jsonInvoice: '' }
+
+export_pdf_order_list:
+    path: /export/pdf/order_list/{pathSlugsJson}
+    defaults: { _controller: ExportBundle:PDFExport:orderList, pathSlugsJson: '' }
+
+export_pdf_order:
+    path: /export/pdf/order/{pathSlug}
+    defaults: { _controller: ExportBundle:PDFExport:order, pathSlug: '' }

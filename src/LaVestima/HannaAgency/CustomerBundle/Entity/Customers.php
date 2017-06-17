@@ -15,7 +15,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Customers", uniqueConstraints={@ORM\UniqueConstraint(name="Customers_Identification_Number_U", columns={"Identification_Number"}), @ORM\UniqueConstraint(name="Customers_Path_Slug_U", columns={"Path_Slug"})}, indexes={@ORM\Index(name="Customers_ID_ADDRESSES_FK", columns={"ID_ADDRESSES"}), @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}), @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Customers
+class Customers implements \JsonSerializable
 {
     /**
      * @var integer
@@ -703,5 +703,14 @@ class Customers
     
     public function getFullName() {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function jsonSerialize() // TODO: finish !!!!
+    {
+        $json = [];
+        $json['fullName'] = $this->fullName;
+        $json['identificationNumber'] = $this->identificationNumber;
+
+        return $json;
     }
 }

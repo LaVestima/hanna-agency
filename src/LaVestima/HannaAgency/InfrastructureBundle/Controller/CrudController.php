@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityNotFoundException;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,7 +22,8 @@ abstract class CrudController extends Controller {
 
 	public function __construct(
             Registry $doctrine,
-            TokenStorageInterface $tokenStorage) {
+            TokenStorageInterface $tokenStorage)
+    {
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
 
@@ -33,7 +35,8 @@ abstract class CrudController extends Controller {
     /**
 	 * @param $entity
 	 */
-	public function createEntity($entity) {
+	public function createEntity($entity)
+    {
 	    if (method_exists($entity, 'setDateCreated')) {
             $entity->setDateCreated(new \DateTime('now'));
         }
@@ -56,7 +59,8 @@ abstract class CrudController extends Controller {
 	 * @param $entityId
 	 * @return object
 	 */
-	public function readEntity($entityId) {
+	public function readEntity($entityId)
+    {
 		return $this->doctrine
 			->getRepository($this->entityClass)
 			->find($entityId);
@@ -66,13 +70,19 @@ abstract class CrudController extends Controller {
 	 * @param $entity
      * @param array $keyValueArray
 	 */
-	public function updateEntity($entity, array $keyValueArray) {
+	public function updateEntity($entity, array $keyValueArray)
+    {
         if (!$entity) {
-            // TODO: throw error
+            throw new EntityNotFoundException();
         }
 
         foreach ($keyValueArray as $key => $value) {
             $methodName = 'set' . $key;
+
+            if (!method_exists($entity, $methodName)) {
+                throw new \InvalidArgumentException();
+            }
+
             $entity->$methodName($value);
         }
 
@@ -85,9 +95,10 @@ abstract class CrudController extends Controller {
 	/**
 	 * @param $entity
 	 */
-	public function deleteEntity($entity) {
+	public function deleteEntity($entity)
+    {
 		if (!$entity) {
-			// TODO: throw error
+		    throw new EntityNotFoundException();
 		}
 
 		// TODO: add method_exists ??
@@ -101,7 +112,8 @@ abstract class CrudController extends Controller {
 	 * @param array $keyValueArray
 	 * @return mixed
 	 */
-	public function readEntitiesBy(array $keyValueArray) {
+	public function readEntitiesBy(array $keyValueArray)
+    {
 		$this->entities = $this->doctrine
 			->getRepository($this->entityClass)
 			->findBy($keyValueArray);
@@ -112,16 +124,24 @@ abstract class CrudController extends Controller {
 	 * @param array $keyValueArray
 	 * @return object
 	 */
-	public function readOneEntityBy(array $keyValueArray) {
-		return $this->doctrine
-			->getRepository($this->entityClass)
-			->findOneBy($keyValueArray);
+	public function readOneEntityBy(array $keyValueArray)
+    {
+	    $entity = $this->doctrine
+            ->getRepository($this->entityClass)
+            ->findOneBy($keyValueArray);
+
+	    if (!$entity) {
+	        throw new EntityNotFoundException();
+        }
+
+		return $entity;
 	}
 
     /**
      * @return object
      */
-    public function readAllEntities() {
+    public function readAllEntities()
+    {
         $this->query = 'SELECT ent FROM ' . $this->entityClass . ' ent';
 
         $this->executeQuery();
@@ -132,7 +152,8 @@ abstract class CrudController extends Controller {
         return $this;
     }
 
-    public function readAllUndeletedEntities() {
+    public function readAllUndeletedEntities()
+    {
         $this->query = '
             SELECT ent FROM ' . $this->entityClass . ' ent
             WHERE ent.dateDeleted IS NULL
@@ -143,7 +164,8 @@ abstract class CrudController extends Controller {
         return $this;
     }
 
-    public function readAllDeletedEntities() {
+    public function readAllDeletedEntities()
+    {
         $this->query = '
             SELECT ent FROM ' . $this->entityClass . ' ent
             WHERE ent.dateDeleted IS NOT NULL
@@ -157,9 +179,10 @@ abstract class CrudController extends Controller {
 	/**
 	 * @param $entity
 	 */
-	public function restoreEntity($entity) {
+	public function restoreEntity($entity)
+    {
         if (!$entity) {
-            // TODO: throw error
+            throw new EntityNotFoundException();
         }
 
         // TODO: add method_exists ??
@@ -172,7 +195,12 @@ abstract class CrudController extends Controller {
 	/**
 	 * @param $entity
 	 */
-	protected function purgeEntity($entity) {
+	protected function purgeEntity($entity)
+    {
+        if (!$entity) {
+            throw new EntityNotFoundException();
+        }
+
 		$em = $this->manager;
 		$em->remove($entity);
 		$em->flush();
@@ -182,13 +210,15 @@ abstract class CrudController extends Controller {
 
     // addEntity()
 
-	public function getEntities() {
+	public function getEntities()
+    {
 //        $this->executeQuery();
 	    // TODO: finish SELECT query here
 	    return $this->entities;
     }
 
-	public function sortBy(array $keyValueArray) {
+	public function sortBy(array $keyValueArray)
+    {
 	    if (is_array($this->entities)) {
             foreach ($keyValueArray as $key => $item) {
                 $methodName = 'get' . $key;
@@ -199,7 +229,7 @@ abstract class CrudController extends Controller {
                     } else if ($item == 'DESC') {
                         return $b->$methodName() <=> $a->$methodName();
                     } else {
-                        // TODO: throw exception
+                        throw new \InvalidArgumentException();
                     }
                 });
             }

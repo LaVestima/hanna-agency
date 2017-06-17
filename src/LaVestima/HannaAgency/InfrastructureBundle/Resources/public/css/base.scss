@@ -34,7 +34,6 @@ h1 {
 .button {
   display: inline-block;
   padding: 10px;
-  //margin: 5px;
   background: $main-theme-color;
   color: $main-font-color;
   text-align: center;
@@ -59,8 +58,36 @@ h1 {
 .action-bar {
   padding: 10px;
   background: #ddd;
-  .action-bar-button {
-    font-weight: bold;
+
+  .action-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .action-bar-button {
+      font-weight: bold;
+    }
+
+    .action-bar-export {
+      position: relative;
+      float: right;
+
+      .action-bar-export-list {
+        position: absolute;
+        right: 0;
+        padding: 0;
+        list-style: none;
+        text-align: center;
+
+        li {
+          display: block;
+
+          a {
+            display: block;
+            color: $main-font-color;
+          }
+        }
+      }
+    }
   }
 }
 

@@ -2,6 +2,15 @@
 
 {% block title %}Show Invoice{% endblock %}
 
+{% block actionBar %}
+    <a href="{{ path('invoice_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+{% endblock %}
+
 {% block content %}
     <div class="module-box">
         <div class="module-box-title">General Information</div>
@@ -29,12 +38,10 @@
 
     {% set invoiceTotalPrice = 0 %}
 
-    {% if invoicesProducts is empty %}
-    No Products!
-    {% else %}
     <div class="module-box">
         <div class="module-box-title">Products</div>
         <div class="module-box-content">
+        {% if invoicesProducts is not empty %}
             <table class="entity-list">
                 <tr>
                     <th>Name</th>
@@ -84,7 +91,9 @@
                     </td>
                 </tr>
             </table>
+            {% else %}
+                No Products
+            {% endif %}
         </div>
     </div>
-    {% endif %}
 {% endblock %}

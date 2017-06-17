@@ -1,8 +1,18 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
+{% set isExportAllowed = true %}
+{% set pdfExportPath = path('export_pdf_order') %}
+{% set pdfExportPathSlug = order.pathSlug %}
+
 {% block title %}Order{% endblock %}
 
 {% block actionBar %}
+    <a href="{{ path('order_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
     {#// TODO: add confirmation window #}
     {% if order.dateDeleted is null %}
     <a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">
