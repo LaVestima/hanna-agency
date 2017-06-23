@@ -47,7 +47,7 @@ class OrdersProducts implements EntityInterface, \JsonSerializable
     /**
      * @var Orders
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\Orders")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\Orders", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_ORDERS", referencedColumnName="ID")
      * })

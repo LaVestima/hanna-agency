@@ -22,4 +22,21 @@ $(function() {
         event.stopPropagation();
         $('.action-bar-export-list > li').toggleClass('hidden');
     });
+
+    // var lastScrollTop = 0;
+    //
+    // $(window).scroll(function () {
+    //     var currentScrollTop = $(this).scrollTop();
+    //
+    //     if (currentScrollTop > 35 && currentScrollTop > lastScrollTop) {
+    //         $('.page-title').addClass('page-title-scrolled');
+    //     } else {
+    //         $('.page-title').removeClass('page-title-scrolled');
+    //     }
+    //
+    //     console.log(lastScrollTop);
+    //     console.log(currentScrollTop);
+    //
+    //     lastScrollTop = currentScrollTop;
+    // })
 });

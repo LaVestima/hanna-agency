@@ -41,7 +41,7 @@ abstract class CrudController extends Controller {
 	    if (method_exists($entity, 'setDateCreated')) {
             $entity->setDateCreated(new \DateTime('now'));
         }
-        if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated()) {
+        if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
             $entity->setUserCreated($this->user);
         }
         if (method_exists($entity, 'setPathSlug')) {
@@ -49,7 +49,14 @@ abstract class CrudController extends Controller {
         }
 
 		$em = $this->manager;
-	    $entity = $em->merge($entity);
+
+	    // TODO: works, i don't know why o.O
+        // TODO: think about it !!!!!!!!!!!!
+//        if ($this->readOneEntityBy(['id' => $entity->getId()])) {
+        if ($this->user) {
+            $entity = $em->merge($entity);
+        }
+
 		$em->persist($entity);
 		$em->flush();
 
@@ -195,6 +202,8 @@ abstract class CrudController extends Controller {
                         $entity = null;
                     }
                 } while (!$entity);
+
+                $entities[] = $entity;
             }
 
             return $entities;
@@ -271,7 +280,7 @@ abstract class CrudController extends Controller {
             ->getResult();
     }
 
-    private function countRows()
+    public function countRows()
     {
         $this->query = '
             SELECT COUNT(ent)

@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\AccessControlBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 
 /**
@@ -11,7 +12,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Login_Attempts", indexes={@ORM\Index(name="Login_Attempts_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class LoginAttempts
+class LoginAttempts implements EntityInterface
 {
     /**
      * @var integer

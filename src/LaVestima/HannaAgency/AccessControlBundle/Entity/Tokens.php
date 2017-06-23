@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\AccessControlBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 
 /**
@@ -11,7 +12,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
  * @ORM\Table(name="Tokens", uniqueConstraints={@ORM\UniqueConstraint(name="Tokens_Token_U", columns={"Token"})}, indexes={@ORM\Index(name="Tokens_ID_USERS_FK", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Tokens
+class Tokens implements EntityInterface
 {
     /**
      * @var integer

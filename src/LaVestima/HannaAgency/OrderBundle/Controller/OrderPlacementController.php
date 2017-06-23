@@ -115,6 +115,7 @@ class OrderPlacementController extends BaseController {
     }
 
     private function createNewOrder() {
+        // TODO: move to order crud controller
         $order = new Orders();
 
         $order->setDatePlaced(new \DateTime('now'));

@@ -20,45 +20,49 @@
     {% if app.environment == 'dev' %}
         <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
     {% endif %}
+
     <div class="main-menu">
         {% include '@Infrastructure/Parts/main_menu.html.twig' %}
     </div>
-    <div class="page-title">
-        <h1>{{ block('title') }}</h1>
-    </div>
 
-    {% if block('actionBar') is defined %}
-        <div class="action-bar">
-            <div class="action-bar-content">
-                {{ block('actionBar') }}
-
-                {% if isExportAllowed is defined and isExportAllowed %}
-                    <div class="action-bar-export">
-                        <div class="button action-bar-button action-bar-export-button">
-                            <i class="fa fa-download" aria-hidden="true"></i>
-                        </div>
-                        <ul class="action-bar-export-list">
-                            {% if pdfExportPath is defined %}
-                                <li class="hidden">
-                                    <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
-                                        PDF
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if excelExportPath is defined %}
-                                <li class="hidden">
-                                    <a class="button" href="{{ excelExportPath }}">
-                                        Excel
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-            </div>
+    <div class="top-bar">
+        <div class="page-title">
+            <h1>{{ block('title') }}</h1>
         </div>
-    {% endif %}
+
+        {% if block('actionBar') is defined %}
+            <div class="action-bar">
+                <div class="action-bar-content">
+                    {{ block('actionBar') }}
+
+                    {% if isExportAllowed is defined and isExportAllowed %}
+                        <div class="action-bar-export">
+                            <div class="button action-bar-button action-bar-export-button">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                            </div>
+                            <ul class="action-bar-export-list">
+                                {% if pdfExportPath is defined %}
+                                    <li class="hidden">
+                                        <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
+                                            PDF
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if excelExportPath is defined %}
+                                    <li class="hidden">
+                                        <a class="button" href="{{ excelExportPath }}">
+                                            Excel
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
     <div class="page-content">
         {{ block('content') }}

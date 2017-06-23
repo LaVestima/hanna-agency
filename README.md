@@ -27,6 +27,7 @@
 - API
 - Method to get Order status
 - Export
+    - Json doesn't scale for lists (url too long)
     - Log every export
     - Invoice
     - Invoice List
