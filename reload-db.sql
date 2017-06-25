@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS Producers;
 DROP TABLE IF EXISTS Customers;
 DROP TABLE IF EXISTS Tokens;
 DROP TABLE IF EXISTS Login_Attempts;
-DROP TABLE IF EXISTS Configurations;
+DROP TABLE IF EXISTS Users_Settings;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Sizes;
@@ -136,13 +136,13 @@ CREATE TABLE IF NOT EXISTS Users (
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Configurations (
+CREATE TABLE IF NOT EXISTS Users_Settings (
 	ID INTEGER NOT NULL AUTO_INCREMENT,
 	ID_USERS INTEGER NOT NULL,
-	Configuration JSON NOT NULL,
-	CONSTRAINT Configurations_PK PRIMARY KEY (ID),
-	CONSTRAINT Configurations_ID_USERS_U UNIQUE(ID_USERS),
-	CONSTRAINT Configurations_ID_USERS_FK FOREIGN KEY (ID_USERS) REFERENCES Users(ID)
+	Locale VARCHAR(2) NOT NULL DEFAULT 'en',
+	CONSTRAINT Users_Settings_PK PRIMARY KEY (ID),
+	CONSTRAINT Users_Settings_ID_USERS_U UNIQUE(ID_USERS),
+	CONSTRAINT Users_Settings_ID_USERS_FK FOREIGN KEY (ID_USERS) REFERENCES Users(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -447,7 +447,8 @@ INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
 
 -- INSERT INTO Configurations () VALUES ();
-INSERT INTO Configurations (ID, ID_USERS, Configuration) VALUES (1, 4, '{"locale": "en", "darkMode": false}');
+INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (1, 4, 'en');
+INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (2, 5, 'pl');
 
 -- INSERT INTO Login_Attempts () VALUES ();
 

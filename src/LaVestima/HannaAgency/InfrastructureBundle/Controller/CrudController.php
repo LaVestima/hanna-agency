@@ -114,6 +114,7 @@ abstract class CrudController extends Controller {
 		$this->entities = $this->doctrine
 			->getRepository($this->entityClass)
 			->findBy($keyValueArray);
+
 		return $this;
 	}
 
@@ -127,10 +128,6 @@ abstract class CrudController extends Controller {
             ->getRepository($this->entityClass)
             ->findOneBy($keyValueArray);
 
-	    if (!$entity) {
-//	        throw new EntityNotFoundException();
-        }
-
 		return $entity;
 	}
 
@@ -139,13 +136,13 @@ abstract class CrudController extends Controller {
      */
     public function readAllEntities()
     {
-        $this->query = 'SELECT ent FROM ' . $this->entityClass . ' ent';
+        $this->query = '
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
+            ';
 
         $this->executeQuery();
 
-//        $this->entities = $this->doctrine
-//            ->getRepository($this->entityClass)
-//            ->findAll();
         return $this;
     }
 

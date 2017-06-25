@@ -3,14 +3,15 @@
 namespace LaVestima\HannaAgency\UserManagementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 
 /**
- * Configurations
+ * UsersSettings
  *
- * @ORM\Table(name="Configurations", uniqueConstraints={@ORM\UniqueConstraint(name="Configurations_ID_USERS_U", columns={"ID_USERS"})})
+ * @ORM\Table(name="Users_Settings", uniqueConstraints={@ORM\UniqueConstraint(name="Users_Settings_ID_USERS_U", columns={"ID_USERS"})})
  * @ORM\Entity
  */
-class Configurations
+class UsersSettings implements EntityInterface
 {
     /**
      * @var integer
@@ -24,9 +25,9 @@ class Configurations
     /**
      * @var string
      *
-     * @ORM\Column(name="Configuration", type="string", length=50, nullable=false)
+     * @ORM\Column(name="Locale", type="string", length=2, nullable=false)
      */
-    private $configuration;
+    private $locale = 'en';
 
     /**
      * @var Users
@@ -37,7 +38,6 @@ class Configurations
      * })
      */
     private $idUsers;
-
 
 
     /**
@@ -51,27 +51,27 @@ class Configurations
     }
 
     /**
-     * Set configuration
+     * Set locale
      *
-     * @param string $configuration
+     * @param string $locale
      *
-     * @return Configurations
+     * @return UsersSettings
      */
-    public function setConfiguration($configuration)
+    public function setLocale($locale)
     {
-        $this->configuration = $configuration;
+        $this->locale = $locale;
 
         return $this;
     }
 
     /**
-     * Get configuration
+     * Get locale
      *
      * @return string
      */
-    public function getConfiguration()
+    public function getLocale()
     {
-        return $this->configuration;
+        return $this->locale;
     }
 
     /**
@@ -79,7 +79,7 @@ class Configurations
      *
      * @param Users $idUsers
      *
-     * @return Configurations
+     * @return UsersSettings
      */
     public function setIdUsers(Users $idUsers = null)
     {

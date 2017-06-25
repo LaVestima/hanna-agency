@@ -18,8 +18,12 @@
 </head>
 <body>
     {% if app.environment == 'dev' %}
-        <div style="position: fixed; bottom: 35px;">{{ dump() }}</div>
+        <div style="position: fixed; bottom: 35px;">
+            {{ dump() }}
+            {{ dump(app.session.get('configuration')) }}
+        </div>
     {% endif %}
+
 
     <div class="main-menu">
         {% include '@Infrastructure/Parts/main_menu.html.twig' %}
