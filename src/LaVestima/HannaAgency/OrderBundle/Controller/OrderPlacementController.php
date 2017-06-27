@@ -79,7 +79,7 @@ class OrderPlacementController extends BaseController {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = $this->createNewOrder();
+            $order = new Orders();
             $order->setIdCustomers($productPlacement->customers);
 
             $order = $this->get('order_crud_controller')
@@ -112,14 +112,5 @@ class OrderPlacementController extends BaseController {
             'productPlacement' => $productPlacement,
             'form' => $form->createView(),
         ]);
-    }
-
-    private function createNewOrder() {
-        // TODO: move to order crud controller
-        $order = new Orders();
-
-        $order->setDatePlaced(new \DateTime('now'));
-
-        return $order;
     }
 }

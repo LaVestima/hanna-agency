@@ -4,13 +4,12 @@ namespace LaVestima\HannaAgency\AccessControlBundle\Handler;
 
 use LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudController;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\LoginAttempts;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\SessionHelper;
 use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController;
 use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudController;
-use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -23,17 +22,20 @@ class AuthenticationHandler implements
     private $loginAttemptCrudController;
     private $userCrudController;
     private $userSettingCrudController;
+    private $sessionHelper;
     private $router;
 
     public function __construct(
             LoginAttemptCrudController $loginAttemptCrudController,
             UserCrudController $userCrudController,
             UserSettingCrudController $userSettingCrudController,
+            SessionHelper $sessionHelper,
             Router $router
     ) {
         $this->loginAttemptCrudController = $loginAttemptCrudController;
         $this->userCrudController = $userCrudController;
         $this->userSettingCrudController = $userSettingCrudController;
+        $this->sessionHelper = $sessionHelper;
         $this->router = $router;
     }
 
@@ -48,7 +50,7 @@ class AuthenticationHandler implements
         $this->loginAttemptCrudController
             ->createEntity($loginAttempt);
 
-        $this->loadUserSettingsToSession($token->getUser(), $request->getSession());
+        $this->sessionHelper->loadUserSettingsToSession($token->getUser());
 
         return new RedirectResponse($this->router->generate('homepage_homepage'));
     }
@@ -70,20 +72,5 @@ class AuthenticationHandler implements
             ->createEntity($loginAttempt);
 
         return new RedirectResponse($this->router->generate('access_control_login'));
-    }
-
-    private function loadUserSettingsToSession(Users $user, SessionInterface $session)
-    {
-        // TODO: finish !!!
-
-        $userSettings = $this->userSettingCrudController
-            ->readOneEntityBy([
-                'idUsers' => $user
-            ]);
-
-        $session->set('configuration', [
-            'locale' => $userSettings->getLocale(),
-            // TODO: more !!!
-        ]);
     }
 }

@@ -67,20 +67,27 @@ abstract class CrudController extends Controller {
 	 * @param $entity
      * @param array $keyValueArray
 	 */
-	public function updateEntity($entity, array $keyValueArray)
+	public function updateEntity(EntityInterface $oldEntity, $newEntity)
     {
-        if (!$entity) {
+        if (!$oldEntity) {
             throw new EntityNotFoundException();
         }
 
-        foreach ($keyValueArray as $key => $value) {
-            $methodName = 'set' . $key;
+        if ($newEntity instanceof EntityInterface) {
+            // TODO: test it !!!
+            $this->manager->merge($newEntity);
+        } elseif (is_array($newEntity)) {
+            foreach ($newEntity as $key => $value) {
+                $methodName = 'set' . $key;
 
-            if (!method_exists($entity, $methodName)) {
-                throw new \InvalidArgumentException();
+                if (!method_exists($oldEntity, $methodName)) {
+                    throw new \InvalidArgumentException();
+                }
+
+                $oldEntity->$methodName($value);
             }
-
-            $entity->$methodName($value);
+        } else {
+            throw new \InvalidArgumentException();
         }
 
         $this->manager->flush();

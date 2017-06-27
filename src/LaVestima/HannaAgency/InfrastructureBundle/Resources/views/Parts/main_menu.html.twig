@@ -81,7 +81,7 @@
         {% endif %}
         {% if is_granted('ROLE_GUEST') %}
             <li>
-                <a href="#">
+                <a href="{{ path('user_setting_index') }}">
                     <div class="left-menu-item left-menu-body-row">
                         <i class="fa fa-cog" aria-hidden="true"></i>
                         <span>Settings</span>
