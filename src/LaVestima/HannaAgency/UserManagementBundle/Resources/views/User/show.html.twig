@@ -63,21 +63,21 @@
     {% endif %}
 
 
-    {% if configuration is defined and configuration is not null %}
+    {% if userSettings is defined and userSettings is not null %}
         <div class="module-box">
             <div class="module-box-title">
-                User Configuration
+                User Settings
             </div>
             <div class="module-box-content">
                 <table class="entity-show-table">
                     <tr>
                         <td>Locale</td>
-                        <td>{{ configuration.locale }}</td>
+                        <td>{{ userSettings.locale }}</td>
                     </tr>
-                    <tr>
-                        <td>Dark Mode</td>
-                        <td>{{ configuration.darkMode ? 'True' : 'False' }}</td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Dark Mode</td>#}
+                        {#<td>{{ configuration.darkMode ? 'True' : 'False' }}</td>#}
+                    {#</tr>#}
                 </table>
             </div>
         </div>
