@@ -1,53 +1,47 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lavestima
- * Date: 22.03.17
- * Time: 21:33
- */
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 
 use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 
-class AccountActivationController extends Controller {
+class AccountActivationController extends BaseController {
 	// TODO: add flashes
 	public function indexAction(string $activationToken) {
-		$token = $this->getDoctrine()->getRepository('AccessControlBundle:Tokens')
-			->findOneBy(['token' => $activationToken]);
+	    $token = $this->get('token_crud_controller')
+            ->readOneEntityBy(['token' => $activationToken]);
 
 		if ($token) {
-			if ($token->getDateExpired() < (new \DateTime('now'))) {
-				$message = 'Token expired';
+			if (!$this->isTokenActive($token)) {
+			    $this->addFlash('error', 'Token expired!');
 			}
 			else {
 				$user = $token->getIdUsers();
-				$userRole = $this->getDoctrine()->getRepository('UserManagementBundle:Roles')
-					->findOneBy(['code' => 'ROLE_USER']);
+				$userRole = $this->get('role_crud_controller')
+                    ->readOneEntityBy(['code' => 'ROLE_USER']);
+
 				$user->setIdRoles($userRole);
 
 				$this->disableToken($token);
-				$em = $this->getDoctrine()->getManager();
-				$em->flush();
 
-				$message = 'User ok!';
+				$this->addFlash('success', 'User account activated!');
 			}
 		}
 		else {
-			$message = 'Wrong token!';
+            $this->addFlash('error', 'Wrong token!');
 		}
 
-		return $this->render('@AccessControl/AccountActivation/index.html.twig', [
-			'message' => $message
-		]);
+        return $this->redirectToRoute('homepage_homepage');
 	}
 
 	private function disableToken(Tokens $token) {
-        // TODO: change to CrudController's update method
-		$token->setDateExpired(new \DateTime('now'));
-		$this->getDoctrine()->getManager()->flush();
+	    $this->get('token_crud_controller')
+            ->updateEntity($token, [
+                'dateExpired' => (new \DateTime('now')),
+            ]);
 	}
 
-
+    private function isTokenActive(Tokens $token) {
+        return $token->getDateExpired() > (new \DateTime('now'));
+    }
 }

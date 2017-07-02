@@ -1,4 +1,14 @@
-{% extends '@Infrastructure/entity-list.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% set isExportAllowed = true %}
+{% set pdfExportPath = path('export_pdf_order_list') %}
+{% set pdfExportJson = [] %}
+
+{% for order in orders %}
+    {% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}
+{% endfor %}
+
+{% set pdfExportJson = pdfExportJson | json_encode %}
 
 {% block title %}Order list{% endblock %}
 
@@ -13,7 +23,7 @@
             New order
         </div>
     </a>
-    <a href="">
+    <a href="{{ path('order_deleted_list') }}">
         <div class="button action-bar-button">
             Deleted orders
         </div>
@@ -23,27 +33,17 @@
 {% block content %}
     <table class="entity-list order-list">
         <tr>
-            <th>
-                Date placed
-            </th>
-            <th>
-                Customer
-            </th>
-            <th>
-                User
-            </th>
+            <th>Date placed</th>
+            <th>Status</th>
+            <th>Customer</th>
+            <th>User</th>
         </tr>
     {% for order in orders %}
         <tr class="entity-list-row">
-            <td>
-                {{ order.datePlaced | date('d.m.Y') }}
-            </td>
-            <td>
-                {{ order.idCustomers.fullName }}
-            </td>
-            <td>
-                {{ order.userCreated.login }}
-            </td>
+            <td>{{ order.datePlaced | date('d.m.Y') }}</td>
+            <td>{{ order.status.name }}</td>
+            <td>{{ order.idCustomers.fullName }}</td>
+            <td>{{ order.userCreated.login }}</td>
             <td class="entity-list-cell">
                 <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
                     <i class="fa fa-chevron-right" aria-hidden="true"></i>

@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\UserManagementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -11,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="Users", uniqueConstraints={@ORM\UniqueConstraint(name="Users_Login_U", columns={"Login"}), @ORM\UniqueConstraint(name="Users_Email_U", columns={"Email"}), @ORM\UniqueConstraint(name="Users_Password_Hash_U", columns={"Password_Hash"})}, indexes={@ORM\Index(name="Users_ID_ROLES_FK", columns={"ID_ROLES"})})
  * @ORM\Entity
  */
-class Users implements UserInterface, \Serializable
+class Users implements UserInterface, \Serializable, EntityInterface
 {
     /**
      * @var integer

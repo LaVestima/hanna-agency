@@ -31,11 +31,31 @@ class Invoices
     private $dateCreated = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var integer
+     * @var \DateTime
      *
-     * @ORM\Column(name="User_Created", type="integer", nullable=false)
+     * @ORM\Column(name="Date_Deleted", type="datetime", nullable=true)
+     */
+    private $dateDeleted = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var Users
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CUSTOMERS", referencedColumnName="ID")
+     * })
      */
     private $userCreated = '0';
+
+    /**
+     * @var Users
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\UserManagementBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_CUSTOMERS", referencedColumnName="ID")
+     * })
+     */
+    private $userDeleted;
 
     /**
      * @var string
@@ -98,9 +118,30 @@ class Invoices
      *
      * @return \DateTime
      */
-    public function getDateCreated()
-    {
+    public function getDateCreated() {
         return $this->dateCreated;
+    }
+
+    /**
+     * Set dateDeleted
+     *
+     * @param $dateDeleted
+     *
+     * @return $this
+     */
+    public function setDateDeleted($dateDeleted) {
+        $this->dateDeleted = $dateDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDeleted
+     *
+     * @return \DateTime
+     */
+    public function getDateDeleted() {
+        return $this->dateDeleted;
     }
 
     /**
@@ -110,8 +151,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setUserCreated($userCreated)
-    {
+    public function setUserCreated($userCreated) {
         $this->userCreated = $userCreated;
 
         return $this;
@@ -120,11 +160,32 @@ class Invoices
     /**
      * Get userCreated
      *
-     * @return integer
+     * @return Users
      */
-    public function getUserCreated()
-    {
+    public function getUserCreated() {
         return $this->userCreated;
+    }
+
+    /**
+     * Set userDeleted
+     *
+     * @param $userDeleted
+     *
+     * @return $this
+     */
+    public function setUserDeleted($userDeleted = null) {
+        $this->userDeleted = $userDeleted;
+
+        return $this;
+    }
+
+    /**
+     * Get userDeleted
+     *
+     * @return Users
+     */
+    public function getUserDeleted() {
+        return $this->userDeleted;
     }
 
     /**
@@ -134,8 +195,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setName($name)
-    {
+    public function setName($name) {
         $this->name = $name;
 
         return $this;
@@ -146,8 +206,7 @@ class Invoices
      *
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -158,8 +217,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setDateIssued($dateIssued)
-    {
+    public function setDateIssued($dateIssued) {
         $this->dateIssued = $dateIssued;
 
         return $this;
@@ -170,8 +228,7 @@ class Invoices
      *
      * @return \DateTime
      */
-    public function getDateIssued()
-    {
+    public function getDateIssued() {
         return $this->dateIssued;
     }
 
@@ -182,8 +239,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setPathSlug($pathSlug)
-    {
+    public function setPathSlug($pathSlug) {
         $this->pathSlug = $pathSlug;
 
         return $this;
@@ -194,8 +250,7 @@ class Invoices
      *
      * @return string
      */
-    public function getPathSlug()
-    {
+    public function getPathSlug() {
         return $this->pathSlug;
     }
 
@@ -206,8 +261,7 @@ class Invoices
      *
      * @return Invoices
      */
-    public function setIdCustomers(Customers $idCustomers = null)
-    {
+    public function setIdCustomers(Customers $idCustomers = null) {
         $this->idCustomers = $idCustomers;
 
         return $this;
@@ -218,8 +272,7 @@ class Invoices
      *
      * @return Customers
      */
-    public function getIdCustomers()
-    {
+    public function getIdCustomers() {
         return $this->idCustomers;
     }
 }

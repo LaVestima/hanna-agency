@@ -1,48 +1,99 @@
-{% extends '@Infrastructure/entity-list.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
 
-{% block pageTitle %}Show Invoice{% endblock %}
+{% block title %}Show Invoice{% endblock %}
+
+{% block actionBar %}
+    <a href="{{ path('invoice_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+{% endblock %}
 
 {% block content %}
-    {{ invoice.name }}<br>
-    {{ invoice.dateIssued | date('d.m.Y') }}<br>
-    {{ invoice.idCustomers.firstName }} {{ invoice.idCustomers.lastName }}
-    <br>
-    {% if invoicesProducts is empty %}
-        No Products!
-    {% endif %}
+    <div class="module-box">
+        <div class="module-box-title">General Information</div>
+        <div class="module-box-content">
+            <table class="entity-show-table">
+                <tr>
+                    <td>Name</td>
+                    <td>{{ invoice.name }}</td>
+                </tr>
+                <tr>
+                    <td>Date Issued</td>
+                    <td>{{ invoice.dateIssued | date('d.m.Y') }}<br></td>
+                </tr>
+                <tr>
+                    <td>Customer</td>
+                    <td>
+                        <a href="{{ path('customer_show', {'pathSlug': invoice.idCustomers.pathSlug}) }}">
+                            {{ invoice.idCustomers.firstName }} {{ invoice.idCustomers.lastName }}
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    <table class="entity-list">
-    {% for invoiceProduct in invoicesProducts %}
-        {% set product = invoiceProduct.idProducts %}
-        {% set productTotalPrice = invoiceProduct.quantity * invoiceProduct.priceFinal %}
-        <tr>
-            <td>
-                {{ product.name }}
-            </td>
-            <td>
-                {{ product.idSizes.name }}
-            </td>
-            <td>
-                {{ product.priceProducer }}
-            </td>
-            <td>
-                {{ product.priceCustomer }}
-            </td>
-            <td>
-                x {{ invoiceProduct.quantity }}
-            </td>
-            <td>
-                {{ invoiceProduct.discount }}%
-            </td>
-            <td>
-                {{ invoiceProduct.priceFinal }}
-            </td>
-            <td>
-                <b>
-                    {{ productTotalPrice }}
-                </b>
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
+    {% set invoiceTotalPrice = 0 %}
+
+    <div class="module-box">
+        <div class="module-box-title">Products</div>
+        <div class="module-box-content">
+        {% if invoicesProducts is not empty %}
+            <table class="entity-list">
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Price P</th>
+                    <th>Price C</th>
+                    <th>Quantity</th>
+                    <th>Discount</th>
+                    <th>Price Final</th>
+                    <th>Total Price</th>
+                </tr>
+                {% for invoiceProduct in invoicesProducts %}
+                    {% set product = invoiceProduct.idProducts %}
+                    {% set productTotalPrice = invoiceProduct.quantity * invoiceProduct.priceFinal %}
+                    {% set invoiceTotalPrice = invoiceTotalPrice + productTotalPrice %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                                {{ product.name }}
+                            </a>
+                        </td>
+                        <td>{{ product.idSizes.name }}</td>
+                        <td>{{ product.priceProducer }}</td>
+                        <td>{{ product.priceCustomer }}</td>
+                        <td>x {{ invoiceProduct.quantity }}</td>
+                        <td>{{ invoiceProduct.discount }}%</td>
+                        <td>{{ invoiceProduct.priceFinal }}</td>
+                        <td>
+                            <b>
+                                {{ productTotalPrice | number_format(2) }}
+                            </b>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="invoice-total-price-cell">
+                        <b>
+                            {{ invoiceTotalPrice | number_format(2) }}
+                        </b>
+                    </td>
+                </tr>
+            </table>
+            {% else %}
+                No Products
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

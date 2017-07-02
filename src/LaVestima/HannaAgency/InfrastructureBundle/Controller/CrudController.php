@@ -3,14 +3,15 @@
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityNotFoundException;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 abstract class CrudController extends Controller {
 	protected $doctrine;
 	protected $manager;
-
 	protected $user;
 
 	protected $entityClass = '';
@@ -21,8 +22,9 @@ abstract class CrudController extends Controller {
 	protected $query = '';
 
 	public function __construct(
-            Registry $doctrine,
-            TokenStorageInterface $tokenStorage) {
+        Registry $doctrine,
+        TokenStorageInterface $tokenStorage
+    ) {
 		$this->doctrine = $doctrine;
 		$this->manager = $this->doctrine->getManager();
 
@@ -34,11 +36,12 @@ abstract class CrudController extends Controller {
     /**
 	 * @param $entity
 	 */
-	public function createEntity($entity) {
+	public function createEntity(EntityInterface $entity)
+    {
 	    if (method_exists($entity, 'setDateCreated')) {
             $entity->setDateCreated(new \DateTime('now'));
         }
-        if (method_exists($entity, 'setUserCreated')) {
+        if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
             $entity->setUserCreated($this->user);
         }
         if (method_exists($entity, 'setPathSlug')) {
@@ -46,7 +49,14 @@ abstract class CrudController extends Controller {
         }
 
 		$em = $this->manager;
-	    $entity = $em->merge($entity);
+
+	    // TODO: works, i don't know why o.O
+        // TODO: think about it !!!!!!!!!!!!
+//        if ($this->readOneEntityBy(['id' => $entity->getId()])) {
+        if ($this->user) {
+            $entity = $em->merge($entity);
+        }
+
 		$em->persist($entity);
 		$em->flush();
 
@@ -54,27 +64,30 @@ abstract class CrudController extends Controller {
 	}
 
 	/**
-	 * @param $entityId
-	 * @return object
-	 */
-	public function readEntity($entityId) {
-		return $this->doctrine
-			->getRepository($this->entityClass)
-			->find($entityId);
-	}
-
-	/**
 	 * @param $entity
      * @param array $keyValueArray
 	 */
-	public function updateEntity($entity, array $keyValueArray) {
-        if (!$entity) {
-            // TODO: throw error
+	public function updateEntity(EntityInterface $oldEntity, $newEntity)
+    {
+        if (!$oldEntity) {
+            throw new EntityNotFoundException();
         }
 
-        foreach ($keyValueArray as $key => $value) {
-            $methodName = 'set' . $key;
-            $entity->$methodName($value);
+        if ($newEntity instanceof EntityInterface) {
+            // TODO: test it !!!
+            $this->manager->merge($newEntity);
+        } elseif (is_array($newEntity)) {
+            foreach ($newEntity as $key => $value) {
+                $methodName = 'set' . $key;
+
+                if (!method_exists($oldEntity, $methodName)) {
+                    throw new \InvalidArgumentException();
+                }
+
+                $oldEntity->$methodName($value);
+            }
+        } else {
+            throw new \InvalidArgumentException();
         }
 
         $this->manager->flush();
@@ -86,9 +99,10 @@ abstract class CrudController extends Controller {
 	/**
 	 * @param $entity
 	 */
-	public function deleteEntity($entity) {
+	public function deleteEntity($entity)
+    {
 		if (!$entity) {
-			// TODO: throw error
+		    throw new EntityNotFoundException();
 		}
 
 		// TODO: add method_exists ??
@@ -102,10 +116,12 @@ abstract class CrudController extends Controller {
 	 * @param array $keyValueArray
 	 * @return mixed
 	 */
-	public function readEntitiesBy(array $keyValueArray) {
+	public function readEntitiesBy(array $keyValueArray)
+    {
 		$this->entities = $this->doctrine
 			->getRepository($this->entityClass)
 			->findBy($keyValueArray);
+
 		return $this;
 	}
 
@@ -113,33 +129,100 @@ abstract class CrudController extends Controller {
 	 * @param array $keyValueArray
 	 * @return object
 	 */
-	public function readOneEntityBy(array $keyValueArray) {
-		return $this->doctrine
-			->getRepository($this->entityClass)
-			->findOneBy($keyValueArray);
+	public function readOneEntityBy(array $keyValueArray)
+    {
+	    $entity = $this->doctrine
+            ->getRepository($this->entityClass)
+            ->findOneBy($keyValueArray);
+
+		return $entity;
 	}
 
     /**
      * @return object
      */
-    public function readAllEntities() {
-        // TODO: if dateDeleted and userDeleted are null
-        $this->entities = $this->doctrine
-            ->getRepository($this->entityClass)
-            ->findAll();
+    public function readAllEntities()
+    {
+        $this->query = '
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
+            ';
+
+        $this->executeQuery();
+
         return $this;
     }
 
-    public function readAllDeletedEntities() {
+    public function readAllUndeletedEntities()
+    {
+        $this->query = '
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
+            WHERE ent.dateDeleted IS NULL
+            ';
 
+        $this->executeQuery();
+
+        return $this;
+    }
+
+    public function readAllDeletedEntities()
+    {
+        $this->query = '
+            SELECT ent 
+            FROM ' . $this->entityClass . ' ent
+            WHERE ent.dateDeleted IS NOT NULL
+            ';
+
+        $this->executeQuery();
+
+        return $this;
+    }
+
+    public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
+    {
+        if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
+            throw new \InvalidArgumentException('Number of randomized entities cannot exceed the row number!');
+        }
+
+        if ($numberOfEntities === null) {
+            $numberOfEntities = rand(1, $this->countRows());
+        }
+
+        if ($numberOfEntities === 1) {
+            do {
+                $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
+            } while (!$entity);
+
+            return $entity;
+        } elseif ($numberOfEntities > 1) {
+            $entities = [];
+
+            for ($i = 0; $i < $numberOfEntities; $i++) {
+                do {
+                    $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
+
+                    if (!$entitiesCanRepeat && in_array($entity, $entities)) {
+                        $entity = null;
+                    }
+                } while (!$entity);
+
+                $entities[] = $entity;
+            }
+
+            return $entities;
+        } else {
+            throw new \InvalidArgumentException();
+        }
     }
 
 	/**
 	 * @param $entity
 	 */
-	public function restoreEntity($entity) {
+	public function restoreEntity($entity)
+    {
         if (!$entity) {
-            // TODO: throw error
+            throw new EntityNotFoundException();
         }
 
         // TODO: add method_exists ??
@@ -152,7 +235,12 @@ abstract class CrudController extends Controller {
 	/**
 	 * @param $entity
 	 */
-	protected function purgeEntity($entity) {
+	protected function purgeEntity($entity)
+    {
+        if (!$entity) {
+            throw new EntityNotFoundException();
+        }
+
 		$em = $this->manager;
 		$em->remove($entity);
 		$em->flush();
@@ -162,12 +250,15 @@ abstract class CrudController extends Controller {
 
     // addEntity()
 
-	public function getEntities() {
+	public function getEntities()
+    {
+//        $this->executeQuery();
 	    // TODO: finish SELECT query here
 	    return $this->entities;
     }
 
-	public function sortBy(array $keyValueArray) {
+	public function sortBy(array $keyValueArray)
+    {
 	    if (is_array($this->entities)) {
             foreach ($keyValueArray as $key => $item) {
                 $methodName = 'get' . $key;
@@ -178,11 +269,44 @@ abstract class CrudController extends Controller {
                     } else if ($item == 'DESC') {
                         return $b->$methodName() <=> $a->$methodName();
                     } else {
-                        // TODO: throw exception
+                        throw new \InvalidArgumentException();
                     }
                 });
             }
         }
 	    return $this;
+    }
+
+    private function executeQuery()
+    {
+        $this->entities = $this->manager
+            ->createQuery($this->query)
+            ->getResult();
+    }
+
+    public function countRows()
+    {
+        $this->query = '
+            SELECT COUNT(ent)
+            FROM ' . $this->entityClass . ' ent
+        ';
+
+        return (int)$this->manager
+            ->createQuery($this->query)
+            ->getSingleScalarResult();
+    }
+
+    private function getLastId()
+    {
+        $this->query = '
+            SELECT ent.id
+            FROM ' . $this->entityClass . ' ent
+            ORDER BY ent.id DESC
+        ';
+
+        return (int)$this->manager
+            ->createQuery($this->query)
+            ->setMaxResults(1)
+            ->getSingleScalarResult();
     }
 }

@@ -1,0 +1,9 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}Deleted Invoices{% endblock %}
+
+{% block content %}
+    {% for invoice in invoices %}
+        {{ invoice.dateIssued | date('d.m.Y') }}
+    {% endfor %}
+{% endblock %}

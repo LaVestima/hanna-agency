@@ -43,8 +43,9 @@ class OrderPlacementController extends BaseController {
                     $productPlacement->customers = $this->getCustomer();
                 }
 
-                $productPlacement->quantities = array_values(array_filter($productPlacement->quantities, function ($var) {
-                    return ($var > 0);
+                $productPlacement->quantities = array_values(
+                    array_filter($productPlacement->quantities, function ($var) {
+                        return ($var > 0);
                 }));
 
                 $request->getSession()->set('productPlacement', $productPlacement);
@@ -52,7 +53,10 @@ class OrderPlacementController extends BaseController {
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
-                // TODO: Add "Order cannot be empty" flash
+                $this->addFlash(
+                    'warning',
+                    'Order cannot be empty!'
+                );
             }
         }
 
@@ -75,7 +79,7 @@ class OrderPlacementController extends BaseController {
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = $this->createNewOrder();
+            $order = new Orders();
             $order->setIdCustomers($productPlacement->customers);
 
             $order = $this->get('order_crud_controller')
@@ -108,13 +112,5 @@ class OrderPlacementController extends BaseController {
             'productPlacement' => $productPlacement,
             'form' => $form->createView(),
         ]);
-    }
-
-    private function createNewOrder() {
-        $order = new Orders();
-
-        $order->setDatePlaced(new \DateTime('now'));
-
-        return $order;
     }
 }

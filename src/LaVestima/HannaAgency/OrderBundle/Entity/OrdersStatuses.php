@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 
 /**
  * OrdersStatuses
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Orders_Statuses", uniqueConstraints={@ORM\UniqueConstraint(name="Orders_Statuses_Name_U", columns={"Name"})})
  * @ORM\Entity
  */
-class OrdersStatuses
+class OrdersStatuses implements EntityInterface
 {
     /**
      * @var integer

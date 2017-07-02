@@ -1,0 +1,7 @@
+services:
+#    producer.example:
+#        class: LaVestima\HannaAgency\ProducerBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    producer_crud_controller:
+         class: LaVestima\HannaAgency\ProducerBundle\Controller\Crud\ProducerCrudController
+         autowire: true

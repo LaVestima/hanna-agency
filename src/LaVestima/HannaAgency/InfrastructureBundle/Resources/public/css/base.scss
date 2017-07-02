@@ -27,10 +27,13 @@ h1 {
   color: #333333;
 }
 
+.red {
+  color: #FF0000;
+}
+
 .button {
   display: inline-block;
   padding: 10px;
-  //margin: 5px;
   background: $main-theme-color;
   color: $main-font-color;
   text-align: center;
@@ -40,12 +43,31 @@ h1 {
   }
 }
 
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .page-title {
+
   margin: 0 auto;
+  width: 100%;
   height: 70px;
   overflow: hidden;
   text-align: center;
   background: #ccc;
+
+  //&.page-title-scrolled {
+  //  height: 35px;
+  //
+  //  h1 {
+  //    font-size: 18px;
+  //    line-height: 35px;
+  //  }
+  //}
+
   h1 {
     line-height: 70px;
     font-weight: bold;
@@ -55,11 +77,42 @@ h1 {
 .action-bar {
   padding: 10px;
   background: #ddd;
+
+  .action-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .action-bar-button {
+      font-weight: bold;
+    }
+
+    .action-bar-export {
+      position: relative;
+      float: right;
+
+      .action-bar-export-list {
+        position: absolute;
+        right: 0;
+        padding: 0;
+        list-style: none;
+        text-align: center;
+
+        li {
+          display: block;
+
+          a {
+            display: block;
+            color: $main-font-color;
+          }
+        }
+      }
+    }
+  }
 }
 
 .page-content {
   max-width: 1200px;
-  margin: 10px auto 0 auto;
+  margin: 140px auto 0 auto;
   padding: 10px;
   .entity-list {
     .entity-list-row {
@@ -73,7 +126,7 @@ h1 {
 
 .module-box {
   background: #ccc;
-  margin: 10px 0 20px 0;
+  margin: 10px 0 10px 0;
   box-shadow: 3px 3px 10px black;
   min-height: 40px;
   overflow: hidden;
@@ -87,20 +140,29 @@ h1 {
     background: #AAAAAA;
     font-weight: bold;
   }
-  //.module-box-content {
-  //
-  //}
+  .module-box-content {
+    text-align: center;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .module-box {
+    width: calc(50% - 12px);
+    display: inline-table;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }
 
 .flash-message-list {
   position: fixed;
-  top: 40px;
+  top: -60px;
   width: 100%;
   text-align: center;
   .flash-message {
     height: 50px;
     line-height: 50px;
-    border-radius: 10px;
+    //border-radius: 10px;
     width: 70%;
     margin: 0 auto;
     box-shadow: 0 0 10px #000;
@@ -116,7 +178,73 @@ h1 {
   }
   .flash-error {
     background-color: #F21515;
+    color: #FFFFFF;
   }
+}
+
+.entity-list {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  th {
+    text-align: center;
+  }
+}
+
+.entity-list-row {
+  &:hover {
+    background: $main-theme-color-lighter;
+  }
+}
+
+.entity-show-table {
+  max-width: 800px;
+  margin: 0 auto;
+  td {
+    padding: 5px;
+    &:first-child {
+      width: 30%;
+      text-align: right;
+      font-weight: bold;
+    }
+    &:last-child {
+      width: 70%;
+      text-align: left;
+    }
+  }
+}
+
+.entity-new-table {
+  width: 100%;
+  margin: 0 auto;
+  td {
+    padding: 5px;
+    &:first-child {
+      text-align: right;
+    }
+    &:last-child {
+      input, select {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.user-input-table {
+  max-width: 600px;
+  margin: 0 auto;
+  td {
+    width: 50%;
+    padding: 5px;
+    &:first-child {
+      text-align: right;
+    }
+  }
+}
+
+.invoice-total-price-cell {
+  border-top: 2px solid #555555;
 }
 
 .hidden {

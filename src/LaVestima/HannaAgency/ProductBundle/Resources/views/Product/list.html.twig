@@ -1,6 +1,14 @@
-{% extends '@Infrastructure/entity-list.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
 
 {% block title %}Product List{% endblock %}
+
+{% block actionBar %}
+    <a href="{{ path('product_new') }}">
+        <div class="button action-bar-button">
+            New Product
+        </div>
+    </a>
+{% endblock %}
 
 {% block content %}
     <table class="entity-list">

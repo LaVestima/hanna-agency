@@ -1,4 +1,4 @@
-{% extends '@Infrastructure/entity-list.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
 {% block title %}Invoice List{% endblock %}
 
 {% block actionBar %}
@@ -7,7 +7,7 @@
             New invoice
         </div>
     </a>
-    <a href="">
+    <a href="{{ path('invoice_deleted_list') }}">
         <div class="button action-bar-button">
             Deleted invoices
         </div>
@@ -16,18 +16,10 @@
 
 {% block content %}
     <table class="entity-list invoice-list">
-        <th>
-            Name
-        </th>
-        <th>
-            Customer
-        </th>
-        <th>
-            Issued by
-        </th>
-        <th>
-            Date issued
-        </th>
+        <th>Name</th>
+        <th>Customer</th>
+        <th>Issued by</th>
+        <th>Date issued</th>
         {% for invoice in invoices %}
             <tr class="entity-list-row">
                 <td class="entity-list-cell">
@@ -37,7 +29,7 @@
                     {{ invoice.idCustomers.fullName }}
                 </td>
                 <td class="entity-list-cell">
-                    {{ invoice.idUsers.login }}
+                    {{ invoice.userCreated.login }}
                 </td>
                 <td class="entity-list-cell">
                     {{ invoice.dateIssued | date('d.m.Y') }}

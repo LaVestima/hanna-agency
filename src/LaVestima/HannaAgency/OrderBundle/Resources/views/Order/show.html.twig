@@ -1,38 +1,80 @@
-{% extends '@Infrastructure/entity-show.html.twig' %}
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% set isExportAllowed = true %}
+{% set pdfExportPath = path('export_pdf_order') %}
+{% set pdfExportPathSlug = order.pathSlug %}
 
 {% block title %}Order{% endblock %}
 
-{% block content %}
-    {{ order.datePlaced | date('d.m.Y') }}
-    {{ order.idCustomers.fullName }}
-    <br>
+{% block actionBar %}
+    <a href="{{ path('order_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+    {#// TODO: add confirmation window #}
+    {% if order.dateDeleted is null %}
     <a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">
         <div class="button action-bar-button">
             Delete Order
         </div>
     </a>
+    {% else %}
+    <a href="{{ path('order_restore', {'pathSlug': order.pathSlug}) }}">
+        <div class="button action-bar-button">
+            Restore Order
+        </div>
+    </a>
+    {% endif %}
+{% endblock %}
 
-    <br><br>
-    {% if ordersProducts is not empty %}
-        <table class="entity-list orders-products-list">
-            {% for ordersProduct in ordersProducts %}
+{% block content %}
+    <div class="module-box">
+        <div class="module-box-title">Customer Information</div>
+        <div class="module-box-content">
+            <table class="entity-show-table">
                 <tr>
+                    <td>Date Placed</td>
+                    <td>{{ order.datePlaced | date('d.m.Y') }}</td>
+                </tr>
+                <tr>
+                    <td>Customer</td>
                     <td>
-                        <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProducts.pathSlug}) }}">
-                            {{ ordersProduct.idProducts.name }}
+                        <a href="{{ path('customer_show', {'pathSlug': order.idCustomers.pathSlug}) }}">
+                            {{ order.idCustomers.fullName }}
                         </a>
                     </td>
-                    <td>
-                        {{ ordersProduct.quantity }}
-                    </td>
-                    <td>
-                        {{ ordersProduct.discount }}
-                    </td>
-                    <td>
-                        {{ ordersProduct.idStatuses.name }}
-                    </td>
                 </tr>
-            {% endfor %}
-        </table>
+            </table>
+        </div>
+    </div>
+
+    {% if ordersProducts is not empty %}
+    <div class="module-box">
+        <div class="module-box-title">Products</div>
+        <div class="module-box-content">
+            <table class="entity-list orders-products-list">
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Discount</th>
+                    <th>Status</th>
+                </tr>
+                {% for ordersProduct in ordersProducts %}
+                    <tr class="entity-list-row">
+                        <td>
+                            <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProducts.pathSlug}) }}">
+                                {{ ordersProduct.idProducts.name }}
+                            </a>
+                        </td>
+                        <td>{{ ordersProduct.quantity }}</td>
+                        <td>{{ ordersProduct.discount }}</td>
+                        <td>{{ ordersProduct.idStatuses.name }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
     {% endif %}
 {% endblock %}

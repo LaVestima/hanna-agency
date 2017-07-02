@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 
 /**
@@ -11,7 +12,7 @@ use LaVestima\HannaAgency\ProductBundle\Entity\Products;
  * @ORM\Table(name="Orders_Products", indexes={@ORM\Index(name="Orders_Products_ID_ORDERS_FK", columns={"ID_ORDERS"}), @ORM\Index(name="Orders_Products_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}), @ORM\Index(name="Orders_Products_ID_STATUSES_FK", columns={"ID_STATUSES"})})
  * @ORM\Entity
  */
-class OrdersProducts
+class OrdersProducts implements EntityInterface, \JsonSerializable
 {
     /**
      * @var integer
@@ -46,7 +47,7 @@ class OrdersProducts
     /**
      * @var Orders
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\Orders")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\OrderBundle\Entity\Orders", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_ORDERS", referencedColumnName="ID")
      * })
@@ -227,5 +228,18 @@ class OrdersProducts
     public function getIdStatuses()
     {
         return $this->idStatuses;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize() // TODO: finish !!!
+    {
+        $json = [];
+        $json['name'] = $this->idProducts->getName();
+        $json['quantity'] = $this->quantity;
+        $json['status'] = $this->idStatuses->getName();
+
+        return $json;
     }
 }

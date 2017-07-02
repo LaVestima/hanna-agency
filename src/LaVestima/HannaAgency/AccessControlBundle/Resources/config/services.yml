@@ -9,4 +9,4 @@ services:
 
     authentication_handler:
         class: LaVestima\HannaAgency\AccessControlBundle\Handler\AuthenticationHandler
-        arguments: ['@login_attempt_crud_controller', '@router']
+        autowire: true

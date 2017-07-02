@@ -1,4 +1,8 @@
 services:
-#    location.example:
-#        class: LaVestima\HannaAgency\LocationBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    country_crud_controller:
+        class: LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudController
+        autowire: true
+
+    city_crud_controller:
+        class: LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudController
+        autowire: true

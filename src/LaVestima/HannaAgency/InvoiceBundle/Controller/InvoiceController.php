@@ -12,11 +12,24 @@ class InvoiceController extends Controller {
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function listAction() {
-		$invoices = $this->get('invoice_crud_controller')->readAllEntities();
+		$invoices = $this->get('invoice_crud_controller')
+            ->readAllEntities()
+		    ->getEntities();
+
 		return $this->render('InvoiceBundle:Invoice:list.html.twig', [
 			'invoices' => $invoices
 		]);
 	}
+
+	public function deletedListAction() {
+	    $invoices = $this->get('invoice_crud_controller')
+            ->readAllDeletedEntities()
+            ->getEntities();
+
+	    return $this->render('@Invoice/Invoice/deletedList.html.twig', [
+	        'invoices' => $invoices,
+        ]);
+    }
 
 	/**
 	 * @param $pathSlug
