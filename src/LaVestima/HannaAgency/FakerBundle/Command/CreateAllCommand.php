@@ -25,6 +25,7 @@ class CreateAllCommand extends ContainerAwareCommand
 
         $commandNames = [
             'faker:create:order',
+            'faker:create:user',
             // TODO: add more commands here
         ];
 
