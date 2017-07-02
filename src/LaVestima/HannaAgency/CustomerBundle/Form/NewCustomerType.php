@@ -64,22 +64,18 @@ class NewCustomerType extends AbstractType {
         $resolver
             ->setDefault('countries', null)
             ->setRequired('countries')
-            ->setAllowedTypes('countries', array('array'))
-        ;
+            ->setAllowedTypes('countries', array('array'));
         $resolver
             ->setDefault('cities', null)
             ->setRequired('cities')
-            ->setAllowedTypes('cities', array('array'))
-        ;
+            ->setAllowedTypes('cities', array('array'));
         $resolver
             ->setDefault('currencies', null)
             ->setRequired('currencies')
-            ->setAllowedTypes('currencies', array('array'))
-        ;
+            ->setAllowedTypes('currencies', array('array'));
         $resolver
             ->setDefault('users', null)
             ->setRequired('users')
-            ->setAllowedTypes('users', array('array'))
-        ;
+            ->setAllowedTypes('users', array('array'));
     }
 }

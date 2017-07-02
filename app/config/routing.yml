@@ -1,3 +1,7 @@
+producer:
+    resource: "@ProducerBundle/Resources/config/routing.yml"
+    prefix:   /
+
 faker:
     resource: "@FakerBundle/Resources/config/routing.yml"
     prefix:   /

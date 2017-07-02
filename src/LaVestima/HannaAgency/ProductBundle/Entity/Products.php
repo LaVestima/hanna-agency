@@ -3,6 +3,8 @@
 namespace LaVestima\HannaAgency\ProductBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
+use LaVestima\HannaAgency\ProducerBundle\Entity\Producers;
 
 /**
  * Products
@@ -10,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Products", uniqueConstraints={@ORM\UniqueConstraint(name="Products_Name_U", columns={"Name"}), @ORM\UniqueConstraint(name="Products_Path_Slug_U", columns={"Path_Slug"}), @ORM\UniqueConstraint(name="Products_QR_Code_Path_U", columns={"QR_Code_Path"})}, indexes={@ORM\Index(name="Items_ID_CATEGORIES_FK", columns={"ID_CATEGORIES"}), @ORM\Index(name="Items_ID_PRODUCERS_FK", columns={"ID_PRODUCERS"}), @ORM\Index(name="Items_ID_SIZES_FK", columns={"ID_SIZES"})})
  * @ORM\Entity
  */
-class Products
+class Products implements EntityInterface
 {
     /**
      * @var integer
@@ -94,15 +96,15 @@ class Products
      */
     private $idCategories;
 
-//    /**
-//     * @var \Producers
-//     *
-//     * @ORM\ManyToOne(targetEntity="Producers")
-//     * @ORM\JoinColumns({
-//     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
-//     * })
-//     */
-//    private $idProducers;
+    /**
+     * @var Producers
+     *
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProducerBundle\Entity\Producers")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
+     * })
+     */
+    private $idProducers;
 
     /**
      * @var Sizes
@@ -366,29 +368,29 @@ class Products
         return $this->idCategories;
     }
 
-//    /**
-//     * Set idProducers
-//     *
-//     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers
-//     *
-//     * @return Products
-//     */
-//    public function setIdProducers(\LaVestima\HannaAgency\ProductBundle\Entity\Producers $idProducers = null)
-//    {
-//        $this->idProducers = $idProducers;
-//
-//        return $this;
-//    }
+    /**
+     * Set idProducers
+     *
+     * @param Producers $idProducers
+     *
+     * @return Products
+     */
+    public function setIdProducers(Producers $idProducers = null)
+    {
+        $this->idProducers = $idProducers;
 
-//    /**
-//     * Get idProducers
-//     *
-//     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Producers
-//     */
-//    public function getIdProducers()
-//    {
-//        return $this->idProducers;
-//    }
+        return $this;
+    }
+
+    /**
+     * Get idProducers
+     *
+     * @return Producers
+     */
+    public function getIdProducers()
+    {
+        return $this->idProducers;
+    }
 
     /**
      * Set idSizes

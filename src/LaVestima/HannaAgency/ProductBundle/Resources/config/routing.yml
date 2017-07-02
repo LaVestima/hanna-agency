@@ -1,6 +1,3 @@
-#product_homepage:
-#    path:     /
-#    defaults: { _controller: ProductBundle:Default:index }
 product_list:
     path: /product/list
     defaults: { _controller: ProductBundle:Product:list }
@@ -8,3 +5,7 @@ product_list:
 product_show:
     path: /product/show/{pathSlug}
     defaults: { _controller: ProductBundle:Product:show, pathSlug: '' }
+
+product_new:
+    path: /product/new
+    defaults: { _controller: ProductBundle:Product:new }

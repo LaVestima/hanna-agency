@@ -3,33 +3,33 @@
 {% block title %}User list{% endblock %}
 
 {% block content %}
-        <table class="entity-list invoices-list">
-            <th>
-                Login
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Role
-            </th>
-            {% for user in users %}
-                <tr class="entity-list-row">
-                    <td class="entity-list-cell">
-                        {{ user.login }}
-                    </td>
-                    <td class="entity-list-cell">
-                        {{ user.email }}
-                    </td>
-                    <td class="entity-list-cell">
-                        {{ user.idRoles.name }}
-                    </td>
-                    <td class="entity-list-cell">
-                        <a href="{{ path('user_show', {'pathSlug': user.pathSlug}) }}">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+    <table class="entity-list invoices-list">
+        <th>
+            Login
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Role
+        </th>
+        {% for user in users %}
+            <tr class="entity-list-row">
+                <td class="entity-list-cell">
+                    {{ user.login }}
+                </td>
+                <td class="entity-list-cell">
+                    {{ user.email }}
+                </td>
+                <td class="entity-list-cell">
+                    {{ user.idRoles.name }}
+                </td>
+                <td class="entity-list-cell">
+                    <a href="{{ path('user_show', {'pathSlug': user.pathSlug}) }}">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

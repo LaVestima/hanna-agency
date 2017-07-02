@@ -1,0 +1,26 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title 'New Product' %}
+
+{% block content %}
+    {{ form_start(form) }}
+    <table class="entity-new-table">
+        {% for fieldName in ['name', 'idCategories', 'idSizes', 'priceProducer', 'priceCustomer', 'idProducers'] %}
+            <tr>
+                <td>
+                    {{ form_label(form[fieldName]) }}
+                    <span class="red">*</span>
+                </td>
+                <td>{{ form_widget(form[fieldName]) }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td>
+                {{ form_widget(form.save) }}
+                <span class="red">* - Required fields</span>
+            </td>
+        </tr>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}

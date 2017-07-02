@@ -29,6 +29,7 @@ class AppKernel extends Kernel
             new LaVestima\HannaAgency\MoneyBundle\MoneyBundle(),
             new LaVestima\HannaAgency\ExportBundle\ExportBundle(),
             new LaVestima\HannaAgency\FakerBundle\FakerBundle(),
+            new LaVestima\HannaAgency\ProducerBundle\ProducerBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
