@@ -27,6 +27,7 @@ class PlaceOrderType extends AbstractType
                 ->add('customers', ChoiceType::class, [
                     'label' => 'Customer',
                     'choices' => $options['customers'],
+                    // TODO: change to fullName
                     'choice_label' => function($customer) {
                         return $customer->getFirstName() . ' ' . $customer->getLastName();
                     }
@@ -39,12 +40,10 @@ class PlaceOrderType extends AbstractType
         $resolver
             ->setDefault('products', null)
             ->setRequired('products')
-            ->setAllowedTypes('products', array('array'))
-        ;
+            ->setAllowedTypes('products', array('array'));
         $resolver
             ->setDefault('customers', null)
             ->setRequired('customers')
-            ->setAllowedTypes('customers', array('array', 'null'))
-        ;
+            ->setAllowedTypes('customers', array('array', 'null'));
     }
 }

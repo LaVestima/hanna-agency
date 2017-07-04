@@ -10,7 +10,7 @@
 
 {% set pdfExportJson = pdfExportJson | json_encode %}
 
-{% block title %}Order list{% endblock %}
+{% block title 'Order List' %}
 
 {% block actionBar %}
     <a href="{{ path('order_placement_new') }}">
@@ -35,15 +35,19 @@
         <tr>
             <th>Date placed</th>
             <th>Status</th>
+            {% if is_granted('ROLE_ADMIN') %}
             <th>Customer</th>
             <th>User</th>
+            {% endif %}
         </tr>
     {% for order in orders %}
         <tr class="entity-list-row">
             <td>{{ order.datePlaced | date('d.m.Y') }}</td>
             <td>{{ order.status.name }}</td>
+            {% if is_granted('ROLE_ADMIN') %}
             <td>{{ order.idCustomers.fullName }}</td>
             <td>{{ order.userCreated.login }}</td>
+            {% endif %}
             <td class="entity-list-cell">
                 <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
                     <i class="fa fa-chevron-right" aria-hidden="true"></i>

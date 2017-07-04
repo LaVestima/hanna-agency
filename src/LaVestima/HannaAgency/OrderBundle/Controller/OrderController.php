@@ -5,8 +5,10 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 
-class OrderController extends BaseController {
-	public function listAction() {
+class OrderController extends BaseController
+{
+	public function listAction()
+    {
 	    $authChecker = $this->get('security.authorization_checker');
 
         $orderCrudController = $this->get('order_crud_controller');
@@ -38,9 +40,11 @@ class OrderController extends BaseController {
 		]);
 	}
 
-	public function deletedListAction() {
+	public function deletedListAction()
+    {
 	    $orders = $this->get('order_crud_controller')
             ->readAllDeletedEntities()
+            ->sortBy(['datePlaced' => 'DESC'])
             ->getEntities();
 
 	    return $this->render('@Order/Order/deletedList.html.twig', [
@@ -48,7 +52,8 @@ class OrderController extends BaseController {
         ]);
     }
 
-	public function showAction(string $pathSlug) {
+	public function showAction(string $pathSlug)
+    {
         $authChecker = $this->get('security.authorization_checker');
         $orderCrudController = $this->get('order_crud_controller');
 
@@ -72,10 +77,7 @@ class OrderController extends BaseController {
         }
 
 		if (!$order) {
-            $this->addFlash(
-                'warning',
-                'No order found!'
-            );
+            $this->addFlash('warning', 'No order found!');
 
 		    return $this->redirectToRoute('order_list');
         }
@@ -90,12 +92,15 @@ class OrderController extends BaseController {
 		]);
 	}
 
-	public function newAction() {
+	// TODO: delete??
+	public function newAction()
+    {
 
 	    return $this->render('@Order/Order/new.html.twig');
     }
 
-    public function deleteAction(string $pathSlug) {
+    public function deleteAction(string $pathSlug)
+    {
 	    $order = $this->get('order_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
 
@@ -110,22 +115,17 @@ class OrderController extends BaseController {
             $this->get('order_crud_controller')
                 ->deleteEntity($order);
 
-            $this->addFlash(
-                'notice',
-                'Order deleted!'
-            );
+            $this->addFlash('notice', 'Order deleted!');
         }
         else {
-            $this->addFlash(
-                'warning',
-                'No order found!'
-            );
+            $this->addFlash('warning', 'No order found!');
         }
 
         return $this->redirectToRoute('order_list');
     }
 
-    public function restoreAction(string $pathSlug) {
+    public function restoreAction(string $pathSlug)
+    {
 	    $order = $this->get('order_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
 
@@ -138,7 +138,8 @@ class OrderController extends BaseController {
 	    // TODO: finish
     }
 
-    protected function generateOrderStatus(Orders $order) {
+    protected function generateOrderStatus(Orders $order)
+    {
 	    $ordersProducts = $this->get('order_product_crud_controller')
             ->readEntitiesBy(['idOrders' => $order])
             ->getEntities();

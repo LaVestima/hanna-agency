@@ -9,7 +9,8 @@ use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-abstract class CrudController extends Controller {
+abstract class CrudController extends Controller
+{
 	protected $doctrine;
 	protected $manager;
 	protected $user;

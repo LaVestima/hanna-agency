@@ -11,8 +11,10 @@ use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 
-class OrderPlacementController extends BaseController {
-    public function newAction(Request $request) {
+class OrderPlacementController extends BaseController
+{
+    public function newAction(Request $request)
+    {
         $products = $this->get('product_crud_controller')
             ->readAllEntities()->getEntities();
 
@@ -28,9 +30,9 @@ class OrderPlacementController extends BaseController {
             'products' => $products
         ]);
 
-        foreach ($products as $product) {
+        foreach ($products as $key => $product) {
             $form->get('quantities')
-                ->add('quantity_' . $product->getId(), IntegerType::class, [
+                ->add('quantity_' . ($key + 1) , IntegerType::class, [
                     'data' => 0,
                     'empty_data' => 0,
                 ]);
@@ -53,10 +55,7 @@ class OrderPlacementController extends BaseController {
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
-                $this->addFlash(
-                    'warning',
-                    'Order cannot be empty!'
-                );
+                $this->addFlash('warning', 'Order cannot be empty!');
             }
         }
 
@@ -100,10 +99,7 @@ class OrderPlacementController extends BaseController {
                     ->createEntity($orderProduct);
             }
 
-            $this->addFlash(
-                'success',
-                'Order placed successfully!'
-            );
+            $this->addFlash('success', 'Order placed successfully!');
 
             return $this->redirectToRoute('order_list');
         }
