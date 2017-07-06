@@ -72,6 +72,7 @@ class OrderPlacementController extends BaseController
         if (count($selectedProducts) != count($selectedQuantities)) {
             // TODO: products and quantities must be the same length
             var_dump('No!!!!');
+            die;
         }
 
         $form = $this->createForm(OrderSummaryType::class);

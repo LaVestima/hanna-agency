@@ -2,13 +2,16 @@
 
 namespace LaVestima\HannaAgency\CustomerBundle\Controller;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
 use LaVestima\HannaAgency\CustomerBundle\Form\NewCustomerType;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomerController extends BaseController {
-    public function listAction() {
+class CustomerController extends BaseController
+{
+    public function listAction()
+    {
         $customers = $this->get('customer_crud_controller')
             ->readAllEntities()
             ->getEntities();
@@ -18,7 +21,8 @@ class CustomerController extends BaseController {
         ]);
     }
 
-    public function showAction(string $pathSlug) {
+    public function showAction(string $pathSlug)
+    {
         $customer = $this->get('customer_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
 
@@ -46,7 +50,8 @@ class CustomerController extends BaseController {
         ]);
     }
 
-    public function newAction(Request $request) {
+    public function newAction(Request $request)
+    {
         $customer = new Customers();
 
         $countries = $this->get('country_crud_controller')
@@ -68,13 +73,24 @@ class CustomerController extends BaseController {
             'currencies' => $currencies,
             'users' => $users,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $customer = $form->getData();
 
-            $this->get('customer_crud_controller')
-                ->createEntity($customer);
+            try {
+                $this->get('customer_crud_controller')
+                    ->createEntity($customer);
+            } catch (UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Customer with this data already exists!');
+
+                return $this->redirectToRoute('customer_list');
+            }
+
+            $this->addFlash('success', 'Customer added!');
+
+            return $this->redirectToRoute('customer_list');
         }
 
         return $this->render('@Customer/Customer/new.html.twig', [
