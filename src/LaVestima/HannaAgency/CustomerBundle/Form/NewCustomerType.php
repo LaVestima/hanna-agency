@@ -2,18 +2,43 @@
 
 namespace LaVestima\HannaAgency\CustomerBundle\Form;
 
+use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudController;
+use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudController;
+use LaVestima\HannaAgency\MoneyBundle\Controller\Crud\CurrencyCrudController;
+use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NewCustomerType extends AbstractType
 {
+    private $countryCrudController;
+    private $cityCrudController;
+    private $currencyCrudController;
+    private $userCrudController;
+
+    public function __construct(
+        CountryCrudController $countryCrudController,
+        CityCrudController $cityCrudController,
+        CurrencyCrudController $currencyCrudController,
+        UserCrudController $userCrudController
+    ) {
+        $this->countryCrudController = $countryCrudController;
+        $this->cityCrudController = $cityCrudController;
+        $this->currencyCrudController = $currencyCrudController;
+        $this->userCrudController = $userCrudController;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $countries = $this->countryCrudController->readAllEntities()->getEntities();
+        $cities = $this->cityCrudController->readAllEntities()->getEntities();
+        $currencies = $this->currencyCrudController->readAllEntities()->getEntities();
+        $users = $this->userCrudController->readAllEntities()->getEntities();
+
         $builder
             ->add('firstName', TextType::class)
             ->add('lastName', TextType::class)
@@ -33,13 +58,13 @@ class NewCustomerType extends AbstractType
             ])
             ->add('idCountries', ChoiceType::class, [
                 'label' => 'Country',
-                'choices' => $options['countries'],
+                'choices' => $countries,
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a country'
             ])
             ->add('idCities', ChoiceType::class, [
                 'label' => 'City',
-                'choices' => $options['cities'],
+                'choices' => $cities,
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a city'
             ])
@@ -49,13 +74,13 @@ class NewCustomerType extends AbstractType
             ->add('phone', TextType::class)
             ->add('idCurrencies', ChoiceType::class, [
                 'label' => 'Currency',
-                'choices' => $options['currencies'],
+                'choices' => $currencies,
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a currency'
             ])
             ->add('idUsers', ChoiceType::class, [
                 'label' => 'User',
-                'choices' => $options['users'],
+                'choices' => $users,
                 'choice_label' => 'login',
                 'placeholder' => 'Choose a user',
                 'required' => false,
@@ -64,25 +89,5 @@ class NewCustomerType extends AbstractType
                 'label' => 'Add Customer'
             ])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefault('countries', null)
-            ->setRequired('countries')
-            ->setAllowedTypes('countries', array('array'));
-        $resolver
-            ->setDefault('cities', null)
-            ->setRequired('cities')
-            ->setAllowedTypes('cities', array('array'));
-        $resolver
-            ->setDefault('currencies', null)
-            ->setRequired('currencies')
-            ->setAllowedTypes('currencies', array('array'));
-        $resolver
-            ->setDefault('users', null)
-            ->setRequired('users')
-            ->setAllowedTypes('users', array('array'));
     }
 }

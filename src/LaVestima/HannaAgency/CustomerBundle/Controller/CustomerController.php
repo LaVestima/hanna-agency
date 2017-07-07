@@ -54,25 +54,7 @@ class CustomerController extends BaseController
     {
         $customer = new Customers();
 
-        $countries = $this->get('country_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        $cities = $this->get('city_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        $currencies = $this->get('currency_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        $users = $this->get('user_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-
-        $form = $this->createForm(NewCustomerType::class, $customer, [
-            'countries' => $countries,
-            'cities' => $cities,
-            'currencies' => $currencies,
-            'users' => $users,
-        ]);
+        $form = $this->createForm(NewCustomerType::class, $customer);
 
         $form->handleRequest($request);
 

@@ -2,3 +2,7 @@ services:
     customer_crud_controller:
         class: LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudController
         autowire: true
+
+    LaVestima\HannaAgency\CustomerBundle\Form\NewCustomerType:
+        autowire: true
+        tags: [form.type]
