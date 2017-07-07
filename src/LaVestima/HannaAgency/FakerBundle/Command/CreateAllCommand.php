@@ -39,6 +39,5 @@ class CreateAllCommand extends ContainerAwareCommand
             $commandInput = new ArrayInput($arguments);
             $command->run($commandInput, $output);
         }
-
     }
 }

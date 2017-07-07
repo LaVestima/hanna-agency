@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "-----------------------------------------------"
+echo -e "\e[1mAccess Control\e[0m"
+phpunit src/LaVestima/HannaAgency/AccessControlBundle/Tests/Controller/LoginControllerTest.php
+
+echo "-----------------------------------------------"
+echo -e "\e[1mOrder\e[0m"
+phpunit src/LaVestima/HannaAgency/OrderBundle/Tests/Controller/OrderControllerTest.php
+

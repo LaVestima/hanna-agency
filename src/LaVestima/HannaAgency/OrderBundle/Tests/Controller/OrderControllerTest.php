@@ -2,48 +2,23 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use LaVestima\HannaAgency\InfrastructureBundle\Tests\BaseWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrderControllerTest extends WebTestCase
+class OrderControllerTest extends BaseWebTestCase
 {
-    private $client;
+    private $testPathSlug = 'Umgewrmyefi6thiDJZMmz4LHuKrJDjaVbPZzfCgwLS6Fr5FKhs';
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    private $listActionPath = '/order/list';
+    private $showActionPath = '/order/show';
+
+    public function testListActionAnonymous()
     {
-        $this->client = static::createClient();
-        parent::__construct($name, $data, $dataName);
-    }
+        $this->client->request('GET', $this->listActionPath);
 
-//    public function setUp()
-//    {
-//
-//    }
-
-    public function testListAction()
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/order/list');
-
-        $this->assertEquals(
-            0,
-            $crawler->filter('html:contains("Order List")')->count()
-        );
-    }
-
-    public function testListActionCustomer()
-    {
-        $client = static::createClient(array(), array(
-            'PHP_AUTH_USER' => 'customer',
-            'PHP_AUTH_PW'   => 'customer',
-        ));
-
-        $crawler = $client->request('GET', '/order/list');
-
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Order List")')->count()
+        $this->assertSame(
+            Response::HTTP_FOUND,
+            $this->client->getResponse()->getStatusCode()
         );
     }
 
@@ -51,51 +26,100 @@ class OrderControllerTest extends WebTestCase
     {
         $this->logInAdmin();
 
-        $crawler = $this->client->request('GET', '/order/list');
+        $this->client->request('GET', $this->listActionPath);
 
         $this->assertSame(
             Response::HTTP_OK,
             $this->client->getResponse()->getStatusCode()
         );
-//        $this->assertNotSame(
-//            Response::HTTP_FORBIDDEN,
-//            $this->client->getResponse()->getStatusCode()
-//        );
-
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Order List")')->count()
-//        );
     }
 
-    public function testListActionGuest()
+    public function testListActionCustomer()
     {
-        $client = static::createClient(array(), array(
-            'PHP_AUTH_USER' => 'guest',
-            'PHP_AUTH_PW'   => 'guest',
-        ));
+        $this->logInCustomer();
 
-        $crawler = $client->request('GET', '/order/list');
+        $this->client->request('GET', $this->listActionPath);
 
-        $this->assertEquals(
-            0,
-            $crawler->filter('html:contains("Order List")')->count()
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
         );
     }
 
-    private function logInAdmin()
+    // TODO: maybe USER
+
+    public function testListActionGuest()
     {
-        $this->client = static::createClient(array(), array(
-            'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW'   => 'admin',
-        ));
+        $this->logInGuest();
+
+        $this->client->request('GET', $this->listActionPath);
+
+        $this->assertSame(
+            Response::HTTP_FORBIDDEN,
+            $this->client->getResponse()->getStatusCode()
+        );
     }
 
-    private function logInUser()
+    public function testShowActionAnonymous()
     {
-        $this->client = static::createClient(array(), array(
-            'PHP_AUTH_USER' => 'user',
-            'PHP_AUTH_PW'   => 'user',
-        ));
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionAdmin()
+    {
+        $this->logInAdmin();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionCorrectCustomer()
+    {
+        $this->logInCustomer();
+
+        $this->client->request('GET', $this->showActionPath . '/ZZgtZjORKCCKKTflMgLr7UpKpC2ErHGE2LqW6tMASMylmPKlBP');
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionIncorrectCustomer()
+    {
+        $this->logInCustomer();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+        $this->assertTrue(
+            $this->client->getResponse()->isRedirect($this->listActionPath)
+        );
+    }
+
+    // TODO: maybe USER
+
+    public function testShowActionGuest()
+    {
+        $this->logInGuest();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_FORBIDDEN,
+            $this->client->getResponse()->getStatusCode()
+        );
     }
 }

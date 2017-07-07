@@ -4,6 +4,7 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class OrderController extends BaseController
 {
@@ -23,6 +24,7 @@ class OrderController extends BaseController
                 ->readEntitiesBy(['idCustomers' => $this->getCustomer()]);
         }
         else {
+//	        throw new AccessDeniedHttpException();
 	        // TODO: exception ?? for ROLE_USER and lower
         }
 
