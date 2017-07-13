@@ -53,10 +53,9 @@ abstract class CrudController extends Controller
 
 	    // TODO: works, i don't know why o.O
         // TODO: think about it !!!!!!!!!!!!
-//        if ($this->readOneEntityBy(['id' => $entity->getId()])) {
-        if ($this->user) {
-            $entity = $em->merge($entity);
-        }
+//        if ($this->user) {
+//            $entity = $em->merge($entity);
+//        }
 
 		$em->persist($entity);
 		$em->flush();

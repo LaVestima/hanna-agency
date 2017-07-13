@@ -3,6 +3,7 @@
 namespace LaVestima\HannaAgency\ProductBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 
 /**
  * ProductsSizes
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Products_Sizes", indexes={@ORM\Index(name="Products_Sizes_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}), @ORM\Index(name="Products_Sizes_ID_SIZES_FK", columns={"ID_SIZES"})})
  * @ORM\Entity
  */
-class ProductsSizes
+class ProductsSizes implements EntityInterface
 {
     /**
      * @var integer
@@ -29,9 +30,9 @@ class ProductsSizes
     private $availability;
 
     /**
-     * @var \Products
+     * @var Products
      *
-     * @ORM\ManyToOne(targetEntity="Products")
+     * @ORM\ManyToOne(targetEntity="Products", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
@@ -39,7 +40,7 @@ class ProductsSizes
     private $idProducts;
 
     /**
-     * @var \Sizes
+     * @var Sizes
      *
      * @ORM\ManyToOne(targetEntity="Sizes")
      * @ORM\JoinColumns({
@@ -48,7 +49,15 @@ class ProductsSizes
      */
     private $idSizes;
 
-
+    public function __construct(
+        Products $idProducts = null,
+        Sizes $idSizes = null,
+        int $availability = 0
+    ) {
+        $this->idProducts = $idProducts;
+        $this->idSizes = $idSizes;
+        $this->availability = $availability;
+    }
 
     /**
      * Get id
@@ -87,11 +96,11 @@ class ProductsSizes
     /**
      * Set idProducts
      *
-     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Products $idProducts
+     * @param Products $idProducts
      *
      * @return ProductsSizes
      */
-    public function setIdProducts(\LaVestima\HannaAgency\ProductBundle\Entity\Products $idProducts = null)
+    public function setIdProducts(Products $idProducts = null)
     {
         $this->idProducts = $idProducts;
 
@@ -101,7 +110,7 @@ class ProductsSizes
     /**
      * Get idProducts
      *
-     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Products
+     * @return Products
      */
     public function getIdProducts()
     {
@@ -111,11 +120,11 @@ class ProductsSizes
     /**
      * Set idSizes
      *
-     * @param \LaVestima\HannaAgency\ProductBundle\Entity\Sizes $idSizes
+     * @param Sizes $idSizes
      *
      * @return ProductsSizes
      */
-    public function setIdSizes(\LaVestima\HannaAgency\ProductBundle\Entity\Sizes $idSizes = null)
+    public function setIdSizes(Sizes $idSizes = null)
     {
         $this->idSizes = $idSizes;
 
@@ -125,7 +134,7 @@ class ProductsSizes
     /**
      * Get idSizes
      *
-     * @return \LaVestima\HannaAgency\ProductBundle\Entity\Sizes
+     * @return Sizes
      */
     public function getIdSizes()
     {

@@ -16,18 +16,33 @@
             <th>Name</th>
             <th>Category</th>
             <th>Size</th>
+            <th>Availability</th>
         </tr>
-    {% for product in products %}
+    {% for productSize in productsSizes %}
         <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.idCategories.name }}</td>
-            <td>{{ product.idSizes.name }}</td>
+            <td>{{ productSize.idProducts.name }}</td>
+            <td>{{ productSize.idProducts.idCategories.name }}</td>
+            <td>{{ productSize.idSizes.name }}</td>
+            <td>{{ productSize.availability }}</td>
             <td class="entity-list-cell">
-                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                <a href="{{ path('product_show', {'pathSlug': productSize.idProducts.pathSlug}) }}">
                     <i class="fa fa-chevron-right" aria-hidden="true"></i>
                 </a>
             </td>
         </tr>
     {% endfor %}
+
+    {#{% for product in products %}#}
+        {#<tr>#}
+            {#<td>{{ product.name }}</td>#}
+            {#<td>{{ product.idCategories.name }}</td>#}
+            {#<td>{{ product.idSizes.name }}</td>#}
+            {#<td class="entity-list-cell">#}
+                {#<a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">#}
+                    {#<i class="fa fa-chevron-right" aria-hidden="true"></i>#}
+                {#</a>#}
+            {#</td>#}
+        {#</tr>#}
+    {#{% endfor %}#}
     </table>
 {% endblock %}

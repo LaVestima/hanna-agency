@@ -106,17 +106,6 @@ class Products implements EntityInterface
      */
     private $idProducers;
 
-    /**
-     * @var Sizes
-     *
-     * @ORM\ManyToOne(targetEntity="Sizes")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_SIZES", referencedColumnName="ID")
-     * })
-     */
-    private $idSizes;
-
-
 
     /**
      * Get id
@@ -390,29 +379,5 @@ class Products implements EntityInterface
     public function getIdProducers()
     {
         return $this->idProducers;
-    }
-
-    /**
-     * Set idSizes
-     *
-     * @param Sizes $idSizes
-     *
-     * @return Products
-     */
-    public function setIdSizes(Sizes $idSizes = null)
-    {
-        $this->idSizes = $idSizes;
-
-        return $this;
-    }
-
-    /**
-     * Get idSizes
-     *
-     * @return Sizes
-     */
-    public function getIdSizes()
-    {
-        return $this->idSizes;
     }
 }

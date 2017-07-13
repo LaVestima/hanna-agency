@@ -4,7 +4,7 @@ namespace LaVestima\HannaAgency\ProductBundle\Controller\Crud;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class ProductCrudController extends CrudController
+class ProductSizeCrudController extends CrudController
 {
-	protected $entityClass = 'LaVestima\\HannaAgency\\ProductBundle\\Entity\\Products';
+    protected $entityClass = 'LaVestima\\HannaAgency\\ProductBundle\\Entity\\ProductsSizes';
 }

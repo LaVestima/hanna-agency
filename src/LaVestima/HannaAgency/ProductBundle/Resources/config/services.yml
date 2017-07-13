@@ -10,3 +10,11 @@ services:
     category_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudController
         autowire: true
+
+    product_size_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudController
+        autowire: true
+
+    LaVestima\HannaAgency\ProductBundle\Form\ProductType:
+        autowire: true
+        tags: [form.type]

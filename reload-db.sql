@@ -273,7 +273,6 @@ CREATE TABLE IF NOT EXISTS Products (
 	QR_Code_Path VARCHAR(50) NOT NULL,
 	ID_CATEGORIES INTEGER NOT NULL,
 	ID_PRODUCERS INTEGER NOT NULL,
-	ID_SIZES INTEGER NOT NULL,
 	Path_Slug VARCHAR(50) NOT NULL DEFAULT '',
 	CONSTRAINT Items_PK PRIMARY KEY (ID),
 	CONSTRAINT Products_Name_U UNIQUE(Name),
@@ -282,8 +281,6 @@ CREATE TABLE IF NOT EXISTS Products (
 	CONSTRAINT Items_ID_CATEGORIES_FK FOREIGN KEY (ID_CATEGORIES) REFERENCES Categories(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT Items_ID_PRODUCERS_FK FOREIGN KEY (ID_PRODUCERS) REFERENCES Producers(ID)
-	ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT Items_ID_SIZES_FK FOREIGN KEY (ID_SIZES) REFERENCES Sizes(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -465,9 +462,9 @@ INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Sl
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (4, '16/2015', 1, 2, '2015-10-15', 'rsooOH9b8LZW8A4c6kb0wDjhpqonhCNWcXo9AgZuHI8HrEV4q0');
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (5, '10/2014', 2, 2, '2014-11-01', 'sNQT0j1GFoMrQ8UieAPb7UKAVLg9ID02z07rC13AOdustnEgBe');
 
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, ID_SIZES, QR_Code_Path) VALUES (1, 'Cool Shoe', 'Cool-Shoe-39', 50, 79.99, 3, 2, 5, 'qr/shoes/cool_qr.jpg');
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, ID_SIZES, QR_Code_Path) VALUES (2, 'TF Hat No. 7', 'TF-Hat-No-7-M', 7, 12.5, 4, 3, 2, 'qr/hats/tf7_qr.jpg');
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, ID_SIZES, QR_Code_Path) VALUES (3, 'Simple Top Hat', 'Simple-Top-Hat-XL', 55, 65.99, 4, 2, 4, 'qr/hats/simple_qr.jpg');
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (1, 'Cool Shoe', 'Cool-Shoe-39', 50, 79.99, 3, 2, 'qr/shoes/cool_qr.jpg');
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (2, 'TF Hat No. 7', 'TF-Hat-No-7-M', 7, 12.5, 4, 3, 'qr/hats/tf7_qr.jpg');
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (3, 'Simple Top Hat', 'Simple-Top-Hat-XL', 55, 65.99, 4, 2, 'qr/hats/simple_qr.jpg');
 
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (1, 1, 5, 12);
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (2, 1, 6, 4);

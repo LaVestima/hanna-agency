@@ -5,11 +5,14 @@
 {% block content %}
     {{ form_start(form) }}
     <table class="entity-new-table">
-        {% for fieldName in ['name', 'idCategories', 'idSizes', 'priceProducer', 'priceCustomer', 'idProducers'] %}
+        {% for fieldName in ['name', 'idCategories', 'idSizes', 'availability', 'priceProducer', 'priceCustomer', 'idProducers'] %}
             <tr>
                 <td>
                     {{ form_label(form[fieldName]) }}
-                    <span class="red">*</span>
+                    {% if form[fieldName].vars.required %}
+                        <span class="red">*</span>
+                    {% else %}&nbsp;
+                    {% endif %}
                 </td>
                 <td>{{ form_widget(form[fieldName]) }}</td>
             </tr>

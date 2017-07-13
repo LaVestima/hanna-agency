@@ -1,22 +1,39 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
+{% set product = productSize.idProducts %}
+
 {% block title %}{{ product.name }}{% endblock %}
 
+{% block actionBar %}
+    <a href="{{ path('product_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+{% endblock %}
+
 {% block content %}
-    <table class="entity-show-table">
-        <tr>
-            <td>Name</td>
-            <td>{{ product.name }}</td>
-        </tr>
-        <tr>
-            <td>Category</td>
-            <td>{{ product.idCategories.name }}</td>
-        </tr>
-        <tr>
-            <td>Size</td>
-            <td>{{ product.idSizes.name }}</td>
-        </tr>
-    </table>
+    <div class="module-box">
+        <div class="module-box-title">General</div>
+        <div class="module-box-content">
+            <table class="entity-show-table">
+                <tr>
+                    <td>Name</td>
+                    <td>{{ product.name }}</td>
+                </tr>
+                <tr>
+                    <td>Category</td>
+                    <td>{{ product.idCategories.name }}</td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>{{ productSize.idSizes.name }}</td>
+                </tr>
+                <tr>
 
-
+                </tr>
+            </table>
+        </div>
+    </div>
 {% endblock %}
