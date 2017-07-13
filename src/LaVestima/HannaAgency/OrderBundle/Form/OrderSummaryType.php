@@ -9,7 +9,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 class OrderSummaryType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('save', SubmitType::class, array('label' => 'Confirm'))
-        ;
+            ->add('save', SubmitType::class, array('label' => 'Confirm'));
     }
 }

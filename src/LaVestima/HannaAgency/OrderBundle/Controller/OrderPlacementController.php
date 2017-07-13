@@ -15,20 +15,16 @@ class OrderPlacementController extends BaseController
 {
     public function newAction(Request $request)
     {
-        $products = $this->get('product_crud_controller')
-            ->readAllEntities()->getEntities();
-
-        $customers = $this->get('customer_crud_controller')
-            ->readAllEntities()->getEntities();
-
         $productPlacement = new ProductPlacementHelper();
 
         $isAdmin = $this->isAdmin();
 
         $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
-            'customers' => $isAdmin ? $customers : null,
-            'products' => $products
+            'isAdmin' => $isAdmin,
         ]);
+
+        $products = $this->get('product_crud_controller')
+            ->readAllEntities()->getEntities();
 
         foreach ($products as $key => $product) {
             $form->get('quantities')
@@ -39,6 +35,7 @@ class OrderPlacementController extends BaseController
         }
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($productPlacement->products)) {
                 if (!$isAdmin) {

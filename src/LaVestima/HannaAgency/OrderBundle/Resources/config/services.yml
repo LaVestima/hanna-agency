@@ -10,3 +10,7 @@ services:
     order_status_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudController
         autowire: true
+
+    LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType:
+        autowire: true
+        tags: [form.type]
