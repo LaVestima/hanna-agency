@@ -122,4 +122,19 @@ class OrderControllerTest extends BaseWebTestCase
             $this->client->getResponse()->getStatusCode()
         );
     }
+
+    public function testShowActionIncorrectPathSlug()
+    {
+        $this->logInAdmin();
+
+        $this->client->request('GET', $this->showActionPath . '/wrongPathSlugxxxxxxxx');
+
+        $this->assertSame(
+            Response::HTTP_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+        $this->assertTrue(
+            $this->client->getResponse()->isRedirect($this->listActionPath)
+        );
+    }
 }

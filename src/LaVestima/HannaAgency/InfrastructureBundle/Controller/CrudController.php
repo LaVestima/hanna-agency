@@ -6,10 +6,9 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityNotFoundException;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-abstract class CrudController extends Controller
+abstract class CrudController extends BaseController
 {
 	protected $doctrine;
 	protected $manager;
@@ -92,6 +91,8 @@ abstract class CrudController extends Controller
 
         $this->manager->flush();
 
+        return $oldEntity;
+
 		// TODO: add user and date updated
 		// TODO: ...
 	}
@@ -105,9 +106,12 @@ abstract class CrudController extends Controller
 		    throw new EntityNotFoundException();
 		}
 
-		// TODO: add method_exists ??
-		$entity->setDateDeleted(new \DateTime('now'));
-		$entity->setUserDeleted($this->user);
+        if (method_exists($entity, 'setDateDeleted')) {
+            $entity->setDateDeleted(new \DateTime('now'));
+        }
+        if (method_exists($entity, 'setUserDeleted')) {
+            $entity->setUserDeleted($this->user);
+        }
 
 		$this->manager->flush();
 	}
@@ -179,6 +183,29 @@ abstract class CrudController extends Controller
         return $this;
     }
 
+    public function by(array $keyValueArray)
+    {
+        $this->query .= 'WHERE ';
+
+        foreach ($keyValueArray as $key => $value) {
+            $key = ucfirst(preg_replace_callback(
+                '/[A-Z]/',
+                function ($matches) {
+//                    foreach ($matches as $key => $match) {
+//                        $matches[$key] = '_'. strtolower($match);
+//                    }
+
+                    return '_' . $matches[0];
+                },
+                $key
+            ));
+
+            $this->query .= $key . '=' . $value;
+        }
+
+        return $this;
+    }
+
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
     {
         if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
@@ -225,9 +252,18 @@ abstract class CrudController extends Controller
             throw new EntityNotFoundException();
         }
 
-        // TODO: add method_exists ??
-		$entity->setDateDeleted(null);
-		$entity->setUserDeleted(null);
+        if (
+            method_exists($entity, 'setDateDeleted') &&
+            method_exists($entity, 'setUserDeleted')
+        ) {
+            $entity->setDateDeleted(null);
+            $entity->setUserDeleted(null);
+        } else {
+            if ($this->isDevEnvironment()) {
+                throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be restored');
+            }
+        }
+
 
 		$this->manager->flush();
 	}
@@ -252,9 +288,18 @@ abstract class CrudController extends Controller
 
 	public function getEntities()
     {
+
 //        $this->executeQuery();
+//
+//        var_dump($this->query);die;
+
+//        var_dump(count($this->entities));die;
+//        var_dump($this->entities);die;
+//        var_dump(count($this->entities) > 1);die;
+
 	    // TODO: finish SELECT query here
-	    return $this->entities;
+        return $this->entities;
+//	    return count($this->entities) > 1 ? $this->entities : $this->entities[0];
     }
 
 	public function sortBy(array $keyValueArray)
@@ -279,6 +324,10 @@ abstract class CrudController extends Controller
 
     private function executeQuery()
     {
+//        var_dump($this->manager
+//            ->createQuery($this->query));die;
+
+
         $this->entities = $this->manager
             ->createQuery($this->query)
             ->getResult();

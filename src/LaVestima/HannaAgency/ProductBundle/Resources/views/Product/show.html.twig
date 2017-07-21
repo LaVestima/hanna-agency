@@ -1,7 +1,5 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% set product = productSize.idProducts %}
-
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block actionBar %}
@@ -26,13 +24,28 @@
                     <td>Category</td>
                     <td>{{ product.idCategories.name }}</td>
                 </tr>
-                <tr>
-                    <td>Size</td>
-                    <td>{{ productSize.idSizes.name }}</td>
-                </tr>
+
                 <tr>
 
                 </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="module-box">
+        <div class="module-box-title">Availability</div>
+        <div class="module-box-content">
+            <table class="entity-show-table product-sizes-table">
+                <tr>
+                    <th>Size</th>
+                    <th>Quantity</th>
+                </tr>
+                {% for productSize in productSizes %}
+                <tr>
+                    <td>{{ productSize.idSizes.name }}</td>
+                    <td>{{ productSize.availability }}</td>
+                </tr>
+                {% endfor %}
             </table>
         </div>
     </div>

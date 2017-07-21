@@ -28,13 +28,11 @@ class OrderController extends BaseController
 	        // TODO: exception ?? for ROLE_USER and lower
         }
 
-        $orders = $orders->sortBy(['datePlaced' => 'DESC'])
+        $orders = $orders->sortBy(['dateCreated' => 'DESC'])
             ->getEntities();
 
         foreach ($orders as $order) {
-            $order->setStatus(
-                $this->generateOrderStatus($order)
-            );
+            $order->setStatus($orderCrudController->generateStatus($order));
         }
 		
 		return $this->render('@Order/Order/list.html.twig', [
@@ -106,21 +104,13 @@ class OrderController extends BaseController
 	    $order = $this->get('order_crud_controller')
             ->readOneEntityBy(['pathSlug' => $pathSlug]);
 
-	    if (!$order) {
-	        // TODO: change
-	        var_dump('errorrrrr');
-	        die();
-        }
-
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
-            || $order->getIdCustomers() === $this->getCustomer()) {
+	    if (!$order || !$this->isUserAllowedToViewEntity($order)) {
+            $this->addFlash('warning', 'No order found!');
+        } else {
             $this->get('order_crud_controller')
                 ->deleteEntity($order);
 
             $this->addFlash('notice', 'Order deleted!');
-        }
-        else {
-            $this->addFlash('warning', 'No order found!');
         }
 
         return $this->redirectToRoute('order_list');
@@ -138,39 +128,5 @@ class OrderController extends BaseController
 
 	    return $this->redirectToRoute('order_list');
 	    // TODO: finish
-    }
-
-    protected function generateOrderStatus(Orders $order)
-    {
-	    $ordersProducts = $this->get('order_product_crud_controller')
-            ->readEntitiesBy(['idOrders' => $order])
-            ->getEntities();
-
-	    $orderStatusName = 'Queued';
-	    $isOrderCompleted = true;
-
-	    foreach ($ordersProducts as $ordersProduct) {
-            $ordersProductStatus = $ordersProduct->getIdStatuses()->getName();
-            if ($ordersProductStatus === 'Rejected') {
-                $orderStatusName = $ordersProductStatus;
-                $isOrderCompleted = false;
-                break;
-            }
-            else if ($ordersProductStatus === 'Pending') {
-                $orderStatusName = $ordersProductStatus;
-                $isOrderCompleted = false;
-            }
-            else if ($ordersProductStatus === 'Queued') {
-                $isOrderCompleted = false;
-            }
-        }
-
-        if ($isOrderCompleted) {
-	        $orderStatusName = 'Completed';
-        }
-
-        $orderStatus = $this->get('order_status_crud_controller')
-            ->readOneEntityBy(['name' => $orderStatusName]);
-        return $orderStatus;
     }
 }

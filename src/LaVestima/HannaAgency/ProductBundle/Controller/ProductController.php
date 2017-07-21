@@ -12,25 +12,37 @@ class ProductController extends BaseController
 {
 	public function listAction()
     {
-		$productsSizes = $this->get('product_size_crud_controller')
-            ->readAllEntities()
+//        $products = $this->get('product_crud_controller')
+//            ->readAllEntities()
+//            ->by(['priceCustomer' => 33])
+//            ->getEntities();
+
+//        var_dump($products);die;
+
+
+        // ................
+		$products = $this->get('product_crud_controller')
+            ->readAllUndeletedEntities()
             ->getEntities();
 
 		return $this->render('@Product/Product/list.html.twig', [
-            'productsSizes' => $productsSizes
+            'products' => $products
         ]);
 	}
 	
 	public function showAction($pathSlug)
     {
 		$product = $this->get('product_crud_controller')
-			->readOneEntityBy(['pathSlug' => $pathSlug]);
+			->readOneEntityBy(['pathSlug' => $pathSlug])
+            ->getEntities();
 
-		$productSize = $this->get('product_size_crud_controller')
-            ->readOneEntityBy(['idProducts' => $product]);
+		$productSizes = $this->get('product_size_crud_controller')
+            ->readEntitiesBy(['idProducts' => $product])
+            ->getEntities();
 
 		return $this->render('@Product/Product/show.html.twig', [
-			'productSize' => $productSize,
+            'product' => $product,
+            'productSizes' => $productSizes
 		]);
 	}
 

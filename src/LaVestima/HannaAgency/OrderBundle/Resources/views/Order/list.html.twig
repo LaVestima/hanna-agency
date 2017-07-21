@@ -42,7 +42,7 @@
         </tr>
     {% for order in orders %}
         <tr class="entity-list-row">
-            <td>{{ order.datePlaced | date('d.m.Y') }}</td>
+            <td>{{ order.dateCreated | date('d.m.Y') }}</td>
             <td>{{ order.status.name }}</td>
             {% if is_granted('ROLE_ADMIN') %}
             <td>{{ order.idCustomers.fullName }}</td>

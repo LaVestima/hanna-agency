@@ -10,7 +10,7 @@ use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudCo
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -33,7 +33,7 @@ class AuthenticationHandler implements
         UserSettingCrudController $userSettingCrudController,
         SessionHelper $sessionHelper,
         Router $router,
-        Session $session
+        SessionInterface $session
     ) {
         $this->loginAttemptCrudController = $loginAttemptCrudController;
         $this->userCrudController = $userCrudController;
