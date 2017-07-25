@@ -50,9 +50,9 @@ class CreateOrderCommand extends ContainerAwareCommand
 
                     $output->writeln('OrderProduct');
                 }
-            }
 
-            $output->writeln($orderNumber . ' order' . ($orderNumber == 1 ? '' : 's') . ' created!');
+                $output->writeln('Created: ' . ($i+1));
+            }
         }
     }
 
@@ -67,7 +67,6 @@ class CreateOrderCommand extends ContainerAwareCommand
             ->readRandomEntities(1);
 
         $order->setDateCreated($this->faker->dateTime('now'));
-        $order->setDatePlaced($this->faker->dateTime('now'));
         $order->setIdCustomers($randomCustomer);
         $order->setUserCreated($randomUser);
 
