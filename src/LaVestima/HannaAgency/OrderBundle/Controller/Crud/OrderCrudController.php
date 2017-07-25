@@ -26,8 +26,6 @@ class OrderCrudController extends CrudController {
 
     public function generateStatus($order)
     {
-        // TODO: think about something better, causes too many db queries
-
         $ordersProducts = $this->orderProductCrudController
             ->readEntitiesBy(['idOrders' => $order])
             ->getEntities();

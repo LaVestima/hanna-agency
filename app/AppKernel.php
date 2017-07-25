@@ -15,6 +15,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            // TODO: delete
 //            new AppBundle\AppBundle(),
             new LaVestima\HannaAgency\InvoiceBundle\InvoiceBundle(),
             new LaVestima\HannaAgency\AccessControlBundle\AccessControlBundle(),
@@ -30,6 +31,7 @@ class AppKernel extends Kernel
             new LaVestima\HannaAgency\ExportBundle\ExportBundle(),
             new LaVestima\HannaAgency\FakerBundle\FakerBundle(),
             new LaVestima\HannaAgency\ProducerBundle\ProducerBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

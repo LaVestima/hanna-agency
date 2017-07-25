@@ -19,7 +19,7 @@ abstract class CrudController extends BaseController
 	protected $entities = [];
 
 	// TODO: realize the whole connection with custom queries
-	protected $query = '';
+	protected $query = null;
 
 	public function __construct(
         Registry $doctrine,
@@ -31,6 +31,8 @@ abstract class CrudController extends BaseController
 		if ($tokenStorage->getToken()) {
             $this->user = $tokenStorage->getToken()->getUser();
         }
+
+        $this->query = $this->manager->createQueryBuilder('ent');
 	}
 
     /**
@@ -159,26 +161,18 @@ abstract class CrudController extends BaseController
 
     public function readAllUndeletedEntities()
     {
-        $this->query = '
-            SELECT ent 
-            FROM ' . $this->entityClass . ' ent
-            WHERE ent.dateDeleted IS NULL
-            ';
-
-        $this->executeQuery();
+        $this->query = $this->query->select('ent')
+            ->from($this->entityClass, 'ent')
+            ->where('ent.dateDeleted IS NULL');
 
         return $this;
     }
 
     public function readAllDeletedEntities()
     {
-        $this->query = '
-            SELECT ent 
-            FROM ' . $this->entityClass . ' ent
-            WHERE ent.dateDeleted IS NOT NULL
-            ';
-
-        $this->executeQuery();
+        $this->query = $this->query->select('ent')
+            ->from($this->entityClass, 'ent')
+            ->where('ent.dateDeleted IS NOT NULL');
 
         return $this;
     }
@@ -320,6 +314,16 @@ abstract class CrudController extends BaseController
             }
         }
 	    return $this;
+    }
+
+    public function getQuery()
+    {
+//        var_dump($this->query);die;
+
+        return $this->query->getQuery();
+//        return $this->entities = $this->manager
+//            ->createQuery($this->query);
+//        return $this->query;
     }
 
     private function executeQuery()

@@ -4,40 +4,55 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class OrderController extends BaseController
 {
-	public function listAction()
+	public function listAction(Request $request)
     {
-	    $authChecker = $this->get('security.authorization_checker');
+        $authChecker = $this->get('security.authorization_checker');
 
         $orderCrudController = $this->get('order_crud_controller');
-        $orders = null;
 
-	    if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $orders = $orderCrudController->readAllUndeletedEntities();
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            $orderCrudController->readAllUndeletedEntities();
         }
         else if ($authChecker->isGranted('ROLE_CUSTOMER')) {
-	        // TODO: only undeleted
-	        $orders = $orderCrudController
-                ->readEntitiesBy(['idCustomers' => $this->getCustomer()]);
+            // TODO: only undeleted
+            $orderCrudController->readEntitiesBy([
+                'idCustomers' => $this->getCustomer()
+            ]);
         }
         else {
 //	        throw new AccessDeniedHttpException();
-	        // TODO: exception ?? for ROLE_USER and lower
+            // TODO: exception ?? for ROLE_USER and lower
         }
+        // TODO: sort orders ...
 
-        $orders = $orders->sortBy(['dateCreated' => 'DESC'])
-            ->getEntities();
 
-        foreach ($orders as $order) {
+        $query = $orderCrudController->getQuery();
+
+        $pagination = $this->get('knp_paginator')->paginate(
+            $query,
+            $request->query->getInt('page', 1)/*page number*/,
+            10 /*limit per page*/
+        );
+
+        foreach ($pagination->getItems() as $order) {
             $order->setStatus($orderCrudController->generateStatus($order));
         }
-		
-		return $this->render('@Order/Order/list.html.twig', [
-			'orders' => $orders,
-		]);
+
+        return $this->render('@Order/Order/list.html.twig', [
+            'pagination' => $pagination
+        ]);
+
+
+
+        // --------------------
+
+//        $orders = $orders->sortBy(['dateCreated' => 'DESC'])
+//            ->getEntities();
 	}
 
 	public function deletedListAction()
