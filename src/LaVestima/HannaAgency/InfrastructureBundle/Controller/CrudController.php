@@ -18,6 +18,8 @@ abstract class CrudController extends BaseController
 
 	protected $entities = [];
 
+	protected $alias = 'ent';
+
 	// TODO: realize the whole connection with custom queries
 	protected $query = null;
 
@@ -32,7 +34,7 @@ abstract class CrudController extends BaseController
             $this->user = $tokenStorage->getToken()->getUser();
         }
 
-        $this->query = $this->manager->createQueryBuilder('ent');
+        $this->clearQuery();
 	}
 
     /**
@@ -124,9 +126,17 @@ abstract class CrudController extends BaseController
 	 */
 	public function readEntitiesBy(array $keyValueArray)
     {
-		$this->entities = $this->doctrine
-			->getRepository($this->entityClass)
-			->findBy($keyValueArray);
+        $this->query->select($this->alias)
+            ->from($this->entityClass, $this->alias);
+
+        foreach ($keyValueArray as $key => $value) {
+            $this->query->andWhere($this->alias . '.' . $key . ' = :param_' . $key)
+                ->setParameter('param_' . $key, ''.$value);
+        }
+
+//		$this->entities = $this->doctrine
+//			->getRepository($this->entityClass)
+//			->findBy($keyValueArray);
 
 		return $this;
 	}
@@ -161,9 +171,9 @@ abstract class CrudController extends BaseController
 
     public function readAllUndeletedEntities()
     {
-        $this->query = $this->query->select('ent')
-            ->from($this->entityClass, 'ent')
-            ->where('ent.dateDeleted IS NULL');
+        $this->query = $this->query->select($this->alias)
+            ->from($this->entityClass, $this->alias)
+            ->where($this->alias . '.dateDeleted IS NULL');
 
         return $this;
     }
@@ -280,20 +290,47 @@ abstract class CrudController extends BaseController
 
     // addEntity()
 
+    public function clearQuery()
+    {
+        $this->query = $this->manager->createQueryBuilder('ent');
+
+        return $this;
+    }
+
+    public function setAlias(string $alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function join($otherEntity, $alias)
+    {
+        $this->query->join(
+            $this->alias . '.' . $otherEntity,
+            $alias,
+            'WITH',
+            $this->alias . '.' . $otherEntity . '=' . $alias . '.id'
+        );
+
+        return $this;
+    }
+
 	public function getEntities()
     {
-
-//        $this->executeQuery();
-//
-//        var_dump($this->query);die;
-
-//        var_dump(count($this->entities));die;
-//        var_dump($this->entities);die;
-//        var_dump(count($this->entities) > 1);die;
-
 	    // TODO: finish SELECT query here
         return $this->entities;
 //	    return count($this->entities) > 1 ? $this->entities : $this->entities[0];
+    }
+
+    public function orderBy(string $field, string $order = 'ASC')
+    {
+        $this->query->orderBy(
+            $this->alias . '.' . $field,
+            strtoupper($order)
+        );
+
+        return $this;
     }
 
 	public function sortBy(array $keyValueArray)
@@ -318,12 +355,16 @@ abstract class CrudController extends BaseController
 
     public function getQuery()
     {
-//        var_dump($this->query);die;
-
+//        var_dump($this->query->getQuery());die;
+//        var_dump($this->query->getQuery()->getDql());die;
         return $this->query->getQuery();
-//        return $this->entities = $this->manager
-//            ->createQuery($this->query);
-//        return $this->query;
+    }
+
+    public function getResult()
+    {
+//        var_dump($this->query->getQuery()->getDql());die;
+//        var_dump($this->getQuery()->getResult());die;
+        return $this->getQuery()->getResult();
     }
 
     private function executeQuery()

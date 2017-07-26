@@ -24,7 +24,9 @@ class OrderPlacementController extends BaseController
         ]);
 
         $products = $this->get('product_crud_controller')
-            ->readAllEntities()->getEntities();
+            ->readAllEntities()
+            ->sortBy(['name' => 'ASC'])
+            ->getEntities();
 
         foreach ($products as $key => $product) {
             $form->get('quantities')

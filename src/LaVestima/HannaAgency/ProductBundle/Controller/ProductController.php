@@ -10,23 +10,24 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends BaseController
 {
-	public function listAction()
+	public function listAction(Request $request)
     {
-//        $products = $this->get('product_crud_controller')
-//            ->readAllEntities()
-//            ->by(['priceCustomer' => 33])
-//            ->getEntities();
+        $productCrudController = $this->get('product_crud_controller');
 
-//        var_dump($products);die;
-
-
-        // ................
-		$products = $this->get('product_crud_controller')
+        $productCrudController->setAlias('p')
             ->readAllUndeletedEntities()
-            ->getEntities();
+            ->join('idCategories', 'c')
+            ->join('idProducers', 'pr')
+            ->orderBy('name');
 
-		return $this->render('@Product/Product/list.html.twig', [
-            'products' => $products
+        $pagination = $this->get('knp_paginator')->paginate(
+            $productCrudController->getQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('@Product/Product/list.html.twig', [
+            'pagination' => $pagination
         ]);
 	}
 	

@@ -15,13 +15,15 @@ class OrderController extends BaseController
 
         $orderCrudController = $this->get('order_crud_controller');
 
+        $orderCrudController->setAlias('o');
+
         if ($authChecker->isGranted('ROLE_ADMIN')) {
             $orderCrudController->readAllUndeletedEntities();
         }
         else if ($authChecker->isGranted('ROLE_CUSTOMER')) {
             // TODO: only undeleted
             $orderCrudController->readEntitiesBy([
-                'idCustomers' => $this->getCustomer()
+                'idCustomers' => $this->getCustomer()->getId()
             ]);
         }
         else {
@@ -30,11 +32,12 @@ class OrderController extends BaseController
         }
         // TODO: sort orders ...
 
-
-        $query = $orderCrudController->getQuery();
+        $orderCrudController
+            ->join('idCustomers', 'c')
+            ->orderBy('dateCreated', 'DESC');
 
         $pagination = $this->get('knp_paginator')->paginate(
-            $query,
+            $orderCrudController->getQuery(),
             $request->query->getInt('page', 1)/*page number*/,
             10 /*limit per page*/
         );

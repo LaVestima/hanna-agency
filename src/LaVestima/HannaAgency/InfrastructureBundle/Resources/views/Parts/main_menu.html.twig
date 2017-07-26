@@ -52,6 +52,8 @@
                     </div>
                 </a>
             </li>
+        {% endif %}
+        {% if is_granted('ROLE_USER') %}
             <li>
                 <a href="{{ path('product_list') }}">
                     <div class="left-menu-item left-menu-body-row">
@@ -60,8 +62,6 @@
                     </div>
                 </a>
             </li>
-        {% endif %}
-        {% if is_granted('ROLE_USER') %}
             <li>
                 <a href="{{ path('order_list') }}">
                     <div class="left-menu-item left-menu-body-row">

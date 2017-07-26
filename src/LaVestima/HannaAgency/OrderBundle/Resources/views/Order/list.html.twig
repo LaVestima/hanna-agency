@@ -4,7 +4,7 @@
 {#{% set pdfExportPath = path('export_pdf_order_list') %}#}
 {#{% set pdfExportJson = [] %}#}
 
-{#{% for order in orders %}#}
+{#{% for order in pagination %}#}
     {#{% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}#}
 {#{% endfor %}#}
 
@@ -37,9 +37,12 @@
 
     <table class="entity-list order-list">
         <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'ent.dateCreated') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Status', 'ent.status') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Customer', 'ent.idCustomers') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
+                <th>User Created</th>
+            {% endif %}
         </tr>
 
         {% for order in pagination %}
@@ -62,30 +65,4 @@
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
-
-    {#<table class="entity-list order-list">#}
-        {#<tr>#}
-            {#<th>Date placed</th>#}
-            {#<th>Status</th>#}
-            {#{% if is_granted('ROLE_ADMIN') %}#}
-            {#<th>Customer</th>#}
-            {#<th>User</th>#}
-            {#{% endif %}#}
-        {#</tr>#}
-    {#{% for order in orders %}#}
-        {#<tr class="entity-list-row">#}
-            {#<td>{{ order.dateCreated | date('d.m.Y') }}</td>#}
-            {#<td>{{ order.status.name }}</td>#}
-            {#{% if is_granted('ROLE_ADMIN') %}#}
-            {#<td>{{ order.idCustomers.fullName }}</td>#}
-            {#<td>{{ order.userCreated.login }}</td>#}
-            {#{% endif %}#}
-            {#<td class="entity-list-cell">#}
-                {#<a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">#}
-                    {#<i class="fa fa-chevron-right" aria-hidden="true"></i>#}
-                {#</a>#}
-            {#</td>#}
-        {#</tr>#}
-    {#{% endfor %}#}
-    {#</table>#}
 {% endblock %}

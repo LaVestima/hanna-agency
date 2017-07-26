@@ -26,9 +26,9 @@ class OrderCrudController extends CrudController {
 
     public function generateStatus($order)
     {
-        $ordersProducts = $this->orderProductCrudController
-            ->readEntitiesBy(['idOrders' => $order])
-            ->getEntities();
+        $ordersProducts = $this->orderProductCrudController->clearQuery()
+            ->readEntitiesBy(['idOrders' => $order->getId()])
+            ->getResult();
 
         $orderStatusName = 'Queued';
         $isOrderCompleted = true;

@@ -208,6 +208,12 @@ h1 {
     th {
         text-align: center;
     }
+
+    td {
+        &:last-child {
+            padding-right: 5px;
+        }
+    }
 }
 
 .entity-list-row {

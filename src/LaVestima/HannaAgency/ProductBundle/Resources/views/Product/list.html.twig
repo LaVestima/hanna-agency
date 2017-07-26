@@ -13,21 +13,26 @@
 {% block content %}
     <table class="entity-list">
         <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Producer</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Category', 'c.name') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Producer', 'pr.shortName') }}</th>
         </tr>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.idCategories.name }}</td>
-            <td>{{ product.idProducers.shortName }}</td>
-            <td class="entity-list-cell">
-                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </a>
-            </td>
-        </tr>
+
+        {% for product in pagination %}
+            <tr class="entity-list-row">
+                <td>{{ product.name }}</td>
+                <td>{{ product.idCategories.name }}</td>
+                <td>{{ product.idProducers.shortName }}</td>
+                <td>
+                    <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
         {% endfor %}
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}
