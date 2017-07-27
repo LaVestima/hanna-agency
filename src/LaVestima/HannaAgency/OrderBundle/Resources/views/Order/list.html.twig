@@ -9,25 +9,41 @@
 {#{% endfor %}#}
 
 {#{% set pdfExportJson = pdfExportJson | json_encode %}#}
-
-{% block title 'Order List' %}
+{% block title %}
+    {% if listType == '' %}
+        Order List
+    {% elseif listType == 'deleted' %}
+        Deleted Order List
+    {% endif %}
+{% endblock %}
 
 {% block actionBar %}
-    <a href="{{ path('order_placement_new') }}">
-        <div class="button action-bar-button">
-            Place order
-        </div>
-    </a>
-    <a href="{{ path('order_new') }}">
-        <div class="button action-bar-button">
-            New order
-        </div>
-    </a>
-    <a href="{{ path('order_deleted_list') }}">
-        <div class="button action-bar-button">
-            Deleted orders
-        </div>
-    </a>
+    {% if listType == 'deleted' %}
+        <a href="{{ path('order_list') }}">
+            <div class="button action-bar-button">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                Back
+            </div>
+        </a>
+    {% endif %}
+
+    {% if listType == '' %}
+        <a href="{{ path('order_placement_new') }}">
+            <div class="button action-bar-button">
+                Place order
+            </div>
+        </a>
+        <a href="{{ path('order_new') }}">
+            <div class="button action-bar-button">
+                New order
+            </div>
+        </a>
+        <a href="{{ path('order_list', {'type': 'deleted'}) }}">
+            <div class="button action-bar-button">
+                Deleted orders
+            </div>
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
