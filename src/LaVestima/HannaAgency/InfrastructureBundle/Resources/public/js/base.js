@@ -11,7 +11,7 @@ $(function() {
         $(this).parent().find('.module-box-content').toggleClass('hidden');
     });
 
-    $('.flash-message-list').delay(300)
+    $('.flash-message-list').delay(200)
         .animate({
             top: "0px"
         }, 500)
@@ -23,20 +23,20 @@ $(function() {
         $('.action-bar-export-list > li').toggleClass('hidden');
     });
 
-    // var lastScrollTop = 0;
-    //
-    // $(window).scroll(function () {
-    //     var currentScrollTop = $(this).scrollTop();
-    //
-    //     if (currentScrollTop > 35 && currentScrollTop > lastScrollTop) {
-    //         $('.page-title').addClass('page-title-scrolled');
-    //     } else {
-    //         $('.page-title').removeClass('page-title-scrolled');
-    //     }
-    //
-    //     console.log(lastScrollTop);
-    //     console.log(currentScrollTop);
-    //
-    //     lastScrollTop = currentScrollTop;
-    // })
+
+    // TODO: move into individual files
+
+    // For show pages
+    $('.no-button').click(function() {
+        $(".body-overlay").fadeOut("fast");
+        $('.confirmation-box').fadeOut('fast');
+    });
 });
+
+function showConfirmationBox(message, yesPath) {
+    $(".body-overlay").fadeIn("fast");
+    $('.confirmation-box').fadeIn('fast');
+
+    $('.confirmation-box > .confirmation-message').html(message);
+    $('.confirmation-box > .yes-button-anchor').attr('href', yesPath);
+}

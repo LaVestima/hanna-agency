@@ -32,7 +32,8 @@ class RegisterController extends BaseController
 			$user->setPasswordHash($passwordHash);
 
 			$defaultRole = $this->get('role_crud_controller')
-				->readOneEntityBy(['code' => 'ROLE_GUEST']);
+				->readOneEntityBy(['code' => 'ROLE_GUEST'])
+                ->getResult();
 
 			$user->setIdRoles($defaultRole);
 

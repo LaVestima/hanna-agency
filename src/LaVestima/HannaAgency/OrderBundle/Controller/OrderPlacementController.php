@@ -25,8 +25,10 @@ class OrderPlacementController extends BaseController
 
         $products = $this->get('product_crud_controller')
             ->readAllEntities()
-            ->sortBy(['name' => 'ASC'])
-            ->getEntities();
+            ->orderBy(['name' => 'ASC'])
+            ->getResult();
+//            ->sortBy(['name' => 'ASC'])
+//            ->getEntities();
 
         foreach ($products as $key => $product) {
             $form->get('quantities')
@@ -92,6 +94,7 @@ class OrderPlacementController extends BaseController
                 $orderProduct->setIdStatuses(
                     $this->get('order_status_crud_controller')
                         ->readOneEntityBy(['name' => 'Queued'])
+                        ->getResult()
                 );
                 $orderProduct->setQuantity($selectedQuantities[$key]);
 

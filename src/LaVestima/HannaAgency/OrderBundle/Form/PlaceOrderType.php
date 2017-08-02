@@ -26,7 +26,9 @@ class PlaceOrderType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $products = $this->productCrudController->readAllEntities()->getEntities();
+        $products = $this->productCrudController
+            ->readAllUndeletedEntities()
+            ->getResult();
 
         $builder
             ->add('products', ChoiceType::class, [
@@ -38,7 +40,9 @@ class PlaceOrderType extends AbstractType
             ->add('quantities', CollectionType::class)
             ->add('save', SubmitType::class, array('label' => 'Place order'));
         if ($options['isAdmin']) {
-            $customers = $this->customerCrudController->readAllEntities()->getEntities();
+            $customers = $this->customerCrudController
+                ->readAllUndeletedEntities()
+                ->getResult();
 
             $builder
                 ->add('customers', ChoiceType::class, [

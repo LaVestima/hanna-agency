@@ -6,7 +6,8 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class OrderCrudController extends CrudController {
+class OrderCrudController extends CrudController implements OrderCrudControllerInterface
+{
 	protected $entityClass = 'LaVestima\\HannaAgency\\OrderBundle\\Entity\\Orders';
 
 	private $orderProductCrudController;
@@ -26,7 +27,7 @@ class OrderCrudController extends CrudController {
 
     public function generateStatus($order)
     {
-        $ordersProducts = $this->orderProductCrudController->clearQuery()
+        $ordersProducts = $this->orderProductCrudController
             ->readEntitiesBy(['idOrders' => $order->getId()])
             ->getResult();
 
@@ -54,7 +55,8 @@ class OrderCrudController extends CrudController {
         }
 
         $orderStatus = $this->orderStatusCrudController
-            ->readOneEntityBy(['name' => $orderStatusName]);
+            ->readOneEntityBy(['name' => $orderStatusName])
+            ->getResult();
 
         return $orderStatus;
     }

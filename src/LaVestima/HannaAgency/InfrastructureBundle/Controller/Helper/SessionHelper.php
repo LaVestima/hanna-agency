@@ -26,7 +26,7 @@ class SessionHelper
         $userSettings = $this->userSettingCrudController
             ->readOneEntityBy([
                 'idUsers' => $user
-            ]);
+            ])->getResult();
 
         $this->session->set('configuration', [
             'locale' => $userSettings->getLocale(),
