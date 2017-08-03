@@ -10,7 +10,8 @@ class AccountActivationController extends BaseController
 	public function indexAction(string $activationToken)
     {
 	    $token = $this->get('token_crud_controller')
-            ->readOneEntityBy(['token' => $activationToken]);
+            ->readOneEntityBy(['token' => $activationToken])
+            ->getResult();
 
 		if ($token) {
 			if (!$this->isTokenActive($token)) {
@@ -19,7 +20,8 @@ class AccountActivationController extends BaseController
 			else {
 				$user = $token->getIdUsers();
 				$userRole = $this->get('role_crud_controller')
-                    ->readOneEntityBy(['code' => 'ROLE_USER']);
+                    ->readOneEntityBy(['code' => 'ROLE_USER'])
+                    ->getResult();
 
 				$user->setIdRoles($userRole);
 

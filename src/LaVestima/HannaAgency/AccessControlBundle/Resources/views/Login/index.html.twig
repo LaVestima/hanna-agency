@@ -17,7 +17,7 @@
 
 {% block content %}
     {% if not app.user %}
-    <form action="{{ path('access_control_login') }}" method="post">
+    <form action="{{ path('access_control_login') }}" method="POST">
         {% if error %}
             <span style="color:red">{{ error.message }}</span>
         {% endif %}

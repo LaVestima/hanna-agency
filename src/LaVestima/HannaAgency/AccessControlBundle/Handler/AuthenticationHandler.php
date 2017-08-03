@@ -68,7 +68,8 @@ class AuthenticationHandler implements
         $user = $this->userCrudController
             ->readOneEntityBy([
                 'login' => $exception->getToken()->getUser()
-            ]);
+            ])
+            ->getResult();
 
         $loginAttempt->setIpAdddress($request->getClientIp());
         $loginAttempt->setIsFailed(1);

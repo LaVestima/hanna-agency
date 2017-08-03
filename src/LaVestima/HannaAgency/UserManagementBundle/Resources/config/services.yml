@@ -10,3 +10,6 @@ services:
     user_setting_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudController
         autowire: true
+
+    LaVestima\HannaAgency\UserManagementBundle\Controller\UserController:
+        autowire: true

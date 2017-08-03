@@ -368,21 +368,16 @@ abstract class CrudController extends BaseController
 
     public function getQuery()
     {
-//        var_dump($this->query->getQuery());die;
-//        var_dump($this->query->getQuery()->getDql());die;
         return $this->query->getQuery();
     }
 
     public function getResult()
     {
-//        var_dump($this->query->getQuery()->getDql());die;
-//        var_dump($this->getQuery()->getResult());die;
-
         $result = $this->getQuery()->getResult();
 
-        return count($result) == 1 ?
-            $result[0] :
-            $result;
+        return count($result) === 1 ? $result[0] :
+            (count($result) === 0 ? null :
+            $result);
     }
 
     // TODO: delete
