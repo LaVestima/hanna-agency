@@ -30,6 +30,13 @@ class UsersSettings implements EntityInterface
     private $locale = 'en';
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Newsletter", type="boolean", nullable=false)
+     */
+    private $newsletter = '1';
+
+    /**
      * @var Users
      *
      * @ORM\ManyToOne(targetEntity="Users")
@@ -38,6 +45,7 @@ class UsersSettings implements EntityInterface
      * })
      */
     private $idUsers;
+
 
 
     /**
@@ -72,6 +80,30 @@ class UsersSettings implements EntityInterface
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * Set newsletter
+     *
+     * @param boolean $newsletter
+     *
+     * @return UsersSettings
+     */
+    public function setNewsletter($newsletter)
+    {
+        $this->newsletter = $newsletter;
+
+        return $this;
+    }
+
+    /**
+     * Get newsletter
+     *
+     * @return boolean
+     */
+    public function getNewsletter()
+    {
+        return $this->newsletter;
     }
 
     /**
