@@ -1,4 +1,9 @@
 services:
+    _defaults:
+        autowire: true
+
     currency_crud_controller:
         class: LaVestima\HannaAgency\MoneyBundle\Controller\Crud\CurrencyCrudController
-        autowire: true
+
+    LaVestima\HannaAgency\MoneyBundle\Controller\Crud\CurrencyCrudControllerInterface:
+        alias: currency_crud_controller

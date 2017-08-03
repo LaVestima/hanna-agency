@@ -1,12 +1,26 @@
 services:
+    _defaults:
+        autowire: true
+
+    LaVestima\HannaAgency\OrderBundle\Controller\OrderController:
+
     order_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudController
-        autowire: true
 
     order_product_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderProductCrudController
-        autowire: true
 
     order_status_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudController
-        autowire: true
+
+    LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType:
+        tags: [form.type]
+
+    LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudControllerInterface:
+        alias: order_crud_controller
+
+    LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderProductCrudControllerInterface:
+        alias: order_product_crud_controller
+
+    LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudControllerInterface:
+        alias: order_status_crud_controller

@@ -11,7 +11,8 @@ class UserSettingController extends BaseController
     public function indexAction(Request $request)
     {
         $userSettings = $this->get('user_setting_crud_controller')
-            ->readOneEntityBy(['idUsers' => $this->getUser()]);
+            ->readOneEntityBy(['idUsers' => $this->getUser()])
+            ->getResult();
 
         $form = $this->createForm(UserSettingsType::class, $userSettings);
         $form->handleRequest($request);

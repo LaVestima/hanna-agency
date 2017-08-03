@@ -1,0 +1,20 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title 'Registration Summary' %}
+
+{% block actionBar %}
+    <a href="{{ path('homepage_homepage') }}">
+        <div class="button action-bar-button">
+            Homepage
+        </div>
+    </a>
+    <a href="{{ path('access_control_login') }}">
+        <div class="button action-bar-button">
+            Log in
+        </div>
+    </a>
+{% endblock %}
+
+{% block content %}
+    Email with an activation link has been sent to {{ email }}.
+{% endblock %}

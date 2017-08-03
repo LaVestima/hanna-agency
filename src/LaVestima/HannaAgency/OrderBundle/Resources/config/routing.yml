@@ -1,14 +1,14 @@
-#order_homepage:
-#    path:     /
-#    defaults: { _controller: OrderBundle:Default:index }
-
 order_list:
-    path: /order/list
-    defaults: { _controller: OrderBundle:Order:list }
+    path: /order/list/{type}
+    defaults: { _controller: OrderBundle:Order:list, type: '' }
 
 order_deleted_list:
-    path: /order/deleted_list
-    defaults: { _controller: OrderBundle:Order:deletedList }
+    path: /order/list/{type}
+    defaults: { _controller: OrderBundle:Order:list, type: 'deleted' }
+
+#order_deleted_list:
+#    path: /order/deleted_list
+#    defaults: { _controller: OrderBundle:Order:deletedList }
 
 order_show:
     path: /order/show/{pathSlug}

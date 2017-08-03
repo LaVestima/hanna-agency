@@ -23,7 +23,7 @@ $loader = require __DIR__.'/../app/autoload.php';
 Debug::enable();
 
 $kernel = new AppKernel('dev', true);
-$kernel->loadClassCache();
+Request::setTrustedProxies([], Request::HEADER_FORWARDED);
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

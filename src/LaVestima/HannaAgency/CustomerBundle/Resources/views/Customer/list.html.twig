@@ -8,62 +8,39 @@
             New Customer
         </div>
     </a>
-    {#<a href="{{ path('order_new') }}">#}
-        {#<div class="button action-bar-button">#}
-            {#New order#}
-        {#</div>#}
-    {#</a>#}
-    {#<a href="">#}
-        {#<div class="button action-bar-button">#}
-            {#Deleted orders#}
-        {#</div>#}
-    {#</a>#}
 {% endblock %}
 
 {% block content %}
-    <table class="entity-list">
+    <table class="entity-list order-list">
         <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                First Name
-            </th>
-            <th>
-                Last Name
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Login
-            </th>
+            <th>{{ knp_pagination_sortable(pagination, 'ID', 'c.identificationNumber') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'First Name', 'c.firstName') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Last Name', 'c.lastName') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Email', 'c.email') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'User', 'u.login') }}</th>
         </tr>
-    {% for customer in customers %}
-        <tr class="entity-list-row">
-            <td>
-                {{ customer.identificationNumber }}
-            </td>
-            <td>
-                {{ customer.firstName }}
-            </td>
-            <td>
-                {{ customer.lastName }}
-            </td>
-            <td>
-                {{ customer.email }}
-            </td>
-            <td>
-                {% if customer.idUsers is not null %}
-                    {{ customer.idUsers.login }}
-                {% endif %}
-            </td>
-            <td class="entity-list-cell">
-                <a href="{{ path('customer_show', {'pathSlug': customer.pathSlug}) }}">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
+
+        {% for customer in pagination %}
+            <tr class="entity-list-row">
+                <td>{{ customer.identificationNumber }}</td>
+                <td>{{ customer.firstName }}</td>
+                <td>{{ customer.lastName }}</td>
+                <td>{{ customer.email }}</td>
+                <td>
+                    {% if customer.idUsers is not null %}
+                        {{ customer.idUsers.login }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('customer_show', {'pathSlug': customer.pathSlug}) }}">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

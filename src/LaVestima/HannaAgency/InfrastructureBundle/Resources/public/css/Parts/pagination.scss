@@ -1,0 +1,28 @@
+.pagination {
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+
+    .button {
+        height: 40px;
+        min-width: 40px;
+        line-height: 40px;
+        padding: 0 10px;
+    }
+
+    .previous {
+        margin-right: 15px;
+    }
+
+    .current {
+        font-weight: bold;
+    }
+
+    .next {
+        margin-left: 15px;
+    }
+
+    .pagination-footer {
+        margin: 10px 0;
+    }
+}

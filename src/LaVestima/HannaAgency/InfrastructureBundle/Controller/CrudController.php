@@ -2,14 +2,17 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\QueryBuilder;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-abstract class CrudController extends Controller {
+abstract class CrudController extends BaseController
+{
+    // TODO: CLEAN IT ALL UP !!!!!!!
+
 	protected $doctrine;
 	protected $manager;
 	protected $user;
@@ -18,11 +21,22 @@ abstract class CrudController extends Controller {
 
 	protected $entities = [];
 
-	// TODO: realize the whole connection with custom queries
-	protected $query = '';
+	protected $alias = 'ent';
 
+    /**
+     * @var QueryBuilder $query
+     */
+	protected $query;
+
+
+    /**
+     * CrudController constructor.
+     *
+     * @param ManagerRegistry $doctrine
+     * @param TokenStorageInterface $tokenStorage
+     */
 	public function __construct(
-        Registry $doctrine,
+        ManagerRegistry $doctrine,
         TokenStorageInterface $tokenStorage
     ) {
 		$this->doctrine = $doctrine;
@@ -31,10 +45,15 @@ abstract class CrudController extends Controller {
 		if ($tokenStorage->getToken()) {
             $this->user = $tokenStorage->getToken()->getUser();
         }
+
+        $this->clearQuery();
 	}
 
     /**
+     * Create new Entity in DB (INSERT).
+     *
 	 * @param $entity
+     * @return EntityInterface
 	 */
 	public function createEntity(EntityInterface $entity)
     {
@@ -52,7 +71,6 @@ abstract class CrudController extends Controller {
 
 	    // TODO: works, i don't know why o.O
         // TODO: think about it !!!!!!!!!!!!
-//        if ($this->readOneEntityBy(['id' => $entity->getId()])) {
         if ($this->user) {
             $entity = $em->merge($entity);
         }
@@ -64,6 +82,8 @@ abstract class CrudController extends Controller {
 	}
 
 	/**
+     * Update Entity in DB (UPDATE).
+     *
 	 * @param $entity
      * @param array $keyValueArray
 	 */
@@ -92,11 +112,93 @@ abstract class CrudController extends Controller {
 
         $this->manager->flush();
 
-		// TODO: add user and date updated
+        return $oldEntity;
+
+		// TODO: add user and date updated ??
 		// TODO: ...
 	}
 
+    /**
+     * Read Entities from DB with given value (SELECT + WHERE).
+     *
+     * @param array $keyValueArray
+     * @return mixed
+     */
+    public function readEntitiesBy(array $keyValueArray)
+    {
+        $this->clearQuery();
+
+        $this->query->select($this->alias)
+            ->from($this->entityClass, $this->alias);
+
+        foreach ($keyValueArray as $key => $value) {
+            $this->query->andWhere($this->alias . '.' . $key . ' = :param_' . $key)
+                ->setParameter('param_' . $key, ''.$value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Read one Entity from DB with given value (SELECT + WHERE).
+     *
+     * @param array $keyValueArray
+     * @return object
+     */
+    public function readOneEntityBy(array $keyValueArray)
+    {
+        $this->readEntitiesBy($keyValueArray);
+        $this->query->setMaxResults(1);
+
+        return $this;
+    }
+
+    /**
+     * Read all Entities from DB (SELECT).
+     *
+     * @return object
+     */
+    public function readAllEntities()
+    {
+        $this->clearQuery();
+
+        $this->query->select($this->alias)
+            ->from($this->entityClass, $this->alias);
+
+        return $this;
+    }
+
+    /**
+     * Read all not deleted Entities from DB (SELECT).
+     *
+     * @return $this
+     */
+    public function readAllUndeletedEntities()
+    {
+        $this->readAllEntities();
+
+        $this->query->where($this->alias . '.dateDeleted IS NULL');
+
+        return $this;
+    }
+
+    /**
+     * Read all deleted Entities from DB (SELECT).
+     *
+     * @return $this
+     */
+    public function readAllDeletedEntities()
+    {
+        $this->readAllEntities();
+
+        $this->query->where($this->alias . '.dateDeleted IS NOT NULL');
+
+        return $this;
+    }
+
 	/**
+     * Mark the Entity in DB as deleted.
+     *
 	 * @param $entity
 	 */
 	public function deleteEntity($entity)
@@ -105,78 +207,56 @@ abstract class CrudController extends Controller {
 		    throw new EntityNotFoundException();
 		}
 
-		// TODO: add method_exists ??
-		$entity->setDateDeleted(new \DateTime('now'));
-		$entity->setUserDeleted($this->user);
+        if (method_exists($entity, 'setDateDeleted')) {
+            $entity->setDateDeleted(new \DateTime('now'));
+        }
+        if (method_exists($entity, 'setUserDeleted')) {
+            $entity->setUserDeleted($this->user);
+        }
 
 		$this->manager->flush();
 	}
 
-	/**
-	 * @param array $keyValueArray
-	 * @return mixed
-	 */
-	public function readEntitiesBy(array $keyValueArray)
+    /**
+     * Mark the Entity in DB as not deleted.
+     *
+     * @param $entity
+     */
+    public function restoreEntity($entity)
     {
-		$this->entities = $this->doctrine
-			->getRepository($this->entityClass)
-			->findBy($keyValueArray);
+        if (!$entity) {
+            throw new EntityNotFoundException();
+        }
 
-		return $this;
-	}
+        if (
+            method_exists($entity, 'setDateDeleted') &&
+            method_exists($entity, 'setUserDeleted')
+        ) {
+            $entity->setDateDeleted(null);
+            $entity->setUserDeleted(null);
+        } else {
+            if ($this->isDevEnvironment()) {
+                throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be restored');
+            }
+        }
 
-	/**
-	 * @param array $keyValueArray
-	 * @return object
-	 */
-	public function readOneEntityBy(array $keyValueArray)
-    {
-	    $entity = $this->doctrine
-            ->getRepository($this->entityClass)
-            ->findOneBy($keyValueArray);
-
-		return $entity;
-	}
+        $this->manager->flush();
+    }
 
     /**
-     * @return object
+     * Delete Entity from DB (DELETE)
+     *
+     * @param $entity
      */
-    public function readAllEntities()
+    protected function purgeEntity($entity)
     {
-        $this->query = '
-            SELECT ent 
-            FROM ' . $this->entityClass . ' ent
-            ';
+        if (!$entity) {
+            throw new EntityNotFoundException();
+        }
 
-        $this->executeQuery();
-
-        return $this;
-    }
-
-    public function readAllUndeletedEntities()
-    {
-        $this->query = '
-            SELECT ent 
-            FROM ' . $this->entityClass . ' ent
-            WHERE ent.dateDeleted IS NULL
-            ';
-
-        $this->executeQuery();
-
-        return $this;
-    }
-
-    public function readAllDeletedEntities()
-    {
-        $this->query = '
-            SELECT ent 
-            FROM ' . $this->entityClass . ' ent
-            WHERE ent.dateDeleted IS NOT NULL
-            ';
-
-        $this->executeQuery();
-
-        return $this;
+        $em = $this->manager;
+        $em->remove($entity);
+        $em->flush();
     }
 
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
@@ -216,47 +296,49 @@ abstract class CrudController extends Controller {
         }
     }
 
-	/**
-	 * @param $entity
-	 */
-	public function restoreEntity($entity)
+    public function clearQuery()
     {
-        if (!$entity) {
-            throw new EntityNotFoundException();
-        }
+        $this->query = $this->manager->createQueryBuilder('ent');
 
-        // TODO: add method_exists ??
-		$entity->setDateDeleted(null);
-		$entity->setUserDeleted(null);
-
-		$this->manager->flush();
-	}
-
-	/**
-	 * @param $entity
-	 */
-	protected function purgeEntity($entity)
-    {
-        if (!$entity) {
-            throw new EntityNotFoundException();
-        }
-
-		$em = $this->manager;
-		$em->remove($entity);
-		$em->flush();
-	}
-
-	// setEntities()
-
-    // addEntity()
-
-	public function getEntities()
-    {
-//        $this->executeQuery();
-	    // TODO: finish SELECT query here
-	    return $this->entities;
+        return $this;
     }
 
+    public function setAlias(string $alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function join($otherEntity, $alias)
+    {
+        $this->query->join(
+            $this->alias . '.' . $otherEntity,
+            $alias,
+            'WITH',
+            $this->alias . '.' . $otherEntity . '=' . $alias . '.id'
+        );
+
+        return $this;
+    }
+
+    // TODO: delete
+//	public function getEntities()
+//    {
+//        return $this->entities;
+//    }
+
+    public function orderBy(string $field, string $order = 'ASC')
+    {
+        $this->query->orderBy(
+            $this->alias . '.' . $field,
+            strtoupper($order)
+        );
+
+        return $this;
+    }
+
+    // TODO: delete
 	public function sortBy(array $keyValueArray)
     {
 	    if (is_array($this->entities)) {
@@ -277,12 +359,32 @@ abstract class CrudController extends Controller {
 	    return $this;
     }
 
-    private function executeQuery()
+    public function getQuery()
     {
-        $this->entities = $this->manager
-            ->createQuery($this->query)
-            ->getResult();
+        return $this->query->getQuery();
     }
+
+    public function getResult()
+    {
+        $result = $this->getQuery()->getResult();
+
+        return count($result) === 1 ? $result[0] :
+            (count($result) === 0 ? null :
+            $result);
+    }
+
+    // TODO: delete
+//    private function executeQuery()
+//    {
+//        $this->entities = $this->manager
+//            ->createQuery($this->query)
+//            ->getResult();
+//    }
+
+
+
+
+    // TODO: maybe move to another class
 
     public function countRows()
     {

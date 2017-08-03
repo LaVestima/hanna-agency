@@ -39,13 +39,6 @@ class Orders implements EntityInterface, \JsonSerializable
     private $dateDeleted;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="Date_Placed", type="datetime", nullable=false)
-     */
-    private $datePlaced = 'CURRENT_TIMESTAMP';
-
-    /**
      * @var string
      *
      * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
@@ -136,28 +129,6 @@ class Orders implements EntityInterface, \JsonSerializable
      */
     public function getDateDeleted() {
         return $this->dateDeleted;
-    }
-
-    /**
-     * Set datePlaced
-     *
-     * @param \DateTime $datePlaced
-     *
-     * @return Orders
-     */
-    public function setDatePlaced($datePlaced) {
-        $this->datePlaced = $datePlaced;
-
-        return $this;
-    }
-
-    /**
-     * Get datePlaced
-     *
-     * @return \DateTime
-     */
-    public function getDatePlaced() {
-        return $this->datePlaced;
     }
 
     /**
@@ -261,7 +232,6 @@ class Orders implements EntityInterface, \JsonSerializable
     public function jsonSerialize() // TODO: finish !!!
     {
         $json = [];
-        $json['datePlaced'] = $this->datePlaced->format('d.m.Y');
         $json['status'] = $this->status;
         $json['customer'] = $this->idCustomers->getFullName();
 

@@ -2,27 +2,54 @@
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 
+use LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudControllerInterface;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
 use LaVestima\HannaAgency\AccessControlBundle\Form\ForgotPasswordType;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use RandomLib\Factory;
 use Symfony\Component\HttpFoundation\Request;
 
-class ForgotPasswordController extends BaseController {
+class ForgotPasswordController extends BaseController
+{
+    private $userCrudController;
+    private $tokenCrudController;
+
     private $baseUrl;
     private $user;
     private $newPasswordToken;
 
-    public function indexAction(Request $request) {
+    /**
+     * ForgotPasswordController constructor.
+     *
+     * @param TokenCrudControllerInterface $tokenCrudController
+     */
+    public function __construct(
+        UserCrudControllerInterface $userCrudController,
+        TokenCrudControllerInterface $tokenCrudController
+    ) {
+        $this->userCrudController = $userCrudController;
+        $this->tokenCrudController = $tokenCrudController;
+    }
+
+    /**
+     * Forgot Password Main Action.
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction(Request $request)
+    {
         $user = new Users();
 
         $form = $this->createForm(ForgotPasswordType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($user = $this->get('user_crud_controller')
+            if ($user = $this->userCrudController
                 ->readOneEntityBy(['email' => $form->get('email')->getData()])
+                ->getResult()
             ) {
                 $this->user = $user;
 
@@ -45,22 +72,34 @@ class ForgotPasswordController extends BaseController {
         ]);
     }
 
-    public function emailSentAction() {
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function emailSentAction()
+    {
         return $this->render('@AccessControl/ForgotPassword/emailSent.html.twig');
     }
 
-    private function createNewPasswordToken() {
+    /**
+     *
+     */
+    private function createNewPasswordToken()
+    {
         $this->newPasswordToken = $this->generateNewPasswordToken();
 
         $token = new Tokens();
         $token->setIdUsers($this->user);
         $token->setToken($this->newPasswordToken);
 
-        $this->get('token_crud_controller')
+        $this->tokenCrudController
             ->createEntity($token);
     }
 
-    private function sendNewPasswordEmail() {
+    /**
+     *
+     */
+    private function sendNewPasswordEmail()
+    {
         $email = $this->user->getEmail();
 
         $message = \Swift_Message::newInstance()
@@ -72,7 +111,11 @@ class ForgotPasswordController extends BaseController {
         $this->get('mailer')->send($message);
     }
 
-    private function getNewPasswordEmailBody() {
+    /**
+     * @return string
+     */
+    private function getNewPasswordEmailBody()
+    {
         $body  = 'To reset the password, click on the link below:<br>';
         $body .= '<a href="' . $this->baseUrl . '/reset_password/';
         $body .= $this->newPasswordToken;
@@ -81,7 +124,11 @@ class ForgotPasswordController extends BaseController {
         return $body;
     }
 
-    private function generateNewPasswordToken() {
+    /**
+     * @return string
+     */
+    private function generateNewPasswordToken()
+    {
         $factory = new Factory();
         $generator = $factory->getMediumStrengthGenerator();
         $activationToken = $generator->generateString(100, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');

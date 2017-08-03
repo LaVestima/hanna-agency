@@ -50,9 +50,9 @@ class CreateOrderCommand extends ContainerAwareCommand
 
                     $output->writeln('OrderProduct');
                 }
-            }
 
-            $output->writeln($orderNumber . ' order' . ($orderNumber == 1 ? '' : 's') . ' created!');
+                $output->writeln('Created: ' . ($i+1));
+            }
         }
     }
 
@@ -61,13 +61,12 @@ class CreateOrderCommand extends ContainerAwareCommand
         $order = new Orders();
 
         $randomCustomer = $this->getContainer()->get('customer_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $randomUser = $this->getContainer()->get('user_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $order->setDateCreated($this->faker->dateTime('now'));
-        $order->setDatePlaced($this->faker->dateTime('now'));
         $order->setIdCustomers($randomCustomer);
         $order->setUserCreated($randomUser);
 
@@ -83,11 +82,11 @@ class CreateOrderCommand extends ContainerAwareCommand
 
         do {
             $randomProduct = $this->getContainer()->get('product_crud_controller')
-                ->readRandomEntities(1);
+                ->readRandomEntities(1)->getResult();
         } while (!$this->isProductUniqueForOrder($randomProduct, $order));
 
         $randomStatus = $this->getContainer()->get('order_status_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $orderProduct->setIdOrders($order);
         $orderProduct->setIdProducts($randomProduct);
@@ -105,9 +104,9 @@ class CreateOrderCommand extends ContainerAwareCommand
     {
         $orderProduct = $this->getContainer()->get('order_product_crud_controller')
             ->readOneEntityBy([
-                'idProducts' => $product,
-                'idOrders' => $order,
-            ]);
+                'idProducts' => $product->getId(),
+                'idOrders' => $order->getId(),
+            ])->getResult();
 
         return $orderProduct ? false : true;
     }

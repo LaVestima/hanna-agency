@@ -2,9 +2,13 @@
 
 namespace LaVestima\HannaAgency\ProductBundle\Form;
 
+use LaVestima\HannaAgency\ProducerBundle\Controller\Crud\ProducerCrudController;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudControllerInterface;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,21 +16,51 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
 {
+    private $categoryCrudController;
+    private $sizeCrudController;
+    private $producerCrudController;
+
+    public function __construct(
+        CategoryCrudControllerInterface $categoryCrudController,
+        SizeCrudControllerInterface $sizeCrudController,
+        ProducerCrudController $producerCrudController
+    ) {
+        $this->categoryCrudController = $categoryCrudController;
+        $this->sizeCrudController = $sizeCrudController;
+        $this->producerCrudController = $producerCrudController;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // TODO: maybe only undeleted x2
+        $categories = $this->categoryCrudController->readAllEntities()->getResult();
+        $sizes = $this->sizeCrudController->readAllEntities()->getResult();
+        $producers = $this->producerCrudController->readAllUndeletedEntities()->getResult();
+
         $builder
             ->add('name', TextType::class)
             ->add('idCategories', ChoiceType::class, [
                 'label' => 'Category',
-                'choices' => $options['categories'],
+                'choices' => $categories,
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a category'
             ])
             ->add('idSizes', ChoiceType::class, [
                 'label' => 'Size',
-                'choices' => $options['sizes'],
+                'choices' => $sizes,
                 'choice_label' => 'name',
-                'placeholder' => 'Choose a size'
+                'placeholder' => 'Choose a size',
+                'mapped' => false
+            ])
+            ->add('availability', NumberType::class, [
+                'label' => 'Availability',
+                'empty_data' => '0',
+                'mapped' => false,
+                'required' => false
             ])
             ->add('priceProducer', MoneyType::class, [
                 'label' => 'Producer Price',
@@ -38,30 +72,24 @@ class ProductType extends AbstractType
             ])
             ->add('idProducers', ChoiceType::class, [
                 'label' => 'Producer',
-                'choices' => $options['producers'],
+                'choices' => $producers,
                 'choice_label' => 'fullName',
                 'placeholder' => 'Choose a producer'
             ])
             // TODO: finish, add more !!!!!!!!!!!!
             ->add('save', SubmitType::class, [
                 'label' => 'Add Product'
-            ])
-        ;
+            ]);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefault('categories', null)
-            ->setRequired('categories')
-            ->setAllowedTypes('categories', array('array'));
-        $resolver
-            ->setDefault('sizes', null)
-            ->setRequired('sizes')
-            ->setAllowedTypes('sizes', array('array'));
-        $resolver
-            ->setDefault('producers', null)
-            ->setRequired('producers')
-            ->setAllowedTypes('producers', array('array'));
+            ->setDefault('isAdmin', null)
+            ->setRequired('isAdmin')
+            ->setAllowedTypes('isAdmin', ['boolean']);
     }
 }

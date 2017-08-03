@@ -7,14 +7,17 @@ use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
 use LaVestima\HannaAgency\AccessControlBundle\Form\RegisterType;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
+use LaVestima\HannaAgency\UserManagementBundle\Entity\UsersSettings;
 use RandomLib\Factory;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegisterController extends BaseController {
+class RegisterController extends BaseController
+{
     private $baseUrl;
 	private $activationToken;
 
-	public function indexAction(Request $request) {
+	public function indexAction(Request $request)
+    {
 		$user = new Users();
 		$form = $this->createForm(RegisterType::class, $user);
 
@@ -29,20 +32,25 @@ class RegisterController extends BaseController {
 			$user->setPasswordHash($passwordHash);
 
 			$defaultRole = $this->get('role_crud_controller')
-				->readOneEntityBy(['code' => 'ROLE_GUEST']);
+				->readOneEntityBy(['code' => 'ROLE_GUEST'])
+                ->getResult();
 
 			$user->setIdRoles($defaultRole);
 
 			try {
 				$this->get('user_crud_controller')
 					->createEntity($user);
+
+				$defaultUsersSettings = new UsersSettings();
+
+				$defaultUsersSettings->setIdUsers($user);
+
+                $this->get('user_setting_crud_controller')
+                    ->createEntity($defaultUsersSettings);
 			} catch (UniqueConstraintViolationException $e) {
-				// TODO: add a flash
-				var_dump('User with these credentials already exists!');
-				var_dump($e->getMessage());
-				die();
-//				return $this->redirectToRoute('access_control_register');
-				// TODO: redirect to error page
+			    $this->addFlash('error', 'User with these credentials already exists!');
+
+				return $this->redirectToRoute('access_control_register');
 			}
 			
 			$this->setActivationToken($this->generateActivationToken());
@@ -58,8 +66,9 @@ class RegisterController extends BaseController {
 
 			$this->sendActivationEmail($form->get('email')->getData());
 
-			// TODO: redirect to confirmation page
-			var_dump('Sent to '.$form->get('email')->getData());
+            return $this->render('@AccessControl/Register/summary.html.twig', [
+                'email' => $form->get('email')->getData()
+            ]);
 		}
 
 		return $this->render('AccessControlBundle:Register:index.html.twig', array(
@@ -67,13 +76,15 @@ class RegisterController extends BaseController {
 		));
 	}
 
-	private function setActivationToken(string $activationToken) {
+	private function setActivationToken(string $activationToken)
+    {
 		$this->activationToken = $activationToken;
 
 		return $this;
 	}
 
-	private function generateActivationToken() {
+	private function generateActivationToken()
+    {
 		$factory = new Factory();
 		$generator = $factory->getMediumStrengthGenerator();
 		$activationToken = $generator->generateString(100, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -81,7 +92,8 @@ class RegisterController extends BaseController {
 		return $activationToken;
 	}
 
-	protected function sendActivationEmail($email) {
+	protected function sendActivationEmail($email)
+    {
 		$message = \Swift_Message::newInstance()
 			->setSubject('Registration confirmation')
 			->setFrom('lavestima@lavestima.com')
@@ -90,12 +102,10 @@ class RegisterController extends BaseController {
 			->setBody($this->getActivationMessageBody(), 'text/html');
 		$this->get('mailer')->send($message);
 	}
-	
-//	protected function sendConfirmationEmail() {
-//
-//	}
 
-	private function getActivationMessageBody() {
+    // TODO: correct message
+	private function getActivationMessageBody()
+    {
 		$body  = 'User has just been registered with this email.' . '<br>';
 		$body .= 'To confirm it click the following link:' . '<br>';
 		$body .= '<a href="' . $this->baseUrl . '/account_activation/';

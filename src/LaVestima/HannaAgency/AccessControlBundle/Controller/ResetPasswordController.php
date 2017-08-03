@@ -2,16 +2,45 @@
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 
+use LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudControllerInterface;
 use LaVestima\HannaAgency\AccessControlBundle\Entity\Tokens;
 use LaVestima\HannaAgency\AccessControlBundle\Form\ResetPasswordType;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 
-class ResetPasswordController extends BaseController {
-    public function indexAction(string $resetPasswordToken, Request $request) {
-        $token = $this->get('token_crud_controller')
-            ->readOneEntityBy(['token' => $resetPasswordToken]);
+class ResetPasswordController extends BaseController
+{
+    private $tokenCrudController;
+    private $userCrudController;
+
+    /**
+     * ResetPasswordController constructor.
+     *
+     * @param TokenCrudControllerInterface $tokenCrudController
+     * @param UserCrudControllerInterface $userCrudController
+     */
+    public function __construct(
+        TokenCrudControllerInterface $tokenCrudController,
+        UserCrudControllerInterface $userCrudController
+    ) {
+        $this->tokenCrudController = $tokenCrudController;
+        $this->userCrudController = $userCrudController;
+    }
+
+    /**
+     * Reset Password Main Action.
+     *
+     * @param string $resetPasswordToken
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction(string $resetPasswordToken, Request $request)
+    {
+        $token = $this->tokenCrudController
+            ->readOneEntityBy(['token' => $resetPasswordToken])
+            ->getResult();
 
         if ($token && $this->isTokenActive($token)) {
             $user = new Users();
@@ -24,10 +53,11 @@ class ResetPasswordController extends BaseController {
 
                 $user = $token->getIdUsers();
 
+                // TODO: DI
                 $newPasswordHash = $this->get('security.password_encoder')
                     ->encodePassword($user, $newPassword);
 
-                $this->get('user_crud_controller')
+                $this->userCrudController
                     ->updateEntity($user, [
                         'passwordHash' => $newPasswordHash,
                     ]);
@@ -50,12 +80,21 @@ class ResetPasswordController extends BaseController {
         }
     }
 
-    private function isTokenActive(Tokens $token) {
+    /**
+     * @param Tokens $token
+     * @return bool
+     */
+    private function isTokenActive(Tokens $token)
+    {
         return $token->getDateExpired() > (new \DateTime('now'));
     }
 
-    private function disableToken(Tokens $token) {
-        $this->get('token_crud_controller')
+    /**
+     * @param Tokens $token
+     */
+    private function disableToken(Tokens $token)
+    {
+        $this->tokenCrudController
             ->updateEntity($token, [
                 'dateExpired' => (new \DateTime('now')),
             ]);

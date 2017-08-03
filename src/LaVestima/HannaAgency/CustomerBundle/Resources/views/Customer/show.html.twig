@@ -81,10 +81,10 @@
                 {% for order in orders %}
                     <tr>
                         <td>
-                            {{ order.datePlaced | date('d.m.Y') }}
+                            {{ order.dateCreated | date('d.m.Y') }}
                         </td>
                         <td>
-                            {{ order.status }}
+                            {{ order.status.name }}
                         </td>
                         <td>
                             <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">

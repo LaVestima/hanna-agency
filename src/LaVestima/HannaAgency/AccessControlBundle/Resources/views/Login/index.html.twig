@@ -17,7 +17,7 @@
 
 {% block content %}
     {% if not app.user %}
-    <form action="{{ path('access_control_login') }}" method="post">
+    <form action="{{ path('access_control_login') }}" method="POST">
         {% if error %}
             <span style="color:red">{{ error.message }}</span>
         {% endif %}
@@ -27,7 +27,7 @@
                     <label for="username">Username:</label>
                 </td>
                 <td>
-                    <input type="text" id="username" name="_username" required value="{{ last_username }}" />
+                    <input type="text" id="username" name="_username" required value="{{ last_username }}" autofocus />
                 </td>
             </tr>
             <tr>

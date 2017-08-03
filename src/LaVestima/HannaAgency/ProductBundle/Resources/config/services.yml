@@ -1,12 +1,30 @@
 services:
+    _defaults:
+        autowire: true
+
     product_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
-        autowire: true
 
     size_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudController
-        autowire: true
 
     category_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudController
-        autowire: true
+
+    product_size_crud_controller:
+        class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudController
+
+    LaVestima\HannaAgency\ProductBundle\Form\ProductType:
+        tags: [form.type]
+
+    LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface:
+        alias: product_crud_controller
+
+    LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudControllerInterface:
+        alias: size_crud_controller
+
+    LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudControllerInterface:
+        alias: category_crud_controller
+
+    LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudControllerInterface:
+        alias: product_size_crud_controller

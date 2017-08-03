@@ -1,12 +1,22 @@
 services:
+    _defaults:
+        autowire: true
+
+    LaVestima\HannaAgency\AccessControlBundle\Controller\ForgotPasswordController:
+
+    LaVestima\HannaAgency\AccessControlBundle\Controller\ResetPasswordController:
+
     token_crud_controller:
         class: LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudController
-        autowire: true
 
     login_attempt_crud_controller:
         class: LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudController
-        autowire: true
 
     authentication_handler:
         class: LaVestima\HannaAgency\AccessControlBundle\Handler\AuthenticationHandler
-        autowire: true
+
+    LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudControllerInterface:
+        alias: 'login_attempt_crud_controller'
+
+    LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudControllerInterface:
+        alias: 'token_crud_controller'

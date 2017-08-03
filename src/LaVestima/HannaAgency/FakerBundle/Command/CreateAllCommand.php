@@ -24,6 +24,7 @@ class CreateAllCommand extends ContainerAwareCommand
         $entityNumber = (int)$input->getOption('number') ?: 1;
 
         $commandNames = [
+            'faker:create:product',
             'faker:create:order',
             'faker:create:user',
             // TODO: add more commands here
@@ -39,6 +40,5 @@ class CreateAllCommand extends ContainerAwareCommand
             $commandInput = new ArrayInput($arguments);
             $command->run($commandInput, $output);
         }
-
     }
 }

@@ -11,32 +11,35 @@ use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\HttpFoundation\Request;
 
-class OrderPlacementController extends BaseController {
-    public function newAction(Request $request) {
-        $products = $this->get('product_crud_controller')
-            ->readAllEntities()->getEntities();
+class OrderPlacementController extends BaseController
+{
+    // TODO: DI
 
-        $customers = $this->get('customer_crud_controller')
-            ->readAllEntities()->getEntities();
-
+    public function newAction(Request $request)
+    {
         $productPlacement = new ProductPlacementHelper();
 
         $isAdmin = $this->isAdmin();
 
         $form = $this->createForm(PlaceOrderType::class, $productPlacement, [
-            'customers' => $isAdmin ? $customers : null,
-            'products' => $products
+            'isAdmin' => $isAdmin,
         ]);
 
-        foreach ($products as $product) {
+        $products = $this->get('product_crud_controller')
+            ->readAllEntities()
+            ->orderBy(['name' => 'ASC'])
+            ->getResult();
+
+        foreach ($products as $key => $product) {
             $form->get('quantities')
-                ->add('quantity_' . $product->getId(), IntegerType::class, [
+                ->add('quantity_' . ($key + 1) , IntegerType::class, [
                     'data' => 0,
                     'empty_data' => 0,
                 ]);
         }
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             if (!empty($productPlacement->products)) {
                 if (!$isAdmin) {
@@ -53,10 +56,7 @@ class OrderPlacementController extends BaseController {
                 return $this->redirectToRoute('order_placement_summary');
             }
             else {
-                $this->addFlash(
-                    'warning',
-                    'Order cannot be empty!'
-                );
+                $this->addFlash('warning', 'Order cannot be empty!');
             }
         }
 
@@ -73,6 +73,7 @@ class OrderPlacementController extends BaseController {
         if (count($selectedProducts) != count($selectedQuantities)) {
             // TODO: products and quantities must be the same length
             var_dump('No!!!!');
+            die;
         }
 
         $form = $this->createForm(OrderSummaryType::class);
@@ -93,6 +94,7 @@ class OrderPlacementController extends BaseController {
                 $orderProduct->setIdStatuses(
                     $this->get('order_status_crud_controller')
                         ->readOneEntityBy(['name' => 'Queued'])
+                        ->getResult()
                 );
                 $orderProduct->setQuantity($selectedQuantities[$key]);
 
@@ -100,10 +102,7 @@ class OrderPlacementController extends BaseController {
                     ->createEntity($orderProduct);
             }
 
-            $this->addFlash(
-                'success',
-                'Order placed successfully!'
-            );
+            $this->addFlash('success', 'Order placed successfully!');
 
             return $this->redirectToRoute('order_list');
         }

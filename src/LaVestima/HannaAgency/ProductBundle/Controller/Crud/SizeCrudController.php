@@ -11,6 +11,7 @@ namespace LaVestima\HannaAgency\ProductBundle\Controller\Crud;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class SizeCrudController extends CrudController {
+class SizeCrudController extends CrudController implements SizeCrudControllerInterface
+{
     protected $entityClass = 'LaVestima\\HannaAgency\\ProductBundle\\Entity\\Sizes';
 }

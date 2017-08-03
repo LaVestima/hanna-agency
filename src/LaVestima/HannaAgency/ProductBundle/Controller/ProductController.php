@@ -4,29 +4,48 @@ namespace LaVestima\HannaAgency\ProductBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
+use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 use LaVestima\HannaAgency\ProductBundle\Form\ProductType;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends BaseController
 {
-	public function listAction()
-    {
-		$products = $this->get('product_crud_controller')
-            ->readAllUndeletedEntities()
-            ->getEntities();
+    // TODO: DI
 
-		return $this->render('@Product/Product/list.html.twig', [
-		    'products' => $products,
+	public function listAction(Request $request)
+    {
+        $productCrudController = $this->get('product_crud_controller');
+
+        $productCrudController->setAlias('p')
+            ->readAllUndeletedEntities()
+            ->join('idCategories', 'c')
+            ->join('idProducers', 'pr')
+            ->orderBy('name');
+
+        $pagination = $this->get('knp_paginator')->paginate(
+            $productCrudController->getQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('@Product/Product/list.html.twig', [
+            'pagination' => $pagination
         ]);
 	}
 	
 	public function showAction($pathSlug)
     {
 		$product = $this->get('product_crud_controller')
-			->readOneEntityBy(['pathSlug' => $pathSlug]);
+			->readOneEntityBy(['pathSlug' => $pathSlug])
+            ->getEntities();
+
+		$productSizes = $this->get('product_size_crud_controller')
+            ->readEntitiesBy(['idProducts' => $product])
+            ->getEntities();
 
 		return $this->render('@Product/Product/show.html.twig', [
-			'product' => $product,
+            'product' => $product,
+            'productSizes' => $productSizes
 		]);
 	}
 
@@ -34,22 +53,10 @@ class ProductController extends BaseController
     {
         $product = new Products();
 
-        $categories = $this->get('category_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        $sizes = $this->get('size_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        $producers = $this->get('producer_crud_controller')
-            ->readAllEntities()
-            ->getEntities();
-        // TODO: more ??
-
         $form = $this->createForm(ProductType::class, $product, [
-            'categories' => $categories,
-            'sizes' => $sizes,
-            'producers' => $producers,
+            'isAdmin' => $this->isAdmin(),
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -59,8 +66,21 @@ class ProductController extends BaseController
             $product->setQRCodePath('-n--' . random_int(0, 1000000));
             // ENDTODO
 
-            $this->get('product_crud_controller')
-                ->createEntity($product);
+            $productSize = new ProductsSizes(
+                $product,
+                $form->get('idSizes')->getData(),
+                $form->get('availability')->getData()
+            );
+
+            try {
+                $this->get('product_crud_controller')
+                    ->createEntity($product);
+
+                $this->get('product_size_crud_controller')
+                    ->createEntity($productSize);
+            } catch (\Exception $e) {
+
+            }
 
             $this->addFlash('success', 'Product added!');
 

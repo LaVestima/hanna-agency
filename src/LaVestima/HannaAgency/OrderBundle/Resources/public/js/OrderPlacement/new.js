@@ -32,7 +32,7 @@ function validateProductSelection() {
 }
 
 function setQuantityValue(value) {
-    var inputIndex = $('.product-list-names input').index(inputField) +1;
+    var inputIndex = $('.product-list-names input').index(inputField) + 1;
     $('#place_order_quantities_quantity_' + inputIndex).val(value);
 }
 

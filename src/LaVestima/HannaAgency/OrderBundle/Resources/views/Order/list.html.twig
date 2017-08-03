@@ -1,55 +1,84 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% set isExportAllowed = true %}
-{% set pdfExportPath = path('export_pdf_order_list') %}
-{% set pdfExportJson = [] %}
+{#{% set isExportAllowed = true %}#}
+{#{% set pdfExportPath = path('export_pdf_order_list') %}#}
+{#{% set pdfExportJson = [] %}#}
 
-{% for order in orders %}
-    {% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}
-{% endfor %}
+{#{% for order in pagination %}#}
+    {#{% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}#}
+{#{% endfor %}#}
 
-{% set pdfExportJson = pdfExportJson | json_encode %}
-
-{% block title %}Order list{% endblock %}
+{#{% set pdfExportJson = pdfExportJson | json_encode %}#}
+{% block title %}
+    {% if listType == '' %}
+        Order List
+    {% elseif listType == 'deleted' %}
+        Deleted Order List
+    {% endif %}
+{% endblock %}
 
 {% block actionBar %}
-    <a href="{{ path('order_placement_new') }}">
-        <div class="button action-bar-button">
-            Place order
-        </div>
-    </a>
-    <a href="{{ path('order_new') }}">
-        <div class="button action-bar-button">
-            New order
-        </div>
-    </a>
-    <a href="{{ path('order_deleted_list') }}">
-        <div class="button action-bar-button">
-            Deleted orders
-        </div>
-    </a>
+    {% if listType == 'deleted' %}
+        <a href="{{ path('order_list') }}">
+            <div class="button action-bar-button">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                Back
+            </div>
+        </a>
+    {% endif %}
+
+    {% if listType == '' %}
+        <a href="{{ path('order_placement_new') }}">
+            <div class="button action-bar-button">
+                Place order
+            </div>
+        </a>
+        <a href="{{ path('order_new') }}">
+            <div class="button action-bar-button">
+                New order
+            </div>
+        </a>
+        <a href="{{ path('order_list', {'type': 'deleted'}) }}">
+            <div class="button action-bar-button">
+                Deleted orders
+            </div>
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
+    {#<div class="count">#}
+        {#{{ pagination.getTotalItemCount }}#}
+    {#</div>#}
+
     <table class="entity-list order-list">
         <tr>
-            <th>Date placed</th>
-            <th>Status</th>
-            <th>Customer</th>
-            <th>User</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
+                <th>User Created</th>
+            {% endif %}
         </tr>
-    {% for order in orders %}
-        <tr class="entity-list-row">
-            <td>{{ order.datePlaced | date('d.m.Y') }}</td>
-            <td>{{ order.status.name }}</td>
-            <td>{{ order.idCustomers.fullName }}</td>
-            <td>{{ order.userCreated.login }}</td>
-            <td class="entity-list-cell">
-                <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
+
+        {% for order in pagination %}
+            <tr class="entity-list-row">
+                <td>{{ order.dateCreated | date('d.m.Y') }}</td>
+                <td>{{ order.status.name }}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td>{{ order.idCustomers.fullName }}</td>
+                    <td>{{ order.userCreated.login }}</td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

@@ -1,12 +1,23 @@
 services:
+    _defaults:
+        autowire: true
+
+    LaVestima\HannaAgency\UserManagementBundle\Controller\UserController:
+
     user_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController
-        autowire: true
 
     role_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudController
-        autowire: true
 
     user_setting_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudController
-        autowire: true
+
+    LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface:
+        alias: user_crud_controller
+
+    LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\RoleCrudControllerInterface:
+        alias: role_crud_controller
+
+    LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudControllerInterface:
+        alias: user_setting_crud_controller

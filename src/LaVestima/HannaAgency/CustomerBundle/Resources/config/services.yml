@@ -1,4 +1,14 @@
 services:
+    _defaults:
+        autowire: true
+
+    LaVestima\HannaAgency\CustomerBundle\Controller\CustomerController:
+
     customer_crud_controller:
         class: LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudController
-        autowire: true
+
+    LaVestima\HannaAgency\CustomerBundle\Form\NewCustomerType:
+        tags: [form.type]
+
+    LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface:
+        alias: customer_crud_controller

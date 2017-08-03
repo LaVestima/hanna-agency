@@ -5,7 +5,8 @@ namespace LaVestima\HannaAgency\AccessControlBundle\Controller\Crud;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 
-class TokenCrudController extends CrudController {
+class TokenCrudController extends CrudController implements TokenCrudControllerInterface
+{
 	protected $entityClass = 'LaVestima\\HannaAgency\\AccessControlBundle\\Entity\\Tokens';
 
 	public function createEntity(EntityInterface $entity) {

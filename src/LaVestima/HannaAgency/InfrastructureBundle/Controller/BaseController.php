@@ -5,11 +5,25 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class BaseController extends Controller {
+class BaseController extends Controller
+{
+    /**
+     * @return bool
+     */
+    public function isDevEnvironment()
+    {
+        if ($this->get('kernel')->getEnvironment() === 'dev') {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return boolean
      */
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->get('security.authorization_checker')
             ->isGranted('ROLE_ADMIN');
     }
@@ -17,7 +31,8 @@ class BaseController extends Controller {
     /**
      * @return mixed
      */
-    public function getCustomer() {
+    public function getCustomer()
+    {
         return $this->get('customer_crud_controller')
             ->readOneEntityBy(['idUsers' => $this->getUser()]);
     }
