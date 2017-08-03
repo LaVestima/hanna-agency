@@ -3,8 +3,8 @@
 namespace LaVestima\HannaAgency\ProductBundle\Form;
 
 use LaVestima\HannaAgency\ProducerBundle\Controller\Crud\ProducerCrudController;
-use LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudController;
-use LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudController;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudControllerInterface;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -21,8 +21,8 @@ class ProductType extends AbstractType
     private $producerCrudController;
 
     public function __construct(
-        CategoryCrudController $categoryCrudController,
-        SizeCrudController $sizeCrudController,
+        CategoryCrudControllerInterface $categoryCrudController,
+        SizeCrudControllerInterface $sizeCrudController,
         ProducerCrudController $producerCrudController
     ) {
         $this->categoryCrudController = $categoryCrudController;
@@ -30,12 +30,16 @@ class ProductType extends AbstractType
         $this->producerCrudController = $producerCrudController;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // TODO: maybe only undeleted x2
-        $categories = $this->categoryCrudController->readAllEntities()->getEntities();
-        $sizes = $this->sizeCrudController->readAllEntities()->getEntities();
-        $producers = $this->producerCrudController->readAllUndeletedEntities()->getEntities();
+        $categories = $this->categoryCrudController->readAllEntities()->getResult();
+        $sizes = $this->sizeCrudController->readAllEntities()->getResult();
+        $producers = $this->producerCrudController->readAllUndeletedEntities()->getResult();
 
         $builder
             ->add('name', TextType::class)
@@ -75,10 +79,12 @@ class ProductType extends AbstractType
             // TODO: finish, add more !!!!!!!!!!!!
             ->add('save', SubmitType::class, [
                 'label' => 'Add Product'
-            ])
-        ;
+            ]);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

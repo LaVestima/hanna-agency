@@ -50,7 +50,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $user = new Users();
 
         $randomRole = $this->getContainer()->get('role_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $user->setLogin($this->faker->userName);
         $user->setEmail($this->faker->safeEmail);

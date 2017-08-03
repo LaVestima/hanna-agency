@@ -2,9 +2,9 @@
 
 namespace LaVestima\HannaAgency\UserManagementBundle\Controller;
 
-use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudController;
+use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
-use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController;
+use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends BaseController
@@ -13,15 +13,15 @@ class UserController extends BaseController
     private $customerCrudController;
 
     public function __construct(
-        UserCrudController $userCrudController,
-        CustomerCrudController $customerCrudController
+        UserCrudControllerInterface $userCrudController,
+        CustomerCrudControllerInterface $customerCrudController
     ) {
         $this->userCrudController = $userCrudController;
         $this->customerCrudController = $customerCrudController;
     }
 
     /**
-     * User List Action
+     * User List Action.
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -38,16 +38,18 @@ class UserController extends BaseController
             $request->query->getInt('page', 1),
             10
         );
-
-//		$users = $this->userCrudController
-//			->readAllEntities()->getResult();
 		
 		return $this->render('@UserManagement/User/list.html.twig', [
-//			'users' => $users,
             'pagination' => $pagination
 		]);
 	}
 
+    /**
+     * User Show Action.
+     *
+     * @param $pathSlug
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
 	public function showAction($pathSlug)
     {
 		$user = $this->get('user_crud_controller')

@@ -2,7 +2,7 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller\Crud;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -13,11 +13,19 @@ class OrderCrudController extends CrudController implements OrderCrudControllerI
 	private $orderProductCrudController;
 	private $orderStatusCrudController;
 
+    /**
+     * OrderCrudController constructor.
+     *
+     * @param ManagerRegistry $doctrine
+     * @param TokenStorageInterface $tokenStorage
+     * @param OrderProductCrudControllerInterface $orderProductCrudController
+     * @param OrderStatusCrudControllerInterface $orderStatusCrudController
+     */
 	public function __construct(
-	    Registry $doctrine,
+	    ManagerRegistry $doctrine,
         TokenStorageInterface $tokenStorage,
-        OrderProductCrudController $orderProductCrudController,
-        OrderStatusCrudController $orderStatusCrudController
+        OrderProductCrudControllerInterface $orderProductCrudController,
+        OrderStatusCrudControllerInterface $orderStatusCrudController
     ) {
 	    $this->orderProductCrudController = $orderProductCrudController;
 	    $this->orderStatusCrudController = $orderStatusCrudController;
@@ -25,6 +33,10 @@ class OrderCrudController extends CrudController implements OrderCrudControllerI
         parent::__construct($doctrine, $tokenStorage);
     }
 
+    /**
+     * @param $order
+     * @return mixed
+     */
     public function generateStatus($order)
     {
         $ordersProducts = $this->orderProductCrudController

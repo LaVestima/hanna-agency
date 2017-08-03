@@ -2,8 +2,8 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Form;
 
-use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudController;
-use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController;
+use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -16,14 +16,24 @@ class PlaceOrderType extends AbstractType
     private $productCrudController;
     private $customerCrudController;
 
+    /**
+     * PlaceOrderType constructor.
+     *
+     * @param ProductCrudControllerInterface $productCrudController
+     * @param CustomerCrudControllerInterface $customerCrudController
+     */
     public function __construct(
-        ProductCrudController $productCrudController,
-        CustomerCrudController $customerCrudController
+        ProductCrudControllerInterface $productCrudController,
+        CustomerCrudControllerInterface $customerCrudController
     ) {
         $this->productCrudController = $productCrudController;
         $this->customerCrudController = $customerCrudController;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $products = $this->productCrudController
@@ -53,6 +63,9 @@ class PlaceOrderType extends AbstractType
         }
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

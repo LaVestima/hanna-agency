@@ -5,7 +5,7 @@ namespace LaVestima\HannaAgency\CustomerBundle\Controller\Helper;
 use RandomLib\Factory;
 
 class CustomerCrudHelper {
-    public function generateIdentificationNumber() {
+    public static function generateIdentificationNumber() {
         $factory = new Factory();
         $generator = $factory->getMediumStrengthGenerator();
 

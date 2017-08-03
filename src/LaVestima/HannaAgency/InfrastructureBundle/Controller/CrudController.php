@@ -2,7 +2,7 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 abstract class CrudController extends BaseController
 {
+    // TODO: CLEAN IT ALL UP !!!!!!!
+
 	protected $doctrine;
 	protected $manager;
 	protected $user;
@@ -30,11 +32,11 @@ abstract class CrudController extends BaseController
     /**
      * CrudController constructor.
      *
-     * @param Registry $doctrine
+     * @param ManagerRegistry $doctrine
      * @param TokenStorageInterface $tokenStorage
      */
 	public function __construct(
-        Registry $doctrine,
+        ManagerRegistry $doctrine,
         TokenStorageInterface $tokenStorage
     ) {
 		$this->doctrine = $doctrine;
@@ -117,6 +119,8 @@ abstract class CrudController extends BaseController
 	}
 
     /**
+     * Read Entities from DB with given value (SELECT + WHERE).
+     *
      * @param array $keyValueArray
      * @return mixed
      */
@@ -136,6 +140,8 @@ abstract class CrudController extends BaseController
     }
 
     /**
+     * Read one Entity from DB with given value (SELECT + WHERE).
+     *
      * @param array $keyValueArray
      * @return object
      */
@@ -148,7 +154,7 @@ abstract class CrudController extends BaseController
     }
 
     /**
-     * Read all Entities from DB (SELECT)
+     * Read all Entities from DB (SELECT).
      *
      * @return object
      */
@@ -162,6 +168,11 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
+    /**
+     * Read all not deleted Entities from DB (SELECT).
+     *
+     * @return $this
+     */
     public function readAllUndeletedEntities()
     {
         $this->readAllEntities();
@@ -171,6 +182,11 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
+    /**
+     * Read all deleted Entities from DB (SELECT).
+     *
+     * @return $this
+     */
     public function readAllDeletedEntities()
     {
         $this->readAllEntities();
@@ -243,29 +259,6 @@ abstract class CrudController extends BaseController
         $em->flush();
     }
 
-//    public function by(array $keyValueArray)
-//    {
-//        $this->query .= 'WHERE ';
-//
-//        foreach ($keyValueArray as $key => $value) {
-//            $key = ucfirst(preg_replace_callback(
-//                '/[A-Z]/',
-//                function ($matches) {
-////                    foreach ($matches as $key => $match) {
-////                        $matches[$key] = '_'. strtolower($match);
-////                    }
-//
-//                    return '_' . $matches[0];
-//                },
-//                $key
-//            ));
-//
-//            $this->query .= $key . '=' . $value;
-//        }
-//
-//        return $this;
-//    }
-
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
     {
         if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
@@ -330,10 +323,10 @@ abstract class CrudController extends BaseController
     }
 
     // TODO: delete
-	public function getEntities()
-    {
-        return $this->entities;
-    }
+//	public function getEntities()
+//    {
+//        return $this->entities;
+//    }
 
     public function orderBy(string $field, string $order = 'ASC')
     {
@@ -381,12 +374,17 @@ abstract class CrudController extends BaseController
     }
 
     // TODO: delete
-    private function executeQuery()
-    {
-        $this->entities = $this->manager
-            ->createQuery($this->query)
-            ->getResult();
-    }
+//    private function executeQuery()
+//    {
+//        $this->entities = $this->manager
+//            ->createQuery($this->query)
+//            ->getResult();
+//    }
+
+
+
+
+    // TODO: maybe move to another class
 
     public function countRows()
     {

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends BaseController
 {
+    // TODO: DI
+
 	public function listAction(Request $request)
     {
         $productCrudController = $this->get('product_crud_controller');

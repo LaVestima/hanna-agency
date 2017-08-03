@@ -1,8 +1,15 @@
 services:
-    country_crud_controller:
-        class: LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudController
+    _defaults:
         autowire: true
 
     city_crud_controller:
         class: LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudController
-        autowire: true
+
+    country_crud_controller:
+        class: LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudController
+
+    LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudControllerInterface:
+        alias: city_crud_controller
+
+    LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudControllerInterface:
+        alias: country_crud_controller

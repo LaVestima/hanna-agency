@@ -50,10 +50,10 @@ class CreateProductCommand extends ContainerAwareCommand
         $product = new Products();
 
         $randomCategory = $this->getContainer()->get('category_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $randomProducer = $this->getContainer()->get('producer_crud_controller')
-            ->readRandomEntities(1);
+            ->readRandomEntities(1)->getResult();
 
         $product->setName($this->faker->text(50));
         $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);

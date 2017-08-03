@@ -6,7 +6,8 @@ use LaVestima\HannaAgency\CustomerBundle\Controller\Helper\CustomerCrudHelper;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 
-class CustomerCrudController extends CrudController {
+class CustomerCrudController extends CrudController implements CustomerCrudControllerInterface
+{
 	protected $entityClass = 'LaVestima\\HannaAgency\\CustomerBundle\\Entity\\Customers';
 
 	public function createEntity(EntityInterface $entity) {

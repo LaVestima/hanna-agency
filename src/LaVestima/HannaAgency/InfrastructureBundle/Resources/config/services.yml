@@ -2,3 +2,4 @@ services:
     session_helper:
         class: LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\SessionHelper
         autowire: true
+

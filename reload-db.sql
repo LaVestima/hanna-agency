@@ -431,11 +431,11 @@ INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (4, '2015-01-01', 'admin', 'admin@admin.admin', '$2y$13$J5XJ.bvLTJ0M0kmun722nOiG3C2HCQi2v7NtNiOjWEJXZD2SXwnVi', 1, 'JWcX5wnVXm6cHmRprqymsFRNlaXZIsr8aa1oNNSDT4239wePs6');
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
 
-INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (1, 1, 'de');
-INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (2, 2, 'pl');
-INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (3, 3, 'fr');
-INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (4, 4, 'en');
-INSERT INTO Users_Settings (ID, ID_USERS, Locale) VALUES (5, 5, 'ca');
+INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (1, 1, 'de', 1);
+INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (2, 2, 'pl', 0);
+INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (3, 3, 'fr', 0);
+INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (4, 4, 'en', 1);
+INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (5, 5, 'ca', 1);
 
 -- INSERT INTO Login_Attempts () VALUES ();
 

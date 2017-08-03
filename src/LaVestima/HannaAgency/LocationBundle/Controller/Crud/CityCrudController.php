@@ -4,6 +4,7 @@ namespace LaVestima\HannaAgency\LocationBundle\Controller\Crud;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
-class CityCrudController extends CrudController {
+class CityCrudController extends CrudController implements CityCrudControllerInterface
+{
     protected $entityClass = 'LaVestima\\HannaAgency\\LocationBundle\\Entity\\Cities';
 }

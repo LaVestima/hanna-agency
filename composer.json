@@ -30,7 +30,8 @@
         "leafo/scssphp": "^0.6.7",
         "setasign/fpdf": "^1.8",
         "symfony/web-server-bundle": "^3.3",
-        "knplabs/knp-paginator-bundle": "^2.6"
+        "knplabs/knp-paginator-bundle": "^2.6",
+        "doctrine/annotations": "1.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

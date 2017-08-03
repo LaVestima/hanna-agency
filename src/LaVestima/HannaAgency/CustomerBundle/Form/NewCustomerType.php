@@ -2,10 +2,10 @@
 
 namespace LaVestima\HannaAgency\CustomerBundle\Form;
 
-use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudController;
-use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudController;
-use LaVestima\HannaAgency\MoneyBundle\Controller\Crud\CurrencyCrudController;
-use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController;
+use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CityCrudControllerInterface;
+use LaVestima\HannaAgency\LocationBundle\Controller\Crud\CountryCrudControllerInterface;
+use LaVestima\HannaAgency\MoneyBundle\Controller\Crud\CurrencyCrudControllerInterface;
+use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -20,11 +20,19 @@ class NewCustomerType extends AbstractType
     private $currencyCrudController;
     private $userCrudController;
 
+    /**
+     * NewCustomerType constructor.
+     *
+     * @param CountryCrudControllerInterface $countryCrudController
+     * @param CityCrudControllerInterface $cityCrudController
+     * @param CurrencyCrudControllerInterface $currencyCrudController
+     * @param UserCrudControllerInterface $userCrudController
+     */
     public function __construct(
-        CountryCrudController $countryCrudController,
-        CityCrudController $cityCrudController,
-        CurrencyCrudController $currencyCrudController,
-        UserCrudController $userCrudController
+        CountryCrudControllerInterface $countryCrudController,
+        CityCrudControllerInterface $cityCrudController,
+        CurrencyCrudControllerInterface $currencyCrudController,
+        UserCrudControllerInterface $userCrudController
     ) {
         $this->countryCrudController = $countryCrudController;
         $this->cityCrudController = $cityCrudController;
@@ -32,12 +40,27 @@ class NewCustomerType extends AbstractType
         $this->userCrudController = $userCrudController;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $countries = $this->countryCrudController->readAllEntities()->getEntities();
-        $cities = $this->cityCrudController->readAllEntities()->getEntities();
-        $currencies = $this->currencyCrudController->readAllEntities()->getEntities();
-        $users = $this->userCrudController->readAllEntities()->getEntities();
+        $countries = $this->countryCrudController
+            ->readAllEntities()
+            ->orderBy('name', 'ASC')
+            ->getResult();
+        $cities = $this->cityCrudController
+            ->readAllEntities()
+            ->orderBy('name', 'ASC')
+            ->getResult();
+        $currencies = $this->currencyCrudController
+            ->readAllEntities()
+            ->orderBy('name', 'ASC')
+            ->getResult();
+        $users = $this->userCrudController->readAllEntities()
+            ->orderBy('login', 'ASC')
+            ->getResult();
 
         $builder
             ->add('firstName', TextType::class)

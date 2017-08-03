@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class OrderPlacementController extends BaseController
 {
+    // TODO: DI
+
     public function newAction(Request $request)
     {
         $productPlacement = new ProductPlacementHelper();
@@ -27,8 +29,6 @@ class OrderPlacementController extends BaseController
             ->readAllEntities()
             ->orderBy(['name' => 'ASC'])
             ->getResult();
-//            ->sortBy(['name' => 'ASC'])
-//            ->getEntities();
 
         foreach ($products as $key => $product) {
             $form->get('quantities')
