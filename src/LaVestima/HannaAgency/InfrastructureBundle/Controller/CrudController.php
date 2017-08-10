@@ -11,15 +11,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 abstract class CrudController extends BaseController
 {
-    // TODO: CLEAN IT ALL UP !!!!!!!
-
 	protected $doctrine;
 	protected $manager;
 	protected $user;
 
 	protected $entityClass = '';
-
-	protected $entities = [];
 
 	protected $alias = 'ent';
 
@@ -27,7 +23,6 @@ abstract class CrudController extends BaseController
      * @var QueryBuilder $query
      */
 	protected $query;
-
 
     /**
      * CrudController constructor.
@@ -69,8 +64,6 @@ abstract class CrudController extends BaseController
 
 		$em = $this->manager;
 
-	    // TODO: works, i don't know why o.O
-        // TODO: think about it !!!!!!!!!!!!
         if ($this->user) {
             $entity = $em->merge($entity);
         }
@@ -84,8 +77,10 @@ abstract class CrudController extends BaseController
 	/**
      * Update Entity in DB (UPDATE).
      *
-	 * @param $entity
-     * @param array $keyValueArray
+	 * @param EntityInterface $entity
+     * @param EntityInterface|array $newEntity
+     *
+     * @return EntityInterface
 	 */
 	public function updateEntity(EntityInterface $oldEntity, $newEntity)
     {
@@ -115,7 +110,6 @@ abstract class CrudController extends BaseController
         return $oldEntity;
 
 		// TODO: add user and date updated ??
-		// TODO: ...
 	}
 
     /**
@@ -199,9 +193,9 @@ abstract class CrudController extends BaseController
 	/**
      * Mark the Entity in DB as deleted.
      *
-	 * @param $entity
+	 * @param EntityInterface $entity
 	 */
-	public function deleteEntity($entity)
+	public function deleteEntity(EntityInterface $entity)
     {
 		if (!$entity) {
 		    throw new EntityNotFoundException();
@@ -220,9 +214,9 @@ abstract class CrudController extends BaseController
     /**
      * Mark the Entity in DB as not deleted.
      *
-     * @param $entity
+     * @param EntityInterface $entity
      */
-    public function restoreEntity($entity)
+    public function restoreEntity(EntityInterface $entity)
     {
         if (!$entity) {
             throw new EntityNotFoundException();
@@ -246,9 +240,9 @@ abstract class CrudController extends BaseController
     /**
      * Delete Entity from DB (DELETE)
      *
-     * @param $entity
+     * @param EntityInterface $entity
      */
-    protected function purgeEntity($entity)
+    protected function purgeEntity(EntityInterface $entity)
     {
         if (!$entity) {
             throw new EntityNotFoundException();
@@ -259,6 +253,14 @@ abstract class CrudController extends BaseController
         $em->flush();
     }
 
+    /**
+     * Read random Entities.
+     *
+     * @param int|null $numberOfEntities
+     * @param bool $entitiesCanRepeat
+     *
+     * @return array|null|object
+     */
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
     {
         if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
@@ -296,6 +298,11 @@ abstract class CrudController extends BaseController
         }
     }
 
+    /**
+     * Clear the SQL Query.
+     *
+     * @return $this
+     */
     public function clearQuery()
     {
         $this->query = $this->manager->createQueryBuilder('ent');
@@ -303,6 +310,12 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
+    /**
+     * Set the alias for the Entity.
+     *
+     * @param string $alias
+     * @return $this
+     */
     public function setAlias(string $alias)
     {
         $this->alias = $alias;
@@ -310,7 +323,15 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
-    public function join($otherEntity, $alias)
+    /**
+     * Join Entity with other Entity (JOIN)
+     *
+     * @param $otherEntity
+     * @param $alias
+     *
+     * @return $this
+     */
+    public function join(string $otherEntity, string $alias) : CrudController
     {
         $this->query->join(
             $this->alias . '.' . $otherEntity,
@@ -322,14 +343,20 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
-    // TODO: delete
-//	public function getEntities()
-//    {
-//        return $this->entities;
-//    }
-
+    /**
+     * Sort the read Entities (ORDER BY)
+     *
+     * @param string $field
+     * @param string $order
+     *
+     * @return $this
+     */
     public function orderBy(string $field, string $order = 'ASC')
     {
+        if (!in_array(strtoupper($order), ['ASC', 'DESC'])) {
+            throw new \InvalidArgumentException('Sorting order must be ASC or DESC');
+        }
+
         $this->query->orderBy(
             $this->alias . '.' . $field,
             strtoupper($order)
@@ -338,32 +365,21 @@ abstract class CrudController extends BaseController
         return $this;
     }
 
-    // TODO: delete
-	public function sortBy(array $keyValueArray)
-    {
-	    if (is_array($this->entities)) {
-            foreach ($keyValueArray as $key => $item) {
-                $methodName = 'get' . $key;
-
-                usort($this->entities, function ($a, $b) use ($key, $item, $methodName) {
-                    if ($item == 'ASC') {
-                        return $a->$methodName() <=> $b->$methodName();
-                    } else if ($item == 'DESC') {
-                        return $b->$methodName() <=> $a->$methodName();
-                    } else {
-                        throw new \InvalidArgumentException();
-                    }
-                });
-            }
-        }
-	    return $this;
-    }
-
+    /**
+     * Get the SQL Query.
+     *
+     * @return \Doctrine\ORM\Query
+     */
     public function getQuery()
     {
         return $this->query->getQuery();
     }
 
+    /**
+     * Get the result of SQL Query.
+     *
+     * @return array|null
+     */
     public function getResult()
     {
         $result = $this->getQuery()->getResult();
@@ -373,42 +389,35 @@ abstract class CrudController extends BaseController
             $result);
     }
 
-    // TODO: delete
-//    private function executeQuery()
-//    {
-//        $this->entities = $this->manager
-//            ->createQuery($this->query)
-//            ->getResult();
-//    }
-
-
-
-
-    // TODO: maybe move to another class
-
+    /**
+     * Count all the rows in DB (COUNT())
+     *
+     * @return int
+     */
     public function countRows()
     {
-        $this->query = '
-            SELECT COUNT(ent)
-            FROM ' . $this->entityClass . ' ent
-        ';
+        $this->clearQuery();
 
-        return (int)$this->manager
-            ->createQuery($this->query)
-            ->getSingleScalarResult();
+        $this->query->select('count(' . $this->alias . '.id)')
+            ->from($this->entityClass, $this->alias);
+
+        return (int)$this->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Get the last id of Entity in DB
+     *
+     * @return int
+     */
     private function getLastId()
     {
-        $this->query = '
-            SELECT ent.id
-            FROM ' . $this->entityClass . ' ent
-            ORDER BY ent.id DESC
-        ';
+        $this->clearQuery();
 
-        return (int)$this->manager
-            ->createQuery($this->query)
-            ->setMaxResults(1)
-            ->getSingleScalarResult();
+        $this->query->select($this->alias . '.id')
+            ->from($this->entityClass, $this->alias)
+            ->orderBy($this->alias . '.id', 'DESC')
+            ->setMaxResults(1);
+
+        return (int)$this->getQuery()->getSingleScalarResult();
     }
 }
