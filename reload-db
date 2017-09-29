@@ -1,2 +1,2 @@
 #!/bin/bash
-mysql -u root -ptoor -h localhost lave_bachelor < reload-db.sql
+mysql -u root -ptoor -h localhost < reload-db.sql
