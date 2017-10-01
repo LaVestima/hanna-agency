@@ -5,6 +5,7 @@ namespace LaVestima\HannaAgency\FakerBundle\Command;
 use Faker\Factory;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,12 +26,12 @@ class CreateProductCommand extends ContainerAwareCommand
         $this
             ->setName('faker:create:product')
             ->setDescription('Creates fake products')
-            ->addOption('number', null, InputOption::VALUE_OPTIONAL, 'Number of products to create');
+            ->addArgument('number', InputArgument::OPTIONAL, 'Number of products to create', 1);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $productNumber = (int)$input->getOption('number') ?: 1;
+        $productNumber = (int)$input->getArgument('number') ?? 1;
 
         if ($productNumber < 1) {
             $output->writeln('Wrong argument!');
@@ -58,7 +59,7 @@ class CreateProductCommand extends ContainerAwareCommand
         $product->setName($this->faker->text(50));
         $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);
         $product->setPriceCustomer($this->faker->numberBetween(100, 99999)/100);
-        $product->setQrCodePath($this->faker->text(20));
+        $product->setQrCodePath($this->faker->text(20) . uniqid()); // TODO: change
         $product->setIdCategories($randomCategory);
         $product->setIdProducers($randomProducer);
 

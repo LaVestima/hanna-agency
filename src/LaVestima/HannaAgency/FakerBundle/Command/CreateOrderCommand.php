@@ -7,6 +7,7 @@ use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,12 +28,12 @@ class CreateOrderCommand extends ContainerAwareCommand
         $this
             ->setName('faker:create:order')
             ->setDescription('Creates fake orders')
-            ->addOption('number', null, InputOption::VALUE_OPTIONAL, 'Number of orders to create');
+            ->addArgument('number', InputArgument::OPTIONAL, 'Number of orders to create', 1);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $orderNumber = (int)$input->getOption('number') ?: 1;
+        $orderNumber = (int)$input->getArgument('number') ?: 1;
 
         if ($orderNumber < 1) {
             $output->writeln('Wrong argument!');
