@@ -9,7 +9,7 @@ use LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\CrudHelper;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-abstract class CrudController extends BaseController
+abstract class CrudController extends BaseController implements CrudControllerInterface
 {
 	protected $doctrine;
 	protected $manager;
@@ -64,9 +64,9 @@ abstract class CrudController extends BaseController
 
 		$em = $this->manager;
 
-        if ($this->user) {
-            $entity = $em->merge($entity);
-        }
+//        if ($this->user) {
+//            $entity = $em->merge($entity);
+//        }
 
 		$em->persist($entity);
 		$em->flush();
@@ -334,6 +334,26 @@ abstract class CrudController extends BaseController
     public function join(string $otherEntity, string $alias) : CrudController
     {
         $this->query->join(
+            $this->alias . '.' . $otherEntity,
+            $alias,
+            'WITH',
+            $this->alias . '.' . $otherEntity . '=' . $alias . '.id'
+        );
+
+        return $this;
+    }
+
+    /**
+     * Join Entity with other Entity (LEFT JOIN)
+     *
+     * @param string $otherEntity
+     * @param string $alias
+     *
+     * @return CrudController
+     */
+    public function leftJoin(string $otherEntity, string $alias) : CrudController
+    {
+        $this->query->leftJoin(
             $this->alias . '.' . $otherEntity,
             $alias,
             'WITH',
