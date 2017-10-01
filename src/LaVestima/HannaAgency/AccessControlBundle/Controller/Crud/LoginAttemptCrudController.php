@@ -10,7 +10,7 @@ class LoginAttemptCrudController extends CrudController implements LoginAttemptC
     protected $entityClass = 'LaVestima\\HannaAgency\\AccessControlBundle\\Entity\\LoginAttempts';
 
     public function createEntity(EntityInterface $entity) {
-        $entity->setTimeLogged(new \DateTime('now'));
+        $entity->setDateCreated(new \DateTime('now'));
         return parent::createEntity($entity);
     }
 }

@@ -1,0 +1,23 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block title %}
+    {{ title[listType] }}
+{% endblock %}
+
+{% block content %}
+
+
+    {#{{ block(content) }}#}
+
+    <table>
+
+
+        {% for entity in pagination %}
+
+        {% endfor %}
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

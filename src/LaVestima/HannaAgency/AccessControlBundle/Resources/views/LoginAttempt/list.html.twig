@@ -1,0 +1,25 @@
+{% extends '@Infrastructure/baseList.html.twig' %}
+
+{% block title 'Login Attempts' %}
+
+{% block entityList %}
+    <table class="entity-list order-list">
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'la.dateCreated') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'User', 'u.login') }}</th>
+            <th>Is Failed?</th>
+        </tr>
+
+        {% for loginAttempt in pagination %}
+            <tr class="entity-list-row">
+                <td>{{ loginAttempt.dateCreated | date('d.m.Y H:i:s') }}</td>
+                <td>{{ loginAttempt.idUsers.login ?? '' }}</td>
+                <td>
+                    {% if loginAttempt.isFailed %}
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

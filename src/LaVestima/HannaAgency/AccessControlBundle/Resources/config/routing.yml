@@ -21,3 +21,7 @@ access_control_email_sent:
 access_control_reset_password:
     path: /reset_password/{resetPasswordToken}
     defaults: { _controller: AccessControlBundle:ResetPassword:index, resetPasswordToken: '' }
+
+access_control_login_attempt_list:
+    path: /login_attempt/list
+    defaults: { _controller: AccessControlBundle:LoginAttempt:list }
