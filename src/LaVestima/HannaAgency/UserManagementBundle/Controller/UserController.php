@@ -12,6 +12,12 @@ class UserController extends BaseController
     private $userCrudController;
     private $customerCrudController;
 
+    /**
+     * UserController constructor.
+     *
+     * @param UserCrudControllerInterface $userCrudController
+     * @param CustomerCrudControllerInterface $customerCrudController
+     */
     public function __construct(
         UserCrudControllerInterface $userCrudController,
         CustomerCrudControllerInterface $customerCrudController
@@ -24,30 +30,36 @@ class UserController extends BaseController
      * User List Action.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request)
     {
-        $this->userCrudController->setAlias('u')
+        $this->setQuery($this->userCrudController->setAlias('u')
             ->readAllUndeletedEntities()
             ->join('idRoles', 'r')
-            ->orderBy('login', 'ASC');
+            ->orderBy('login', 'ASC')
+            ->getQuery());
+        $this->setView('@UserManagement/User/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => 'New User',
+                'path' => 'user_new'
+            ],
+            [
+                'label' => 'Deleted Users',
+                'path' => 'user_deleted_list'
+            ]
+        ]);
 
-        $pagination = $this->get('knp_paginator')->paginate(
-            $this->userCrudController->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
-		
-		return $this->render('@UserManagement/User/list.html.twig', [
-            'pagination' => $pagination
-		]);
+        return parent::listAction($request);
 	}
 
     /**
      * User Show Action.
      *
      * @param $pathSlug
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
 	public function showAction($pathSlug)
@@ -80,4 +92,9 @@ class UserController extends BaseController
             'userSettings' => $userSettings,
 		]);
 	}
+
+	public function newAction()
+    {
+
+    }
 }
