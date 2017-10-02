@@ -2,6 +2,10 @@ product_list:
     path: /product/list
     defaults: { _controller: ProductBundle:Product:list }
 
+product_deleted_list:
+    path: /product/deleted_list
+    defaults: { _controller: ProductBundle:Product:deletedList }
+
 product_show:
     path: /product/show/{pathSlug}
     defaults: { _controller: ProductBundle:Product:show, pathSlug: '' }
