@@ -64,9 +64,9 @@ abstract class CrudController extends BaseController implements CrudControllerIn
 
 		$em = $this->manager;
 
-//        if ($this->user) {
-//            $entity = $em->merge($entity);
-//        }
+        if ($this->user) {
+            $entity = $em->merge($entity);
+        }
 
 		$em->persist($entity);
 		$em->flush();
@@ -125,9 +125,21 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         $this->query->select($this->alias)
             ->from($this->entityClass, $this->alias);
 
-        foreach ($keyValueArray as $key => $value) {
-            $this->query->andWhere($this->alias . '.' . $key . ' = :param_' . $key)
-                ->setParameter('param_' . $key, ''.$value);
+        foreach ($keyValueArray as $key => $condition) {
+            if (is_array($condition)) {
+                if (count($condition) === 2) {
+                    $operator = $condition[1];
+                    $value = $condition[0];
+                } else {
+                    throw new \Exception('Two elements required in condition array');
+                }
+            } else {
+                $operator = '=';
+                $value = $condition;
+            }
+
+            $this->query->andWhere($this->alias . '.' . $key . ' ' . $operator . ' :param_' . $key)
+                ->setParameter('param_' . $key, '' . $value);
         }
 
         return $this;
