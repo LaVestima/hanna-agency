@@ -18,9 +18,9 @@
 {% block content %}
     {% if not app.user %}
     <form action="{{ path('access_control_login') }}" method="POST">
-        {% if error %}
-            <span style="color:red">{{ error.message }}</span>
-        {% endif %}
+        {% if loginDisabled %}
+            <span style="color:red">{{ loginDisabled.message }}</span>
+        {% else %}
         <table class="user-input-table">
             <tr>
                 <td>
@@ -47,6 +47,7 @@
                 </td>
             </tr>
         </table>
+        {% endif %}
     </form>
     {% else %}
         User already logged in.
