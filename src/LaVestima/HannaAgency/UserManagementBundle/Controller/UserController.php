@@ -49,11 +49,40 @@ class UserController extends BaseController
             [
                 'label' => 'Deleted Users',
                 'path' => 'user_deleted_list'
+            ],
+            [
+                'label' => 'Login History',
+                'path' => 'access_control_login_attempt_list'
             ]
         ]);
 
         return parent::listAction($request);
 	}
+
+    /**
+     * User Deleted List Action.
+     *
+     * @param Request $request
+     *
+     * @return mixed
+     */
+	public function deletedListAction(Request $request)
+    {
+        $this->setQuery($this->userCrudController->setAlias('u')
+            ->readAllDeletedEntities()
+            ->join('idRoles', 'r')
+            ->orderBy('login', 'ASC')
+            ->getQuery());
+        $this->setView('@UserManagement/User/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => '< User List',
+                'path' => 'user_list'
+            ]
+        ]);
+
+        return parent::listAction($request);
+    }
 
     /**
      * User Show Action.
@@ -64,7 +93,7 @@ class UserController extends BaseController
      */
 	public function showAction($pathSlug)
     {
-		$user = $this->get('user_crud_controller')
+		$user = $this->userCrudController
 			->readOneEntityBy(['pathSlug' => $pathSlug])
             ->getResult();
 		

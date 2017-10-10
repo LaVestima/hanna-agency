@@ -2,9 +2,17 @@ user_list:
     path: /user/list
     defaults: { _controller: UserManagementBundle:User:list }
 
+user_deleted_list:
+    path: /user/deleted_list
+    defaults: { _controller: UserManagementBundle:User:deletedList }
+
 user_show:
     path: /user/show/{pathSlug}
     defaults: { _controller: UserManagementBundle:User:show, pathSlug: '' }
+
+user_new:
+    path: /user/new
+    defaults: { _controller: UserManagementBundle:User:new }
 
 user_setting_index:
     path: /user_settings/
