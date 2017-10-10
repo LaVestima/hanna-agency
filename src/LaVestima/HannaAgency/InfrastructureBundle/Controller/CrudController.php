@@ -131,15 +131,25 @@ abstract class CrudController extends BaseController implements CrudControllerIn
                     $operator = $condition[1];
                     $value = $condition[0];
                 } else {
-                    throw new \Exception('Two elements required in condition array');
+                    throw new \Exception('Two elements required in condition array!');
                 }
             } else {
                 $operator = '=';
                 $value = $condition;
             }
 
-            $this->query->andWhere($this->alias . '.' . $key . ' ' . $operator . ' :param_' . $key)
-                ->setParameter('param_' . $key, '' . $value);
+            if ($value instanceof \DateTime) {
+                if ($operator === '>') {
+                    $this->query->andWhere($this->alias . '.' . $key . ' BETWEEN :param_' . $key . ' AND \'' . (new \DateTime('now'))->format('Y-m-d H:i:s') . '\'')
+                        ->setParameter('param_' . $key, '' . $value->format('Y-m-d H:i:s'));
+                } elseif ($operator === '<') {
+                    $this->query->andWhere($this->alias . '.' . $key . ' BETWEEN ' . (new \DateTime('01-01-1970'))->format('Y-m-d H:i:s') . ' AND :param_' . $key)
+                        ->setParameter('param_' . $key, '' . $value->format('Y-m-d H:i:s'));
+                }
+            } else {
+                $this->query->andWhere($this->alias . '.' . $key . ' ' . $operator . ' :param_' . $key)
+                    ->setParameter('param_' . $key, '' . $value);
+            }
         }
 
         return $this;
