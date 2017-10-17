@@ -63,6 +63,8 @@ security:
         - { path: ^/customer, roles: ROLE_ADMIN }
         - { path: ^/login_attempt, roles: ROLE_ADMIN }
 
+        - { path: ^/user, roles: ROLE_SUPER_ADMIN }
+
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/export/pdf/order_list, roles: ROLE_ADMIN }
