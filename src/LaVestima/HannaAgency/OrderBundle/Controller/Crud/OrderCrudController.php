@@ -4,6 +4,7 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller\Crud;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
+use LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrderCrudController extends CrudController implements OrderCrudControllerInterface
@@ -43,27 +44,27 @@ class OrderCrudController extends CrudController implements OrderCrudControllerI
             ->readEntitiesBy(['idOrders' => $order->getId()])
             ->getResult();
 
-        $orderStatusName = 'Queued';
+        $orderStatusName = OrdersStatuses::QUEUED;
         $isOrderCompleted = true;
 
         foreach ($ordersProducts as $ordersProduct) {
             $ordersProductStatus = $ordersProduct->getIdStatuses()->getName();
-            if ($ordersProductStatus === 'Rejected') {
+            if ($ordersProductStatus === OrdersStatuses::REJECTED) {
                 $orderStatusName = $ordersProductStatus;
                 $isOrderCompleted = false;
                 break;
             }
-            else if ($ordersProductStatus === 'Pending') {
+            else if ($ordersProductStatus === OrdersStatuses::PENDING) {
                 $orderStatusName = $ordersProductStatus;
                 $isOrderCompleted = false;
             }
-            else if ($ordersProductStatus === 'Queued') {
+            else if ($ordersProductStatus === OrdersStatuses::QUEUED) {
                 $isOrderCompleted = false;
             }
         }
 
         if ($isOrderCompleted) {
-            $orderStatusName = 'Completed';
+            $orderStatusName = OrdersStatuses::COMPLETED;
         }
 
         $orderStatus = $this->orderStatusCrudController
