@@ -1,0 +1,25 @@
+{% extends '@Infrastructure/base.html.twig' %}
+
+{% block actionBar %}
+    {% for button in actionBar %}
+        {% if button.role is not defined or is_granted(button.role) %}
+            <a href="{{ path(button.path) }}">
+                <div class="button action-bar-button">
+                    {{ button.label }}
+                </div>
+            </a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% if pagination | length > 0 %}
+        {{ block('entityList') }}
+    {% else %}
+        No Items!
+    {% endif %}
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

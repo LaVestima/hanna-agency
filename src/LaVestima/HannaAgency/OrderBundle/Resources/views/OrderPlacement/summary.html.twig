@@ -4,22 +4,30 @@
 
 {% block content %}
     Customer:
-    {{ productPlacement.customers.firstName }} {{ productPlacement.customers.lastName }}
-    <br>
+    {{ productPlacement.customers.fullName }}
+    <br><br>
     Selected products: <br>
     <div class="place-order-summary">
-        <div class="product-list-names">
-            {% for product in productPlacement.products %}
-                {{ product.name }}<br>
+        <table>
+            <tr>
+                <th>Quantity</th>
+                <th>Name</th>
+                <th>Size</th>
+            </tr>
+            {% for key, productSize in productPlacement.productsSizes %}
+                <tr>
+                    <td>
+                        {{ productPlacement.quantities[key] }}x
+                    </td>
+                    <td>
+                        {{ productPlacement.productsSizes[key].idProducts.name }}
+                    </td>
+                    <td>
+                        {{ productPlacement.productsSizes[key].idSizes.name }}
+                    </td>
+                </tr>
             {% endfor %}
-        </div>
-        <div class="product-list-quantities">
-            {% for quantity in productPlacement.quantities %}
-                {% if quantity > 0 %}
-                    x{{ quantity }}<br>
-                {% endif %}
-            {% endfor %}
-        </div>
+        </table>
     </div>
     {{ form_start(form) }}
     {{ form_end(form) }}

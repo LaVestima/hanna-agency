@@ -10,15 +10,20 @@ class BaseWebTestCase extends WebTestCase
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
-        $this->client = static::createClient();
+        $this->createNewClient();
 
         parent::__construct($name, $data, $dataName);
     }
 
-//    public function setUp()
-//    {
-//
-//    }
+    protected function createNewClient()
+    {
+        $this->client = static::createClient();
+    }
+
+    public function setUp()
+    {
+        $this->createNewClient();
+    }
 
     protected function logInAdmin()
     {

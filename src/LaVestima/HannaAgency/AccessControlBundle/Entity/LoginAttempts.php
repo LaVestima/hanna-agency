@@ -26,16 +26,16 @@ class LoginAttempts implements EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Time_Logged", type="datetime", nullable=false)
+     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
      */
-    private $timeLogged = 'CURRENT_TIMESTAMP';
+    private $dateCreated = 'CURRENT_TIMESTAMP';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Ip_Adddress", type="string", length=50, nullable=false)
+     * @ORM\Column(name="Ip_Address", type="string", length=50, nullable=false)
      */
-    private $ipAdddress;
+    private $ipAddress;
 
     /**
      * @var boolean
@@ -54,8 +54,6 @@ class LoginAttempts implements EntityInterface
      */
     private $idUsers;
 
-
-
     /**
      * Get id
      *
@@ -67,51 +65,51 @@ class LoginAttempts implements EntityInterface
     }
 
     /**
-     * Set timeLogged
+     * Set dateCreated
      *
-     * @param \DateTime $timeLogged
+     * @param \DateTime $dateCreated
      *
      * @return LoginAttempts
      */
-    public function setTimeLogged($timeLogged)
+    public function setDateCreated($dateCreated)
     {
-        $this->timeLogged = $timeLogged;
+        $this->dateCreated = $dateCreated;
 
         return $this;
     }
 
     /**
-     * Get timeLogged
+     * Get dateCreated
      *
      * @return \DateTime
      */
-    public function getTimeLogged()
+    public function getDateCreated()
     {
-        return $this->timeLogged;
+        return $this->dateCreated;
     }
 
     /**
-     * Set ipAdddress
+     * Set ipAddress
      *
-     * @param string $ipAdddress
+     * @param string $ipAddress
      *
      * @return LoginAttempts
      */
-    public function setIpAdddress($ipAdddress)
+    public function setIpAddress($ipAddress)
     {
-        $this->ipAdddress = $ipAdddress;
+        $this->ipAddress = $ipAddress;
 
         return $this;
     }
 
     /**
-     * Get ipAdddress
+     * Get ipAddress
      *
      * @return string
      */
-    public function getIpAdddress()
+    public function getIpAddress()
     {
-        return $this->ipAdddress;
+        return $this->ipAddress;
     }
 
     /**

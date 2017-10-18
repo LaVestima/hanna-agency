@@ -3,7 +3,7 @@
 namespace LaVestima\HannaAgency\OrderBundle\Form;
 
 use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
-use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -13,20 +13,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlaceOrderType extends AbstractType
 {
-    private $productCrudController;
+    private $productSizeCrudController;
     private $customerCrudController;
 
     /**
      * PlaceOrderType constructor.
      *
-     * @param ProductCrudControllerInterface $productCrudController
+     * @param ProductSizeCrudControllerInterface $productSizeCrudController
      * @param CustomerCrudControllerInterface $customerCrudController
      */
     public function __construct(
-        ProductCrudControllerInterface $productCrudController,
+        ProductSizeCrudControllerInterface $productSizeCrudController,
         CustomerCrudControllerInterface $customerCrudController
     ) {
-        $this->productCrudController = $productCrudController;
+        $this->productSizeCrudController = $productSizeCrudController;
         $this->customerCrudController = $customerCrudController;
     }
 
@@ -36,18 +36,27 @@ class PlaceOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $products = $this->productCrudController
-            ->readAllUndeletedEntities()
+        $productsSizes = $this->productSizeCrudController
+            ->setAlias('ps')
+            ->readAllEntities()
+            ->join('idProducts', 'p')
+            ->orderBy('p.name', 'ASC')
             ->getResult();
 
         $builder
-            ->add('products', ChoiceType::class, [
-                'choices' => $products,
-                'choice_label' => 'name',
+            ->add('productsSizes', ChoiceType::class, [
+                'choices' => $productsSizes,
+                'choice_label' => 'idProducts.name',
                 'expanded' => true,
                 'multiple' => true,
             ])
             ->add('quantities', CollectionType::class)
+            ->add('sizes', ChoiceType::class, [
+                'choices' => $productsSizes,
+                'choice_label' => 'idSizes.name',
+                'expanded' => true,
+                'multiple' => true,
+            ])
             ->add('save', SubmitType::class, array('label' => 'Place order'));
         if ($options['isAdmin']) {
             $customers = $this->customerCrudController

@@ -2,52 +2,98 @@
 
 namespace LaVestima\HannaAgency\InvoiceBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudControllerInterface;
+use LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceProductCrudControllerInterface;
 use LaVestima\HannaAgency\InvoiceBundle\Entity\Invoices;
 use LaVestima\HannaAgency\InvoiceBundle\Form\InvoiceType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class InvoiceController extends Controller {
-	/**
+class InvoiceController extends BaseController
+{
+    private $invoiceCrudController;
+    private $invoiceProductCrudController;
+
+    /**
+     * InvoiceController constructor.
+     *
+     * @param InvoiceCrudControllerInterface $invoiceCrudController
+     */
+    public function __construct(
+        InvoiceCrudControllerInterface $invoiceCrudController,
+        InvoiceProductCrudControllerInterface $invoiceProductCrudController
+    ) {
+        $this->invoiceCrudController = $invoiceCrudController;
+        $this->invoiceProductCrudController = $invoiceProductCrudController;
+    }
+
+    /**
+     * Invoice List Action.
+     *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function listAction() {
-		$invoices = $this->get('invoice_crud_controller')
+	public function listAction(Request $request)
+    {
+		$this->invoiceCrudController
+            ->setAlias('i')
             ->readAllEntities()
-		    ->getEntities();
+            ->join('idCustomers', 'c')
+            ->join('userCreated', 'u')
+            ->orderBy('dateCreated', 'DESC');
 
-		return $this->render('InvoiceBundle:Invoice:list.html.twig', [
-			'invoices' => $invoices
-		]);
+        $this->setQuery($this->invoiceCrudController->getQuery());
+        $this->setView('@Invoice/Invoice/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => 'New Invoice',
+                'path' => 'invoice_new'
+            ],
+            [
+                'label' => 'Deleted Invoices',
+                'path' => 'invoice_deleted_list'
+            ]
+        ]);
+
+        return parent::listAction($request);
 	}
 
-	public function deletedListAction() {
-	    $invoices = $this->get('invoice_crud_controller')
-            ->readAllDeletedEntities()
-            ->getEntities();
+    /**
+     * Invoice Deleted List Action.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+	public function deletedListAction(Request $request)
+    {
+	    $this->invoiceCrudController
+            ->readAllDeletedEntities();
 
-	    return $this->render('@Invoice/Invoice/deletedList.html.twig', [
-	        'invoices' => $invoices,
+	    $this->setQuery($this->invoiceCrudController->getQuery());
+	    $this->setView('@Invoice/Invoice/list.html.twig');
+	    $this->setActionBar([
+	        [
+	            'label' => '< Invoice List',
+                'path' => 'invoice_list'
+            ]
         ]);
+
+	    return parent::listAction($request);
     }
 
 	/**
+     * Invoice Show Action.
+     *
 	 * @param $pathSlug
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function showAction($pathSlug) {
-		if ($pathSlug === '') {
-			var_dump('No path slug!');
-			// TODO: create flash
-			// TODO: redirect to list
-		}
+	public function showAction(string $pathSlug)
+    {
+		$invoice = $this->invoiceCrudController
+			->readOneEntityBy(['pathSlug' => $pathSlug])
+            ->getResult();
 
-		$invoice = $this->get('invoice_crud_controller')
-			->readOneEntityBy(['pathSlug' => $pathSlug]);
-
-		$invoicesProducts = $this->get('invoice_product_crud_controller')
-			->readEntitiesBy(['idInvoices' => $invoice])
-            ->getEntities();
+		$invoicesProducts = $this->invoiceProductCrudController
+			->readEntitiesBy(['idInvoices' => $invoice->getId()])
+		    ->getResult();
 
 		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
 			'invoice' => $invoice,
@@ -55,7 +101,14 @@ class InvoiceController extends Controller {
 		]);
 	}
 
-	public function newAction(Request $request) {
+    /**
+     * Invoice New Action.
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+	public function newAction(Request $request)
+    {
 		$invoice = new Invoices();
 		$form = $this->createForm(InvoiceType::class, $invoice);
 		$form->handleRequest($request);
@@ -78,7 +131,14 @@ class InvoiceController extends Controller {
 		]);
 	}
 
-	public function deleteAction($invoiceId) {
-		$this->get('invoice_crud_controller')->deleteEntity((int)$invoiceId);
+    /**
+     * Invoice Delete Action.
+     *
+     * @param $invoiceId
+     */
+	public function deleteAction($invoiceId)
+    {
+		$this->invoiceCrudController
+            ->deleteEntity((int)$invoiceId);
 	}
 }

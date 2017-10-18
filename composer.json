@@ -11,10 +11,10 @@
         "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
-        "php": "7.*",
+        "php": "^7.1",
         "symfony/symfony": "3.*",
         "doctrine/orm": "^2.5",
-        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-bundle": "^1.7",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/monolog-bundle": "dev-master",

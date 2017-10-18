@@ -5,6 +5,7 @@ namespace LaVestima\HannaAgency\FakerBundle\Command;
 use Faker\Factory;
 use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,12 +26,12 @@ class CreateUserCommand extends ContainerAwareCommand
         $this
             ->setName('faker:create:user')
             ->setDescription('Creates fake users')
-            ->addOption('number', null, InputOption::VALUE_OPTIONAL, 'Number of users to create');
+            ->addArgument('number', InputArgument::OPTIONAL, 'Number of users to create', 1);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $userNumber = (int)$input->getOption('number') ?: 1;
+        $userNumber = (int)$input->getArgument('number') ?: 1;
 
         if ($userNumber < 1) {
             $output->writeln('Wrong argument!');
@@ -39,6 +40,7 @@ class CreateUserCommand extends ContainerAwareCommand
                 $this->createFakeUser();
 
                 $output->writeln('User');
+                $output->writeln('Created: ' . ($i+1));
             }
         }
 

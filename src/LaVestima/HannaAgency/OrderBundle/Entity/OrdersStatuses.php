@@ -13,6 +13,11 @@ use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
  */
 class OrdersStatuses implements EntityInterface
 {
+    const QUEUED = 'Queued';
+    const PENDING = 'Pending';
+    const COMPLETED = 'Completed';
+    const REJECTED = 'Rejected';
+
     /**
      * @var integer
      *

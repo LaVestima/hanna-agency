@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
 </head>
 <body>
-    {% if app.environment == 'dev' %}
+    {% if app.debug %}
         <div style="position: fixed; bottom: 35px;">
             {{ dump() }}
             {{ dump(app.session.get('configuration')) }}
@@ -34,7 +34,7 @@
             <h1>{{ block('title') }}</h1>
         </div>
 
-        {% if block('actionBar') is defined %}
+        {% if actionBar is defined and actionBar is not null %}
             <div class="action-bar">
                 <div class="action-bar-content">
                     {{ block('actionBar') }}
@@ -105,6 +105,14 @@
 
 {% if block('stylesheets') is defined %}
     {{ block('stylesheets') }}
+{% endif %}
+
+{% if actionBar is not defined or actionBar is null %}
+    <style>
+        .page-content {
+            margin: 82px auto 0 auto;
+        }
+    </style>
 {% endif %}
 
 {% javascripts

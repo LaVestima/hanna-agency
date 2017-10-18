@@ -14,12 +14,12 @@ function validateQuantity() {
 
 function selectProduct() {
     var inputIndex = $('.product-list-quantities input').index(inputField);
-    $('#place_order_products_' + inputIndex).prop('checked', true);
+    $('#place_order_productsSizes_' + inputIndex).prop('checked', true);
 }
 
 function unselectProduct() {
     var inputIndex = $('.product-list-quantities input').index(inputField);
-    $('#place_order_products_' + inputIndex).prop('checked', false);
+    $('#place_order_productsSizes_' + inputIndex).prop('checked', false);
 }
 
 function validateProductSelection() {
@@ -32,8 +32,8 @@ function validateProductSelection() {
 }
 
 function setQuantityValue(value) {
-    var inputIndex = $('.product-list-names input').index(inputField) + 1;
-    $('#place_order_quantities_quantity_' + inputIndex).val(value);
+    var inputIndex = $('.product-list-names input').index(inputField);
+    $('#place_order_quantities_' + inputIndex).val(value);
 }
 
 $(function() {
@@ -43,6 +43,7 @@ $(function() {
     });
 
     $('.product-list-names input').on('change', function () {
+        console.log('asdf');
         inputField = $(this);
         validateProductSelection();
     });

@@ -2,11 +2,19 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ActionControllerTrait;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ListActionControllerTrait;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ShowActionControllerTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class BaseController extends Controller
 {
+    use ActionControllerTrait;
+    use ListActionControllerTrait;
+    use ShowActionControllerTrait;
+
+    protected $request;
+
     /**
      * @return bool
      */
@@ -20,7 +28,9 @@ class BaseController extends Controller
     }
 
     /**
-     * @return boolean
+     * Check if user is an admin.
+     *
+     * @return bool
      */
     public function isAdmin()
     {
@@ -29,15 +39,31 @@ class BaseController extends Controller
     }
 
     /**
+     * Check if user is a customer.
+     *
+     * @return bool
+     */
+    public function isCustomer()
+    {
+        return $this->get('security.authorization_checker')
+            ->isGranted('ROLE_CUSTOMER');
+    }
+
+    /**
+     * Get logged in customer.
+     *
      * @return mixed
      */
     public function getCustomer()
     {
         return $this->get('customer_crud_controller')
-            ->readOneEntityBy(['idUsers' => $this->getUser()]);
+            ->readOneEntityBy(['idUsers' => $this->getUser()])
+            ->getResult();
     }
 
     /**
+     * Check if user is allowed to view the entity.
+     *
      * @param $entity
      *
      * @return bool
@@ -55,6 +81,4 @@ class BaseController extends Controller
             return false;
         }
     }
-
-
 }

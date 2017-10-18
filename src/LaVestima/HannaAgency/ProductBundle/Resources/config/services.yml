@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
 
+    LaVestima\HannaAgency\ProductBundle\Controller\ProductController:
+
     product_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
 

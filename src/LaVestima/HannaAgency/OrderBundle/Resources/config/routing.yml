@@ -1,22 +1,18 @@
 order_list:
-    path: /order/list/{type}
-    defaults: { _controller: OrderBundle:Order:list, type: '' }
+    path: /order/list
+    defaults: { _controller: OrderBundle:Order:list }
 
 order_deleted_list:
-    path: /order/list/{type}
-    defaults: { _controller: OrderBundle:Order:list, type: 'deleted' }
-
-#order_deleted_list:
-#    path: /order/deleted_list
-#    defaults: { _controller: OrderBundle:Order:deletedList }
+    path: /order/deleted_list
+    defaults: { _controller: OrderBundle:Order:deletedList }
 
 order_show:
     path: /order/show/{pathSlug}
     defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
 
-order_new:
-    path: /order/new
-    defaults: { _controller: OrderBundle:Order:new }
+#order_new:
+#    path: /order/new
+#    defaults: { _controller: OrderBundle:Order:new }
 
 order_delete:
     path: /order/delete/{pathSlug}

@@ -1,6 +1,6 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% block title %}Show Invoice{% endblock %}
+{% block title 'Show Invoice' %}
 
 {% block actionBar %}
     <a href="{{ path('invoice_list') }}">
@@ -45,7 +45,7 @@
             <table class="entity-list">
                 <tr>
                     <th>Name</th>
-                    <th>Size</th>
+                    {#<th>Size</th>#}
                     <th>Price P</th>
                     <th>Price C</th>
                     <th>Quantity</th>
@@ -63,7 +63,7 @@
                                 {{ product.name }}
                             </a>
                         </td>
-                        <td>{{ product.idSizes.name }}</td>
+                        {#<td>{{ product.idSizes.name }}</td>#}
                         <td>{{ product.priceProducer }}</td>
                         <td>{{ product.priceCustomer }}</td>
                         <td>x {{ invoiceProduct.quantity }}</td>
@@ -78,7 +78,7 @@
                 {% endfor %}
                 <tr>
                     <td></td>
-                    <td></td>
+                    {#<td></td>#}
                     <td></td>
                     <td></td>
                     <td></td>

@@ -32,6 +32,7 @@
         </div>
     </div>
 
+    {% if productSizes is defined and productSizes is not null %}
     <div class="module-box">
         <div class="module-box-title">Availability</div>
         <div class="module-box-content">
@@ -49,4 +50,5 @@
             </table>
         </div>
     </div>
+    {% endif %}
 {% endblock %}

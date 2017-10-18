@@ -90,6 +90,8 @@ input[type=checkbox] {
 .action-bar {
     padding: 10px;
     background: #ddd;
+    //border-bottom: 2px solid $main-theme-color;
+    box-shadow: 0 3px 3px $main-theme-color;
 
     .action-bar-content {
         max-width: 1200px;
@@ -144,12 +146,25 @@ input[type=checkbox] {
 
 .page-content {
     max-width: 1200px;
-    margin: 140px auto 0 auto;
+    margin: 150px auto 0 auto;
     padding: 10px;
 
         .entity-list {
+            .entity-list-header {
+                height: 40px;
+                background: #cccccc;
+            }
+
             .entity-list-row {
-                padding: 5px 0;
+                height: 35px;
+
+                &:nth-child(even) {
+                    background: #dddddd;
+                }
+
+                &:hover {
+                    background: $main-theme-color-lighter;
+                }
 
                 .entity-list-cell {
                     padding: 0 10px;
@@ -238,12 +253,6 @@ input[type=checkbox] {
         &:last-child {
             padding-right: 5px;
         }
-    }
-}
-
-.entity-list-row {
-    &:hover {
-        background: $main-theme-color-lighter;
     }
 }
 

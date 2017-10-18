@@ -4,10 +4,7 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudControllerInterface;
-use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class OrderController extends BaseController
@@ -34,26 +31,16 @@ class OrderController extends BaseController
      * Order List Action.
      *
      * @param Request $request
-     * @param string $type
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request, string $type)
+    public function listAction(Request $request)
     {
-        if (!in_array($type, ['', 'deleted'])) {
-            throw new NotFoundHttpException();
-        }
-
         $this->orderCrudController->setAlias('o');
 
-        if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            if ($type === '') {
-                $this->orderCrudController->readAllUndeletedEntities();
-            } elseif ($type === 'deleted') {
-                $this->orderCrudController->readAllDeletedEntities();
-            }
-        }
-        else if ($this->authorizationChecker->isGranted('ROLE_CUSTOMER')) {
+        if ($this->isAdmin()) {
+            $this->orderCrudController->readAllUndeletedEntities();
+        } elseif ($this->isCustomer()) {
             // TODO: only undeleted
             $this->orderCrudController->readEntitiesBy([
                 'idCustomers' => $this->getCustomer()->getId()
@@ -64,23 +51,69 @@ class OrderController extends BaseController
             ->join('idCustomers', 'c')
             ->orderBy('dateCreated', 'DESC');
 
-        $pagination = $this->get('knp_paginator')->paginate(
-            $this->orderCrudController->getQuery(),
-            $request->query->getInt('page', 1)/*page number*/,
-            10 /*limit per page*/
-        );
+        // TODO: find better way of generating status
+//        foreach ($pagination->getItems() as $order) {
+//            $order->setStatus(
+//                $this->orderCrudController->generateStatus($order)
+//            );
+//        }
 
-        foreach ($pagination->getItems() as $order) {
-            $order->setStatus(
-                $this->orderCrudController->generateStatus($order)
-            );
+        $this->setQuery($this->orderCrudController->getQuery());
+        $this->setView('@Order/Order/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => 'Place Order',
+                'path' => 'order_placement_new'
+            ],
+            [
+                'label' => 'Deleted Orders',
+                'path' => 'order_deleted_list'
+            ],
+//            [
+//                'label' => 'New Order',
+//                'path' => 'order_new',
+//                'role' => 'ROLE_ADMIN'
+//            ]
+        ]);
+
+        return parent::listAction($request);
+	}
+
+    /**
+     * Order Deleted List Action.
+     *
+     * @param Request $request
+     *
+     * @return mixed
+     */
+	public function deletedListAction(Request $request)
+    {
+        $this->orderCrudController->setAlias('o');
+
+        if ($this->isAdmin()) {
+            $this->orderCrudController->readAllDeletedEntities();
+        } elseif ($this->isCustomer()) {
+            // TODO: only undeleted
+            $this->orderCrudController->readEntitiesBy([
+                'idCustomers' => $this->getCustomer()->getId()
+            ]);
         }
 
-        return $this->render('@Order/Order/list.html.twig', [
-            'pagination' => $pagination,
-            'listType' => $type
+        $this->orderCrudController
+            ->join('idCustomers', 'c')
+            ->orderBy('dateCreated', 'DESC');
+
+        $this->setQuery($this->orderCrudController->getQuery());
+        $this->setView('@Order/Order/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => '< Back',
+                'path' => 'order_list'
+            ]
         ]);
-	}
+
+        return parent::listAction($request);
+    }
 
     /**
      * Order Show Action

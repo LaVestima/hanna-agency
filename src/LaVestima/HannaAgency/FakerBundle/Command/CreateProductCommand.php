@@ -4,9 +4,11 @@ namespace LaVestima\HannaAgency\FakerBundle\Command;
 
 use Faker\Factory;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
+use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
+use LaVestima\HannaAgency\ProductBundle\Entity\Sizes;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateProductCommand extends ContainerAwareCommand
@@ -25,18 +27,27 @@ class CreateProductCommand extends ContainerAwareCommand
         $this
             ->setName('faker:create:product')
             ->setDescription('Creates fake products')
-            ->addOption('number', null, InputOption::VALUE_OPTIONAL, 'Number of products to create');
+            ->addArgument('number', InputArgument::OPTIONAL, 'Number of products to create', 1);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $productNumber = (int)$input->getOption('number') ?: 1;
+        $productNumber = (int)$input->getArgument('number') ?? 1;
 
         if ($productNumber < 1) {
             $output->writeln('Wrong argument!');
         } else {
             for ($i = 0; $i < $productNumber; $i++) {
-                $this->createFakeProduct();
+                $product = $this->createFakeProduct();
+
+                $sizeNumber = $this->getContainer()->get('size_crud_controller')
+                    ->countRows();
+
+                for ($j = 0; $j < rand(1, $sizeNumber); $j++) {
+                    $this->createFakeProductSize($product);
+
+                    $output->writeln('Product Size');
+                }
 
                 $output->writeln('Product');
 
@@ -58,11 +69,42 @@ class CreateProductCommand extends ContainerAwareCommand
         $product->setName($this->faker->text(50));
         $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);
         $product->setPriceCustomer($this->faker->numberBetween(100, 99999)/100);
-        $product->setQrCodePath($this->faker->text(20));
+        $product->setQrCodePath($this->faker->text(20) . uniqid()); // TODO: change
         $product->setIdCategories($randomCategory);
         $product->setIdProducers($randomProducer);
 
         $this->getContainer()->get('product_crud_controller')
             ->createEntity($product);
+
+        return $product;
+    }
+
+    private function createFakeProductSize(Products $product)
+    {
+        $productSize = new ProductsSizes();
+
+        // TODO: check uniqueness, doesn't work
+        do {
+            $randomSize = $this->getContainer()->get('size_crud_controller')
+                ->readRandomEntities(1)->getResult();
+        } while (!$this->isSizeUniqueForProduct($randomSize, $product));
+
+        $productSize->setIdProducts($product);
+        $productSize->setAvailability($this->faker->numberBetween(0, 200));
+        $productSize->setIdSizes($randomSize);
+
+        $this->getContainer()->get('product_size_crud_controller')
+            ->createEntity($productSize);
+    }
+
+    private function isSizeUniqueForProduct(Sizes $size, Products $product)
+    {
+        $productSize = $this->getContainer()->get('product_size_crud_controller')
+            ->readOneEntityBy([
+                'idSizes' => $size->getId(),
+                'idProducts' => $product->getId(),
+            ])->getResult();
+
+        return $productSize ? false : true;
     }
 }

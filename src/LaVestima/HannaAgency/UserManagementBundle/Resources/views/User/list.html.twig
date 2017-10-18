@@ -1,13 +1,14 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/baseList.html.twig' %}
 
-{% block title %}User list{% endblock %}
+{% block title 'User list' %}
 
-{% block content %}
+{% block entityList %}
     <table class="entity-list order-list">
-        <tr>
+        <tr class="entity-list-header">
             <th>{{ knp_pagination_sortable(pagination, 'Login', 'u.login') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Email', 'u.email') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Role', 'r.name') }}</th>
+            <th></th>
         </tr>
 
         {% for user in pagination %}
@@ -23,8 +24,4 @@
             </tr>
         {% endfor %}
     </table>
-
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
 {% endblock %}

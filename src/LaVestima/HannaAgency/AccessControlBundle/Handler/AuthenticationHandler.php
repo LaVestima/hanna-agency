@@ -64,7 +64,7 @@ class AuthenticationHandler implements
     {
         $loginAttempt = new LoginAttempts();
 
-        $loginAttempt->setIpAdddress($request->getClientIp());
+        $loginAttempt->setIpAddress($request->getClientIp());
         $loginAttempt->setIsFailed(0);
         $loginAttempt->setIdUsers($token->getUser());
 
@@ -95,7 +95,7 @@ class AuthenticationHandler implements
             ])
             ->getResult();
 
-        $loginAttempt->setIpAdddress($request->getClientIp());
+        $loginAttempt->setIpAddress($request->getClientIp());
         $loginAttempt->setIsFailed(1);
         $loginAttempt->setIdUsers($user);
 
