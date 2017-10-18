@@ -1,26 +1,29 @@
-{% extends '@Infrastructure/base.html.twig' %}
-{% block title %}Invoice List{% endblock %}
+{% extends '@Infrastructure/baseList.html.twig' %}
 
-{% block actionBar %}
-    <a href="{{ path('invoice_new') }}">
-        <div class="button action-bar-button">
-            New invoice
-        </div>
-    </a>
-    <a href="{{ path('invoice_deleted_list') }}">
-        <div class="button action-bar-button">
-            Deleted invoices
-        </div>
-    </a>
-{% endblock %}
+{% block title 'Invoice List' %}
 
-{% block content %}
+{#{% block actionBar %}#}
+    {#<a href="{{ path('invoice_new') }}">#}
+        {#<div class="button action-bar-button">#}
+            {#New invoice#}
+        {#</div>#}
+    {#</a>#}
+    {#<a href="{{ path('invoice_deleted_list') }}">#}
+        {#<div class="button action-bar-button">#}
+            {#Deleted invoices#}
+        {#</div>#}
+    {#</a>#}
+{#{% endblock %}#}
+
+{% block entityList %}
     <table class="entity-list invoice-list">
-        <th>Name</th>
-        <th>Customer</th>
-        <th>Issued by</th>
-        <th>Date issued</th>
-        {% for invoice in invoices %}
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Name', 'i.name') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.firstName') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Issued By', 'u.login') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Issued', 'i.dateCreated') }}</th>
+        </tr>
+        {% for invoice in pagination %}
             <tr class="entity-list-row">
                 <td class="entity-list-cell">
                     {{ invoice.name }}
