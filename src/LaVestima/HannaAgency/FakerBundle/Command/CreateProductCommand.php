@@ -42,7 +42,7 @@ class CreateProductCommand extends ContainerAwareCommand
 
                 $sizeNumber = $this->getContainer()->get('size_crud_controller')
                     ->countRows();
-                // TODO: for
+
                 for ($j = 0; $j < rand(1, $sizeNumber); $j++) {
                     $this->createFakeProductSize($product);
 

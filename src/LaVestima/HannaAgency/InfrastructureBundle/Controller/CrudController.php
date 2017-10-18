@@ -126,6 +126,16 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             ->from($this->entityClass, $this->alias);
 
         foreach ($keyValueArray as $key => $condition) {
+            if (count($parts = explode('.', $key)) > 1) {
+                if (count($parts) > 2) {
+                    throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
+                }
+
+                $tableFieldName = $key;
+            } else {
+                $tableFieldName = $this->alias . '.' . $key;
+            }
+
             if (is_array($condition)) {
                 if (count($condition) === 2) {
                     $operator = $condition[1];
@@ -138,17 +148,19 @@ abstract class CrudController extends BaseController implements CrudControllerIn
                 $value = $condition;
             }
 
+            $parameterName = 'param_' . str_replace('.', '', $key);
+
             if ($value instanceof \DateTime) {
                 if ($operator === '>') {
-                    $this->query->andWhere($this->alias . '.' . $key . ' BETWEEN :param_' . $key . ' AND \'' . (new \DateTime('now'))->format('Y-m-d H:i:s') . '\'')
-                        ->setParameter('param_' . $key, '' . $value->format('Y-m-d H:i:s'));
+                    $this->query->andWhere($tableFieldName . ' BETWEEN :' . $parameterName . ' AND \'' . (new \DateTime('now'))->format('Y-m-d H:i:s') . '\'')
+                        ->setParameter($parameterName, '' . $value->format('Y-m-d H:i:s'));
                 } elseif ($operator === '<') {
-                    $this->query->andWhere($this->alias . '.' . $key . ' BETWEEN ' . (new \DateTime('01-01-1970'))->format('Y-m-d H:i:s') . ' AND :param_' . $key)
-                        ->setParameter('param_' . $key, '' . $value->format('Y-m-d H:i:s'));
+                    $this->query->andWhere($tableFieldName . ' BETWEEN ' . (new \DateTime('01-01-1970'))->format('Y-m-d H:i:s') . ' AND :' . $parameterName)
+                        ->setParameter($parameterName, '' . $value->format('Y-m-d H:i:s'));
                 }
             } else {
-                $this->query->andWhere($this->alias . '.' . $key . ' ' . $operator . ' :param_' . $key)
-                    ->setParameter('param_' . $key, '' . $value);
+                $this->query->andWhere($tableFieldName . ' ' . $operator . ' :' . $parameterName)
+                    ->setParameter($parameterName, '' . $value);
             }
         }
 
@@ -223,11 +235,16 @@ abstract class CrudController extends BaseController implements CrudControllerIn
 		    throw new EntityNotFoundException();
 		}
 
-        if (method_exists($entity, 'setDateDeleted')) {
+        if (
+            method_exists($entity, 'setDateDeleted') &&
+            method_exists($entity, 'setUserDeleted')
+        ) {
             $entity->setDateDeleted(new \DateTime('now'));
-        }
-        if (method_exists($entity, 'setUserDeleted')) {
             $entity->setUserDeleted($this->user);
+        } else {
+            if ($this->isDevEnvironment()) {
+                throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be deleted');
+            }
         }
 
 		$this->manager->flush();
@@ -399,10 +416,21 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             throw new \InvalidArgumentException('Sorting order must be ASC or DESC');
         }
 
-        $this->query->orderBy(
-            $this->alias . '.' . $field,
-            strtoupper($order)
-        );
+        if (count($parts = explode('.', $field)) > 1) {
+            if (count($parts) > 2) {
+                throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
+            }
+
+            $this->query->orderBy(
+                $field,
+                strtoupper($order)
+            );
+        } else {
+            $this->query->orderBy(
+                $this->alias . '.' . $field,
+                strtoupper($order)
+            );
+        }
 
         return $this;
     }
@@ -424,6 +452,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function getResult()
     {
+//        var_dump($this->getQuery());die;
         $result = $this->getQuery()->getResult();
 
         return count($result) === 1 ? $result[0] :
