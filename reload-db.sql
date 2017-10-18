@@ -497,3 +497,4 @@ INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, 
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (4, 2, 1, 3, 1, 0);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (5, 3, 1, 2, 1, 0);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (6, 3, 2, 4, 1, 0);
+INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS, ID_STATUSES, Quantity, Discount) VALUES (7, 4, 3, 2, 15, 3);
