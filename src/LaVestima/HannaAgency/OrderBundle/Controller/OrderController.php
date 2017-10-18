@@ -72,8 +72,8 @@ class OrderController extends BaseController
                 'path' => 'order_deleted_list'
             ],
 //            [
-//                'label' => 'Only for admin',
-//                'path' => 'order_deleted_list',
+//                'label' => 'New Order',
+//                'path' => 'order_new',
 //                'role' => 'ROLE_ADMIN'
 //            ]
         ]);

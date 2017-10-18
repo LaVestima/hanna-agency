@@ -3,7 +3,8 @@
 namespace LaVestima\HannaAgency\OrderBundle\Form\Helper;
 
 class ProductPlacementHelper {
-    public $products = [];
+    public $productsSizes = [];
     public $quantities = [];
+    public $sizes = [];
     public $customers = [];
 }

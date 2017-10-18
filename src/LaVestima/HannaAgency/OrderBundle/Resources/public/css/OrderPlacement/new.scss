@@ -1,28 +1,26 @@
+.place-order-customer {
+    width: 100%;
+    text-align: center;
+    margin: 0 0 30px 0;
+}
+
 .place-order-form {
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  .product-list-names {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    input[type=checkbox] {
-      -webkit-appearance:button;
-      border-radius: 0;
-      height: 20px;
-      width: 20px;
-      border: solid 2px #000000;
-      &:checked {
-        background-color: #00ff00;
-      }
+    flex-direction: row;
+    //padding: 10px;
+
+    table {
+        margin: 0 auto;
+
+        tr {
+            th {
+                text-align: center;
+            }
+
+            td {
+                padding: 5px 10px;
+            }
+        }
     }
-  }
-  .product-list-quantities {
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-    input {
-      padding: 5px 5px 5px 10px;
-    }
-  }
 }

@@ -69,7 +69,7 @@ class ProductController extends BaseController
         $this->setView('@Product/Product/list.html.twig');
         $this->setActionBar([
             [
-                'label' => '< Product List',
+                'label' => '< Back',
                 'path' => 'product_list'
             ]
         ]);
