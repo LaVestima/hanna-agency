@@ -57,6 +57,12 @@ class PlaceOrderType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
             ])
+            ->add('availabilities', ChoiceType::class, [
+                'choices' => $productsSizes,
+                'choice_label' => 'availability',
+                'expanded' => true,
+                'multiple' => true,
+            ])
             ->add('save', SubmitType::class, array('label' => 'Place order'));
         if ($options['isAdmin']) {
             $customers = $this->customerCrudController

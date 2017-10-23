@@ -6,5 +6,6 @@ class ProductPlacementHelper {
     public $productsSizes = [];
     public $quantities = [];
     public $sizes = [];
+    public $availabilities = [];
     public $customers = [];
 }

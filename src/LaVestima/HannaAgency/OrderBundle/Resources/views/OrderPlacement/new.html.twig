@@ -17,6 +17,7 @@
                     <th>Name</th>
                     <th>Size</th>
                     <th>Quantity</th>
+                    <th>Availability</th>
                 </tr>
                 {% for key, productSize in form.productsSizes %}
                 <tr>
@@ -34,6 +35,12 @@
                     </td>
                     <td class="product-list-quantities">
                         {{ form_widget(form.quantities[key]) }}
+                    </td>
+                    <td>
+                        {{ form_label(form.availabilities[key]) }}
+                        <div class="hidden">
+                            {{ form_widget(form.availabilities[key]) }}
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
