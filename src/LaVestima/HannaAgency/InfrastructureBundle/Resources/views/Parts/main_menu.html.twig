@@ -33,7 +33,6 @@
                     </div>
                 </a>
             </li>
-            {#SUPER_ADMIN#}
         {% endif %}
         {% if is_granted('ROLE_ADMIN') %}
             <li>
@@ -62,6 +61,8 @@
                     </div>
                 </a>
             </li>
+        {% endif %}
+        {% if is_granted('ROLE_CUSTOMER') %}
             <li>
                 <a href="{{ path('order_list') }}">
                     <div class="left-menu-item left-menu-body-row">

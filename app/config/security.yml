@@ -56,8 +56,11 @@ security:
 
         - { path: ^/user_settings, roles: ROLE_GUEST }
 
-        - { path: ^/invoice, roles: ROLE_USER }
         - { path: ^/order, roles: ROLE_CUSTOMER }
+        - { path: ^/order_placement, roles: ROLE_CUSTOMER }
+        - { path: ^/invoice, roles: ROLE_CUSTOMER }
+
+        - { path: ^/product, roles: ROLE_USER }
         - { path: ^/export, roles: ROLE_USER }
 
         - { path: ^/customer, roles: ROLE_ADMIN }
