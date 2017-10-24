@@ -151,7 +151,7 @@ class OrderController extends BaseController
 			->readEntitiesBy([
 			    'idOrders' => $order->getId()
             ])
-            ->getResult();
+            ->getResultAsArray();
 
 		return $this->render('@Order/Order/show.html.twig', [
 			'order' => $order,

@@ -452,12 +452,21 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function getResult()
     {
-//        var_dump($this->getQuery());die;
-        $result = $this->getQuery()->getResult();
+        $result = $this->getResultAsArray();
 
         return count($result) === 1 ? $result[0] :
             (count($result) === 0 ? null :
             $result);
+    }
+
+    /**
+     * Get the result of SQL Query always as array.
+     *
+     * @return array
+     */
+    public function getResultAsArray()
+    {
+        return $this->getQuery()->getResult();
     }
 
     /**

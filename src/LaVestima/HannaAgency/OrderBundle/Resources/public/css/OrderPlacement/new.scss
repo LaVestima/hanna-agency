@@ -10,16 +10,52 @@
     flex-direction: row;
 
     table {
+        width: 90%;
         margin: 0 auto;
+        table-layout: fixed;
+
+        input {
+            width: 100%;
+
+            &[type=checkbox] {
+                width: 20px;
+            }
+        }
 
         tr {
+            border-bottom: 1px solid #aaaaaa;
+
+            &:nth-child(1) {
+                border-bottom: 0;
+            }
+
+            input[type=text] {
+                padding: 0 5px;
+            }
+            
             th {
                 text-align: center;
             }
 
             td {
                 padding: 5px 10px;
+
+                &.cell-size {
+                    text-align: center;
+                }
+
+                &.cell-quantity {
+                    input {
+                        padding: 0 0 0 5px;
+                    }
+                }
             }
         }
     }
+}
+
+.place-order-save {
+    width: 100%;
+    text-align: right;
+    padding: 10px 5% 0 0;
 }

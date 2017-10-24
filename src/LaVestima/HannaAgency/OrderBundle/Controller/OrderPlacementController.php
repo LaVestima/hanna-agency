@@ -5,6 +5,7 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts;
+use LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses;
 use LaVestima\HannaAgency\OrderBundle\Form\Helper\ProductPlacementHelper;
 use LaVestima\HannaAgency\OrderBundle\Form\OrderSummaryType;
 use LaVestima\HannaAgency\OrderBundle\Form\PlaceOrderType;
@@ -52,11 +53,9 @@ class OrderPlacementController extends BaseController
                     $productPlacement->customers = $this->getCustomer();
                 }
 
-                $productPlacement->quantities = array_values(
-                    array_filter($productPlacement->quantities, function ($var) {
-                        return ($var > 0);
-                }));
-                $productPlacement->sizes = [];
+                foreach ($form->get('availabilities') ?? [] as $availability) {
+                    $productPlacement->availabilities[] = (int)$availability->getConfig()->getOption('label');
+                }
 
                 $request->getSession()->set('productPlacement', $productPlacement);
 
@@ -81,39 +80,69 @@ class OrderPlacementController extends BaseController
      */
     public function summaryAction(Request $request) {
         $productPlacement = $request->getSession()->get('productPlacement');
-        $selectedProductsSizes = $productPlacement->productsSizes;
         $selectedQuantities = $productPlacement->quantities;
 
-        if (count($selectedProductsSizes) != count($selectedQuantities)) {
-            // TODO: products and quantities must be the same length
-            var_dump('No!!!!');
-            die;
+        $selectedProductsSizes = [];
+        $i = 0;
+        foreach ($selectedQuantities as $key => $selectedQuantity) {
+            if ($selectedQuantity === 0) {
+                $selectedProductsSizes[] = null;
+            } else {
+                $selectedProductsSizes[] = $productPlacement->productsSizes[$i];
+                $i++;
+            }
+        }
+        $productPlacement->productsSizes = $selectedProductsSizes;
+
+        foreach ($productPlacement->quantities as $key => $quantity) {
+            if ($quantity > $productPlacement->availabilities[$key]) {
+                // TODO: better exception
+                throw new \Exception('Quantity > Availability');
+            }
         }
 
         $form = $this->createForm(OrderSummaryType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $order = new Orders();
-            $order->setIdCustomers($productPlacement->customers);
+            try {
+                $order = new Orders();
+                $order->setIdCustomers($productPlacement->customers);
 
-            $order = $this->get('order_crud_controller')
-                ->createEntity($order);
+                $order = $this->get('order_crud_controller')
+                    ->createEntity($order);
 
-            foreach ($selectedProductsSizes as $key => $selectedProductSize) {
-                $orderProduct = new OrdersProducts();
+                foreach ($selectedProductsSizes as $key => $selectedProductSize) {
+                    $orderProduct = new OrdersProducts();
 
-                $orderProduct->setIdOrders($order);
-                $orderProduct->setIdProducts($selectedProductSize->getIdProducts());
-                $orderProduct->setIdStatuses(
-                    $this->get('order_status_crud_controller')
-                        ->readOneEntityBy(['name' => 'Queued'])
-                        ->getResult()
-                );
-                $orderProduct->setQuantity($selectedQuantities[$key]);
+                    $orderProduct->setIdOrders($order);
+                    $orderProduct->setIdProductsSizes($selectedProductSize);
+                    $orderProduct->setIdStatuses(
+                        $this->get('order_status_crud_controller')
+                            ->readOneEntityBy(['name' => OrdersStatuses::QUEUED])
+                            ->getResult()
+                    );
+                    $orderProduct->setQuantity($selectedQuantities[$key]);
+                    // TODO: discount
 
-                $this->get('order_product_crud_controller')
-                    ->createEntity($orderProduct);
+                    $this->get('order_product_crud_controller')
+                        ->createEntity($orderProduct);
+
+                    $productSize = $this->get('product_size_crud_controller')
+                        ->readOneEntityBy([
+                            'id' => $selectedProductSize->getId()
+                        ])
+                        ->getResult();
+
+                    $newAvailability = $selectedProductSize->getAvailability() - ($productPlacement->quantities)[$key];
+
+                    $this->get('product_size_crud_controller')
+                        ->updateEntity($productSize, [
+                            'availability' => $newAvailability
+                        ]);
+                }
+            } catch (\Exception $e) {
+                // TODO: do something
             }
 
             $this->addFlash('success', 'Order placed successfully!');

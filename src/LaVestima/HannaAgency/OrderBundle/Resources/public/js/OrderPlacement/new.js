@@ -1,14 +1,22 @@
 var inputField = null;
 
 function validateQuantity() {
-    if (Number(inputField.val()) < 0) {
+    var quantity = Number(inputField.val());
+
+    if (quantity < 0) {
         inputField.val(0);
     }
-    else if (Number(inputField.val()) > 0) {
+    else if (quantity > 0) {
         selectProduct();
     }
-    else if (Number(inputField.val()) === 0) {
+    else if (quantity === 0) {
         unselectProduct();
+    }
+
+    var availability = Number(inputField.closest('tr').find('.product-list-availabilities > label').html());
+
+    if (quantity > availability) {
+        inputField.val(availability);
     }
 }
 
@@ -37,13 +45,12 @@ function setQuantityValue(value) {
 }
 
 $(function() {
-    $('.product-list-quantities input').on('click change keyup', function() {
+    $('.product-list-quantities input').on('click change keydown keyup', function() {
         inputField = $(this);
         validateQuantity();
     });
 
     $('.product-list-names input').on('change', function () {
-        console.log('asdf');
         inputField = $(this);
         validateProductSelection();
     });

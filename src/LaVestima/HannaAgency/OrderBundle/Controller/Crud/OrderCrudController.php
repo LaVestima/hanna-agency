@@ -42,7 +42,7 @@ class OrderCrudController extends CrudController implements OrderCrudControllerI
     {
         $ordersProducts = $this->orderProductCrudController
             ->readEntitiesBy(['idOrders' => $order->getId()])
-            ->getResult();
+            ->getResultAsArray();
 
         $orderStatusName = OrdersStatuses::QUEUED;
         $isOrderCompleted = true;
