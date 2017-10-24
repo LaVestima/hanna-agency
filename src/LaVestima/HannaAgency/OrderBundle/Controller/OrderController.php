@@ -152,7 +152,7 @@ class OrderController extends BaseController
 			    'idOrders' => $order->getId()
             ])
             ->getResult();
-		
+
 		return $this->render('@Order/Order/show.html.twig', [
 			'order' => $order,
 			'ordersProducts' => $ordersProducts,

@@ -4,12 +4,12 @@ namespace LaVestima\HannaAgency\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
-use LaVestima\HannaAgency\ProductBundle\Entity\Products;
+use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 
 /**
  * OrdersProducts
  *
- * @ORM\Table(name="Orders_Products", indexes={@ORM\Index(name="Orders_Products_ID_ORDERS_FK", columns={"ID_ORDERS"}), @ORM\Index(name="Orders_Products_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}), @ORM\Index(name="Orders_Products_ID_STATUSES_FK", columns={"ID_STATUSES"})})
+ * @ORM\Table(name="Orders_Products", indexes={@ORM\Index(name="Orders_Products_ID_ORDERS_FK", columns={"ID_ORDERS"}), @ORM\Index(name="Orders_Products_ID_PRODUCTS_SIZES_FK", columns={"ID_PRODUCTS_SIZES"}), @ORM\Index(name="Orders_Products_ID_STATUSES_FK", columns={"ID_STATUSES"})})
  * @ORM\Entity
  */
 class OrdersProducts implements EntityInterface, \JsonSerializable
@@ -55,14 +55,14 @@ class OrdersProducts implements EntityInterface, \JsonSerializable
     private $idOrders;
 
     /**
-     * @var Products
+     * @var ProductsSizes
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_PRODUCTS_SIZES", referencedColumnName="ID")
      * })
      */
-    private $idProducts;
+    private $idProductsSizes;
 
     /**
      * @var OrdersStatuses
@@ -183,27 +183,27 @@ class OrdersProducts implements EntityInterface, \JsonSerializable
     }
 
     /**
-     * Set idProducts
+     * Set idProductsSizes
      *
-     * @param Products $idProducts
+     * @param ProductsSizes $idProductsSizes
      *
      * @return OrdersProducts
      */
-    public function setIdProducts(Products $idProducts = null)
+    public function setIdProductsSizes(ProductsSizes $idProductsSizes = null)
     {
-        $this->idProducts = $idProducts;
+        $this->idProductsSizes = $idProductsSizes;
 
         return $this;
     }
 
     /**
-     * Get idProducts
+     * Get idProductsSizes
      *
-     * @return Products
+     * @return ProductsSizes
      */
-    public function getIdProducts()
+    public function getIdProductsSizes()
     {
-        return $this->idProducts;
+        return $this->idProductsSizes;
     }
 
     /**
@@ -236,7 +236,7 @@ class OrdersProducts implements EntityInterface, \JsonSerializable
     public function jsonSerialize() // TODO: finish !!!
     {
         $json = [];
-        $json['name'] = $this->idProducts->getName();
+        $json['name'] = $this->idProductsSizes->getName();
         $json['quantity'] = $this->quantity;
         $json['status'] = $this->idStatuses->getName();
 

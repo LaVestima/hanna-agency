@@ -4,11 +4,12 @@ namespace LaVestima\HannaAgency\InvoiceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
+use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 
 /**
  * InvoicesProducts
  *
- * @ORM\Table(name="Invoices_Products", indexes={@ORM\Index(name="Invoices_Products_ID_INVOICES_FK", columns={"ID_INVOICES"}), @ORM\Index(name="Invoices_Products_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"})})
+ * @ORM\Table(name="Invoices_Products", indexes={@ORM\Index(name="Invoices_Products_ID_INVOICES_FK", columns={"ID_INVOICES"}), @ORM\Index(name="Invoices_Products_ID_PRODUCTS_SIZES_FK", columns={"ID_PRODUCTS_SIZES"})})
  * @ORM\Entity
  */
 class InvoicesProducts
@@ -61,14 +62,14 @@ class InvoicesProducts
     private $idInvoices;
 
     /**
-     * @var Products
+     * @var ProductsSizes
      *
-     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\Products")
+     * @ORM\ManyToOne(targetEntity="LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_PRODUCTS_SIZES", referencedColumnName="ID")
      * })
      */
-    private $idProducts;
+    private $idProductsSizes;
 
 
 
@@ -203,26 +204,26 @@ class InvoicesProducts
     }
 
     /**
-     * Set idProducts
+     * Set idProductsSizes
      *
-     * @param Products $idProducts
+     * @param ProductsSizes $idProductsSizes
      *
      * @return InvoicesProducts
      */
-    public function setIdProducts(Products $idProducts = null)
+    public function setIdProductsSizes(ProductsSizes $idProductsSizes = null)
     {
-        $this->idProducts = $idProducts;
+        $this->idProductsSizes = $idProductsSizes;
 
         return $this;
     }
 
     /**
-     * Get idProducts
+     * Get idProductsSizes
      *
-     * @return Products
+     * @return ProductsSizes
      */
-    public function getIdProducts()
+    public function getIdProductsSizes()
     {
-        return $this->idProducts;
+        return $this->idProductsSizes;
     }
 }
