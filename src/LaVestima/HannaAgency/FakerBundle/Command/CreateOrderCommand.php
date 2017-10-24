@@ -6,6 +6,7 @@ use Faker\Factory;
 use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
+use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -81,15 +82,15 @@ class CreateOrderCommand extends ContainerAwareCommand
         $orderProduct = new OrdersProducts();
 
         do {
-            $randomProduct = $this->getContainer()->get('product_crud_controller')
+            $randomProductSize = $this->getContainer()->get('product_size_crud_controller')
                 ->readRandomEntities(1)->getResult();
-        } while (!$this->isProductUniqueForOrder($randomProduct, $order));
+        } while (!$this->isProductUniqueForOrder($randomProductSize, $order));
 
         $randomStatus = $this->getContainer()->get('order_status_crud_controller')
             ->readRandomEntities(1)->getResult();
 
         $orderProduct->setIdOrders($order);
-        $orderProduct->setIdProducts($randomProduct);
+        $orderProduct->setIdProductsSizes($randomProductSize);
         $orderProduct->setIdStatuses($randomStatus);
         $orderProduct->setQuantity($this->faker->numberBetween(1, 200));
         $orderProduct->setDiscount($this->faker->numberBetween(0, 100));
@@ -100,11 +101,11 @@ class CreateOrderCommand extends ContainerAwareCommand
         return $orderProduct;
     }
 
-    private function isProductUniqueForOrder(Products $product, Orders $order)
+    private function isProductUniqueForOrder(ProductsSizes $productSize, Orders $order)
     {
         $orderProduct = $this->getContainer()->get('order_product_crud_controller')
             ->readOneEntityBy([
-                'idProducts' => $product->getId(),
+                'idProductsSizes' => $productSize->getId(),
                 'idOrders' => $order->getId(),
             ])->getResult();
 
