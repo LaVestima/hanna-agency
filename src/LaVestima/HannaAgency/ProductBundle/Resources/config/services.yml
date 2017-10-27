@@ -4,6 +4,8 @@ services:
 
     LaVestima\HannaAgency\ProductBundle\Controller\ProductController:
 
+    LaVestima\HannaAgency\ProductBundle\Controller\Async\ProductAsyncController:
+
     product_crud_controller:
         class: LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudController
 

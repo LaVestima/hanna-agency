@@ -4,23 +4,66 @@
 
 {% block entityList %}
     <table class="entity-list">
+        <col>
+        <col width="150px">
+        <col width="200px">
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Category', 'c.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Producer', 'pr.shortName') }}</th>
         </tr>
-
-        {% for product in pagination %}
-            <tr class="entity-list-row">
-                <td>{{ product.name }}</td>
-                <td>{{ product.idCategories.name }}</td>
-                <td>{{ product.idProducers.shortName }}</td>
-                <td>
-                    <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'p.name')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.name')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block stylesheets %}
+{% stylesheets filter='scssphp' output='css/app.css'
+'@ProductBundle/Resources/public/Product/list.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+{# TODO: move to separate file #}
+<script>
+    $(function () {
+        filters = [];
+
+        $('.entity-list-content').html('<tr><td>Loading...</td></tr>');
+
+        filterSearch();
+    });
+
+    function filterSearch(filter, column) {
+        if (filter !== undefined && column !== undefined) {
+            filterIndex = $(filter).closest('td').index();
+            filterInputs = $(filter).closest('tr').find('td input');
+            filterValue = $(filterInputs[filterIndex]).val();
+
+            filters[filterIndex] = {
+                value: filterValue,
+                column: column
+            };
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{{ path('product_async_list') }}",
+            data: {
+                filters: filters
+            }
+        }).done(function(data) {
+            $('.entity-list-content').html(data);
+        });
+    }
+</script>
 {% endblock %}

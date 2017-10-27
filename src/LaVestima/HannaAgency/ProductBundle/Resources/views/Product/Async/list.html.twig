@@ -1,0 +1,20 @@
+{% if pagination | length <= 0 %}
+<tr>
+    <td>No Products</td>
+    <td></td>
+    <td></td>
+</tr>
+{% else %}
+    {% for product in pagination %}
+        <tr class="entity-list-row">
+            <td class="product-list-name">{{ product.name }}</td>
+            <td>{{ product.idCategories.name }}</td>
+            <td>{{ product.idProducers.shortName }}</td>
+            <td>
+                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}
