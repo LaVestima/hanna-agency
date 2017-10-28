@@ -6,8 +6,10 @@ $main-theme-color: #178900;
 $main-theme-color: #DD6600;
 $main-theme-color-light: $main-theme-color + 1*$shade-multiplier;
 $main-theme-color-lighter: $main-theme-color + 2*$shade-multiplier;
+$main-theme-color-lighterer: $main-theme-color + 3*$shade-multiplier;
 $main-theme-color-dark: $main-theme-color - 1*$shade-multiplier;
 $main-theme-color-darker: $main-theme-color - 2*$shade-multiplier;
+$main-theme-color-darkerer: $main-theme-color - 3*$shade-multiplier;
 $main-theme-color-hover: $main-theme-color - 2*$shade-multiplier;
 
 $main-theme-color-inactive: #CCC + $main-theme-color - 2*$shade-multiplier;
