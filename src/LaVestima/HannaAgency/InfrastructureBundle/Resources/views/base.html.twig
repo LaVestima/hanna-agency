@@ -1,30 +1,31 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>
+    <title>{% spaceless %}
         {% if block('title') is defined %}
             {{ block('title') }}
         {% else %}
             Hanna Agency
         {% endif %}
-    </title>
+    {% endspaceless %}</title>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-    {# TODO: change favicon #}
+{# TODO: change favicon #}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
+    {% stylesheets filter='scssphp' output='css/app.css'
+    '@InfrastructureBundle/Resources/public/css/base.scss'
+    '@InfrastructureBundle/Resources/public/css/main_menu.scss'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% if block('stylesheets') is defined %}{{ block('stylesheets') }}{% endif %}
 </head>
+{# ----------------------- BODY ----------------------- #}
 <body>
-    {% if app.debug %}
-        <div style="position: fixed; bottom: 35px;">
-            {{ dump() }}
-            {{ dump(app.session.get('configuration')) }}
-        </div>
-    {% endif %}
-
     <div class="main-menu">
         {% include '@Infrastructure/Parts/main_menu.html.twig' %}
     </div>
@@ -94,35 +95,28 @@
     </div>
 
     <div class="body-overlay"></div>
-</body>
 
+    {% if app.debug %}
+        <div style="position: fixed; bottom: 35px;">
+            {{ dump() }}
+            {{ dump(app.session.get('configuration')) }}
+        </div>
+    {% endif %}
+</body>
+{# ----------------------- JS ----------------------- #}
+{% if block('actionBar') is not defined or block('actionBar') is null %}
 {% stylesheets filter='scssphp' output='css/app.css'
-    '@InfrastructureBundle/Resources/public/css/base.scss'
-    '@InfrastructureBundle/Resources/public/css/main_menu.scss'
+'@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
 <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
-
-{% if block('stylesheets') is defined %}
-    {{ block('stylesheets') }}
-{% endif %}
-
-{% if block('actionBar') is not defined or block('actionBar') is null %}
-    <style>
-        .page-content {
-            margin: 82px auto 0 auto;
-        }
-    </style>
 {% endif %}
 
 {% javascripts
-    '@InfrastructureBundle/Resources/public/js/base.js'
+'@InfrastructureBundle/Resources/public/js/base.js'
+'@InfrastructureBundle/Resources/public/js/filters.js'
 %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
-
-{% if block('javascripts') is defined %}
-    {{ block('javascripts') }}
-{% endif %}
-
+{% if block('javascripts') is defined %}{{ block('javascripts') }}{% endif %}
 </html>
