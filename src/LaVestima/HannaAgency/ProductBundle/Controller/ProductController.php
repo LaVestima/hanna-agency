@@ -4,6 +4,7 @@ namespace LaVestima\HannaAgency\ProductBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
+use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudControllerInterface;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 use LaVestima\HannaAgency\ProductBundle\Form\ProductType;
@@ -12,13 +13,20 @@ use Symfony\Component\HttpFoundation\Request;
 class ProductController extends BaseController
 {
     private $productCrudController;
+    private $productSizeCrudController;
 
-    // TODO: DI
-
+    /**
+     * ProductController constructor.
+     *
+     * @param ProductCrudControllerInterface $productCrudController
+     * @param ProductSizeCrudControllerInterface $productSizeCrudController
+     */
     public function __construct(
-        ProductCrudControllerInterface $productCrudController
+        ProductCrudControllerInterface $productCrudController,
+        ProductSizeCrudControllerInterface $productSizeCrudController
     ) {
         $this->productCrudController = $productCrudController;
+        $this->productSizeCrudController = $productSizeCrudController;
     }
 
     /**
@@ -35,7 +43,8 @@ class ProductController extends BaseController
             ->join('idCategories', 'c')
             ->join('idProducers', 'pr')
             ->orderBy('name')
-            ->getQuery());
+            ->getQuery()
+        );
         $this->setView('@Product/Product/list.html.twig');
         $this->setActionBar([
             [
@@ -86,11 +95,11 @@ class ProductController extends BaseController
      */
 	public function showAction($pathSlug)
     {
-		$product = $this->get('product_crud_controller')
+		$product = $this->productCrudController
 			->readOneEntityBy(['pathSlug' => $pathSlug])
             ->getResult();
 
-		$productSizes = $this->get('product_size_crud_controller')
+		$productSizes = $this->productSizeCrudController
             ->readEntitiesBy(['idProducts' => $product->getId()])
             ->getResult();
 
@@ -104,6 +113,12 @@ class ProductController extends BaseController
 		]);
 	}
 
+    /**
+     * Product New Action.
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
 	public function newAction(Request $request)
     {
         $product = new Products();
@@ -119,9 +134,8 @@ class ProductController extends BaseController
 
             // TODO: delete
             $product->setQRCodePath('-n--' . random_int(0, 1000000));
-            // ENDTODO
 
-            $product = $this->get('product_crud_controller')
+            $product = $this->productCrudController
                 ->createEntity($product);
 
             $productSize = new ProductsSizes(
@@ -130,9 +144,7 @@ class ProductController extends BaseController
                 $form->get('availability')->getData()
             );
 
-//            var_dump($productSize);die;
-
-            $this->get('product_size_crud_controller')
+            $this->productSizeCrudController
                 ->createEntity($productSize);
 
             $this->addFlash('success', 'Product added!');

@@ -52,7 +52,7 @@ function tableSearch(input) {
     for (i = filterTr.index() + 1; i < trs.length; i++) {
         tr = $(trs[i]);
         td = $(tr.find('td')[columnIndex]);
-        tdText = td.find('label').html();
+        tdText = td.text();
 
         if (tdText) {
             if (tdText.toUpperCase().indexOf(filter) > -1) {

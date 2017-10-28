@@ -4,13 +4,17 @@
 
 {% block entityList %}
     <table class="entity-list">
-        <col>
-        <col width="150px">
-        <col width="200px">
-        <tr>
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Category', 'c.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Producer', 'pr.shortName') }}</th>
+            <th></th>
         </tr>
         <tr class="entity-list-filters">
             <td>
@@ -18,6 +22,9 @@
             </td>
             <td>
                 <input type="text" onkeyup="filterSearch(this, 'c.name')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'pr.shortName')" placeholder="Search..." title="Search">
             </td>
         </tr>
         <tbody class="entity-list-content"></tbody>
