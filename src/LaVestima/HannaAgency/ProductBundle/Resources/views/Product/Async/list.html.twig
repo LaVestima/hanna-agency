@@ -1,8 +1,6 @@
 {% if pagination | length <= 0 %}
 <tr>
-    <td>No Products</td>
-    <td></td>
-    <td></td>
+    <td colspan="4">No Products</td>
 </tr>
 {% else %}
     {% for product in pagination %}
@@ -18,3 +16,11 @@
         </tr>
     {% endfor %}
 {% endif %}
+
+<tr>
+    <td colspan="4">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </td>
+</tr>

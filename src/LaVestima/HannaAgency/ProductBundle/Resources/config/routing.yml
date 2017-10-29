@@ -17,3 +17,5 @@ product_new:
 product_async_list:
     path: /product/async/list
     defaults: { _controller: ProductBundle:Async\ProductAsync:list }
+    options:
+        expose: true
