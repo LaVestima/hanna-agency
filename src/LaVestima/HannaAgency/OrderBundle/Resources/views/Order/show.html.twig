@@ -4,7 +4,7 @@
 {% set pdfExportPath = path('export_pdf_order') %}
 {% set pdfExportPathSlug = order.pathSlug %}
 
-{% block title %}Order{% endblock %}
+{% block title 'Order' %}
 
 {% block actionBar %}
     <a href="{{ path('order_list') }}">
@@ -42,7 +42,9 @@
                 <tr>
                     <td>Customer</td>
                     <td>
+                        {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('customer_show', {'pathSlug': order.idCustomers.pathSlug}) }}">
+                        {% endif %}
                             {{ order.idCustomers.fullName }}
                         </a>
                     </td>
@@ -58,6 +60,7 @@
             <table class="entity-list orders-products-list">
                 <tr>
                     <th>Name</th>
+                    <th>Size</th>
                     <th>Quantity</th>
                     <th>Discount</th>
                     <th>Status</th>
@@ -65,10 +68,11 @@
                 {% for ordersProduct in ordersProducts %}
                     <tr class="entity-list-row">
                         <td>
-                            <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProducts.pathSlug}) }}">
-                                {{ ordersProduct.idProducts.name }}
+                            <a href="{{ path('product_show', {'pathSlug': ordersProduct.idProductsSizes.idProducts.pathSlug}) }}">
+                                {{ ordersProduct.idProductsSizes.idProducts.name }}
                             </a>
                         </td>
+                        <td>{{ ordersProduct.idProductsSizes.idSizes.name }}</td>
                         <td>{{ ordersProduct.quantity }}</td>
                         <td>{{ ordersProduct.discount }}</td>
                         <td>{{ ordersProduct.idStatuses.name }}</td>

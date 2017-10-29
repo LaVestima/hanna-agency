@@ -10,6 +10,8 @@ trait ListActionControllerTrait
     protected $request;
     protected $query;
 
+    protected $pagination;
+
     /**
      * List Action.
      *
@@ -19,6 +21,18 @@ trait ListActionControllerTrait
      */
     public function listAction(Request $request)
     {
+        $this->request = $request;
+
+        $this->configure();
+
+        return $this->render($this->view, [
+            'pagination' => $this->pagination,
+            'actionBar' => $this->actionBar,
+        ]);
+    }
+
+    private function configure()
+    {
         if (!isset($this->query)) {
             throw new \Exception('No query defined!');
         }
@@ -26,14 +40,7 @@ trait ListActionControllerTrait
             throw new \Exception('No view defined!');
         }
 
-        $this->request = $request;
-
-        $pagination = $this->paginate();
-
-        return $this->render($this->view, [
-            'pagination' => $pagination,
-            'actionBar' => $this->actionBar,
-        ]);
+        $this->pagination = $this->paginate();
     }
 
     /**

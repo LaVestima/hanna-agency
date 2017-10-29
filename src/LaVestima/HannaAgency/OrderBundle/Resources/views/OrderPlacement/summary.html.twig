@@ -1,6 +1,6 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% block title %}Order summary{% endblock %}
+{% block title 'Order summary' %}
 
 {% block content %}
     Customer:
@@ -14,7 +14,7 @@
                 <th>Name</th>
                 <th>Size</th>
             </tr>
-            {% for key, productSize in productPlacement.productsSizes %}
+            {% for key, productSize in productPlacement.productsSizes if productSize %}
                 <tr>
                     <td>
                         {{ productPlacement.quantities[key] }}x

@@ -8,28 +8,28 @@
                 &nbsp;&lt;
             </div>
         {% elseif first is defined and current != first %}
-            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+            <ua href="{{ path(route, query|merge({(pageParameterName): first})) }}">
                 <div class="button first">
                     &lt;&lt;
                 </div>
-            </a>
+            </ua>
         {% endif %}
 
         {% if previous is defined %}
-            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+            <ua href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
                 <div class="button previous">
                     &nbsp;&lt;
                 </div>
-            </a>
+            </ua>
         {% endif %}
 
         {% for page in pagesInRange %}
             {% if page != current %}
-                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">
+                <ua href="{{ path(route, query|merge({(pageParameterName): page})) }}">
                     <div class="button page">
                         {{ page }}
                     </div>
-                </a>
+                </ua>
             {% else %}
                 <div class="button active current">
                     {{ page }}
@@ -38,11 +38,11 @@
         {% endfor %}
 
         {% if next is defined %}
-            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+            <ua href="{{ path(route, query|merge({(pageParameterName): next})) }}">
                 <div class="button next">
                     &gt;
                 </div>
-            </a>
+            </ua>
         {% endif %}
 
         {% if last is defined and current == last %}
@@ -53,15 +53,26 @@
                 &gt;&gt;
             </div>
         {% elseif last is defined and current != last %}
-            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+            <ua href="{{ path(route, query|merge({(pageParameterName): last})) }}">
                 <div class="button last">
                     &gt;&gt;
                 </div>
-            </a>
+            </ua>
         {% endif %}
         <br>
         <div class="pagination-footer">
             {{ firstItemNumber }} - {{ lastItemNumber }} / {{ totalCount }}
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $('.pagination .button').on('click', function () {
+                link = $(this).closest('ua').attr('href');
+                if (link) {
+                    filterSearch(undefined, undefined, link);
+                }
+            });
+        });
+    </script>
 {% endif %}

@@ -36,15 +36,6 @@ class Roles
     private $code = 'ROLE_GUEST';
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="Is_Admin", type="boolean", nullable=false)
-     */
-    private $isAdmin = '0';
-
-
-
-    /**
      * Get id
      *
      * @return integer
@@ -100,29 +91,5 @@ class Roles
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * Set isAdmin
-     *
-     * @param boolean $isAdmin
-     *
-     * @return Roles
-     */
-    public function setIsAdmin($isAdmin)
-    {
-        $this->isAdmin = $isAdmin;
-
-        return $this;
-    }
-
-    /**
-     * Get isAdmin
-     *
-     * @return boolean
-     */
-    public function getIsAdmin()
-    {
-        return $this->isAdmin;
     }
 }

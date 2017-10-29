@@ -37,19 +37,21 @@ class CustomerController extends BaseController
      */
     public function listAction(Request $request)
     {
+
         $this->customerCrudController->setAlias('c')
             ->readAllUndeletedEntities()
             ->join('idUsers', 'u');
 
-        $pagination = $this->get('knp_paginator')->paginate(
-            $this->customerCrudController->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        return $this->render('@Customer/Customer/list.html.twig', [
-            'pagination' => $pagination
+        $this->setQuery($this->customerCrudController->getQuery());
+        $this->setView('@Customer/Customer/list.html.twig');
+        $this->setActionBar([
+            [
+                'label' => 'New Customer',
+                'path' => 'customer_new'
+            ]
         ]);
+
+        return parent::listAction($request);
     }
 
     /**
@@ -117,7 +119,7 @@ class CustomerController extends BaseController
             $customer = $form->getData();
 
             try {
-                $this->get('customer_crud_controller')
+                $this->customerCrudController
                     ->createEntity($customer);
             } catch (UniqueConstraintViolationException $e) {
                 $this->addFlash('error', 'Customer with this data already exists!');

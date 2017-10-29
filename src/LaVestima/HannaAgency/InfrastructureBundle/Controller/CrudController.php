@@ -126,6 +126,8 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             ->from($this->entityClass, $this->alias);
 
         foreach ($keyValueArray as $key => $condition) {
+            // TODO: split into several methods
+
             if (count($parts = explode('.', $key)) > 1) {
                 if (count($parts) > 2) {
                     throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
@@ -136,6 +138,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
                 $tableFieldName = $this->alias . '.' . $key;
             }
 
+            // if operator is included in condition
             if (is_array($condition)) {
                 if (count($condition) === 2) {
                     $operator = $condition[1];
@@ -159,6 +162,10 @@ abstract class CrudController extends BaseController implements CrudControllerIn
                         ->setParameter($parameterName, '' . $value->format('Y-m-d H:i:s'));
                 }
             } else {
+                if (strtoupper($operator) === 'LIKE') {
+                    $value = '%' . $value . '%';
+                }
+
                 $this->query->andWhere($tableFieldName . ' ' . $operator . ' :' . $parameterName)
                     ->setParameter($parameterName, '' . $value);
             }
@@ -442,6 +449,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function getQuery()
     {
+//        var_dump($this->query->getQuery()->getDQL());
         return $this->query->getQuery();
     }
 
@@ -452,12 +460,21 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function getResult()
     {
-//        var_dump($this->getQuery());die;
-        $result = $this->getQuery()->getResult();
+        $result = $this->getResultAsArray();
 
         return count($result) === 1 ? $result[0] :
             (count($result) === 0 ? null :
             $result);
+    }
+
+    /**
+     * Get the result of SQL Query always as array.
+     *
+     * @return array
+     */
+    public function getResultAsArray()
+    {
+        return $this->getQuery()->getResult();
     }
 
     /**

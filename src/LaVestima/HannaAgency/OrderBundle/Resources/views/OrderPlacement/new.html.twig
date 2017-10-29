@@ -6,17 +6,34 @@
     {{ form_start(form) }}
         <div class="place-order-customer">
             {% if form.customers is defined and form.customers is not null  %}
-                {{ form_label(form.customers) }}<br>
+                {{ form_label(form.customers) }}
                 {{ form_widget(form.customers) }}
             {% endif %}
         </div>
         <div class="place-order-form">
             <table>
+                <col width="30px">
+                <col>
+                <col width="100px">
+                <col width="100px">
+                <col width="100px">
                 <tr>
                     <th></th>
-                    <th>Name</th>
-                    <th>Size</th>
+                    <th id="header-name">Name</th>
+                    <th id="header-size">Size</th>
                     <th>Quantity</th>
+                    <th>Availability</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="text" id="nameSearch" onkeyup="tableSearch(this)" placeholder="Search..." title="Search">
+                    </td>
+                    <td>
+                        <input type="text" id="sizeSearch" onkeyup="tableSearch(this)" placeholder="Search..." title="Search">
+                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 {% for key, productSize in form.productsSizes %}
                 <tr>
@@ -26,24 +43,28 @@
                     <td>
                         {{ form_label(form.productsSizes[key]) }}
                     </td>
-                    <td>
+                    <td class="cell-size">
                         {{ form_label(form.sizes[key]) }}
                         <div class="hidden">
                             {{ form_widget(form.sizes[key]) }}
                         </div>
                     </td>
-                    <td class="product-list-quantities">
+                    <td class="cell-quantity product-list-quantities">
                         {{ form_widget(form.quantities[key]) }}
+                    </td>
+                    <td class="product-list-availabilities">
+                        / {{ form_label(form.availabilities[key]) }}
+                        <div class="hidden">
+                            {{ form_widget(form.availabilities[key]) }}
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ form_widget(form.save) }}</td>
-                </tr>
             </table>
+            <br>
+        </div>
+        <div class="place-order-save">
+            {{ form_widget(form.save) }}
         </div>
     {{ form_end(form) }}
 {% endblock %}

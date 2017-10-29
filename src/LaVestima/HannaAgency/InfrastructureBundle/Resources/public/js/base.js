@@ -40,3 +40,26 @@ function showConfirmationBox(message, yesPath) {
     $('.confirmation-box > .confirmation-message').html(message);
     $('.confirmation-box > .yes-button-anchor').attr('href', yesPath);
 }
+
+function tableSearch(input) {
+    var filter, table, tr, td, i;
+
+    columnIndex = $(input).closest('td').index();
+    filter = input.value.toUpperCase();
+    filterTr = $(input).closest('tr');
+    trs = $(input).closest('table').find('tr');
+
+    for (i = filterTr.index() + 1; i < trs.length; i++) {
+        tr = $(trs[i]);
+        td = $(tr.find('td')[columnIndex]);
+        tdText = td.text();
+
+        if (tdText) {
+            if (tdText.toUpperCase().indexOf(filter) > -1) {
+                tr.fadeIn('fast');
+            } else {
+                tr.fadeOut('fast');
+            }
+        }
+    }
+}

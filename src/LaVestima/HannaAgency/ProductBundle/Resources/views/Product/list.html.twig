@@ -4,23 +4,50 @@
 
 {% block entityList %}
     <table class="entity-list">
-        <tr>
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Category', 'c.name') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Producer', 'pr.shortName') }}</th>
+            <th></th>
         </tr>
-
-        {% for product in pagination %}
-            <tr class="entity-list-row">
-                <td>{{ product.name }}</td>
-                <td>{{ product.idCategories.name }}</td>
-                <td>{{ product.idProducers.shortName }}</td>
-                <td>
-                    <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'p.name', '{{ path('product_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.name', '{{ path('product_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'pr.shortName', '{{ path('product_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block stylesheets %}
+{% stylesheets filter='scssphp' output='css/app.css'
+'@ProductBundle/Resources/public/Product/list.scss'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+{% javascripts
+'@InfrastructureBundle/Resources/public/js/filters.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script>
+    $(function () {
+        filterSearch(undefined, undefined, '{{ path('product_async_list') }}');
+    });
+</script>
 {% endblock %}

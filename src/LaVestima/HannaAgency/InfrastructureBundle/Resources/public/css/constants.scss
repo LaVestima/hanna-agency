@@ -1,10 +1,17 @@
-$main-theme-color: #663399;
-$main-theme-color-light: $main-theme-color + 50;
-$main-theme-color-lighter: $main-theme-color + 100;
-$main-theme-color-dark: $main-theme-color - 50;
-$main-theme-color-darker: $main-theme-color - 100;
-$main-theme-color-hover: $main-theme-color - 50;
+$shade-multiplier: 25;
 
-$main-theme-color-inactive: #8A7B9A;
+$main-theme-color: #663399;
+$main-theme-color: #00aa00;
+$main-theme-color: #178900;
+$main-theme-color: #DD6600;
+$main-theme-color-light: $main-theme-color + 1*$shade-multiplier;
+$main-theme-color-lighter: $main-theme-color + 2*$shade-multiplier;
+$main-theme-color-lighterer: $main-theme-color + 3*$shade-multiplier;
+$main-theme-color-dark: $main-theme-color - 1*$shade-multiplier;
+$main-theme-color-darker: $main-theme-color - 2*$shade-multiplier;
+$main-theme-color-darkerer: $main-theme-color - 3*$shade-multiplier;
+$main-theme-color-hover: $main-theme-color - 2*$shade-multiplier;
+
+$main-theme-color-inactive: #CCC + $main-theme-color - 2*$shade-multiplier;
 
 $main-font-color: #ffffff;
