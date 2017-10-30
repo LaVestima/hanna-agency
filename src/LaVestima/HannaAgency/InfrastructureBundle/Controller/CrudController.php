@@ -128,7 +128,9 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         foreach ($keyValueArray as $key => $condition) {
             // TODO: split into several methods
 
-            if (count($parts = explode('.', $key)) > 1) {
+            if (strpos($key, 'CONCAT') !== false) {
+                $tableFieldName = $key;
+            } elseif (count($parts = explode('.', $key)) > 1) {
                 if (count($parts) > 2) {
                     throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
                 }
@@ -151,7 +153,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
                 $value = $condition;
             }
 
-            $parameterName = 'param_' . str_replace('.', '', $key);
+            $parameterName = 'param_' . str_replace(['.', '(', ')', ',', '\'', ' '], '', $key);
 
             if ($value instanceof \DateTime) {
                 if ($operator === '>') {

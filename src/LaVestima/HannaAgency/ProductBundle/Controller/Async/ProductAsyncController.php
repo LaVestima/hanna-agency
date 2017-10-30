@@ -38,15 +38,10 @@ class ProductAsyncController extends BaseController
             $this->productCrudController
                 ->readAllUndeletedEntities();
         } else {
-            $columnValueFilter = [];
-            foreach ($filters as $key => $filter) {
-                if (isset($filters[$key]['value'])) {
-                    $columnValueFilter[$filters[$key]['column']] = [$filters[$key]['value'], 'LIKE'];
-                }
-            }
-
             $this->productCrudController
-                ->readEntitiesBy($columnValueFilter);
+                ->readEntitiesBy(
+                    $this->convertFiltersToCrudCondition($filters)
+                );
         }
 
         $this->setQuery($this->productCrudController

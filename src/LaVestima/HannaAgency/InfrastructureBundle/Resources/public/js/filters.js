@@ -24,5 +24,6 @@ function filterSearch(filter, column, path) {
 
 $(function () {
     filters = [];
+
     $('.entity-list-content').html('<tr><td>Loading...</td></tr>');
 });

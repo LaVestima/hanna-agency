@@ -29,3 +29,9 @@ order_placement_new:
 order_placement_summary:
     path: /order_placement/summary
     defaults: { _controller: OrderBundle:OrderPlacement:summary }
+
+order_async_list:
+    path: /order/async/list
+    defaults: { _controller: OrderBundle:Async\OrderAsync:list }
+    options:
+        expose: true

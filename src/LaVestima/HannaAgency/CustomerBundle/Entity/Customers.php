@@ -4,7 +4,6 @@ namespace LaVestima\HannaAgency\CustomerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
-use LaVestima\HannaAgency\LocationBundle\Entity\Addresses;
 use LaVestima\HannaAgency\LocationBundle\Entity\Cities;
 use LaVestima\HannaAgency\LocationBundle\Entity\Countries;
 use LaVestima\HannaAgency\MoneyBundle\Entity\Currencies;
@@ -701,7 +700,12 @@ class Customers implements EntityInterface, \JsonSerializable
     {
         return $this->idUsers;
     }
-    
+
+    /**
+     * Get fullName
+     *
+     * @return string
+     */
     public function getFullName() {
         return $this->firstName . ' ' . $this->lastName;
     }

@@ -40,11 +40,6 @@
 {% endblock %}
 
 {% block javascripts %}
-{% javascripts
-'@InfrastructureBundle/Resources/public/js/filters.js'
-%}
-<script src="{{ asset_url }}"></script>
-{% endjavascripts %}
 <script>
     $(function () {
         filterSearch(undefined, undefined, '{{ path('product_async_list') }}');

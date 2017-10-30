@@ -69,11 +69,6 @@ class OrderController extends BaseController
                 'label' => 'Deleted Orders',
                 'path' => 'order_deleted_list'
             ],
-//            [
-//                'label' => 'New Order',
-//                'path' => 'order_new',
-//                'role' => 'ROLE_ADMIN'
-//            ]
         ]);
 
         return parent::listAction($request);

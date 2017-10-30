@@ -1,12 +1,6 @@
 {% extends '@Infrastructure/baseList.html.twig' %}
 
-{#'order_list': 'Back'#}
-
 {% block title 'Order List'%}
-
-{% set paginationColumns = [
-    ['Date Created', 'o.dateCreated']
-] %}
 
 {#{% set isExportAllowed = true %}#}
 {#{% set pdfExportPath = path('export_pdf_order_list') %}#}
@@ -26,38 +20,45 @@
 {#{% endblock %}#}
 
 {% block entityList %}
-
     {# TODO: maybe #}
     {#{{ render(controller(#}
         {#'ExportBundle:PDFExport:orderList',#}
         {#{'pathSlugsJson': '{"aa":3}'}#}
     {#)) }}#}
 
-    <table class="entity-list order-list">
-        <tr>
+    <table class="entity-list">
+        <tr class="entity-list-header">
             <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
             {% if is_granted('ROLE_ADMIN') %}
                 <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
                 <th>User Created</th>
             {% endif %}
+            <th></th>
         </tr>
-
-        {% for order in pagination %}
-            <tr class="entity-list-row">
-                <td>{{ order.dateCreated | date('d.m.Y') }}</td>
-                {#<td>{{ order.status.name }}</td>#}
-                <td></td>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <td>{{ order.idCustomers.fullName }}</td>
-                    <td>{{ order.userCreated.login }}</td>
-                {% endif %}
-                <td>
-                    <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'o.dateCreated', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                {# TODO: make it work #}
+                <input type="text" onkeyup="filterSearch(this, 'o.status', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('order_async_list') }}');
+        });
+    </script>
 {% endblock %}

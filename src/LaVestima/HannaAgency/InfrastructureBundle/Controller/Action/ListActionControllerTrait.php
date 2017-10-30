@@ -31,6 +31,11 @@ trait ListActionControllerTrait
         ]);
     }
 
+    /**
+     * Initial configuration.
+     *
+     * @throws \Exception
+     */
     private function configure()
     {
         if (!isset($this->query)) {
@@ -41,6 +46,12 @@ trait ListActionControllerTrait
         }
 
         $this->pagination = $this->paginate();
+
+        if (strpos($this->pagination->getRoute(), 'async_list') === false) {
+            $this->pagination->setUsedRoute(
+                str_replace('list', 'async_list', $this->pagination->getRoute())
+            );
+        }
     }
 
     /**
@@ -68,5 +79,18 @@ trait ListActionControllerTrait
         $this->query = $query;
 
         return $this;
+    }
+
+    protected function convertFiltersToCrudCondition($filters)
+    {
+        $columnValueFilter = [];
+
+        foreach ($filters as $key => $filter) {
+            if (isset($filters[$key]['value'])) {
+                $columnValueFilter[$filters[$key]['column']] = [$filters[$key]['value'], 'LIKE'];
+            }
+        }
+
+        return $columnValueFilter;
     }
 }
