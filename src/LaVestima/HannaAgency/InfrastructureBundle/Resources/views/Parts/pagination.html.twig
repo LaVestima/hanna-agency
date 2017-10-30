@@ -5,7 +5,7 @@
                 &lt;&lt;
             </div>
             <div class="button previous inactive">
-                &nbsp;&lt;
+                &lt;
             </div>
         {% elseif first is defined and current != first %}
             <ua href="{{ path(route, query|merge({(pageParameterName): first})) }}">
@@ -18,7 +18,7 @@
         {% if previous is defined %}
             <ua href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
                 <div class="button previous">
-                    &nbsp;&lt;
+                    &lt;
                 </div>
             </ua>
         {% endif %}
@@ -72,7 +72,20 @@
                 if (link) {
                     filterSearch(undefined, undefined, link);
                 }
+                link = undefined;
             });
         });
     </script>
 {% endif %}
+
+<script>
+    $(function () {
+        $('.entity-list-header .sortable').on('click', function () {
+            link = $(this).attr('href');
+            if (link) {
+                filterSearch(undefined, undefined, link);
+            }
+            link = undefined;
+        });
+    });
+</script>

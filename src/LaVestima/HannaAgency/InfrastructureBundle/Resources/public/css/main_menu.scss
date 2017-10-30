@@ -13,6 +13,8 @@ $left-menu-item-height: 40px;
 
     a {
         color: #ffffff;
+        font-style: normal;
+
         &:hover {
             color: #ffffff;
         }
@@ -30,6 +32,7 @@ $left-menu-item-height: 40px;
         i {
             width: 30%;
         }
+
         span {
             width: 70%;
         }
@@ -50,11 +53,14 @@ $left-menu-item-height: 40px;
 
     .left-menu-subheader {
         width: 100%;
+        color: $main-font-color-inverted;
         line-height: $left-menu-item-height;
         background: #555555;
         cursor: default;
+
         &:hover {
             background: #555555;
+            color: $main-font-color-inverted;
         }
     }
 
@@ -80,7 +86,7 @@ $left-menu-item-height: 40px;
     position: fixed;
     top: 5px;
     left: 0;
-    color: $main-font-color;
+    color: $main-font-color-inverted;
     font-weight: bold;
     cursor: pointer;
     z-index: 100;
@@ -94,7 +100,7 @@ $left-menu-item-height: 40px;
     }
 
     span {
-        width: 50px;
+        width: 55px;
     }
 
     i {

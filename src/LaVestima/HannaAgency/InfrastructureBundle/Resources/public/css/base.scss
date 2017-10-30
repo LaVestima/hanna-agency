@@ -1,19 +1,24 @@
 @import "constants";
 
 body {
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Gudea', sans-serif;
     font-size: 20px;
-    color: #555555;
+    color: $main-font-color;
 }
 
 a {
     text-decoration: none;
-    color: #555555;
+    font-style: italic;
+    color: $main-font-color;
 
     &:hover, &:active {
         text-decoration: none;
-        color: #222222;
+        color: $main-theme-color;
     }
+}
+
+ua { // Useless Anchor
+    cursor: pointer;
 }
 
 h1 {
@@ -48,6 +53,16 @@ select {
     }
 }
 
+::selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
+::-moz-selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
 .red {
     color: #FF0000;
 }
@@ -56,9 +71,10 @@ select {
     display: inline-block;
     padding: 10px;
     background: $main-theme-color;
-    color: $main-font-color;
+    color: $main-font-color-inverted;
     text-align: center;
     cursor: pointer;
+    font-style: normal;
 
     &:hover {
         background: $main-theme-color-hover;
