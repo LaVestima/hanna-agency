@@ -3,7 +3,9 @@
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ActionControllerTrait;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\DeleteActionControllerTrait;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ListActionControllerTrait;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\NewActionControllerTrait;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Action\ShowActionControllerTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -12,6 +14,8 @@ class BaseController extends Controller
     use ActionControllerTrait;
     use ListActionControllerTrait;
     use ShowActionControllerTrait;
+    use NewActionControllerTrait;
+    use DeleteActionControllerTrait;
 
     protected $request;
 

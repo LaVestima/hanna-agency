@@ -4,8 +4,22 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller\Action;
 
 trait ActionControllerTrait
 {
+    protected $entityName;
     protected $view;
     protected $actionBar;
+
+    /**
+     * Set entity name.
+     *
+     * @param string $entityName
+     * @return $this
+     */
+    public function setEntityName(string $entityName)
+    {
+        $this->entityName = $entityName;
+
+        return $this;
+    }
 
     /**
      * Set view template.

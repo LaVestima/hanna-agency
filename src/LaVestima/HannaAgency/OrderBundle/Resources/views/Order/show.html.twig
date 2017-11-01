@@ -16,11 +16,9 @@
     {#// TODO: add confirmation window #}
 
     {% if order.dateDeleted is null %}
-    {#<a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">#}
         <div class="button action-bar-button delete-button" onclick="showConfirmationBox('Are You sure You want to delete the order?', '{{ path('order_delete', {'pathSlug': order.pathSlug}) }}')">
             Delete Order
         </div>
-    {#</a>#}
     {% else %}
     <a href="{{ path('order_restore', {'pathSlug': order.pathSlug}) }}">
         <div class="button action-bar-button">

@@ -93,7 +93,7 @@ class InvoiceController extends BaseController
 
 		$invoicesProducts = $this->invoiceProductCrudController
 			->readEntitiesBy(['idInvoices' => $invoice->getId()])
-		    ->getResult();
+		    ->getResultAsArray();
 
 		return $this->render('InvoiceBundle:Invoice:show.html.twig', [
 			'invoice' => $invoice,
@@ -131,14 +131,14 @@ class InvoiceController extends BaseController
 		]);
 	}
 
-    /**
-     * Invoice Delete Action.
-     *
-     * @param $invoiceId
-     */
-	public function deleteAction($invoiceId)
-    {
-		$this->invoiceCrudController
-            ->deleteEntity((int)$invoiceId);
-	}
+//    /**
+//     * Invoice Delete Action.
+//     *
+//     * @param $invoiceId
+//     */
+//	public function deleteAction($invoiceId)
+//    {
+//		$this->invoiceCrudController
+//            ->deleteEntity((int)$invoiceId);
+//	}
 }

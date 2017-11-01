@@ -10,7 +10,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class OrderController extends BaseController
 {
     private $authorizationChecker;
-    private $orderCrudController;
+    protected $orderCrudController;
+
+    protected $entityName = 'order';
 
     /**
      * OrderController constructor.
@@ -21,10 +23,10 @@ class OrderController extends BaseController
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         OrderCrudControllerInterface $orderCrudController
-
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->orderCrudController = $orderCrudController;
+//        $this->setEntityName('order');
     }
 
     /**
@@ -154,38 +156,8 @@ class OrderController extends BaseController
 		]);
 	}
 
-	// TODO: delete??
-//	public function newAction()
-//    {
-//
-//	    return $this->render('@Order/Order/new.html.twig');
-//    }
-
     /**
-     * Order Delete Action
-     *
-     * @param string $pathSlug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteAction(string $pathSlug)
-    {
-	    $order = $this->orderCrudController
-            ->readOneEntityBy(['pathSlug' => $pathSlug])
-            ->getResult();
-
-	    if (!$order || !$this->isUserAllowedToViewEntity($order)) {
-            $this->addFlash('warning', 'No order found!');
-        } else {
-            $this->orderCrudController->deleteEntity($order);
-
-            $this->addFlash('notice', 'Order deleted!');
-        }
-
-        return $this->redirectToRoute('order_list');
-    }
-
-    /**
-     * Order Restore Action
+     * Order Restore Action.
      *
      * @param string $pathSlug
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
