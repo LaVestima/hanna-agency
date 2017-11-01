@@ -205,6 +205,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    // TODO: delete
     /**
      * Read all not deleted Entities from DB (SELECT).
      *
@@ -219,6 +220,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    // TODO: delete
     /**
      * Read all deleted Entities from DB (SELECT).
      *
@@ -229,6 +231,20 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         $this->readAllEntities();
 
         $this->query->where($this->alias . '.dateDeleted IS NOT NULL');
+
+        return $this;
+    }
+
+    public function onlyDeleted()
+    {
+        $this->query->andWhere($this->alias . '.dateDeleted IS NOT NULL');
+
+        return $this;
+    }
+
+    public function onlyUndeleted()
+    {
+        $this->query->andWhere($this->alias . '.dateDeleted IS NULL');
 
         return $this;
     }

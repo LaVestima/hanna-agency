@@ -99,7 +99,7 @@ class OrderController extends BaseController
             ->orderBy('dateCreated', 'DESC');
 
         $this->setQuery($this->orderCrudController->getQuery());
-        $this->setView('@Order/Order/list.html.twig');
+        $this->setView('@Order/Order/deletedList.html.twig');
         $this->setActionBar([
             [
                 'label' => '< Back',

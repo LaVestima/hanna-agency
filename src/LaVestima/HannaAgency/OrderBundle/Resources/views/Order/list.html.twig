@@ -44,12 +44,14 @@
                 {# TODO: make it work #}
                 <input type="text" onkeyup="filterSearch(this, 'o.status', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
             </td>
+            {% if is_granted('ROLE_ADMIN') %}
             <td>
                 <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
             </td>
             <td>
                 <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">
             </td>
+            {% endif %}
         </tr>
         <tbody class="entity-list-content"></tbody>
     </table>

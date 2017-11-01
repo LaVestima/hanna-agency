@@ -10,6 +10,9 @@ class OrderAsyncController extends BaseController
 {
     private $orderCrudController;
 
+
+    private $isListDeleted = false;
+
     /**
      * OrderAsyncController constructor.
      *
@@ -29,6 +32,20 @@ class OrderAsyncController extends BaseController
      */
     public function listAction(Request $request)
     {
+        $this->isListDeleted = false;
+
+        return $this->genericListAction($request);
+    }
+
+    public function deletedListAction(Request $request)
+    {
+        $this->isListDeleted = true;
+
+        return $this->genericListAction($request);
+    }
+
+    private function genericListAction(Request $request)
+    {
         $filters = $request->get('filters');
 
         $this->orderCrudController
@@ -36,7 +53,7 @@ class OrderAsyncController extends BaseController
 
         if (empty($filters)) {
             $this->orderCrudController
-                ->readAllUndeletedEntities();
+                ->readAllEntities();
         } else {
             $this->orderCrudController
                 ->readEntitiesBy(
@@ -44,12 +61,20 @@ class OrderAsyncController extends BaseController
                 );
         }
 
+        if ($this->isListDeleted) {
+            $this->orderCrudController
+                ->onlyDeleted();
+        } else {
+            $this->orderCrudController
+                ->onlyUndeleted();
+        }
+
         $this->setQuery(
             $this->orderCrudController
-            ->join('idCustomers', 'c')
-            ->join('userCreated', 'u')
-            ->orderBy('dateCreated', 'DESC')
-            ->getQuery()
+                ->join('idCustomers', 'c')
+                ->join('userCreated', 'u')
+                ->orderBy('dateCreated', 'DESC')
+                ->getQuery()
         );
         $this->setView('@Order/Order/Async/list.html.twig');
 
