@@ -1,15 +1,24 @@
 @import "constants";
 
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Gudea', sans-serif;
     font-size: 20px;
     color: $main-font-color;
+    overflow-y: scroll;
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 50px;
 }
 
 a {
     text-decoration: none;
-    font-style: italic;
     color: $main-font-color;
+    cursor: pointer;
 
     &:hover, &:active {
         text-decoration: none;
@@ -50,6 +59,36 @@ select {
     &:focus {
         outline: none;
         box-shadow: 0 0 5px $main-theme-color-darkerer inset;
+    }
+}
+
+footer {
+    background: #bbbbbb;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+
+    ul {
+        max-width: 1200px;
+        list-style-type: none;
+        padding: 5px;
+        margin: auto;
+
+        li {
+            padding: 0 5px 0 10px;
+            display: inline-block;
+            border-left: 2px solid $main-theme-color;
+
+            &:nth-child(1) {
+                border-left: none;
+            }
+
+            .copyright {
+                font-size: 15px;
+            }
+        }
     }
 }
 
@@ -107,7 +146,7 @@ select {
     //height: 70px;
     overflow: hidden;
     text-align: center;
-    background: #ccc;
+    background: #bbb;
 
     //&.page-title-scrolled {
     //  height: 35px;
@@ -127,7 +166,6 @@ select {
 .action-bar {
     padding: 5px 10px;
     background: #ddd;
-    //border-bottom: 3px solid $main-theme-color;
     box-shadow: 0 3px 3px $main-theme-color;
 
     .action-bar-content {
@@ -183,8 +221,9 @@ select {
 
 .page-content {
     max-width: 1200px;
-    margin: 125px auto 0 auto;
+    margin: 0 auto;
     padding: 10px;
+    padding-top: 135px;
 }
 
 .module-box {
@@ -206,14 +245,13 @@ select {
     }
 
     .module-box-content {
-        padding: 5px 0;
         text-align: center;
     }
 }
 
 @media screen and (min-width: 1200px) {
     .module-box {
-        width: calc(50% - 12px);
+        width: calc(50% - 20px);
         display: inline-table;
         margin-left: 5px;
         margin-right: 5px;
@@ -229,7 +267,6 @@ select {
     .flash-message {
         height: 50px;
         line-height: 50px;
-        //border-radius: 10px;
         width: 70%;
         margin: 0 auto;
         box-shadow: 0 0 10px #000;
@@ -298,7 +335,7 @@ select {
     .entity-list-row {
         height: 35px;
 
-        &:nth-child(odd) {
+        &:nth-child(even) {
             background: #dddddd;
         }
 

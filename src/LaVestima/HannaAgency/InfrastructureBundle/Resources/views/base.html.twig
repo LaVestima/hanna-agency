@@ -35,47 +35,49 @@
             <h1>{{ block('title') }}</h1>
         </div>
 
-        {% if actionBar is defined and actionBar is not null %}
-            <div class="action-bar">
-                <div class="action-bar-content">
-                    {% for button in actionBar %}
-                        {% if button.role is not defined or is_granted(button.role) %}
-                            <a href="{{ path(button.path) }}">
-                                <div class="button action-bar-button">
-                                    {{ button.label }}
-                                </div>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-
-
-                    {% if isExportAllowed is defined and isExportAllowed %}
-                        <div class="action-bar-export">
-                            <div class="button action-bar-button action-bar-export-button">
-                                <i class="fa fa-download" aria-hidden="true"></i>
+        {# TODO: eventually define all actionBars in controllers, then the first if not needed #}
+        <div class="action-bar">
+            <div class="action-bar-content">
+            {% if block('actionBar') is defined and block('actionBar') is not null %}
+                {{ block('actionBar') }}
+            {% elseif actionBar is defined and actionBar is not null %}
+                {% for button in actionBar %}
+                    {% if button.role is not defined or is_granted(button.role) %}
+                        <a href="{{ path(button.path) }}">
+                            <div class="button action-bar-button">
+                                {{ button.label }}
                             </div>
-                            <ul class="action-bar-export-list">
-                                {% if pdfExportPath is defined %}
-                                    <li class="hidden">
-                                        <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
-                                            PDF
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if excelExportPath is defined %}
-                                    <li class="hidden">
-                                        <a class="button" href="{{ excelExportPath }}">
-                                            Excel
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </div>
+                        </a>
                     {% endif %}
+                {% endfor %}
 
-                </div>
+
+                {% if isExportAllowed is defined and isExportAllowed %}
+                    <div class="action-bar-export">
+                        <div class="button action-bar-button action-bar-export-button">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                        </div>
+                        <ul class="action-bar-export-list">
+                            {% if pdfExportPath is defined %}
+                                <li class="hidden">
+                                    <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
+                                        PDF
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if excelExportPath is defined %}
+                                <li class="hidden">
+                                    <a class="button" href="{{ excelExportPath }}">
+                                        Excel
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
             </div>
-        {% endif %}
+        </div>
     </div>
 
     <div class="page-content">
@@ -105,6 +107,27 @@
 
     <div class="body-overlay"></div>
 
+    <footer>
+        <ul>
+            <li>
+                <span class="copyright">
+                    &#9400;
+                </span>
+                2017 Hanna Agency
+            </li>
+
+            <li>
+                {# TODO: add link to contact site #}
+                <a href="">
+                    Contact
+                </a>
+            </li>
+            <li>
+                MORE...
+            </li>
+        </ul>
+    </footer>
+
     {# TODO: deploy: delete #}
     {#{% if app.debug %}#}
         {#<div style="position: fixed; bottom: 35px;">#}
@@ -114,7 +137,8 @@
     {#{% endif %}#}
 </body>
 {# ----------------------- JS ----------------------- #}
-{% if actionBar is not defined or actionBar is null %}
+{% if (block('actionBar') is not defined or block('actionBar') is null) and
+    (actionBar is not defined or actionBar is null) %}
 {% stylesheets filter='scssphp' output='css/app.css'
 '@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
