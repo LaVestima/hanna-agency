@@ -10,7 +10,6 @@ class OrderAsyncController extends BaseController
 {
     private $orderCrudController;
 
-
     private $isListDeleted = false;
 
     /**
@@ -37,6 +36,12 @@ class OrderAsyncController extends BaseController
         return $this->genericListAction($request);
     }
 
+    /**
+     * Order Async Deleted List Action.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function deletedListAction(Request $request)
     {
         $this->isListDeleted = true;

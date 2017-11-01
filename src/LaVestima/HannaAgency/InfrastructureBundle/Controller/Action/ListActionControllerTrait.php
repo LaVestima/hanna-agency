@@ -47,10 +47,19 @@ trait ListActionControllerTrait
 
         $this->pagination = $this->paginate();
 
-        if (strpos($this->pagination->getRoute(), 'async_list') === false) {
-            $this->pagination->setUsedRoute(
-                str_replace('list', 'async_list', $this->pagination->getRoute())
-            );
+        if (
+            strpos($this->pagination->getRoute(), 'async_list') === false &&
+            strpos($this->pagination->getRoute(), 'async_deleted_list') === false
+        ) {
+            if (strpos($this->pagination->getRoute(), 'deleted_list') !== false) {
+                $this->pagination->setUsedRoute(
+                    str_replace('deleted_list', 'async_deleted_list', $this->pagination->getRoute())
+                );
+            } else {
+                $this->pagination->setUsedRoute(
+                    str_replace('list', 'async_list', $this->pagination->getRoute())
+                );
+            }
         }
     }
 

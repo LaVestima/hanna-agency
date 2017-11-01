@@ -14,10 +14,12 @@
 {% block entityList %}
     <table class="entity-list">
         <tr class="entity-list-header">
-            <th>Date placed</th>
-            <th>Customer</th>
-            <th>User</th>
-            <th></th>
+            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
+                <th>User Created</th>
+            {% endif %}
             <th></th>
         </tr>
         <tr class="entity-list-filters">

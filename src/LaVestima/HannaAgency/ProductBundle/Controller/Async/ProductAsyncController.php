@@ -10,6 +10,8 @@ class ProductAsyncController extends BaseController
 {
     private $productCrudController;
 
+    private $isListDeleted = false;
+
     /**
      * ProductAsyncController constructor.
      *
@@ -29,6 +31,26 @@ class ProductAsyncController extends BaseController
      */
     public function listAction(Request $request)
     {
+        $this->isListDeleted = false;
+
+        return $this->genericListAction($request);
+    }
+
+    /**
+     * Product Async Deleted List Action.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function deletedListAction(Request $request)
+    {
+        $this->isListDeleted = true;
+
+        return $this->genericListAction($request);
+    }
+
+    private function genericListAction(Request $request)
+    {
         $filters = $request->get('filters');
 
         $this->productCrudController
@@ -36,12 +58,20 @@ class ProductAsyncController extends BaseController
 
         if (empty($filters)) {
             $this->productCrudController
-                ->readAllUndeletedEntities();
+                ->readAllEntities();
         } else {
             $this->productCrudController
                 ->readEntitiesBy(
                     $this->convertFiltersToCrudCondition($filters)
                 );
+        }
+
+        if ($this->isListDeleted) {
+            $this->productCrudController
+                ->onlyDeleted();
+        } else {
+            $this->productCrudController
+                ->onlyUndeleted();
         }
 
         $this->setQuery($this->productCrudController

@@ -10,10 +10,6 @@ order_show:
     path: /order/show/{pathSlug}
     defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
 
-#order_new:
-#    path: /order/new
-#    defaults: { _controller: OrderBundle:Order:new }
-
 order_delete:
     path: /order/delete/{pathSlug}
     defaults: { _controller: OrderBundle:Order:delete, pathSlug: '' }

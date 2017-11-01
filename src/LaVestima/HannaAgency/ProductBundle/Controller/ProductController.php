@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends BaseController
 {
-    private $productCrudController;
-    private $productSizeCrudController;
+    protected $productCrudController;
+    protected $productSizeCrudController;
+
+    protected $entityName = 'product';
 
     /**
      * ProductController constructor.
@@ -75,7 +77,7 @@ class ProductController extends BaseController
             ->join('idProducers', 'pr')
             ->orderBy('name')
             ->getQuery());
-        $this->setView('@Product/Product/list.html.twig');
+        $this->setView('@Product/Product/deletedList.html.twig');
         $this->setActionBar([
             [
                 'label' => '< Back',
@@ -152,8 +154,15 @@ class ProductController extends BaseController
             return $this->redirectToRoute('product_list');
         }
 
-        return $this->render('@Product/Product/new.html.twig', [
-            'form' => $form->createView()
+        $this->setView('@Product/Product/new.html.twig');
+        $this->setForm($form);
+        $this->setActionBar([
+           [
+               'label' => '< List',
+               'path' => 'product_list'
+           ]
         ]);
+
+        return parent::newAction($request);
     }
 }
