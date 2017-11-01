@@ -1,3 +1,7 @@
 homepage_homepage:
-    path:     /
-    defaults: { _controller: HomepageBundle:Homepage:index }
+    path: /
+    defaults: { _controller: HomepageBundle:Homepage:homepage }
+
+homepage_contact:
+    path: /contact
+    defaults: { _controller: HomepageBundle:Homepage:contact }

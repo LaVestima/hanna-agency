@@ -1,18 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lavestima
- * Date: 18.03.17
- * Time: 20:53
- */
 
 namespace LaVestima\HannaAgency\HomepageBundle\Controller;
 
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-class HomepageController extends Controller {
-	public function indexAction() {
-		return $this->render('HomepageBundle:Homepage:index.html.twig');
+class HomepageController extends BaseController
+{
+    /**
+     * Homepage Action.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+	public function homepageAction()
+    {
+		return $this->render('@Homepage/Homepage/index.html.twig');
 	}
+
+    /**
+     * Contact Action.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+	public function contactAction()
+    {
+        return $this->render('@Homepage/Homepage/contact.html.twig');
+    }
 }
