@@ -126,32 +126,9 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             ->from($this->entityClass, $this->alias);
 
         foreach ($keyValueArray as $key => $condition) {
-            // TODO: split into several methods
+            $tableFieldName = $this->generateTableFieldName($key);
 
-            if (strpos($key, 'CONCAT') !== false) {
-                $tableFieldName = $key;
-            } elseif (count($parts = explode('.', $key)) > 1) {
-                if (count($parts) > 2) {
-                    throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
-                }
-
-                $tableFieldName = $key;
-            } else {
-                $tableFieldName = $this->alias . '.' . $key;
-            }
-
-            // if operator is included in condition
-            if (is_array($condition)) {
-                if (count($condition) === 2) {
-                    $operator = $condition[1];
-                    $value = $condition[0];
-                } else {
-                    throw new \Exception('Two elements required in condition array!');
-                }
-            } else {
-                $operator = '=';
-                $value = $condition;
-            }
+            [$operator, $value] = $this->extractElementsFromCondition($condition);
 
             $parameterName = 'param_' . str_replace(['.', '(', ')', ',', '\'', ' '], '', $key);
 
@@ -174,6 +151,49 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         }
 
         return $this;
+    }
+
+    /**
+     * @param $conditionKey
+     * @return string
+     */
+    private function generateTableFieldName($conditionKey)
+    {
+        if (strpos($conditionKey, 'CONCAT') !== false) {
+            $tableFieldName = $conditionKey;
+        } elseif (count($parts = explode('.', $conditionKey)) > 1) {
+            if (count($parts) > 2) {
+                throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
+            }
+
+            $tableFieldName = $conditionKey;
+        } else {
+            $tableFieldName = $this->alias . '.' . $conditionKey;
+        }
+
+        return $tableFieldName;
+    }
+
+    /**
+     * @param $condition
+     * @return array
+     * @throws \Exception
+     */
+    private function extractElementsFromCondition($condition)
+    {
+        if (is_array($condition)) {
+            if (count($condition) === 2) {
+                $operator = $condition[1];
+                $value = $condition[0];
+            } else {
+                throw new \Exception('Two elements required in condition array!');
+            }
+        } else {
+            $operator = '=';
+            $value = $condition;
+        }
+
+        return [$operator, $value];
     }
 
     /**
@@ -235,6 +255,11 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    /**
+     * Only include deleted Entities.
+     *
+     * @return $this
+     */
     public function onlyDeleted()
     {
         $this->query->andWhere($this->alias . '.dateDeleted IS NOT NULL');
@@ -242,6 +267,11 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    /**
+     * Only include not deleted Entities.
+     *
+     * @return $this
+     */
     public function onlyUndeleted()
     {
         $this->query->andWhere($this->alias . '.dateDeleted IS NULL');
