@@ -1,92 +1,26 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/baseNew.html.twig' %}
 
-{% block title %}New Customer{% endblock %}
+{% block title 'New Customer' %}
 
 {% block content %}
     {{ form_start(form) }}
     <table class="entity-new-table">
-        <tr>
-            <td>
-                {{ form_label(form.firstName) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.firstName) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.lastName) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.lastName) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.gender) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.gender) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.companyName) }}</td>
-            <td>{{ form_widget(form.companyName) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.vat) }}</td>
-            <td>{{ form_widget(form.vat) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.idCountries) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.idCountries) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.idCities) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.idCities) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.postalCode) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.postalCode) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.street) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.street) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.email) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.email) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.phone) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.phone) }}</td>
-        </tr>
-        <tr>
-            <td>
-                {{ form_label(form.idCurrencies) }}
-                <span class="red">*</span>
-            </td>
-            <td>{{ form_widget(form.idCurrencies) }}</td>
-        </tr>
-        <tr>
-            <td>{{ form_label(form.idUsers) }}</td>
-            <td>{{ form_widget(form.idUsers) }}</td>
-        </tr>
+        {% for fieldName in ['firstName', 'lastName', 'gender', 'companyName', 'vat',
+            'idCountries', 'idCities', 'postalCode', 'street', 'email', 'phone',
+            'idCurrencies', 'idUsers'] %}
+            <tr>
+                <td>
+                    {{ form_label(form[fieldName]) }}
+                    {% if form[fieldName].vars.required %}
+                        <span class="red">*</span>
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
+                </td>
+                <td>{{ form_widget(form[fieldName]) }}</td>
+            </tr>
+        {% endfor %}
+
         <tr>
             <td></td>
             <td>

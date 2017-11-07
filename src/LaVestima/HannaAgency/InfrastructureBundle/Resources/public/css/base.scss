@@ -341,6 +341,7 @@ footer {
 
         &:hover {
             background: $main-theme-color-lighter;
+            color: $main-font-color-inverted;
         }
 
         .entity-list-cell {

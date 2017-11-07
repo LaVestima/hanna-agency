@@ -49,6 +49,12 @@ class ProductAsyncController extends BaseController
         return $this->genericListAction($request);
     }
 
+    /**
+     * Product Async Generic List Action.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     private function genericListAction(Request $request)
     {
         $filters = $request->get('filters');
