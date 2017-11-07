@@ -5,11 +5,11 @@ namespace LaVestima\HannaAgency\AccessControlBundle\Tests;
 use LaVestima\HannaAgency\InfrastructureBundle\Tests\BaseWebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginControllerTest extends BaseWebTestCase
+class ForgotPasswordControllerTest extends BaseWebTestCase
 {
-    private $indexActionPath = '/login';
+    private $indexActionPath = '/forgot_password';
 
-    public function testLoginActionAnonymous()
+    public function testRegisterActionAnonymous()
     {
         $crawler = $this->client->request('GET', $this->indexActionPath);
 
@@ -24,7 +24,7 @@ class LoginControllerTest extends BaseWebTestCase
         );
     }
 
-    public function testLoginActionGuest()
+    public function testRegisterActionGuest()
     {
         $this->logInGuest();
 

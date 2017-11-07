@@ -22,18 +22,6 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
-    public function testListActionAdmin()
-    {
-        $this->logInAdmin();
-
-        $this->client->request('GET', $this->listActionPath);
-
-        $this->assertSame(
-            Response::HTTP_OK,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
-
     public function testListActionCustomer()
     {
         $this->logInCustomer();
@@ -46,11 +34,9 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
-    // TODO: maybe USER
-
-    public function testListActionGuest()
+    public function testListActionUser()
     {
-        $this->logInGuest();
+        $this->logInUser();
 
         $this->client->request('GET', $this->listActionPath);
 
@@ -60,24 +46,14 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
+    // --------------------------------------------------------------------
+
     public function testShowActionAnonymous()
     {
         $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
 
         $this->assertSame(
             Response::HTTP_FOUND,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
-
-    public function testShowActionAdmin()
-    {
-        $this->logInAdmin();
-
-        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
-
-        $this->assertSame(
-            Response::HTTP_OK,
             $this->client->getResponse()->getStatusCode()
         );
     }
@@ -104,16 +80,15 @@ class OrderControllerTest extends BaseWebTestCase
             Response::HTTP_FOUND,
             $this->client->getResponse()->getStatusCode()
         );
+
         $this->assertTrue(
             $this->client->getResponse()->isRedirect($this->listActionPath)
         );
     }
 
-    // TODO: maybe USER
-
-    public function testShowActionGuest()
+    public function testShowActionUser()
     {
-        $this->logInGuest();
+        $this->logInUser();
 
         $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
 
@@ -125,7 +100,7 @@ class OrderControllerTest extends BaseWebTestCase
 
     public function testShowActionIncorrectPathSlug()
     {
-        $this->logInAdmin();
+        $this->logInCustomer();
 
         $this->client->request('GET', $this->showActionPath . '/wrongPathSlugxxxxxxxx');
 
