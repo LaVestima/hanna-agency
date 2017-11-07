@@ -528,10 +528,9 @@ INSERT INTO Sizes (ID, Name) VALUES (7, '44');
 
 INSERT INTO Roles (ID, Name, Code) VALUES (1, 'Super Administrator', 'ROLE_SUPER_ADMIN');
 INSERT INTO Roles (ID, Name, Code) VALUES (2, 'Administrator', 'ROLE_ADMIN');
-INSERT INTO Roles (ID, Name, Code) VALUES (3, 'User', 'ROLE_USER');
-INSERT INTO Roles (ID, Name, Code) VALUES (4, 'Customer', 'ROLE_CUSTOMER');
-INSERT INTO Roles (ID, Name, Code) VALUES (5, 'Producer', 'ROLE_PRODUCER');
-INSERT INTO Roles (ID, Name, Code) VALUES (6, 'Guest', 'ROLE_GUEST');
+INSERT INTO Roles (ID, Name, Code) VALUES (3, 'Customer', 'ROLE_CUSTOMER');
+INSERT INTO Roles (ID, Name, Code) VALUES (4, 'User', 'ROLE_USER');
+INSERT INTO Roles (ID, Name, Code) VALUES (5, 'Guest', 'ROLE_GUEST');
 
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (1, 'guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 6, 'ewWSIGrRBcRtkddBn2FlDzonjEPKbVRyN8qJ69vcaM5xJCuRPc');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (2, '2016-12-02', 'admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2, 'GgUSZbnDcBu6wosgoz8jaaHVpA1euAI1jQa8mEMYAt9LQVPVuw');

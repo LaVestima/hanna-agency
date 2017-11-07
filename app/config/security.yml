@@ -24,7 +24,6 @@ security:
                 csrf_token_generator: security.csrf.token_manager
             logout:
                 path: /logout
-#                target: homepage_homepage
                 target: access_control_login
             provider: db_provider
 #            access_denied_url: /login
@@ -54,6 +53,7 @@ security:
         - { path: ^/account_activation, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/forgot_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contact, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/user_settings, roles: ROLE_GUEST }
 
