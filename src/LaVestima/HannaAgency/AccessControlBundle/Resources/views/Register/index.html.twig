@@ -3,6 +3,7 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+    {% if not app.user %}
     {{ form_start(form) }}
     <table class="user-input-table">
         <tr>
@@ -27,4 +28,7 @@
         </tr>
     </table>
     {{ form_end(form) }}
+    {% else %}
+        User already logged in.
+    {% endif %}
 {% endblock %}
