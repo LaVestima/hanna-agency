@@ -2,11 +2,10 @@
 
 namespace LaVestima\HannaAgency\FakerBundle\Command;
 
-
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateAllCommand extends ContainerAwareCommand
@@ -16,14 +15,15 @@ class CreateAllCommand extends ContainerAwareCommand
         $this
             ->setName('faker:create:all')
             ->setDescription('Creates fake entities')
-            ->addOption('number', null, InputOption::VALUE_OPTIONAL, 'Number of entities to create');
+            ->addArgument('number', InputArgument::OPTIONAL, 'Number of entities to create');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $entityNumber = (int)$input->getOption('number') ?: 1;
+        $entityNumber = (int)$input->getArgument('number') ?: 1;
 
         $commandNames = [
+            'faker:create:customer',
             'faker:create:product',
             'faker:create:order',
             'faker:create:user',
@@ -34,7 +34,7 @@ class CreateAllCommand extends ContainerAwareCommand
             $command = $this->getApplication()->find($commandName);
             $arguments = [
                 'command' => $commandName,
-                '--number' => $entityNumber
+                'number' => $entityNumber
             ];
 
             $commandInput = new ArrayInput($arguments);

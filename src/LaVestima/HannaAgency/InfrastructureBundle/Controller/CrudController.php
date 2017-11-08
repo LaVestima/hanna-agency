@@ -357,6 +357,8 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
     {
+        $this->clearQuery();
+
         if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
             throw new \InvalidArgumentException('Number of randomized entities cannot exceed the row number!');
         }

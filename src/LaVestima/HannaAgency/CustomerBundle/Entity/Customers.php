@@ -660,7 +660,7 @@ class Customers implements EntityInterface, \JsonSerializable
      *
      * @return Customers
      */
-    public function setIdCurrencies(Currencies $idCurrencies = null)
+    public function setIdCurrencies(Currencies $idCurrencies)
     {
         $this->idCurrencies = $idCurrencies;
 

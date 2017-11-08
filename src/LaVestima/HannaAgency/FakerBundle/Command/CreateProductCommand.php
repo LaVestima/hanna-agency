@@ -2,26 +2,15 @@
 
 namespace LaVestima\HannaAgency\FakerBundle\Command;
 
-use Faker\Factory;
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 use LaVestima\HannaAgency\ProductBundle\Entity\Sizes;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateProductCommand extends ContainerAwareCommand
+class CreateProductCommand extends BaseCreateCommand
 {
-    private $faker;
-
-    public function __construct($name = null)
-    {
-        $this->faker = Factory::create();
-
-        parent::__construct($name);
-    }
-
     public function configure()
     {
         $this
@@ -50,9 +39,9 @@ class CreateProductCommand extends ContainerAwareCommand
                 }
 
                 $output->writeln('Product');
-
-                $output->writeln('Created: ' . ($i+1));
             }
+
+            $output->writeln('Created: ' . $i);
         }
     }
 

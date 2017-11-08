@@ -106,6 +106,7 @@ class NewCustomerType extends AbstractType
                 'choices' => $users,
                 'choice_label' => 'login',
                 'placeholder' => 'Choose a user',
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Add Customer'
