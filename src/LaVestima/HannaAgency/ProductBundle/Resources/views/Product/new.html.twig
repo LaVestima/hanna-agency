@@ -1,11 +1,11 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/baseNew.html.twig' %}
 
 {% block title 'New Product' %}
 
 {% block content %}
     {{ form_start(form) }}
     <table class="entity-new-table">
-        {% for fieldName in ['name', 'idCategories', 'idSizes', 'availability', 'priceProducer', 'priceCustomer', 'idProducers'] %}
+        {% for fieldName in ['name', 'idCategories', 'priceProducer', 'priceCustomer', 'idProducers'] %}
             <tr>
                 <td>
                     {{ form_label(form[fieldName]) }}
@@ -17,6 +17,36 @@
                 <td>{{ form_widget(form[fieldName]) }}</td>
             </tr>
         {% endfor %}
+
+        <tbody class="size-list">
+        {% for size in form.sizes %}
+            <tr style="border-top: 1px solid black;">
+                <td>{{ form_label(form.sizes) }}</td>
+                <td>
+                    {{ form_widget(size) }}
+                </td>
+            </tr>
+        {% endfor %}
+        {% for availability in form.availabilities %}
+            <tr style="border-bottom: 1px solid black;">
+                <td>{{ form_label(form.availabilities) }}</td>
+                <td>
+                    {{ form_widget(availability) }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+        <tr>
+            <td></td>
+            <td>
+                <button id="add-size">Add another size</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>&nbsp;</td>
+        </tr>
         <tr>
             <td></td>
             <td>
@@ -25,5 +55,31 @@
             </td>
         </tr>
     </table>
+
     {{ form_end(form) }}
+
+    <script type="text/javascript">
+        var sizeCount = '{{ form.sizes | length }}';
+
+        function addSizeForm() {
+            var sizeListPrototype = '<tr><td>{{ form_label(form.sizes) }}</td><td>';
+            sizeListPrototype += '{{ form_widget(form.sizes.vars.prototype) }}';
+            sizeListPrototype += '</td></tr><tr style="border-bottom: 1px solid black;"><td>{{ form_label(form.availabilities) }}</td><td>';
+            sizeListPrototype += '{{ form_widget(form.availabilities.vars.prototype) }}';
+            sizeListPrototype += '</td></tr>';
+
+            sizeListPrototype = sizeListPrototype.replace(/__name__/g, sizeCount);
+            sizeCount++;
+
+            $('.size-list').append(sizeListPrototype);
+        }
+
+        $(function() {
+            $('#add-size').click(function(e) {
+                e.preventDefault();
+
+                addSizeForm();
+            });
+        })
+    </script>
 {% endblock %}
