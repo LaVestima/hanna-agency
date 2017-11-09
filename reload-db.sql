@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS Tokens (
 	ID INTEGER NOT NULL AUTO_INCREMENT,
 	ID_USERS INTEGER NOT NULL,
 	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	Date_Expired TIMESTAMP NOT NULL,
+	Date_Expired DATETIME NOT NULL,
 	Token VARCHAR(100) NOT NULL,
 	CONSTRAINT Tokens_PK PRIMARY KEY (ID),
 	CONSTRAINT Tokens_Token_U UNIQUE(Token),
@@ -306,13 +306,13 @@ CREATE TABLE IF NOT EXISTS History_Invoices (
 	User_Edited INTEGER NOT NULL,
 	Name VARCHAR(50),
 	ID_CUSTOMERS INTEGER,
-	Date_Issued TIMESTAMP,
+	Date_Issued DATETIME,
 	CONSTRAINT History_Invoices_PK PRIMARY KEY (ID),
 	CONSTRAINT History_Invoices_ID_INVOICES_FK FOREIGN KEY (ID_INVOICES) REFERENCES Invoices(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT History_Invoices_User_Edited_FK FOREIGN KEY (User_Edited) REFERENCES Users(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
+	CONSTRAINT History_Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -353,19 +353,17 @@ CREATE TABLE IF NOT EXISTS Products (
 	ID INTEGER NOT NULL AUTO_INCREMENT,
 	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	Date_Deleted TIMESTAMP NULL,
-	User_Created INTEGER NOT NULL,
+	User_Created INTEGER NOT NULL DEFAULT 0,
 	User_Deleted INTEGER,
 	Name VARCHAR(50) NOT NULL,
 	Price_Producer DECIMAL(10, 2) NOT NULL,
 	Price_Customer DECIMAL(10, 2) NOT NULL,
-	QR_Code_Path VARCHAR(50) NOT NULL,
 	ID_CATEGORIES INTEGER NOT NULL,
 	ID_PRODUCERS INTEGER NOT NULL,
 	Path_Slug VARCHAR(50) NOT NULL DEFAULT '',
 	CONSTRAINT Items_PK PRIMARY KEY (ID),
 	CONSTRAINT Products_Name_U UNIQUE(Name),
 	CONSTRAINT Products_Path_Slug_U UNIQUE(Path_Slug),
-	CONSTRAINT Products_QR_Code_Path_U UNIQUE(QR_Code_Path),
 	CONSTRAINT Items_ID_CATEGORIES_FK FOREIGN KEY (ID_CATEGORIES) REFERENCES Categories(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT Items_ID_PRODUCERS_FK FOREIGN KEY (ID_PRODUCERS) REFERENCES Producers(ID)
@@ -532,7 +530,7 @@ INSERT INTO Roles (ID, Name, Code) VALUES (3, 'Customer', 'ROLE_CUSTOMER');
 INSERT INTO Roles (ID, Name, Code) VALUES (4, 'User', 'ROLE_USER');
 INSERT INTO Roles (ID, Name, Code) VALUES (5, 'Guest', 'ROLE_GUEST');
 
-INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (1, 'guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 6, 'ewWSIGrRBcRtkddBn2FlDzonjEPKbVRyN8qJ69vcaM5xJCuRPc');
+INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (1, 'guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 5, 'ewWSIGrRBcRtkddBn2FlDzonjEPKbVRyN8qJ69vcaM5xJCuRPc');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (2, '2016-12-02', 'admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2, 'GgUSZbnDcBu6wosgoz8jaaHVpA1euAI1jQa8mEMYAt9LQVPVuw');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (3, '2016-07-07', 'user', 'user@used.user', '$2y$13$LK082JKNh7ME7o6Vn/bjkeDEJfajPXCiegqlDaDESnrGjflvYrNAG', 3, 'HKAZmjMlvAielHIFOwdZkjoA8Us1M6S5jdoXziiJuTU0negPQl');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (4, '2015-01-01', 'admin', 'admin@admin.admin', '$2y$13$J5XJ.bvLTJ0M0kmun722nOiG3C2HCQi2v7NtNiOjWEJXZD2SXwnVi', 1, 'JWcX5wnVXm6cHmRprqymsFRNlaXZIsr8aa1oNNSDT4239wePs6');
@@ -569,9 +567,9 @@ INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Sl
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (4, '16/2015', 1, 2, '2015-10-15', 'rsooOH9b8LZW8A4c6kb0wDjhpqonhCNWcXo9AgZuHI8HrEV4q0');
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (5, '10/2014', 2, 2, '2014-11-01', 'sNQT0j1GFoMrQ8UieAPb7UKAVLg9ID02z07rC13AOdustnEgBe');
 
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (1, 'Cool Shoe', 'Cool-Shoe-39', 50, 79.99, 3, 2, 'qr/shoes/cool_qr.jpg');
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (2, 'TF Hat No. 7', 'TF-Hat-No-7-M', 7, 12.5, 4, 3, 'qr/hats/tf7_qr.jpg');
-INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS, QR_Code_Path) VALUES (3, 'Simple Top Hat', 'Simple-Top-Hat-XL', 55, 65.99, 4, 2, 'qr/hats/simple_qr.jpg');
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS) VALUES (1, 'Cool Shoe', 'Cool-Shoe-39', 50, 79.99, 3, 2);
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS) VALUES (2, 'TF Hat No. 7', 'TF-Hat-No-7-M', 7, 12.5, 4, 3);
+INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS) VALUES (3, 'Simple Top Hat', 'Simple-Top-Hat-XL', 55, 65.99, 4, 2);
 
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (1, 1, 5, 12);
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (2, 1, 6, 4);

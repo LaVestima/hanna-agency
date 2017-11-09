@@ -7,6 +7,7 @@ use LaVestima\HannaAgency\ProductBundle\Controller\Crud\CategoryCrudControllerIn
 use LaVestima\HannaAgency\ProductBundle\Controller\Crud\SizeCrudControllerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,6 +21,13 @@ class ProductType extends AbstractType
     private $sizeCrudController;
     private $producerCrudController;
 
+    /**
+     * ProductType constructor.
+     *
+     * @param CategoryCrudControllerInterface $categoryCrudController
+     * @param SizeCrudControllerInterface $sizeCrudController
+     * @param ProducerCrudController $producerCrudController
+     */
     public function __construct(
         CategoryCrudControllerInterface $categoryCrudController,
         SizeCrudControllerInterface $sizeCrudController,
@@ -49,19 +57,32 @@ class ProductType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Choose a category'
             ])
-            ->add('idSizes', ChoiceType::class, [
+            ->add('sizes', CollectionType::class, [
                 'label' => 'Size',
-                'choices' => $sizes,
-                'choice_label' => 'name',
-                'placeholder' => 'Choose a size',
-                'mapped' => false
-            ])
-            ->add('availability', NumberType::class, [
-                'label' => 'Availability',
-                'empty_data' => '0',
+                'entry_type' => ChoiceType::class,
+                'entry_options' => [
+                    'choices' => $sizes,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Choose a size',
+                ],
+                'allow_add' => true,
+                'prototype' => true,
+                'prototype_data' => '',
                 'mapped' => false,
-                'required' => false
             ])
+            ->add('availabilities', CollectionType::class, [
+                'label' => 'Availability',
+                'entry_type' => NumberType::class,
+                'entry_options' => [
+                    'data' => 0,
+                    'empty_data' => 0,
+                ],
+                'allow_add' => true,
+                'prototype' => true,
+                'prototype_data' => 0,
+                'mapped' => false,
+            ])
+
             ->add('priceProducer', MoneyType::class, [
                 'label' => 'Producer Price',
                 'currency' => false

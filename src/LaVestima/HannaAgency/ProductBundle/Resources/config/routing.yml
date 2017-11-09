@@ -18,6 +18,10 @@ product_new:
     path: /product/new
     defaults: { _controller: ProductBundle:Product:new }
 
+product_edit:
+    path: /product/edit/{pathSlug}
+    defaults: { _controller: ProductBundle:Product:edit, pathSlug: '' }
+
 product_async_list:
     path: /product/async/list
     defaults: { _controller: ProductBundle:Async\ProductAsync:list }
