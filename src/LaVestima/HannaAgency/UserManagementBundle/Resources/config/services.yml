@@ -4,6 +4,8 @@ services:
 
     LaVestima\HannaAgency\UserManagementBundle\Controller\UserController:
 
+    LaVestima\HannaAgency\UserManagementBundle\Controller\Async\UserAsyncController:
+
     user_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudController
 

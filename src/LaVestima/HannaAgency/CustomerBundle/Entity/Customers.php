@@ -104,13 +104,6 @@ class Customers implements EntityInterface, \JsonSerializable
     private $email;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="Newsletter", type="boolean", nullable=false)
-     */
-    private $newsletter = '1';
-
-    /**
      * @var string
      *
      * @ORM\Column(name="Phone", type="string", length=50, nullable=false)
@@ -470,30 +463,6 @@ class Customers implements EntityInterface, \JsonSerializable
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Set newsletter
-     *
-     * @param boolean $newsletter
-     *
-     * @return Customers
-     */
-    public function setNewsletter($newsletter)
-    {
-        $this->newsletter = $newsletter;
-
-        return $this;
-    }
-
-    /**
-     * Get newsletter
-     *
-     * @return boolean
-     */
-    public function getNewsletter()
-    {
-        return $this->newsletter;
     }
 
     /**

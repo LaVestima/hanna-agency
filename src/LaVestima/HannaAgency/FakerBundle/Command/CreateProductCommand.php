@@ -58,7 +58,6 @@ class CreateProductCommand extends BaseCreateCommand
         $product->setName($this->faker->text(50));
         $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);
         $product->setPriceCustomer($this->faker->numberBetween(100, 99999)/100);
-        $product->setQrCodePath($this->faker->text(20) . uniqid()); // TODO: change
         $product->setIdCategories($randomCategory);
         $product->setIdProducers($randomProducer);
 

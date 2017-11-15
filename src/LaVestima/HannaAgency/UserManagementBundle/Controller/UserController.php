@@ -44,15 +44,15 @@ class UserController extends BaseController
         $this->setActionBar([
             [
                 'label' => 'New User',
-                'path' => 'user_new'
+                'path' => 'user_new',
             ],
             [
                 'label' => 'Deleted Users',
-                'path' => 'user_deleted_list'
+                'path' => 'user_deleted_list',
             ],
             [
                 'label' => 'Login History',
-                'path' => 'access_control_login_attempt_list'
+                'path' => 'access_control_login_attempt_list',
             ]
         ]);
 
@@ -91,19 +91,14 @@ class UserController extends BaseController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-	public function showAction($pathSlug)
+	public function showAction(string $pathSlug)
     {
 		$user = $this->userCrudController
 			->readOneEntityBy(['pathSlug' => $pathSlug])
             ->getResult();
-		
-//		$producer =
+
         $customer = null;
 
-		// TODO: delete role??
-//		if ($user->getIdRoles()->getCode() === 'ROLE_PRODUCER') {
-//
-//		}
 		if ($user->getIdRoles()->getCode() === 'ROLE_CUSTOMER') {
 			$customer = $this->get('customer_crud_controller')
 				->readOneEntityBy(['idUsers' => $user])
@@ -116,14 +111,15 @@ class UserController extends BaseController
 		
 		return $this->render('@UserManagement/User/show.html.twig', [
 			'user' => $user,
-//			'producer' => $producer,
 			'customer' => $customer,
             'userSettings' => $userSettings,
 		]);
 	}
 
-	public function newAction()
+	public function newAction(Request $request)
     {
+        return $this->render('@UserManagement/User/new.html.twig', [
 
+        ]);
     }
 }
