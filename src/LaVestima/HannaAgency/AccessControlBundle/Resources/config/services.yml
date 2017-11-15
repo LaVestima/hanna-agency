@@ -6,6 +6,10 @@ services:
 
     LaVestima\HannaAgency\AccessControlBundle\Controller\ResetPasswordController:
 
+    LaVestima\HannaAgency\AccessControlBundle\Controller\LoginAttemptController:
+
+    LaVestima\HannaAgency\AccessControlBundle\Controller\Async\LoginAttemptAsyncController:
+
     token_crud_controller:
         class: LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\TokenCrudController
 

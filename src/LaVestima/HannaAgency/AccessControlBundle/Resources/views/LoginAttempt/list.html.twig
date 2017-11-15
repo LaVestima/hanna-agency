@@ -3,23 +3,36 @@
 {% block title 'Login Attempts' %}
 
 {% block entityList %}
-    <table class="entity-list order-list">
+    <table class="entity-list">
+        <colgroup>
+            <col>
+            <col width="400px">
+            <col width="100px">
+        </colgroup>
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'la.dateCreated') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'User', 'u.login') }}</th>
-            <th>Is Failed?</th>
+            <th>Failed?</th>
         </tr>
-
-        {% for loginAttempt in pagination %}
-            <tr class="entity-list-row">
-                <td>{{ loginAttempt.dateCreated | date('d.m.Y H:i:s') }}</td>
-                <td>{{ loginAttempt.idUsers.login ?? '' }}</td>
-                <td>
-                    {% if loginAttempt.isFailed %}
-                        <i class="fa fa-check" aria-hidden="true"></i>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'la.dateCreated', '{{ path('access_control_login_attempt_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('access_control_login_attempt_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                {#<input type="text" onkeyup="filterSearch(this, 'pr.shortName', '{{ path('product_async_list') }}')" placeholder="Search..." title="Search">#}
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('access_control_login_attempt_async_list') }}');
+        });
+    </script>
 {% endblock %}

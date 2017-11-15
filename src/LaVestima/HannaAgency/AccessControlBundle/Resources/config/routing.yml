@@ -25,3 +25,9 @@ access_control_reset_password:
 access_control_login_attempt_list:
     path: /login_attempt/list
     defaults: { _controller: AccessControlBundle:LoginAttempt:list }
+
+access_control_login_attempt_async_list:
+    path: /login_attempt/async/list
+    defaults: { _controller: AccessControlBundle:Async\LoginAttemptAsync:list }
+    options:
+        expose: true
