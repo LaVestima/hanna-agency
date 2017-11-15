@@ -106,7 +106,7 @@ footer {
     color: #FF0000;
 }
 
-.button {
+.button, button {
     display: inline-block;
     padding: 10px;
     background: $main-theme-color;
@@ -114,9 +114,14 @@ footer {
     text-align: center;
     cursor: pointer;
     font-style: normal;
+    border: none;
 
     &:hover {
         background: $main-theme-color-hover;
+    }
+
+    &:focus {
+        outline: none;
     }
 
     &.inactive {
