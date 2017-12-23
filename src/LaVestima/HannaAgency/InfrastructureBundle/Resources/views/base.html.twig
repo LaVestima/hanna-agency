@@ -139,7 +139,7 @@
 {# ----------------------- JS ----------------------- #}
 {% if (block('actionBar') is not defined or block('actionBar') is null) and
     (actionBar is not defined or actionBar is null) %}
-{% stylesheets filter='scssphp' output='css/app.css'
+{% stylesheets filter='scssphp' output='css/no_action_bar.css'
 '@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
 <link rel="stylesheet" href="{{ asset_url }}" />

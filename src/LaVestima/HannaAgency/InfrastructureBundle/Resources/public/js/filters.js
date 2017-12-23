@@ -1,5 +1,5 @@
 function filterSearch(filter, column, path) {
-    console.log(path);
+    // console.log(path);
     if (filter !== undefined && column !== undefined) {
         filterIndex = $(filter).closest('td').index();
         filterInputs = $(filter).closest('tr').find('td input');
