@@ -41,8 +41,10 @@
             {% if block('actionBar') is defined and block('actionBar') is not null %}
                 {{ block('actionBar') }}
             {% elseif actionBar is defined and actionBar is not null %}
+                {% set renderActionBar = false %}
                 {% for button in actionBar %}
                     {% if button.role is not defined or is_granted(button.role) %}
+                        {% set renderActionBar = true %}
                         <a href="{{ path(button.path) }}">
                             <div class="button action-bar-button">
                                 {% if button.icon is defined %}
@@ -139,8 +141,8 @@
     {#{% endif %}#}
 </body>
 {# ----------------------- JS ----------------------- #}
-{% if (block('actionBar') is not defined or block('actionBar') is null) and
-    (actionBar is not defined or actionBar is null) %}
+{% if ((block('actionBar') is not defined or block('actionBar') is null) and
+    (actionBar is not defined or actionBar is null)) or not renderActionBar %}
 {% stylesheets filter='scssphp' output='css/no_action_bar.css'
 '@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
