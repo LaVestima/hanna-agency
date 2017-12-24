@@ -2,15 +2,13 @@
 
 namespace LaVestima\HannaAgency\UserManagementBundle\Controller\Async;
 
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserAsyncController extends BaseController
+class UserAsyncController extends BaseAsyncController
 {
     private $userCrudController;
-
-    protected $isListDeleted = false;
 
     /**
      * UserAsyncController constructor.
@@ -21,32 +19,6 @@ class UserAsyncController extends BaseController
         UserCrudControllerInterface $userCrudController
     ) {
         $this->userCrudController = $userCrudController;
-    }
-
-    /**
-     * User Async List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function listAction(Request $request)
-    {
-        $this->isListDeleted = false;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
-     * User Async Deleted List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function deletedListAction(Request $request)
-    {
-        $this->isListDeleted = true;
-
-        return $this->genericListAction($request);
     }
 
     /**
@@ -87,6 +59,6 @@ class UserAsyncController extends BaseController
         );
         $this->setView('@UserManagement/User/Async/list.html.twig');
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

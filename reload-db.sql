@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS ha;
-CREATE DATABASE ha;
+CREATE DATABASE ha CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE ha;
 
@@ -532,9 +532,9 @@ INSERT INTO Roles (ID, Name, Code) VALUES (5, 'Guest', 'ROLE_GUEST');
 
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (1, 'guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 5, 'ewWSIGrRBcRtkddBn2FlDzonjEPKbVRyN8qJ69vcaM5xJCuRPc');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (2, '2016-12-02', 'admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2, 'GgUSZbnDcBu6wosgoz8jaaHVpA1euAI1jQa8mEMYAt9LQVPVuw');
-INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (3, '2016-07-07', 'user', 'user@used.user', '$2y$13$LK082JKNh7ME7o6Vn/bjkeDEJfajPXCiegqlDaDESnrGjflvYrNAG', 3, 'HKAZmjMlvAielHIFOwdZkjoA8Us1M6S5jdoXziiJuTU0negPQl');
+INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (3, '2016-07-07', 'user', 'user@used.user', '$2y$13$LK082JKNh7ME7o6Vn/bjkeDEJfajPXCiegqlDaDESnrGjflvYrNAG', 4, 'HKAZmjMlvAielHIFOwdZkjoA8Us1M6S5jdoXziiJuTU0negPQl');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (4, '2015-01-01', 'admin', 'admin@admin.admin', '$2y$13$J5XJ.bvLTJ0M0kmun722nOiG3C2HCQi2v7NtNiOjWEJXZD2SXwnVi', 1, 'JWcX5wnVXm6cHmRprqymsFRNlaXZIsr8aa1oNNSDT4239wePs6');
-INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
+INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 3, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
 
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (1, 1, 'de', 1);
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (2, 2, 'pl', 0);

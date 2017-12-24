@@ -10,10 +10,22 @@ invoice_show:
     path: /invoice/show/{pathSlug}
     defaults: { _controller: InvoiceBundle:Invoice:show, pathSlug: '' }
 
+invoice_delete:
+    path: /invoice/delete/{invoiceId}
+    defaults: { _controller: InvoiceBundle:Invoice:delete, invoiceId: 0 }
+
 invoice_new:
     path: /invoice/new
     defaults: { _controller: InvoiceBundle:Invoice:new }
 
-invoice_delete:
-    path: /invoice/delete/{invoiceId}
-    defaults: { _controller: InvoiceBundle:Invoice:delete, invoiceId: 0 }
+invoice_async_list:
+    path: /invoice/async/list
+    defaults: { _controller: InvoiceBundle:Async\InvoiceAsync:list }
+    options:
+        expose: true
+
+invoice_async_deleted_list:
+    path: /invoice/async/deleted_list
+    defaults: { _controller: InvoiceBundle:Async\InvoiceAsync:deletedList }
+    options:
+        expose: true

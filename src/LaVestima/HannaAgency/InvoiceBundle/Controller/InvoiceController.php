@@ -46,15 +46,17 @@ class InvoiceController extends BaseController
         $this->setActionBar([
             [
                 'label' => 'New Invoice',
-                'path' => 'invoice_new'
+                'path' => 'invoice_new',
+                'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Invoices',
-                'path' => 'invoice_deleted_list'
+                'path' => 'invoice_deleted_list',
+                'icon' => 'fa-close'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
 	}
 
     /**
@@ -76,7 +78,7 @@ class InvoiceController extends BaseController
             ]
         ]);
 
-	    return parent::listAction($request);
+	    return parent::baseListAction($request);
     }
 
 	/**

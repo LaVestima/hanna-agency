@@ -22,14 +22,14 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
-    public function testListActionCustomer()
+    public function testListActionGuest()
     {
-        $this->logInCustomer();
+        $this->logInGuest();
 
         $this->client->request('GET', $this->listActionPath);
 
         $this->assertSame(
-            Response::HTTP_OK,
+            Response::HTTP_FORBIDDEN,
             $this->client->getResponse()->getStatusCode()
         );
     }
@@ -46,6 +46,42 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
+    public function testListActionCustomer()
+    {
+        $this->logInCustomer();
+
+        $this->client->request('GET', $this->listActionPath);
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testListActionAdmin()
+    {
+        $this->logInAdmin();
+
+        $this->client->request('GET', $this->listActionPath);
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testListActionSuperAdmin()
+    {
+        $this->logInSuperAdmin();
+
+        $this->client->request('GET', $this->listActionPath);
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
     // --------------------------------------------------------------------
 
     public function testShowActionAnonymous()
@@ -54,6 +90,18 @@ class OrderControllerTest extends BaseWebTestCase
 
         $this->assertSame(
             Response::HTTP_FOUND,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionGuest()
+    {
+        $this->logInGuest();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_FORBIDDEN,
             $this->client->getResponse()->getStatusCode()
         );
     }
@@ -94,6 +142,30 @@ class OrderControllerTest extends BaseWebTestCase
 
         $this->assertSame(
             Response::HTTP_FORBIDDEN,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionAdmin()
+    {
+        $this->logInAdmin();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_OK,
+            $this->client->getResponse()->getStatusCode()
+        );
+    }
+
+    public function testShowActionSuperAdmin()
+    {
+        $this->logInSuperAdmin();
+
+        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
+
+        $this->assertSame(
+            Response::HTTP_OK,
             $this->client->getResponse()->getStatusCode()
         );
     }

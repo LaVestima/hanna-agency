@@ -4,8 +4,16 @@ services:
 
     LaVestima\HannaAgency\InvoiceBundle\Controller\InvoiceController:
 
+    LaVestima\HannaAgency\InvoiceBundle\Controller\Async\InvoiceAsyncController:
+
     invoice_crud_controller:
         class: LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudController
 
     invoice_product_crud_controller:
         class: LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceProductCrudController
+
+    LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudControllerInterface:
+        alias: invoice_crud_controller
+
+    LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceProductCrudControllerInterface:
+        alias: invoice_product_crud_controller

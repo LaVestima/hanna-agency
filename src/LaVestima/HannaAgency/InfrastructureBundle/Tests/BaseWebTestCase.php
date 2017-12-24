@@ -29,11 +29,19 @@ class BaseWebTestCase extends WebTestCase
         $this->createNewClient();
     }
 
-    protected function logInAdmin()
+    protected function logInSuperAdmin()
     {
         $this->client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW'   => 'admin',
+        ]);
+    }
+
+    protected function logInAdmin()
+    {
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'admin123',
+            'PHP_AUTH_PW'   => 'admin123',
         ]);
     }
 

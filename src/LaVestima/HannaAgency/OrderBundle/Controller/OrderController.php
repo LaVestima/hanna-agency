@@ -73,7 +73,7 @@ class OrderController extends BaseController
             ],
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
 	}
 
     /**
@@ -109,7 +109,7 @@ class OrderController extends BaseController
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**

@@ -56,7 +56,7 @@ class UserController extends BaseController
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
 	}
 
     /**
@@ -81,7 +81,7 @@ class UserController extends BaseController
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**

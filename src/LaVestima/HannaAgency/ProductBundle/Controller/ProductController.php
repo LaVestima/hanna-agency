@@ -54,15 +54,17 @@ class ProductController extends BaseController
         $this->setActionBar([
             [
                 'label' => 'New Product',
-                'path' => 'product_new'
+                'path' => 'product_new',
+                'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Products',
-                'path' => 'product_deleted_list'
+                'path' => 'product_deleted_list',
+                'icon' => 'fa-close'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
 	}
 
     /**
@@ -84,12 +86,13 @@ class ProductController extends BaseController
         $this->setView('@Product/Product/deletedList.html.twig');
         $this->setActionBar([
             [
-                'label' => '< Back',
-                'path' => 'product_list'
+                'label' => 'Back',
+                'path' => 'product_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**
@@ -99,7 +102,7 @@ class ProductController extends BaseController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-	public function showAction($pathSlug)
+	public function showAction(string $pathSlug)
     {
 		$product = $this->productCrudController
 			->readOneEntityBy(['pathSlug' => $pathSlug])
@@ -107,16 +110,15 @@ class ProductController extends BaseController
 
 		$productSizes = $this->productSizeCrudController
             ->readEntitiesBy(['idProducts' => $product->getId()])
-            ->getResult();
+            ->getResultAsArray();
 
-		if (!is_array($productSizes) && $productSizes !== null) {
-            $productSizes = [$productSizes];
-        }
+		$this->setView('@Product/Product/show.html.twig');
+		$this->setTemplateEntities([
+		    'product' => $product,
+            'productSizes' => $productSizes,
+        ]);
 
-		return $this->render('@Product/Product/show.html.twig', [
-            'product' => $product,
-            'productSizes' => $productSizes
-		]);
+        return parent::showAction('');
 	}
 
     /**
@@ -142,7 +144,8 @@ class ProductController extends BaseController
                 'label' => 'Size',
                 'choices' => $sizes,
                 'choice_label' => 'name',
-                'placeholder' => 'Choose a size'
+                'placeholder' => 'Choose a size',
+                'required' => true,
             ]);
 
         $form->get('availabilities')
@@ -150,6 +153,7 @@ class ProductController extends BaseController
                 'label' => 'Availability',
                 'data' => 0,
                 'empty_data' => 0,
+                'required' => true,
             ]);
 
         $form->handleRequest($request);
@@ -222,17 +226,39 @@ class ProductController extends BaseController
             return $this->redirectToRoute('product_list');
         }
 
-//        var_dump($product);die;
-
-
-
         $form = $this->createForm(ProductType::class, $product, [
             'isAdmin' => $this->isAdmin(),
         ]);
+
+        $sizes = $this->get('size_crud_controller')
+            ->readAllEntities()
+            ->getResult();
+
+        $form->get('sizes')
+            ->add('0', ChoiceType::class, [
+                'label' => 'Size',
+                'choices' => $sizes,
+                'choice_label' => 'name',
+                'placeholder' => 'Choose a size',
+                'required' => true,
+            ]);
+
+        $form->get('availabilities')
+            ->add('0', NumberType::class, [
+                'label' => 'Availability',
+                'data' => 0,
+                'empty_data' => 0,
+                'required' => true,
+            ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->productCrudController->updateEntity($product, $form->getData());
 
+            return $this->redirectToRoute('product_show', [
+                'pathSlug' => $pathSlug,
+            ]);
         }
 
         return $this->render('@Product/Product/edit.html.twig', [

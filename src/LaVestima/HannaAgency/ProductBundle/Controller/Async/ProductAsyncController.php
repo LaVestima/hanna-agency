@@ -2,15 +2,14 @@
 
 namespace LaVestima\HannaAgency\ProductBundle\Controller\Async;
 
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class ProductAsyncController extends BaseController
+class ProductAsyncController extends BaseAsyncController
 {
     private $productCrudController;
-
-    private $isListDeleted = false;
 
     /**
      * ProductAsyncController constructor.
@@ -24,39 +23,18 @@ class ProductAsyncController extends BaseController
     }
 
     /**
-     * Product Async List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function listAction(Request $request)
-    {
-        $this->isListDeleted = false;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
-     * Product Async Deleted List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function deletedListAction(Request $request)
-    {
-        $this->isListDeleted = true;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
      * Product Async Generic List Action.
      *
      * @param Request $request
      * @return mixed
      */
-    private function genericListAction(Request $request)
+    protected function genericListAction(Request $request)
     {
+        // TODO: put this for all async actions
+        if (!$request->isXmlHttpRequest()) {
+            throw new AccessDeniedHttpException();
+        }
+
         $filters = $request->get('filters');
 
         $this->productCrudController
@@ -88,6 +66,6 @@ class ProductAsyncController extends BaseController
         );
         $this->setView('@Product/Product/Async/list.html.twig');
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

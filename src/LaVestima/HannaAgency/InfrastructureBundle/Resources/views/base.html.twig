@@ -45,12 +45,14 @@
                     {% if button.role is not defined or is_granted(button.role) %}
                         <a href="{{ path(button.path) }}">
                             <div class="button action-bar-button">
+                                {% if button.icon is defined %}
+                                    <i class="fa {{ button.icon }}" aria-hidden="true"></i>
+                                {% endif %}
                                 {{ button.label }}
                             </div>
                         </a>
                     {% endif %}
                 {% endfor %}
-
 
                 {% if isExportAllowed is defined and isExportAllowed %}
                     <div class="action-bar-export">
