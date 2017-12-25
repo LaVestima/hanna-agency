@@ -238,4 +238,41 @@ class Orders implements EntityInterface, \JsonSerializable
 
         return $json;
     }
+
+    static public function getStatusColumnColumn()
+    {
+        return '(
+            CASE
+                WHEN EXISTS(
+                    SELECT os1.name
+                    FROM LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts op1
+                    INNER JOIN LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses os1 WITH op1.idStatuses=os1.id
+                    WHERE os1.name=\'Rejected\'
+                    AND o.id=op1.idOrders
+                ) THEN \'Rejected\'
+                WHEN EXISTS(
+                    SELECT os2.name
+                    FROM LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts op2
+                    INNER JOIN LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses os2 WITH op2.idStatuses=os2.id
+                    WHERE os2.name=\'Pending\'
+                    AND o.id=op2.idOrders
+                ) THEN \'Pending\'
+                WHEN EXISTS(
+                    SELECT os3.name
+                    FROM LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts op3
+                    INNER JOIN LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses os3 WITH op3.idStatuses=os3.id
+                    WHERE os3.name=\'Queued\'
+                    AND o.id=op3.idOrders
+                ) THEN \'Queued\'
+                WHEN \'Completed\'=ANY(
+                    SELECT os4.name
+                    FROM LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts op4
+                    INNER JOIN LaVestima\HannaAgency\OrderBundle\Entity\OrdersStatuses os4 WITH op4.idStatuses=os4.id
+                    WHERE os4.name=\'Completed\'
+                    AND o.id=op4.idOrders
+                ) THEN \'Completed\'
+                ELSE \'\'
+            END
+        ) as status';
+    }
 }

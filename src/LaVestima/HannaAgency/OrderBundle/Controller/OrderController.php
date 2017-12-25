@@ -26,7 +26,6 @@ class OrderController extends BaseController
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->orderCrudController = $orderCrudController;
-//        $this->setEntityName('order');
     }
 
     /**
@@ -38,21 +37,6 @@ class OrderController extends BaseController
      */
     public function listAction(Request $request)
     {
-        $this->orderCrudController->setAlias('o');
-
-        if ($this->isAdmin()) {
-            $this->orderCrudController->readAllUndeletedEntities();
-        } elseif ($this->isCustomer()) {
-            // TODO: only undeleted
-            $this->orderCrudController->readEntitiesBy([
-                'idCustomers' => $this->getCustomer()->getId()
-            ]);
-        }
-
-        $this->orderCrudController
-            ->join('idCustomers', 'c')
-            ->orderBy('dateCreated', 'DESC');
-
         // TODO: find better way of generating status
 //        foreach ($pagination->getItems() as $order) {
 //            $order->setStatus(
@@ -60,16 +44,19 @@ class OrderController extends BaseController
 //            );
 //        }
 
-        $this->setQuery($this->orderCrudController->getQuery());
         $this->setView('@Order/Order/list.html.twig');
         $this->setActionBar([
             [
                 'label' => 'Place Order',
-                'path' => 'order_placement_new'
+                'path' => 'order_placement_new',
+                'role' => 'ROLE_CUSTOMER',
+                'icon' => 'fa-file-text-o'
             ],
             [
                 'label' => 'Deleted Orders',
-                'path' => 'order_deleted_list'
+                'path' => 'order_deleted_list',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-close'
             ],
         ]);
 
@@ -85,22 +72,6 @@ class OrderController extends BaseController
      */
 	public function deletedListAction(Request $request)
     {
-        $this->orderCrudController->setAlias('o');
-
-        if ($this->isAdmin()) {
-            $this->orderCrudController->readAllDeletedEntities();
-        } elseif ($this->isCustomer()) {
-            // TODO: only undeleted
-            $this->orderCrudController->readEntitiesBy([
-                'idCustomers' => $this->getCustomer()->getId()
-            ]);
-        }
-
-        $this->orderCrudController
-            ->join('idCustomers', 'c')
-            ->orderBy('dateCreated', 'DESC');
-
-        $this->setQuery($this->orderCrudController->getQuery());
         $this->setView('@Order/Order/deletedList.html.twig');
         $this->setActionBar([
             [

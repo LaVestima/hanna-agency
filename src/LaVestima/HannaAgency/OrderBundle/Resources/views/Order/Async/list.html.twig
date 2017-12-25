@@ -4,10 +4,11 @@
     </tr>
 {% else %}
     {% for order in pagination %}
+        {% set status = order['status'] %}
+        {% set order = order[0] %}
         <tr class="entity-list-row">
             <td>{{ order.dateCreated | date('d.m.Y') }}</td>
-            {#<td>{{ order.status.name }}</td>#}
-            <td></td>
+            <td>{{ status }}</td>
             {% if is_granted('ROLE_ADMIN') %}
                 <td>{{ order.idCustomers.fullName }}</td>
                 <td>{{ order.userCreated.login }}</td>

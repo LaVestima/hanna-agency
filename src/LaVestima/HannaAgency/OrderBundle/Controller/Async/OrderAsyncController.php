@@ -2,15 +2,14 @@
 
 namespace LaVestima\HannaAgency\OrderBundle\Controller\Async;
 
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudControllerInterface;
+use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use Symfony\Component\HttpFoundation\Request;
 
-class OrderAsyncController extends BaseController
+class OrderAsyncController extends BaseAsyncController
 {
     private $orderCrudController;
-
-    private $isListDeleted = false;
 
     /**
      * OrderAsyncController constructor.
@@ -24,34 +23,15 @@ class OrderAsyncController extends BaseController
     }
 
     /**
-     * Order Async List Action.
+     * Order Async Generic List Action.
      *
      * @param Request $request
      * @return mixed
      */
-    public function listAction(Request $request)
-    {
-        $this->isListDeleted = false;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
-     * Order Async Deleted List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function deletedListAction(Request $request)
-    {
-        $this->isListDeleted = true;
-
-        return $this->genericListAction($request);
-    }
-
-    private function genericListAction(Request $request)
+    protected function genericListAction(Request $request)
     {
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->orderCrudController
             ->setAlias('o');
@@ -66,6 +46,10 @@ class OrderAsyncController extends BaseController
                 );
         }
 
+        $this->orderCrudController->addSelect(
+            Orders::getStatusColumnColumn()
+        );
+
         if ($this->isListDeleted) {
             $this->orderCrudController
                 ->onlyDeleted();
@@ -78,11 +62,14 @@ class OrderAsyncController extends BaseController
             $this->orderCrudController
                 ->join('idCustomers', 'c')
                 ->join('userCreated', 'u')
-                ->orderBy('dateCreated', 'DESC')
+                ->orderBy(
+                    isset($sorters) ? $sorters[0]['column'] : 'dateCreated',
+                    isset($sorters) ? $sorters[0]['direction'] : 'desc'
+                )
                 ->getQuery()
         );
         $this->setView('@Order/Order/Async/list.html.twig');
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

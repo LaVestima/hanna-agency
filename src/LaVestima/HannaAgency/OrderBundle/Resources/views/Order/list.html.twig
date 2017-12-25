@@ -28,11 +28,31 @@
 
     <table class="entity-list">
         <tr class="entity-list-header">
-            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
+            <th>
+                <ua onclick="sortSearch(this, 'o.dateCreated', '{{ path('order_async_list') }}')">
+                    Date Created
+                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'o.status', '{{ path('order_async_list') }}')">
+                    Status
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
             {% if is_granted('ROLE_ADMIN') %}
-                <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
-                <th>User Created</th>
+                <th>
+                    <ua onclick="sortSearch(this, 'c.lastName', '{{ path('order_async_list') }}')">
+                        Customer
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                    </ua>
+                </th>
+                <th>
+                    <ua onclick="sortSearch(this, 'u.login', '{{ path('order_async_list') }}')">
+                        User Created
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                    </ua>
+                </th>
             {% endif %}
             <th></th>
         </tr>
