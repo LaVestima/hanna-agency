@@ -376,10 +376,12 @@ abstract class CrudController extends BaseController implements CrudControllerIn
 
         if ($numberOfEntities === 1) {
             do {
-                $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
-            } while (!$entity);
+                $entity = $this->readOneEntityBy([
+                    'id' => rand(1, $this->getLastId())
+                ]);
+            } while (!$entity->getResult());
 
-            return $entity;
+            return $this;
         } elseif ($numberOfEntities > 1) {
             $entities = [];
 

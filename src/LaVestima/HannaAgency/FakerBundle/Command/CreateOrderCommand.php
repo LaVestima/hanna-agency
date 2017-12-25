@@ -43,7 +43,8 @@ class CreateOrderCommand extends ContainerAwareCommand
 
                 $output->writeln('Order');
 
-                $productNumber = $this->getContainer()->get('product_crud_controller')
+                $productNumber = $this->getContainer()
+                    ->get('product_crud_controller')
                     ->countRows();
 
                 for ($j = 0; $j < rand(1, $productNumber); $j++) {
@@ -61,17 +62,22 @@ class CreateOrderCommand extends ContainerAwareCommand
     {
         $order = new Orders();
 
-        $randomCustomer = $this->getContainer()->get('customer_crud_controller')
-            ->readRandomEntities(1)->getResult();
+        $randomCustomer = $this->getContainer()
+            ->get('customer_crud_controller')
+            ->readRandomEntities(1)
+            ->getResult();
 
-        $randomUser = $this->getContainer()->get('user_crud_controller')
-            ->readRandomEntities(1)->getResult();
+        $randomUser = $this->getContainer()
+            ->get('user_crud_controller')
+            ->readRandomEntities(1)
+            ->getResult();
 
         $order->setDateCreated($this->faker->dateTime('now'));
         $order->setIdCustomers($randomCustomer);
         $order->setUserCreated($randomUser);
 
-        $this->getContainer()->get('order_crud_controller')
+        $this->getContainer()
+            ->get('order_crud_controller')
             ->createEntity($order);
 
         return $order;
@@ -82,8 +88,10 @@ class CreateOrderCommand extends ContainerAwareCommand
         $orderProduct = new OrdersProducts();
 
         do {
-            $randomProductSize = $this->getContainer()->get('product_size_crud_controller')
-                ->readRandomEntities(1)->getResult();
+            $randomProductSize = $this->getContainer()
+                ->get('product_size_crud_controller')
+                ->readRandomEntities(1)
+                ->getResult();
         } while (!$this->isProductUniqueForOrder($randomProductSize, $order));
 
         $randomStatus = $this->getContainer()->get('order_status_crud_controller')

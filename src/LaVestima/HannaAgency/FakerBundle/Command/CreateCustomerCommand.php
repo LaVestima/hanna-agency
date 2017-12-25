@@ -27,7 +27,7 @@ class CreateCustomerCommand extends BaseCreateCommand
             for ($i = 0; $i < $productNumber; $i++) {
                 $this->createFakeCustomer();
 
-                $output->writeln('Product');
+                $output->writeln('Customer');
             }
 
             $output->writeln('Created: ' . $i);
@@ -55,7 +55,7 @@ class CreateCustomerCommand extends BaseCreateCommand
         $customer->setCompanyName($this->faker->company);
         $customer->setVat($this->faker->regexify('[A-Z]{2}[0-9]{8}'));
         $customer->setEmail($this->faker->safeEmail);
-        $customer->setNewsletter($this->faker->numberBetween(0, 1));
+//        $customer->setNewsletter($this->faker->numberBetween(0, 1));
         $customer->setPhone($this->faker->phoneNumber);
         $customer->setDefaultDiscount($this->faker->numberBetween(0, 90));
         $customer->setIdCountries($randomCountry);
