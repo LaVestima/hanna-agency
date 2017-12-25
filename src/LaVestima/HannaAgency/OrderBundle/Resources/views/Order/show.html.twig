@@ -37,6 +37,12 @@
                     <td>Date Placed</td>
                     <td>{{ order.dateCreated | date('d.m.Y') }}</td>
                 </tr>
+                {% if order.status is defined and order.status is not null %}
+                <tr>
+                    <td>Status</td>
+                    <td>{{ order.status.name }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td>Customer</td>
                     <td>

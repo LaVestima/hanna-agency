@@ -239,7 +239,7 @@ class Orders implements EntityInterface, \JsonSerializable
         return $json;
     }
 
-    static public function getStatusColumnColumn()
+    static public function getStatusColumnQuery()
     {
         return '(
             CASE

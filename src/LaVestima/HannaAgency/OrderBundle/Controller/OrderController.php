@@ -4,6 +4,8 @@ namespace LaVestima\HannaAgency\OrderBundle\Controller;
 
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudControllerInterface;
+use LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderStatusCrudControllerInterface;
+use LaVestima\HannaAgency\OrderBundle\Entity\Orders;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -11,6 +13,7 @@ class OrderController extends BaseController
 {
     private $authorizationChecker;
     protected $orderCrudController;
+    protected $orderStatusCrudController;
 
     protected $entityName = 'order';
 
@@ -22,10 +25,12 @@ class OrderController extends BaseController
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
-        OrderCrudControllerInterface $orderCrudController
+        OrderCrudControllerInterface $orderCrudController,
+        OrderStatusCrudControllerInterface $orderStatusCrudController
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->orderCrudController = $orderCrudController;
+        $this->orderStatusCrudController = $orderStatusCrudController;
     }
 
     /**
@@ -93,27 +98,43 @@ class OrderController extends BaseController
     {
         $order = null;
 
+        $this->orderCrudController->setAlias('o');
+
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            $order = $this->orderCrudController
+            $this->orderCrudController
                 ->readOneEntityBy([
                     'pathSlug' => $pathSlug
                 ]);
         }
         else if ($this->authorizationChecker->isGranted('ROLE_CUSTOMER')) {
-            $order = $this->orderCrudController
+            $this->orderCrudController
                 ->readOneEntityBy([
                     'pathSlug' => $pathSlug,
                     'idCustomers' => $this->getCustomer()->getId()
                 ]);
         }
 
+        $this->orderCrudController->addSelect(
+            Orders::getStatusColumnQuery()
+        );
+
         $order = $this->orderCrudController->getResult();
 
-		if (!$order) {
+        if (!$order) {
             $this->addFlash('warning', 'No order found!');
 
-		    return $this->redirectToRoute('order_list');
+            return $this->redirectToRoute('order_list');
         }
+
+        $orderStatus = $this->orderStatusCrudController->readOneEntityBy([
+            'name' => $order['status']
+        ])->getResult();
+
+        if ($orderStatus) {
+            $order[0]->setStatus($orderStatus);
+        }
+
+        $order = $order[0];
 
 		$ordersProducts = $this->get('order_product_crud_controller')
 			->readEntitiesBy([

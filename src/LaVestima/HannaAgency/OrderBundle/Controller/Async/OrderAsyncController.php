@@ -47,7 +47,7 @@ class OrderAsyncController extends BaseAsyncController
         }
 
         $this->orderCrudController->addSelect(
-            Orders::getStatusColumnColumn()
+            Orders::getStatusColumnQuery()
         );
 
         if ($this->isListDeleted) {
