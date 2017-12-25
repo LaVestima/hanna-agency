@@ -42,24 +42,18 @@ class ProductController extends BaseController
      */
 	public function listAction(Request $request)
     {
-        $this->setQuery($this->productCrudController
-            ->setAlias('p')
-            ->readAllUndeletedEntities()
-            ->join('idCategories', 'c')
-            ->join('idProducers', 'pr')
-            ->orderBy('name')
-            ->getQuery()
-        );
         $this->setView('@Product/Product/list.html.twig');
         $this->setActionBar([
             [
                 'label' => 'New Product',
                 'path' => 'product_new',
+                'role' => 'ROLE_ADMIN',
                 'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Products',
                 'path' => 'product_deleted_list',
+                'role' => 'ROLE_ADMIN',
                 'icon' => 'fa-close'
             ]
         ]);
@@ -76,13 +70,6 @@ class ProductController extends BaseController
      */
 	public function deletedListAction(Request $request)
     {
-        $this->setQuery($this->productCrudController
-            ->setAlias('p')
-            ->readAllDeletedEntities()
-            ->join('idCategories', 'c')
-            ->join('idProducers', 'pr')
-            ->orderBy('name')
-            ->getQuery());
         $this->setView('@Product/Product/deletedList.html.twig');
         $this->setActionBar([
             [

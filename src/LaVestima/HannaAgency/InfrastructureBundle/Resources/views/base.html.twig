@@ -142,7 +142,9 @@
 </body>
 {# ----------------------- JS ----------------------- #}
 {% if ((block('actionBar') is not defined or block('actionBar') is null) and
-    (actionBar is not defined or actionBar is null)) or not renderActionBar %}
+    (actionBar is not defined or actionBar is null)) or
+    (renderActionBar is defined and not renderActionBar)
+%}
 {% stylesheets filter='scssphp' output='css/no_action_bar.css'
 '@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
@@ -155,6 +157,7 @@
 {% javascripts
 '@InfrastructureBundle/Resources/public/js/base.js'
 '@InfrastructureBundle/Resources/public/js/filters.js'
+'@InfrastructureBundle/Resources/public/js/sorters.js'
 %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

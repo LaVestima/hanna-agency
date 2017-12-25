@@ -1,5 +1,4 @@
 function filterSearch(filter, column, path) {
-    // console.log(path);
     if (filter !== undefined && column !== undefined) {
         filterIndex = $(filter).closest('td').index();
         filterInputs = $(filter).closest('tr').find('td input');
@@ -15,7 +14,8 @@ function filterSearch(filter, column, path) {
         type: "GET",
         url: path,
         data: {
-            filters: filters
+            filters: filters,
+            sorters: sorters
         }
     }).done(function(data) {
         $('.entity-list-content').html(data);

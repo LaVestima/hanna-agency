@@ -7,9 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait ListActionControllerTrait
 {
-    protected $request;
     protected $query;
-
     protected $pagination;
 
     /**
@@ -19,13 +17,14 @@ trait ListActionControllerTrait
      * @return mixed
      * @throws \Exception
      */
-    public function listAction(Request $request)
+    public function baseListAction(Request $request)
     {
         $this->request = $request;
 
         $this->configure();
 
         return $this->render($this->view, [
+            'isAsync' => $this->isAsync,
             'pagination' => $this->pagination,
             'actionBar' => $this->actionBar,
         ]);
@@ -38,27 +37,29 @@ trait ListActionControllerTrait
      */
     private function configure()
     {
-        if (!isset($this->query)) {
+        if ($this->isAsync && !isset($this->query)) {
             throw new \Exception('No query defined!');
         }
         if (!isset($this->view)) {
             throw new \Exception('No view defined!');
         }
 
-        $this->pagination = $this->paginate();
+        if ($this->isAsync) {
+            $this->pagination = $this->paginate();
 
-        if (
-            strpos($this->pagination->getRoute(), 'async_list') === false &&
-            strpos($this->pagination->getRoute(), 'async_deleted_list') === false
-        ) {
-            if (strpos($this->pagination->getRoute(), 'deleted_list') !== false) {
-                $this->pagination->setUsedRoute(
-                    str_replace('deleted_list', 'async_deleted_list', $this->pagination->getRoute())
-                );
-            } else {
-                $this->pagination->setUsedRoute(
-                    str_replace('list', 'async_list', $this->pagination->getRoute())
-                );
+            if (
+                strpos($this->pagination->getRoute(), 'async_list') === false &&
+                strpos($this->pagination->getRoute(), 'async_deleted_list') === false
+            ) {
+                if (strpos($this->pagination->getRoute(), 'deleted_list') !== false) {
+                    $this->pagination->setUsedRoute(
+                        str_replace('deleted_list', 'async_deleted_list', $this->pagination->getRoute())
+                    );
+                } else {
+                    $this->pagination->setUsedRoute(
+                        str_replace('list', 'async_list', $this->pagination->getRoute())
+                    );
+                }
             }
         }
     }
@@ -90,6 +91,12 @@ trait ListActionControllerTrait
         return $this;
     }
 
+    /**
+     * Convert filters from inputs to SQL CRUD format.
+     *
+     * @param $filters
+     * @return array
+     */
     protected function convertFiltersToCrudCondition($filters)
     {
         $columnValueFilter = [];

@@ -69,6 +69,8 @@ class BaseAsyncController extends BaseController
     {
         if (!$this->request->isXmlHttpRequest()) {
             throw new AccessDeniedHttpException();
+        } else {
+            $this->isAsync = true;
         }
     }
 }

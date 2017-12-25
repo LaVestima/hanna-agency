@@ -11,9 +11,24 @@
             <col width="40px">
         </colgroup>
         <tr class="entity-list-header">
-            <th>{{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Category', 'c.name') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Producer', 'pr.shortName') }}</th>
+            <th>
+                <ua onclick="sortSearch(this, 'p.name', '{{ path('product_async_list') }}')">
+                    Name
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.name', '{{ path('product_async_list') }}')">
+                    Category
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'pr.shortName', '{{ path('product_async_list') }}')">
+                    Producer
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
             <th></th>
         </tr>
         <tr class="entity-list-filters">

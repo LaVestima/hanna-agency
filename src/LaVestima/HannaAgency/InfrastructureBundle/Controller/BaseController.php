@@ -18,6 +18,7 @@ class BaseController extends Controller
     use DeleteActionControllerTrait;
 
     protected $request;
+    protected $isAsync;
 
     /**
      * @return bool

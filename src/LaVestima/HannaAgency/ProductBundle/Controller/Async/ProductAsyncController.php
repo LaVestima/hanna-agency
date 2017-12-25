@@ -30,12 +30,8 @@ class ProductAsyncController extends BaseAsyncController
      */
     protected function genericListAction(Request $request)
     {
-        // TODO: put this for all async actions
-        if (!$request->isXmlHttpRequest()) {
-            throw new AccessDeniedHttpException();
-        }
-
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->productCrudController
             ->setAlias('p');
@@ -61,7 +57,10 @@ class ProductAsyncController extends BaseAsyncController
         $this->setQuery($this->productCrudController
             ->join('idCategories', 'c')
             ->join('idProducers', 'pr')
-            ->orderBy('name')
+            ->orderBy(
+                isset($sorters) ? $sorters[0]['column'] : 'name',
+                isset($sorters) ? $sorters[0]['direction'] : 'asc'
+            )
             ->getQuery()
         );
         $this->setView('@Product/Product/Async/list.html.twig');
