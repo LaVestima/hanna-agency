@@ -142,10 +142,13 @@ class OrderController extends BaseController
             ])
             ->getResultAsArray();
 
-		return $this->render('@Order/Order/show.html.twig', [
-			'order' => $order,
-			'ordersProducts' => $ordersProducts,
-		]);
+		$this->setView('@Order/Order/show.html.twig');
+		$this->setTemplateEntities([
+            'order' => $order,
+            'ordersProducts' => $ordersProducts,
+        ]);
+
+		return parent::baseShowAction();
 	}
 
     /**

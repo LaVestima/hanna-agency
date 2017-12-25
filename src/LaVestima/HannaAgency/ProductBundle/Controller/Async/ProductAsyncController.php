@@ -5,7 +5,6 @@ namespace LaVestima\HannaAgency\ProductBundle\Controller\Async;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ProductAsyncController extends BaseAsyncController
 {

@@ -279,6 +279,13 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    public function addSelect($column)
+    {
+        $this->query->addSelect($column);
+
+        return $this;
+    }
+
 	/**
      * Mark the Entity in DB as deleted.
      *
@@ -473,21 +480,12 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             throw new \InvalidArgumentException('Sorting order must be ASC or DESC');
         }
 
-        if (count($parts = explode('.', $field)) > 1) {
-            if (count($parts) > 2) {
-                throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
-            }
+        $field = $this->generateTableFieldName($field);
 
-            $this->query->orderBy(
-                $field,
-                strtoupper($order)
-            );
-        } else {
-            $this->query->orderBy(
-                $this->alias . '.' . $field,
-                strtoupper($order)
-            );
-        }
+        $this->query->orderBy(
+            $field,
+            strtoupper($order)
+        );
 
         return $this;
     }
@@ -500,6 +498,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
     public function getQuery()
     {
 //        var_dump($this->query->getQuery()->getDQL());
+//        die;
         return $this->query->getQuery();
     }
 

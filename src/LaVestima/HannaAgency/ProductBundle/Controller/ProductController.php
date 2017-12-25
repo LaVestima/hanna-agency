@@ -105,7 +105,7 @@ class ProductController extends BaseController
             'productSizes' => $productSizes,
         ]);
 
-        return parent::showAction('');
+        return parent::baseShowAction();
 	}
 
     /**
