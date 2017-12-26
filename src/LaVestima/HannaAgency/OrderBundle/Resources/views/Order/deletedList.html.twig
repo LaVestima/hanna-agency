@@ -2,22 +2,28 @@
 
 {% block title 'Deleted Orders' %}
 
-{% block actionBar %}
-    <a href="{{ path('order_list') }}">
-        <div class="button action-bar-button">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            Back
-        </div>
-    </a>
-{% endblock %}
-
 {% block entityList %}
     <table class="entity-list">
         <tr class="entity-list-header">
-            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'o.dateCreated') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Status', 'o.status') }}</th>
+            <th>
+                <ua onclick="sortSearch(this, 'o.dateCreated', '{{ path('order_async_deleted_list') }}')">
+                    Date Created
+                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'o.status', '{{ path('order_async_deleted_list') }}')">
+                    Status
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
             {% if is_granted('ROLE_ADMIN') %}
-                <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.fullName') }}</th>
+                <th>
+                    <ua onclick="sortSearch(this, 'c.fullName', '{{ path('order_async_deleted_list') }}')">
+                        Customer
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                    </ua>
+                </th>
                 <th>User Created</th>
             {% endif %}
             <th></th>

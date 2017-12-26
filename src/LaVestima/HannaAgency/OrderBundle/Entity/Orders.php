@@ -241,8 +241,8 @@ class Orders implements EntityInterface, \JsonSerializable
 
     static public function getStatusColumnQuery()
     {
-        return '(
-            CASE
+        return '
+            (CASE
                 WHEN EXISTS(
                     SELECT os1.name
                     FROM LaVestima\HannaAgency\OrderBundle\Entity\OrdersProducts op1
@@ -272,7 +272,7 @@ class Orders implements EntityInterface, \JsonSerializable
                     AND o.id=op4.idOrders
                 ) THEN \'Completed\'
                 ELSE \'\'
-            END
-        ) as status';
+            END) AS status
+         ';
     }
 }

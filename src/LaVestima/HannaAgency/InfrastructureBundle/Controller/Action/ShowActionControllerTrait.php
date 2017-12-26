@@ -21,6 +21,8 @@ trait ShowActionControllerTrait
             throw new \Exception('No entities defined!');
         }
 
+        $this->templateEntities['actionBar'] = $this->actionBar;
+
         return $this->render($this->view, $this->templateEntities);
     }
 

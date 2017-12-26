@@ -3,14 +3,12 @@
 namespace LaVestima\HannaAgency\CustomerBundle\Controller\Async;
 
 use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomerAsyncController extends BaseController
+class CustomerAsyncController extends BaseAsyncController
 {
     private $customerCrudController;
-
-    private $isListDeleted = false;
 
     /**
      * CustomerAsyncController constructor.
@@ -24,40 +22,15 @@ class CustomerAsyncController extends BaseController
     }
 
     /**
-     * Customer Async List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function listAction(Request $request)
-    {
-        $this->isListDeleted = false;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
-     * Customer Async Deleted List Action.
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function deletedListAction(Request $request)
-    {
-        $this->isListDeleted = true;
-
-        return $this->genericListAction($request);
-    }
-
-    /**
      * Customer Async Generic List Action.
      *
      * @param Request $request
      * @return mixed
      */
-    private function genericListAction(Request $request)
+    protected function genericListAction(Request $request)
     {
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->customerCrudController
             ->setAlias('c');
@@ -82,11 +55,14 @@ class CustomerAsyncController extends BaseController
 
         $this->setQuery($this->customerCrudController
             ->leftJoin('idUsers', 'u')
-            ->orderBy('identificationNumber')
+            ->orderBy(
+                isset($sorters) ? $sorters[0]['column'] : 'identificationNumber',
+                isset($sorters) ? $sorters[0]['direction'] : 'asc'
+            )
             ->getQuery()
         );
         $this->setView('@Customer/Customer/Async/list.html.twig');
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

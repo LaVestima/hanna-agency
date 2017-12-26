@@ -38,26 +38,23 @@ class CustomerController extends BaseController
      */
     public function listAction(Request $request)
     {
-        $this->setQuery($this->customerCrudController
-            ->setAlias('c')
-            ->readAllUndeletedEntities()
-            ->join('idUsers', 'u')
-            ->orderBy('identificationNumber')
-            ->getQuery()
-        );
         $this->setView('@Customer/Customer/list.html.twig');
         $this->setActionBar([
             [
                 'label' => 'New Customer',
-                'path' => 'customer_new'
+                'path' => 'customer_new',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Customers',
-                'path' => 'customer_deleted_list'
+                'path' => 'customer_deleted_list',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-close'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**
@@ -69,23 +66,16 @@ class CustomerController extends BaseController
      */
     public function deletedListAction(Request $request)
     {
-        $this->setQuery($this->customerCrudController
-            ->setAlias('c')
-            ->readAllEntities()
-            ->onlyDeleted()
-            ->join('idUsers', 'u')
-            ->orderBy('identificationNumber')
-            ->getQuery()
-        );
         $this->setView('@Customer/Customer/deletedList.html.twig');
         $this->setActionBar([
             [
-                'label' => '< Back',
-                'path' => 'customer_list'
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**
@@ -120,11 +110,21 @@ class CustomerController extends BaseController
             ->readEntitiesBy(['idCustomers' => $customer->getId()])
             ->getResultAsArray();
 
-        return $this->render('@Customer/Customer/show.html.twig', [
+        $this->setView('@Customer/Customer/show.html.twig');
+        $this->setTemplateEntities([
             'customer' => $customer,
             'orders' => $orders,
             'invoices' => $invoices,
         ]);
+        $this->setActionBar([
+            [
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
+            ]
+        ]);
+
+        return parent::baseShowAction();
     }
 
     /**
@@ -162,15 +162,12 @@ class CustomerController extends BaseController
         $this->setForm($form);
         $this->setActionBar([
             [
-                'label' => '< Back',
-                'path' => 'customer_list'
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
-        return parent::newAction($request);
-
-//        return $this->render('@Customer/Customer/new.html.twig', [
-//            'form' => $form->createView(),
-//        ]);
+        return parent::baseNewAction($request);
     }
 }

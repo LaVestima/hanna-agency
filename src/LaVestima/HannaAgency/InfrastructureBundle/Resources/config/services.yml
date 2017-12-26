@@ -1,5 +1,9 @@
 services:
-    session_helper:
-        class: LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\SessionHelper
+    _defaults:
         autowire: true
 
+    session_helper:
+        class: LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\SessionHelper
+
+    LaVestima\HannaAgency\InfrastructureBundle\Controller\Helper\SessionHelper:
+        alias: session_helper

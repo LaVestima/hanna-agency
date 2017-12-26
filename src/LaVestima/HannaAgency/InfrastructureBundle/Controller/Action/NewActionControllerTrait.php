@@ -9,7 +9,7 @@ trait NewActionControllerTrait
 {
     protected $form;
 
-    public function newAction(Request $request)
+    public function baseNewAction(Request $request)
     {
         if (!isset($this->view)) {
             throw new \Exception('No view defined!');

@@ -42,13 +42,6 @@ class OrderController extends BaseController
      */
     public function listAction(Request $request)
     {
-        // TODO: find better way of generating status
-//        foreach ($pagination->getItems() as $order) {
-//            $order->setStatus(
-//                $this->orderCrudController->generateStatus($order)
-//            );
-//        }
-
         $this->setView('@Order/Order/list.html.twig');
         $this->setActionBar([
             [
@@ -80,8 +73,9 @@ class OrderController extends BaseController
         $this->setView('@Order/Order/deletedList.html.twig');
         $this->setActionBar([
             [
-                'label' => '< Back',
-                'path' => 'order_list'
+                'label' => 'Back',
+                'path' => 'order_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 

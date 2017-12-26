@@ -186,8 +186,9 @@ class ProductController extends BaseController
         $this->setForm($form);
         $this->setActionBar([
            [
-               'label' => '< List',
-               'path' => 'product_list'
+               'label' => 'List',
+               'path' => 'product_list',
+               'icon' => 'fa-chevron-left'
            ]
         ]);
 
