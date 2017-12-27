@@ -17,3 +17,15 @@ user_new:
 user_setting_index:
     path: /user_settings/
     defaults: { _controller: UserManagementBundle:UserSetting:index }
+
+user_async_list:
+    path: /user/async/list
+    defaults: { _controller: UserManagementBundle:Async\UserAsync:list }
+    options:
+        expose: true
+
+user_async_deleted_list:
+    path: /user/async/deleted_list
+    defaults: { _controller: UserManagementBundle:Async\UserAsync:deletedList }
+    options:
+        expose: true

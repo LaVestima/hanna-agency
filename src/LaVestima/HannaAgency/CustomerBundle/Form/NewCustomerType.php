@@ -110,7 +110,6 @@ class NewCustomerType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Add Customer'
-            ])
-        ;
+            ]);
     }
 }

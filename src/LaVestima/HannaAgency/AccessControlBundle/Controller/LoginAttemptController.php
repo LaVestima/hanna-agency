@@ -2,11 +2,25 @@
 
 namespace LaVestima\HannaAgency\AccessControlBundle\Controller;
 
+use LaVestima\HannaAgency\AccessControlBundle\Controller\Crud\LoginAttemptCrudControllerInterface;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 
 class LoginAttemptController extends BaseController
 {
+    private $loginAttemptCrudController;
+
+    /**
+     * LoginAttemptController constructor.
+     *
+     * @param LoginAttemptCrudControllerInterface $loginAttemptCrudController
+     */
+    public function __construct(
+        LoginAttemptCrudControllerInterface $loginAttemptCrudController
+    ) {
+        $this->loginAttemptCrudController = $loginAttemptCrudController;
+    }
+
     /**
      * Login Attempt List Action.
      *
@@ -16,7 +30,7 @@ class LoginAttemptController extends BaseController
      */
     public function listAction(Request $request)
     {
-        $this->setQuery($this->get('login_attempt_crud_controller') // TODO: DI
+        $this->setQuery($this->loginAttemptCrudController
             ->setAlias('la')
             ->readAllEntities()
             ->leftJoin('idUsers', 'u')

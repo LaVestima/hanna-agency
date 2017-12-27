@@ -1,6 +1,22 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title user.login %}
+
+{% block actionBar %}
+    <a href="{{ path('user_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+    {# TODO: Finish #}
+    {#<a href="{{ path('user_edit', {'pathSlug': user.pathSlug}) }}">#}
+        {#<div class="button action-bar-button">#}
+            {#Edit#}
+        {#</div>#}
+    {#</a>#}
+
+{% endblock %}
 
 {% block content %}
     <div class="module-box">
@@ -24,7 +40,6 @@
             </table>
         </div>
     </div>
-
 
     {% if customer is defined and customer is not null %}
         <div class="module-box">

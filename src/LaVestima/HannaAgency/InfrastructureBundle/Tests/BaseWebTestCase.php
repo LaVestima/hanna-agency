@@ -2,10 +2,14 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Tests;
 
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BaseWebTestCase extends WebTestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
 
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -25,11 +29,19 @@ class BaseWebTestCase extends WebTestCase
         $this->createNewClient();
     }
 
-    protected function logInAdmin()
+    protected function logInSuperAdmin()
     {
         $this->client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW'   => 'admin',
+        ]);
+    }
+
+    protected function logInAdmin()
+    {
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'admin123',
+            'PHP_AUTH_PW'   => 'admin123',
         ]);
     }
 
@@ -41,13 +53,13 @@ class BaseWebTestCase extends WebTestCase
         ]);
     }
 
-//    protected function logInUser()
-//    {
-//        $this->client = static::createClient([], [
-//            'PHP_AUTH_USER' => 'user',
-//            'PHP_AUTH_PW'   => 'user',
-//        ]);
-//    }
+    protected function logInUser()
+    {
+        $this->client = static::createClient([], [
+            'PHP_AUTH_USER' => 'user',
+            'PHP_AUTH_PW'   => 'user',
+        ]);
+    }
 
     protected function logInGuest()
     {

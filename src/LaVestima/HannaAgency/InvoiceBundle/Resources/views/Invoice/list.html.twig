@@ -2,19 +2,6 @@
 
 {% block title 'Invoice List' %}
 
-{#{% block actionBar %}#}
-    {#<a href="{{ path('invoice_new') }}">#}
-        {#<div class="button action-bar-button">#}
-            {#New invoice#}
-        {#</div>#}
-    {#</a>#}
-    {#<a href="{{ path('invoice_deleted_list') }}">#}
-        {#<div class="button action-bar-button">#}
-            {#Deleted invoices#}
-        {#</div>#}
-    {#</a>#}
-{#{% endblock %}#}
-
 {% block entityList %}
     <table class="entity-list invoice-list">
         <tr>
@@ -23,26 +10,28 @@
             <th>{{ knp_pagination_sortable(pagination, 'Issued By', 'u.login') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Date Issued', 'i.dateCreated') }}</th>
         </tr>
-        {% for invoice in pagination %}
-            <tr class="entity-list-row">
-                <td class="entity-list-cell">
-                    {{ invoice.name }}
-                </td>
-                <td class="entity-list-cell">
-                    {{ invoice.idCustomers.fullName }}
-                </td>
-                <td class="entity-list-cell">
-                    {{ invoice.userCreated.login }}
-                </td>
-                <td class="entity-list-cell">
-                    {{ invoice.dateIssued | date('d.m.Y') }}
-                </td>
-                <td class="entity-list-cell">
-                    <a href="{{ path('invoice_show', {'pathSlug': invoice.pathSlug}) }}">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'i.name', '{{ path('invoice_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('invoice_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('invoice_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'i.dateCreated', '{{ path('invoice_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('invoice_async_list') }}');
+        });
+    </script>
 {% endblock %}

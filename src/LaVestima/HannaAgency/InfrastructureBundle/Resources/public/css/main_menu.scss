@@ -11,13 +11,6 @@ $left-menu-item-height: 40px;
     font-weight: bold;
     text-align: center;
 
-    a {
-        color: #ffffff;
-        &:hover {
-            color: #ffffff;
-        }
-    }
-
     .left-menu-item {
         min-width: 200px;
         padding: 0 10px;
@@ -26,17 +19,19 @@ $left-menu-item-height: 40px;
         align-items: center;
         justify-content: center;
         line-height: $left-menu-item-height;
+        color: $main-font-color-inverted;
 
         i {
             width: 30%;
         }
+
         span {
             width: 70%;
         }
 
         &:hover {
             background: $main-theme-color-lighter;
-            color: $main-font-color;
+            color: $main-font-color-inverted;
         }
     }
 
@@ -50,11 +45,14 @@ $left-menu-item-height: 40px;
 
     .left-menu-subheader {
         width: 100%;
+        color: $main-font-color-inverted;
         line-height: $left-menu-item-height;
         background: #555555;
         cursor: default;
+
         &:hover {
             background: #555555;
+            color: $main-font-color-inverted;
         }
     }
 
@@ -80,7 +78,7 @@ $left-menu-item-height: 40px;
     position: fixed;
     top: 5px;
     left: 0;
-    color: $main-font-color;
+    color: $main-font-color-inverted;
     font-weight: bold;
     cursor: pointer;
     z-index: 100;
@@ -94,7 +92,7 @@ $left-menu-item-height: 40px;
     }
 
     span {
-        width: 50px;
+        width: 55px;
     }
 
     i {

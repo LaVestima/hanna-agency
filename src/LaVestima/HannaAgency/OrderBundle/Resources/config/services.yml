@@ -4,6 +4,8 @@ services:
 
     LaVestima\HannaAgency\OrderBundle\Controller\OrderController:
 
+    LaVestima\HannaAgency\OrderBundle\Controller\Async\OrderAsyncController:
+
     order_crud_controller:
         class: LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudController
 

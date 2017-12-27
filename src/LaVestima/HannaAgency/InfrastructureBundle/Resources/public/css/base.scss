@@ -1,19 +1,33 @@
 @import "constants";
 
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Gudea', sans-serif;
     font-size: 20px;
-    color: #555555;
+    color: $main-font-color;
+    overflow-y: scroll;
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 50px;
 }
 
 a {
     text-decoration: none;
-    color: #555555;
+    color: $main-font-color;
+    cursor: pointer;
 
     &:hover, &:active {
         text-decoration: none;
-        color: #222222;
+        color: $main-theme-color;
     }
+}
+
+ua { // Useless Anchor
+    cursor: pointer;
 }
 
 h1 {
@@ -48,28 +62,82 @@ select {
     }
 }
 
+footer {
+    background: #bbbbbb;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+
+    ul {
+        max-width: 1200px;
+        list-style-type: none;
+        padding: 5px;
+        margin: auto;
+
+        li {
+            padding: 0 5px 0 10px;
+            display: inline-block;
+            border-left: 2px solid $main-theme-color;
+
+            &:nth-child(1) {
+                border-left: none;
+            }
+
+            .copyright {
+                font-size: 15px;
+            }
+        }
+    }
+}
+
+::selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
+::-moz-selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
 .red {
     color: #FF0000;
 }
 
-.button {
+.button, button {
+    position: relative;
     display: inline-block;
     padding: 10px;
     background: $main-theme-color;
-    color: $main-font-color;
+    color: $main-font-color-inverted;
     text-align: center;
     cursor: pointer;
+    font-style: normal;
+    border: none;
+    border-bottom: 5px inset $main-theme-color-darker;
 
     &:hover {
         background: $main-theme-color-hover;
+        border-bottom: 5px inset $main-theme-color;
+    }
+
+    &:focus {
+        outline: none;
     }
 
     &.inactive {
         background: $main-theme-color-inactive;
+        border-bottom: 3px inset $main-theme-color-inactive - 50;
         cursor: default;
 
         &:hover {
+            border-top: none;
             background: $main-theme-color-inactive;
+            top: 0;
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 
@@ -88,10 +156,9 @@ select {
 .page-title {
     margin: 0 auto;
     width: 100%;
-    //height: 70px;
     overflow: hidden;
     text-align: center;
-    background: #ccc;
+    background: #bbb;
 
     //&.page-title-scrolled {
     //  height: 35px;
@@ -111,7 +178,6 @@ select {
 .action-bar {
     padding: 5px 10px;
     background: #ddd;
-    //border-bottom: 3px solid $main-theme-color;
     box-shadow: 0 3px 3px $main-theme-color;
 
     .action-bar-content {
@@ -120,6 +186,10 @@ select {
 
         .action-bar-button {
             font-weight: bold;
+
+            i {
+                margin: 0 5px 0 0;
+            }
         }
 
         .action-bar-export {
@@ -167,8 +237,9 @@ select {
 
 .page-content {
     max-width: 1200px;
-    margin: 125px auto 0 auto;
+    margin: 0 auto;
     padding: 10px;
+    padding-top: 135px;
 }
 
 .module-box {
@@ -190,14 +261,13 @@ select {
     }
 
     .module-box-content {
-        padding: 5px 0;
         text-align: center;
     }
 }
 
 @media screen and (min-width: 1200px) {
     .module-box {
-        width: calc(50% - 12px);
+        width: calc(50% - 20px);
         display: inline-table;
         margin-left: 5px;
         margin-right: 5px;
@@ -213,7 +283,6 @@ select {
     .flash-message {
         height: 50px;
         line-height: 50px;
-        //border-radius: 10px;
         width: 70%;
         margin: 0 auto;
         box-shadow: 0 0 10px #000;
@@ -282,12 +351,13 @@ select {
     .entity-list-row {
         height: 35px;
 
-        &:nth-child(odd) {
+        &:nth-child(even) {
             background: #dddddd;
         }
 
         &:hover {
             background: $main-theme-color-lighter;
+            color: $main-font-color-inverted;
         }
 
         .entity-list-cell {
@@ -324,6 +394,8 @@ select {
     }
 
     &.product-sizes-table {
+        margin-bottom: 10px;
+
         tr {
             border-top: 1px solid black;
 
@@ -344,7 +416,6 @@ select {
                 }
             }
         }
-
     }
 }
 
@@ -367,6 +438,7 @@ select {
     }
 }
 
+// TODO: move to other file
 .user-input-table {
     max-width: 600px;
     margin: 0 auto;
@@ -381,6 +453,7 @@ select {
     }
 }
 
+// TODO: move to other file
 .invoice-total-price-cell {
     border-top: 2px solid #555555;
 }

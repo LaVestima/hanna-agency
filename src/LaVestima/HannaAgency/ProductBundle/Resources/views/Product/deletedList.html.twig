@@ -1,0 +1,55 @@
+{% extends '@Infrastructure/baseList.html.twig' %}
+
+{% block title 'Deleted Products' %}
+
+{% block entityList %}
+    <table class="entity-list">
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'p.name', '{{ path('product_async_deleted_list') }}')">
+                    Name
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.name', '{{ path('product_async_deleted_list') }}')">
+                    Category
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'pr.shortName', '{{ path('product_async_deleted_list') }}')">
+                    Producer
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th></th>
+        </tr>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'p.name', '{{ path('product_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.name', '{{ path('product_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'pr.shortName', '{{ path('product_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('product_async_deleted_list') }}');
+        });
+    </script>
+{% endblock %}

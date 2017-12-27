@@ -1,8 +1,18 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% block title %}Forgot Password{% endblock %}
+{% block title 'Forgot Password' %}
+
+{% block actionBar %}
+    <a href="{{ path('access_control_login') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            Login
+        </div>
+    </a>
+{% endblock %}
 
 {% block content %}
+    {% if not app.user %}
     {{ form_start(form) }}
     <table class="user-input-table">
         <tr>
@@ -15,4 +25,7 @@
         </tr>
     </table>
     {{ form_end(form) }}
+    {% else %}
+        User already logged in.
+    {% endif %}
 {% endblock %}

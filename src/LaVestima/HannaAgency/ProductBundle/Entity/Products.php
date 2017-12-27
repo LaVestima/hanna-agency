@@ -75,13 +75,6 @@ class Products implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="QR_Code_Path", type="string", length=50, nullable=false)
-     */
-    private $qrCodePath;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
@@ -283,30 +276,6 @@ class Products implements EntityInterface
     public function getPriceCustomer()
     {
         return $this->priceCustomer;
-    }
-
-    /**
-     * Set qrCodePath
-     *
-     * @param string $qrCodePath
-     *
-     * @return Products
-     */
-    public function setQrCodePath($qrCodePath)
-    {
-        $this->qrCodePath = $qrCodePath;
-
-        return $this;
-    }
-
-    /**
-     * Get qrCodePath
-     *
-     * @return string
-     */
-    public function getQrCodePath()
-    {
-        return $this->qrCodePath;
     }
 
     /**

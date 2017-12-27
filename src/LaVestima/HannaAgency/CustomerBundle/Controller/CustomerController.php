@@ -33,25 +33,49 @@ class CustomerController extends BaseController
      * Customer List Action.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function listAction(Request $request)
     {
-
-        $this->customerCrudController->setAlias('c')
-            ->readAllUndeletedEntities()
-            ->join('idUsers', 'u');
-
-        $this->setQuery($this->customerCrudController->getQuery());
         $this->setView('@Customer/Customer/list.html.twig');
         $this->setActionBar([
             [
                 'label' => 'New Customer',
-                'path' => 'customer_new'
+                'path' => 'customer_new',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-plus'
+            ],
+            [
+                'label' => 'Deleted Customers',
+                'path' => 'customer_deleted_list',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-close'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
+    }
+
+    /**
+     * Customer Deleted List Action.
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deletedListAction(Request $request)
+    {
+        $this->setView('@Customer/Customer/deletedList.html.twig');
+        $this->setActionBar([
+            [
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
+            ]
+        ]);
+
+        return parent::baseListAction($request);
     }
 
     /**
@@ -74,11 +98,7 @@ class CustomerController extends BaseController
 
         $orders = $this->get('order_crud_controller')
             ->readEntitiesBy(['idCustomers' => $customer->getId()])
-            ->getResult();
-
-        if (!is_array($orders)) {
-            $orders = [$orders];
-        }
+            ->getResultAsArray();
 
         foreach ($orders as $order) {
             $order->setStatus(
@@ -88,17 +108,23 @@ class CustomerController extends BaseController
 
         $invoices = $this->get('invoice_crud_controller')
             ->readEntitiesBy(['idCustomers' => $customer->getId()])
-            ->getResult();
+            ->getResultAsArray();
 
-        if (!is_array($invoices)) {
-            $invoices = [$invoices];
-        }
-
-        return $this->render('@Customer/Customer/show.html.twig', [
+        $this->setView('@Customer/Customer/show.html.twig');
+        $this->setTemplateEntities([
             'customer' => $customer,
             'orders' => $orders,
             'invoices' => $invoices,
         ]);
+        $this->setActionBar([
+            [
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
+            ]
+        ]);
+
+        return parent::baseShowAction();
     }
 
     /**
@@ -132,8 +158,16 @@ class CustomerController extends BaseController
             return $this->redirectToRoute('customer_list');
         }
 
-        return $this->render('@Customer/Customer/new.html.twig', [
-            'form' => $form->createView(),
+        $this->setView('@Customer/Customer/new.html.twig');
+        $this->setForm($form);
+        $this->setActionBar([
+            [
+                'label' => 'Back',
+                'path' => 'customer_list',
+                'icon' => 'fa-chevron-left'
+            ]
         ]);
+
+        return parent::baseNewAction($request);
     }
 }

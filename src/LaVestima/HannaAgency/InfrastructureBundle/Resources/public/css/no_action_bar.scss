@@ -1,7 +1,12 @@
 @import "constants";
 
+.action-bar {
+    display: none;
+}
+
 .page-content {
-    margin: 82px auto 0 auto;
+    margin: 0 auto;
+    padding-top: 92px;
 }
 
 .top-bar {

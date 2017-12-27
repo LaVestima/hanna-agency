@@ -11,11 +11,11 @@
     {% endspaceless %}</title>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-{# TODO: change favicon #}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+{# TODO: change favicon ? #}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon3.png') }}" />
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('font-awesome/css/font-awesome.min.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Dosis:400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gudea" rel="stylesheet">
     {% stylesheets filter='scssphp' output='css/app.css'
     '@InfrastructureBundle/Resources/public/css/base.scss'
     '@InfrastructureBundle/Resources/public/css/main_menu.scss'
@@ -35,38 +35,53 @@
             <h1>{{ block('title') }}</h1>
         </div>
 
-        {% if block('actionBar') is defined and block('actionBar') is not null %}
-            <div class="action-bar">
-                <div class="action-bar-content">
-                    {{ block('actionBar') }}
-
-                    {% if isExportAllowed is defined and isExportAllowed %}
-                        <div class="action-bar-export">
-                            <div class="button action-bar-button action-bar-export-button">
-                                <i class="fa fa-download" aria-hidden="true"></i>
+        {# TODO: eventually define all actionBars in controllers, then the first if not needed #}
+        <div class="action-bar">
+            <div class="action-bar-content">
+            {% if block('actionBar') is defined and block('actionBar') is not null %}
+                {{ block('actionBar') }}
+            {% elseif actionBar is defined and actionBar is not null %}
+                {% set renderActionBar = false %}
+                {% for button in actionBar %}
+                    {% if button.role is not defined or is_granted(button.role) %}
+                        {% set renderActionBar = true %}
+                        <a href="{{ path(button.path) }}">
+                            <div class="button action-bar-button">
+                                {% if button.icon is defined %}
+                                    <i class="fa {{ button.icon }}" aria-hidden="true"></i>
+                                {% endif %}
+                                {{ button.label }}
                             </div>
-                            <ul class="action-bar-export-list">
-                                {% if pdfExportPath is defined %}
-                                    <li class="hidden">
-                                        <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
-                                            PDF
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if excelExportPath is defined %}
-                                    <li class="hidden">
-                                        <a class="button" href="{{ excelExportPath }}">
-                                            Excel
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </div>
+                        </a>
                     {% endif %}
+                {% endfor %}
 
-                </div>
+                {% if isExportAllowed is defined and isExportAllowed %}
+                    <div class="action-bar-export">
+                        <div class="button action-bar-button action-bar-export-button">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                        </div>
+                        <ul class="action-bar-export-list">
+                            {% if pdfExportPath is defined %}
+                                <li class="hidden">
+                                    <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
+                                        PDF
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if excelExportPath is defined %}
+                                <li class="hidden">
+                                    <a class="button" href="{{ excelExportPath }}">
+                                        Excel
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
             </div>
-        {% endif %}
+        </div>
     </div>
 
     <div class="page-content">
@@ -96,16 +111,41 @@
 
     <div class="body-overlay"></div>
 
-    {% if app.debug %}
-        <div style="position: fixed; bottom: 35px;">
-            {{ dump() }}
-            {{ dump(app.session.get('configuration')) }}
-        </div>
-    {% endif %}
+    <footer>
+        <ul>
+            <li>
+                <span class="copyright">
+                    &#9400;
+                </span>
+                2017 Hanna Agency
+            </li>
+
+            <li>
+                {# TODO: add link to contact site #}
+                <a href="{{ path('homepage_contact') }}">
+                    Contact
+                </a>
+            </li>
+            <li>
+                MORE...
+            </li>
+        </ul>
+    </footer>
+
+    {# TODO: deploy: delete #}
+    {#{% if app.debug %}#}
+        {#<div style="position: fixed; bottom: 35px;">#}
+            {#{{ dump() }}#}
+            {#{{ dump(app.session.get('configuration')) }}#}
+        {#</div>#}
+    {#{% endif %}#}
 </body>
 {# ----------------------- JS ----------------------- #}
-{% if block('actionBar') is not defined or block('actionBar') is null %}
-{% stylesheets filter='scssphp' output='css/app.css'
+{% if ((block('actionBar') is not defined or block('actionBar') is null) and
+    (actionBar is not defined or actionBar is null)) or
+    (renderActionBar is defined and not renderActionBar)
+%}
+{% stylesheets filter='scssphp' output='css/no_action_bar.css'
 '@InfrastructureBundle/Resources/public/css/no_action_bar.scss'
 %}
 <link rel="stylesheet" href="{{ asset_url }}" />
@@ -117,6 +157,7 @@
 {% javascripts
 '@InfrastructureBundle/Resources/public/js/base.js'
 '@InfrastructureBundle/Resources/public/js/filters.js'
+'@InfrastructureBundle/Resources/public/js/sorters.js'
 %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

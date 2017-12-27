@@ -36,7 +36,7 @@ class Cities
     private $note;
 
     /**
-     * @var \Countries
+     * @var Countries
      *
      * @ORM\ManyToOne(targetEntity="Countries")
      * @ORM\JoinColumns({
@@ -108,11 +108,11 @@ class Cities
     /**
      * Set idCountries
      *
-     * @param \LaVestima\HannaAgency\LocationBundle\Entity\Countries $idCountries
+     * @param Countries $idCountries
      *
      * @return Cities
      */
-    public function setIdCountries(\LaVestima\HannaAgency\LocationBundle\Entity\Countries $idCountries = null)
+    public function setIdCountries(Countries $idCountries = null)
     {
         $this->idCountries = $idCountries;
 
@@ -122,7 +122,7 @@ class Cities
     /**
      * Get idCountries
      *
-     * @return \LaVestima\HannaAgency\LocationBundle\Entity\Countries
+     * @return Countries
      */
     public function getIdCountries()
     {

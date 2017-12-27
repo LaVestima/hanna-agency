@@ -1,34 +1,56 @@
-{% extends '@Infrastructure/base.html.twig' %}
+{% extends '@Infrastructure/baseList.html.twig' %}
 
-{% block title %}Deleted Orders{% endblock %}
+{% block title 'Deleted Orders' %}
 
-{% block actionBar %}
-    <a href="{{ path('order_list') }}">
-        <div class="button action-bar-button">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            Back
-        </div>
-    </a>
-{% endblock %}
-
-{% block content %}
+{% block entityList %}
     <table class="entity-list">
-        <tr>
-            <th>Date placed</th>
-            <th>Customer</th>
-            <th>User</th>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'o.dateCreated', '{{ path('order_async_deleted_list') }}')">
+                    Date Created
+                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'o.status', '{{ path('order_async_deleted_list') }}')">
+                    Status
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th>
+                    <ua onclick="sortSearch(this, 'c.fullName', '{{ path('order_async_deleted_list') }}')">
+                        Customer
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                    </ua>
+                </th>
+                <th>User Created</th>
+            {% endif %}
+            <th></th>
         </tr>
-    {% for order in orders %}
-        <tr class="entity-list-row">
-            <td>{{ order.datePlaced | date('d.m.Y') }}</td>
-            <td>{{ order.idCustomers.fullName }}</td>
-            <td>{{ order.userCreated.login }}</td>
-            <td class="entity-list-cell">
-                <a href="{{ path('order_show', {'pathSlug': order.pathSlug}) }}">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </a>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'o.dateCreated', '{{ path('order_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                {# TODO: make it work #}
+                <input type="text" onkeyup="filterSearch(this, 'o.status', '{{ path('order_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('order_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('order_async_deleted_list') }}')" placeholder="Search..." title="Search">
             </td>
         </tr>
-    {% endfor %}
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('order_async_deleted_list') }}');
+        });
+    </script>
 {% endblock %}

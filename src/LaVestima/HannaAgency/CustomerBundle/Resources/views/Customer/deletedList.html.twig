@@ -1,0 +1,74 @@
+{% extends '@Infrastructure/baseList.html.twig' %}
+
+{% block title 'Deleted Customers' %}
+
+{% block entityList %}
+    <table class="entity-list order-list">
+        <colgroup>
+            <col width="150px">
+            <col width="200px">
+            <col width="200px">
+            <col>
+            <col width="150px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'c.identificationNumber', '{{ path('customer_async_deleted_list') }}')">
+                    ID
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.firstName', '{{ path('customer_async_deleted_list') }}')">
+                    First Name
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.lastName', '{{ path('customer_async_deleted_list') }}')">
+                    Last Name
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.email', '{{ path('customer_async_deleted_list') }}')">
+                    Email
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('customer_async_deleted_list') }}')">
+                    User
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th></th>
+        </tr>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.identificationNumber', '{{ path('customer_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.firstName', '{{ path('customer_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.lastName', '{{ path('customer_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'c.email', '{{ path('customer_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('customer_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('customer_async_deleted_list') }}');
+        });
+    </script>
+{% endblock %}

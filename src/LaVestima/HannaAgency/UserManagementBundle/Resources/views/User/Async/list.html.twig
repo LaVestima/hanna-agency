@@ -1,0 +1,26 @@
+{% if pagination | length <= 0 %}
+    <tr>
+        <td colspan="4">No Users</td>
+    </tr>
+{% else %}
+    {% for user in pagination %}
+        <tr class="entity-list-row">
+            <td>{{ user.login }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.idRoles.name }}</td>
+            <td>
+                <a href="{{ path('user_show', {'pathSlug': user.pathSlug}) }}">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}
+
+<tr>
+    <td colspan="4">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </td>
+</tr>

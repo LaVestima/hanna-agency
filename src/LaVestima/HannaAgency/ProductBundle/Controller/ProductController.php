@@ -8,12 +8,16 @@ use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductSizeCrudControlle
 use LaVestima\HannaAgency\ProductBundle\Entity\Products;
 use LaVestima\HannaAgency\ProductBundle\Entity\ProductsSizes;
 use LaVestima\HannaAgency\ProductBundle\Form\ProductType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductController extends BaseController
 {
-    private $productCrudController;
-    private $productSizeCrudController;
+    protected $productCrudController;
+    protected $productSizeCrudController;
+
+    protected $entityName = 'product';
 
     /**
      * ProductController constructor.
@@ -38,26 +42,23 @@ class ProductController extends BaseController
      */
 	public function listAction(Request $request)
     {
-        $this->setQuery($this->productCrudController->setAlias('p')
-            ->readAllUndeletedEntities()
-            ->join('idCategories', 'c')
-            ->join('idProducers', 'pr')
-            ->orderBy('name')
-            ->getQuery()
-        );
         $this->setView('@Product/Product/list.html.twig');
         $this->setActionBar([
             [
                 'label' => 'New Product',
-                'path' => 'product_new'
+                'path' => 'product_new',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Products',
-                'path' => 'product_deleted_list'
+                'path' => 'product_deleted_list',
+                'role' => 'ROLE_ADMIN',
+                'icon' => 'fa-close'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
 	}
 
     /**
@@ -69,21 +70,16 @@ class ProductController extends BaseController
      */
 	public function deletedListAction(Request $request)
     {
-        $this->setQuery($this->productCrudController->setAlias('p')
-            ->readAllDeletedEntities()
-            ->join('idCategories', 'c')
-            ->join('idProducers', 'pr')
-            ->orderBy('name')
-            ->getQuery());
-        $this->setView('@Product/Product/list.html.twig');
+        $this->setView('@Product/Product/deletedList.html.twig');
         $this->setActionBar([
             [
-                'label' => '< Back',
-                'path' => 'product_list'
+                'label' => 'Back',
+                'path' => 'product_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 
     /**
@@ -93,7 +89,7 @@ class ProductController extends BaseController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-	public function showAction($pathSlug)
+	public function showAction(string $pathSlug)
     {
 		$product = $this->productCrudController
 			->readOneEntityBy(['pathSlug' => $pathSlug])
@@ -101,16 +97,15 @@ class ProductController extends BaseController
 
 		$productSizes = $this->productSizeCrudController
             ->readEntitiesBy(['idProducts' => $product->getId()])
-            ->getResult();
+            ->getResultAsArray();
 
-		if (!is_array($productSizes) && $productSizes !== null) {
-            $productSizes = [$productSizes];
-        }
+		$this->setView('@Product/Product/show.html.twig');
+		$this->setTemplateEntities([
+		    'product' => $product,
+            'productSizes' => $productSizes,
+        ]);
 
-		return $this->render('@Product/Product/show.html.twig', [
-            'product' => $product,
-            'productSizes' => $productSizes
-		]);
+        return parent::baseShowAction();
 	}
 
     /**
@@ -127,32 +122,135 @@ class ProductController extends BaseController
             'isAdmin' => $this->isAdmin(),
         ]);
 
+        $sizes = $this->get('size_crud_controller')
+            ->readAllEntities()
+            ->getResult();
+
+        $form->get('sizes')
+            ->add('0', ChoiceType::class, [
+                'label' => 'Size',
+                'choices' => $sizes,
+                'choice_label' => 'name',
+                'placeholder' => 'Choose a size',
+                'required' => true,
+            ]);
+
+        $form->get('availabilities')
+            ->add('0', NumberType::class, [
+                'label' => 'Availability',
+                'data' => 0,
+                'empty_data' => 0,
+                'required' => true,
+            ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $product = $form->getData();
+            $sizes = $form->get('sizes')->getData();
+            $availabilities = $form->get('availabilities')->getData();
+            $countSizes = count($sizes);
+            $countAvailabilities = count($availabilities);
 
-            // TODO: delete
-            $product->setQRCodePath('-n--' . random_int(0, 1000000));
+            if ($countSizes !== $countAvailabilities) {
+                // TODO: error
+            }
 
-            $product = $this->productCrudController
-                ->createEntity($product);
+            try {
+                $product = $form->getData();
 
-            $productSize = new ProductsSizes(
-                $product,
-                $form->get('idSizes')->getData(),
-                $form->get('availability')->getData()
-            );
+                $product = $this->productCrudController
+                    ->createEntity($product);
 
-            $this->productSizeCrudController
-                ->createEntity($productSize);
+                foreach ($sizes as $key => $size) {
+                    $productSize = new ProductsSizes(
+                        $product,
+                        $size,
+                        $availabilities[$key]
+                    );
+
+                    $this->productSizeCrudController
+                        ->createEntity($productSize);
+                }
+            } catch (\Exception $e) {
+                if ($this->isDevEnvironment()) {
+                    var_dump($e->getMessage());die;
+                }
+            }
 
             $this->addFlash('success', 'Product added!');
 
             return $this->redirectToRoute('product_list');
         }
 
-        return $this->render('@Product/Product/new.html.twig', [
+        $this->setView('@Product/Product/new.html.twig');
+        $this->setForm($form);
+        $this->setActionBar([
+           [
+               'label' => 'List',
+               'path' => 'product_list',
+               'icon' => 'fa-chevron-left'
+           ]
+        ]);
+
+        return parent::newAction($request);
+    }
+
+    /**
+     * Product Edit Action.
+     *
+     * @param string $pathSlug
+     */
+    public function editAction(Request $request, string $pathSlug)
+    {
+        $product = $this->productCrudController
+            ->readOneEntityBy([
+                'pathSlug' => $pathSlug
+            ])
+            ->getResult();
+
+        if (!$product) {
+            $this->addFlash('warning', 'No product found!');
+
+            return $this->redirectToRoute('product_list');
+        }
+
+        $form = $this->createForm(ProductType::class, $product, [
+            'isAdmin' => $this->isAdmin(),
+        ]);
+
+        $sizes = $this->get('size_crud_controller')
+            ->readAllEntities()
+            ->getResult();
+
+        $form->get('sizes')
+            ->add('0', ChoiceType::class, [
+                'label' => 'Size',
+                'choices' => $sizes,
+                'choice_label' => 'name',
+                'placeholder' => 'Choose a size',
+                'required' => true,
+            ]);
+
+        $form->get('availabilities')
+            ->add('0', NumberType::class, [
+                'label' => 'Availability',
+                'data' => 0,
+                'empty_data' => 0,
+                'required' => true,
+            ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->productCrudController->updateEntity($product, $form->getData());
+
+            return $this->redirectToRoute('product_show', [
+                'pathSlug' => $pathSlug,
+            ]);
+        }
+
+        return $this->render('@Product/Product/edit.html.twig', [
+            'product' => $product,
             'form' => $form->createView()
         ]);
     }

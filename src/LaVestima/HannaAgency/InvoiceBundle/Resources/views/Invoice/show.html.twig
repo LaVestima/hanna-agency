@@ -45,8 +45,8 @@
             <table class="entity-list">
                 <tr>
                     <th>Name</th>
-                    {#<th>Size</th>#}
-                    <th>Price P</th>
+                    <th>Size</th>
+                    {#<th>Price P</th>#}
                     <th>Price C</th>
                     <th>Quantity</th>
                     <th>Discount</th>
@@ -54,7 +54,7 @@
                     <th>Total Price</th>
                 </tr>
                 {% for invoiceProduct in invoicesProducts %}
-                    {% set product = invoiceProduct.idProducts %}
+                    {% set product = invoiceProduct.idProductsSizes.idProducts %}
                     {% set productTotalPrice = invoiceProduct.quantity * invoiceProduct.priceFinal %}
                     {% set invoiceTotalPrice = invoiceTotalPrice + productTotalPrice %}
                     <tr>
@@ -63,8 +63,8 @@
                                 {{ product.name }}
                             </a>
                         </td>
-                        {#<td>{{ product.idSizes.name }}</td>#}
-                        <td>{{ product.priceProducer }}</td>
+                        <td>{{ invoiceProduct.idProductsSizes.idSizes.name }}</td>
+                        {#<td>{{ product.priceProducer }}</td>#}
                         <td>{{ product.priceCustomer }}</td>
                         <td>x {{ invoiceProduct.quantity }}</td>
                         <td>{{ invoiceProduct.discount }}%</td>
@@ -78,8 +78,8 @@
                 {% endfor %}
                 <tr>
                     <td></td>
-                    {#<td></td>#}
                     <td></td>
+                    {#<td></td>#}
                     <td></td>
                     <td></td>
                     <td></td>

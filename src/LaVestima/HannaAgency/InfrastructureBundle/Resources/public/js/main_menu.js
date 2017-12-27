@@ -24,7 +24,7 @@ function hideLeftMenu() {
         left: "0px"
     }, 500);
     $('.left-menu-button > span').animate({
-        width: '50px',
+        width: '55px',
         opacity: 1
     }, 500);
     $(".body-overlay").fadeOut("fast");

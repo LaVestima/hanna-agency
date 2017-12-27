@@ -1,9 +1,10 @@
-#customer_homepage:
-#    path:     /
-#    defaults: { _controller: CustomerBundle:Default:index }
 customer_list:
     path: /customer/list
     defaults: { _controller: CustomerBundle:Customer:list }
+
+customer_deleted_list:
+    path: /customer/deleted_list
+    defaults: { _controller: CustomerBundle:Customer:deletedList }
 
 customer_new:
     path: /customer/new
@@ -12,3 +13,15 @@ customer_new:
 customer_show:
     path: /customer/show/{pathSlug}
     defaults: { _controller: CustomerBundle:Customer:show, pathSlug: '' }
+
+customer_async_list:
+    path: /customer/async/list
+    defaults: { _controller: CustomerBundle:Async\CustomerAsync:list }
+    options:
+        expose: true
+
+customer_async_deleted_list:
+    path: /customer/async/deleted_list
+    defaults: { _controller: CustomerBundle:Async\CustomerAsync:deletedList }
+    options:
+        expose: true

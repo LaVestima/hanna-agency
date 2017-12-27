@@ -126,32 +126,11 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             ->from($this->entityClass, $this->alias);
 
         foreach ($keyValueArray as $key => $condition) {
-            // TODO: split into several methods
+            $tableFieldName = $this->generateTableFieldName($key);
 
-            if (count($parts = explode('.', $key)) > 1) {
-                if (count($parts) > 2) {
-                    throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
-                }
+            [$operator, $value] = $this->extractElementsFromCondition($condition);
 
-                $tableFieldName = $key;
-            } else {
-                $tableFieldName = $this->alias . '.' . $key;
-            }
-
-            // if operator is included in condition
-            if (is_array($condition)) {
-                if (count($condition) === 2) {
-                    $operator = $condition[1];
-                    $value = $condition[0];
-                } else {
-                    throw new \Exception('Two elements required in condition array!');
-                }
-            } else {
-                $operator = '=';
-                $value = $condition;
-            }
-
-            $parameterName = 'param_' . str_replace('.', '', $key);
+            $parameterName = 'param_' . str_replace(['.', '(', ')', ',', '\'', ' '], '', $key);
 
             if ($value instanceof \DateTime) {
                 if ($operator === '>') {
@@ -172,6 +151,49 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         }
 
         return $this;
+    }
+
+    /**
+     * @param $conditionKey
+     * @return string
+     */
+    private function generateTableFieldName($conditionKey)
+    {
+        if (strpos($conditionKey, 'CONCAT') !== false) {
+            $tableFieldName = $conditionKey;
+        } elseif (count($parts = explode('.', $conditionKey)) > 1) {
+            if (count($parts) > 2) {
+                throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
+            }
+
+            $tableFieldName = $conditionKey;
+        } else {
+            $tableFieldName = $this->alias . '.' . $conditionKey;
+        }
+
+        return $tableFieldName;
+    }
+
+    /**
+     * @param $condition
+     * @return array
+     * @throws \Exception
+     */
+    private function extractElementsFromCondition($condition)
+    {
+        if (is_array($condition)) {
+            if (count($condition) === 2) {
+                $operator = $condition[1];
+                $value = $condition[0];
+            } else {
+                throw new \Exception('Two elements required in condition array!');
+            }
+        } else {
+            $operator = '=';
+            $value = $condition;
+        }
+
+        return [$operator, $value];
     }
 
     /**
@@ -203,6 +225,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    // TODO: delete
     /**
      * Read all not deleted Entities from DB (SELECT).
      *
@@ -217,6 +240,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         return $this;
     }
 
+    // TODO: delete
     /**
      * Read all deleted Entities from DB (SELECT).
      *
@@ -227,6 +251,37 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         $this->readAllEntities();
 
         $this->query->where($this->alias . '.dateDeleted IS NOT NULL');
+
+        return $this;
+    }
+
+    /**
+     * Only include deleted Entities.
+     *
+     * @return $this
+     */
+    public function onlyDeleted()
+    {
+        $this->query->andWhere($this->alias . '.dateDeleted IS NOT NULL');
+
+        return $this;
+    }
+
+    /**
+     * Only include not deleted Entities.
+     *
+     * @return $this
+     */
+    public function onlyUndeleted()
+    {
+        $this->query->andWhere($this->alias . '.dateDeleted IS NULL');
+
+        return $this;
+    }
+
+    public function addSelect($column)
+    {
+        $this->query->addSelect($column);
 
         return $this;
     }
@@ -309,6 +364,8 @@ abstract class CrudController extends BaseController implements CrudControllerIn
      */
     public function readRandomEntities(int $numberOfEntities = null, bool $entitiesCanRepeat = false)
     {
+        $this->clearQuery();
+
         if (!$entitiesCanRepeat && $numberOfEntities > $this->countRows()) {
             throw new \InvalidArgumentException('Number of randomized entities cannot exceed the row number!');
         }
@@ -319,10 +376,12 @@ abstract class CrudController extends BaseController implements CrudControllerIn
 
         if ($numberOfEntities === 1) {
             do {
-                $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
-            } while (!$entity);
+                $entity = $this->readOneEntityBy([
+                    'id' => rand(1, $this->getLastId())
+                ]);
+            } while (!$entity->getResult());
 
-            return $entity;
+            return $this;
         } elseif ($numberOfEntities > 1) {
             $entities = [];
 
@@ -423,21 +482,12 @@ abstract class CrudController extends BaseController implements CrudControllerIn
             throw new \InvalidArgumentException('Sorting order must be ASC or DESC');
         }
 
-        if (count($parts = explode('.', $field)) > 1) {
-            if (count($parts) > 2) {
-                throw new \InvalidArgumentException('Wrong table field format, should be \'x.y\'');
-            }
+        $field = $this->generateTableFieldName($field);
 
-            $this->query->orderBy(
-                $field,
-                strtoupper($order)
-            );
-        } else {
-            $this->query->orderBy(
-                $this->alias . '.' . $field,
-                strtoupper($order)
-            );
-        }
+        $this->query->orderBy(
+            $field,
+            strtoupper($order)
+        );
 
         return $this;
     }
@@ -450,6 +500,7 @@ abstract class CrudController extends BaseController implements CrudControllerIn
     public function getQuery()
     {
 //        var_dump($this->query->getQuery()->getDQL());
+//        die;
         return $this->query->getQuery();
     }
 

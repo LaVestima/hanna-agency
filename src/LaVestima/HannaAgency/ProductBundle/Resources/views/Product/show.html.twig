@@ -9,6 +9,18 @@
             List
         </div>
     </a>
+    {% if product.dateDeleted is null %}
+        <div class="button action-bar-button delete-button" onclick="showConfirmationBox('Are You sure You want to delete the product?', '{{ path('product_delete', {'pathSlug': product.pathSlug}) }}')">
+            Delete Product
+        </div>
+    {% else %}
+        {# TODO: finish #}
+        {#<a href="{{ path('product_restore', {'pathSlug': product.pathSlug}) }}">#}
+            {#<div class="button action-bar-button">#}
+                {#Restore Product#}
+            {#</div>#}
+        {#</a>#}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -24,9 +36,15 @@
                     <td>Category</td>
                     <td>{{ product.idCategories.name }}</td>
                 </tr>
-
                 <tr>
-
+                    <td>Producer</td>
+                    <td>
+                        {#<a href="{{ path('producer_show', {'pathSlug': product.idProducers.pathSlug}) }}">#}
+                        {# TODO: add link to producer page #}
+                        <a>
+                            {{ product.idProducers.fullName }}
+                        </a>
+                    </td>
                 </tr>
             </table>
         </div>

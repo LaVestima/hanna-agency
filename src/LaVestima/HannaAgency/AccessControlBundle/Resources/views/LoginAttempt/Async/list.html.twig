@@ -1,0 +1,25 @@
+{% if pagination | length <= 0 %}
+    <tr>
+        <td colspan="3">No login attempts</td>
+    </tr>
+{% else %}
+    {% for loginAttempt in pagination %}
+        <tr class="entity-list-row">
+            <td>{{ loginAttempt.dateCreated | date('d.m.Y H:i:s') }}</td>
+            <td>{{ loginAttempt.idUsers.login ?? '' }}</td>
+            <td>
+                {% if loginAttempt.isFailed %}
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+{% endif %}
+
+<tr>
+    <td colspan="3">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </td>
+</tr>

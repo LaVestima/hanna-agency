@@ -1,4 +1,4 @@
-<a{% for attr, value in options %} {{ attr }}="{{ value }}"{% endfor %}>
+<ua {% for attr, value in options %} {{ attr }}="{{ value }}"{% endfor %}>
     {{ title }}
     {% if sorted %}
         {% if direction == 'desc' %}
@@ -9,4 +9,4 @@
     {% else %}
         <i class="fa fa-sort" aria-hidden="true"></i>
     {% endif %}
-</a>
+</ua>

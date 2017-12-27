@@ -2,11 +2,11 @@
 
 namespace LaVestima\HannaAgency\ProductBundle\Controller\Async;
 
-use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
+use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\ProductBundle\Controller\Crud\ProductCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProductAsyncController extends BaseController
+class ProductAsyncController extends BaseAsyncController
 {
     private $productCrudController;
 
@@ -22,41 +22,48 @@ class ProductAsyncController extends BaseController
     }
 
     /**
-     * Product Async List Action.
+     * Product Async Generic List Action.
      *
      * @param Request $request
      * @return mixed
      */
-    public function listAction(Request $request)
+    protected function genericListAction(Request $request)
     {
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->productCrudController
             ->setAlias('p');
 
         if (empty($filters)) {
             $this->productCrudController
-                ->readAllUndeletedEntities();
+                ->readAllEntities();
         } else {
-            $columnValueFilter = [];
-            foreach ($filters as $key => $filter) {
-                if (isset($filters[$key]['value'])) {
-                    $columnValueFilter[$filters[$key]['column']] = [$filters[$key]['value'], 'LIKE'];
-                }
-            }
-
             $this->productCrudController
-                ->readEntitiesBy($columnValueFilter);
+                ->readEntitiesBy(
+                    $this->convertFiltersToCrudCondition($filters)
+                );
+        }
+
+        if ($this->isListDeleted) {
+            $this->productCrudController
+                ->onlyDeleted();
+        } else {
+            $this->productCrudController
+                ->onlyUndeleted();
         }
 
         $this->setQuery($this->productCrudController
             ->join('idCategories', 'c')
             ->join('idProducers', 'pr')
-            ->orderBy('name')
+            ->orderBy(
+                isset($sorters) ? $sorters[0]['column'] : 'name',
+                isset($sorters) ? $sorters[0]['direction'] : 'asc'
+            )
             ->getQuery()
         );
         $this->setView('@Product/Product/Async/list.html.twig');
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

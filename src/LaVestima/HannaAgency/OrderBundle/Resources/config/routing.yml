@@ -10,10 +10,6 @@ order_show:
     path: /order/show/{pathSlug}
     defaults: { _controller: OrderBundle:Order:show, pathSlug: '' }
 
-#order_new:
-#    path: /order/new
-#    defaults: { _controller: OrderBundle:Order:new }
-
 order_delete:
     path: /order/delete/{pathSlug}
     defaults: { _controller: OrderBundle:Order:delete, pathSlug: '' }
@@ -29,3 +25,15 @@ order_placement_new:
 order_placement_summary:
     path: /order_placement/summary
     defaults: { _controller: OrderBundle:OrderPlacement:summary }
+
+order_async_list:
+    path: /order/async/list
+    defaults: { _controller: OrderBundle:Async\OrderAsync:list }
+    options:
+        expose: true
+
+order_async_deleted_list:
+    path: /order/async/deleted_list
+    defaults: { _controller: OrderBundle:Async\OrderAsync:deletedList }
+    options:
+        expose: true

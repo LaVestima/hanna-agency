@@ -4,7 +4,6 @@ namespace LaVestima\HannaAgency\CustomerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use LaVestima\HannaAgency\InfrastructureBundle\Model\EntityInterface;
-use LaVestima\HannaAgency\LocationBundle\Entity\Addresses;
 use LaVestima\HannaAgency\LocationBundle\Entity\Cities;
 use LaVestima\HannaAgency\LocationBundle\Entity\Countries;
 use LaVestima\HannaAgency\MoneyBundle\Entity\Currencies;
@@ -103,13 +102,6 @@ class Customers implements EntityInterface, \JsonSerializable
      * @ORM\Column(name="Email", type="string", length=200, nullable=false)
      */
     private $email;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="Newsletter", type="boolean", nullable=false)
-     */
-    private $newsletter = '1';
 
     /**
      * @var string
@@ -474,30 +466,6 @@ class Customers implements EntityInterface, \JsonSerializable
     }
 
     /**
-     * Set newsletter
-     *
-     * @param boolean $newsletter
-     *
-     * @return Customers
-     */
-    public function setNewsletter($newsletter)
-    {
-        $this->newsletter = $newsletter;
-
-        return $this;
-    }
-
-    /**
-     * Get newsletter
-     *
-     * @return boolean
-     */
-    public function getNewsletter()
-    {
-        return $this->newsletter;
-    }
-
-    /**
      * Set phone
      *
      * @param string $phone
@@ -661,7 +629,7 @@ class Customers implements EntityInterface, \JsonSerializable
      *
      * @return Customers
      */
-    public function setIdCurrencies(Currencies $idCurrencies = null)
+    public function setIdCurrencies(Currencies $idCurrencies)
     {
         $this->idCurrencies = $idCurrencies;
 
@@ -701,7 +669,12 @@ class Customers implements EntityInterface, \JsonSerializable
     {
         return $this->idUsers;
     }
-    
+
+    /**
+     * Get fullName
+     *
+     * @return string
+     */
     public function getFullName() {
         return $this->firstName . ' ' . $this->lastName;
     }

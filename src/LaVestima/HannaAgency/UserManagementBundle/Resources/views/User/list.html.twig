@@ -4,24 +4,37 @@
 
 {% block entityList %}
     <table class="entity-list order-list">
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
         <tr class="entity-list-header">
             <th>{{ knp_pagination_sortable(pagination, 'Login', 'u.login') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Email', 'u.email') }}</th>
             <th>{{ knp_pagination_sortable(pagination, 'Role', 'r.name') }}</th>
             <th></th>
         </tr>
-
-        {% for user in pagination %}
-            <tr class="entity-list-row">
-                <td>{{ user.login }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.idRoles.name }}</td>
-                <td>
-                    <a href="{{ path('user_show', {'pathSlug': user.pathSlug}) }}">
-                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('user_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.email', '{{ path('user_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'r.name', '{{ path('user_async_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
     </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('user_async_list') }}');
+        });
+    </script>
 {% endblock %}

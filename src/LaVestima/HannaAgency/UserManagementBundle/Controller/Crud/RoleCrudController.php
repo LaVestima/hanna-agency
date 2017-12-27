@@ -6,6 +6,4 @@ use LaVestima\HannaAgency\InfrastructureBundle\Controller\CrudController;
 
 class RoleCrudController extends CrudController {
 	protected $entityClass = 'LaVestima\\HannaAgency\\UserManagementBundle\\Entity\\Roles';
-	
-	
 }

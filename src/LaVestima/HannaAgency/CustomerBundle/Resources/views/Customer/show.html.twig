@@ -1,15 +1,6 @@
 {% extends '@Infrastructure/base.html.twig' %}
 
-{% block title %}Customer{% endblock %}
-
-{% block actionBar %}
-    <a href="{{ path('customer_list') }}">
-        <div class="button action-bar-button">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            List
-        </div>
-    </a>
-{% endblock %}
+{% block title customer.firstName ~ ' ' ~ customer.lastName %}
 
 {% block content %}
     <div class="module-box">

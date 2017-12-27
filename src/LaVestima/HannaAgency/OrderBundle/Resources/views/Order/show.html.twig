@@ -16,11 +16,9 @@
     {#// TODO: add confirmation window #}
 
     {% if order.dateDeleted is null %}
-    {#<a href="{{ path('order_delete', {'pathSlug': order.pathSlug}) }}">#}
         <div class="button action-bar-button delete-button" onclick="showConfirmationBox('Are You sure You want to delete the order?', '{{ path('order_delete', {'pathSlug': order.pathSlug}) }}')">
             Delete Order
         </div>
-    {#</a>#}
     {% else %}
     <a href="{{ path('order_restore', {'pathSlug': order.pathSlug}) }}">
         <div class="button action-bar-button">
@@ -39,6 +37,12 @@
                     <td>Date Placed</td>
                     <td>{{ order.dateCreated | date('d.m.Y') }}</td>
                 </tr>
+                {% if order.status is defined and order.status is not null %}
+                <tr>
+                    <td>Status</td>
+                    <td>{{ order.status.name }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td>Customer</td>
                     <td>
@@ -58,7 +62,7 @@
         <div class="module-box-title">Products</div>
         <div class="module-box-content">
             <table class="entity-list orders-products-list">
-                <tr>
+                <tr class="entity-list-header">
                     <th>Name</th>
                     <th>Size</th>
                     <th>Quantity</th>

@@ -24,42 +24,6 @@ class LoginControllerTest extends BaseWebTestCase
         );
     }
 
-    public function testLoginActionAdmin()
-    {
-        $this->logInAdmin();
-
-        $crawler = $this->client->request('GET', $this->indexActionPath);
-
-        $this->assertSame(
-            Response::HTTP_OK,
-            $this->client->getResponse()->getStatusCode()
-        );
-
-        $this->assertEquals(
-            0,
-            $crawler->filter('.page-content > form')->count()
-        );
-    }
-
-    public function testLoginActionCustomer()
-    {
-        $this->logInCustomer();
-
-        $crawler = $this->client->request('GET', $this->indexActionPath);
-
-        $this->assertSame(
-            Response::HTTP_OK,
-            $this->client->getResponse()->getStatusCode()
-        );
-
-        $this->assertEquals(
-            0,
-            $crawler->filter('.page-content > form')->count()
-        );
-    }
-
-    // TODO: maybe USER
-
     public function testLoginActionGuest()
     {
         $this->logInGuest();
