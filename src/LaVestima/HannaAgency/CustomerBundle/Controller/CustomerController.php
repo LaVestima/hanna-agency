@@ -5,7 +5,7 @@ namespace LaVestima\HannaAgency\CustomerBundle\Controller;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
 use LaVestima\HannaAgency\CustomerBundle\Entity\Customers;
-use LaVestima\HannaAgency\CustomerBundle\Form\NewCustomerType;
+use LaVestima\HannaAgency\CustomerBundle\Form\CustomerType;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\OrderBundle\Controller\Crud\OrderCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,7 +137,7 @@ class CustomerController extends BaseController
     {
         $customer = new Customers();
 
-        $form = $this->createForm(NewCustomerType::class, $customer);
+        $form = $this->createForm(CustomerType::class, $customer);
 
         $form->handleRequest($request);
 

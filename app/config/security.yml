@@ -56,21 +56,28 @@ security:
         - { path: ^/contact, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/user_settings, roles: ROLE_GUEST }
+        - { path: ^/user_customer, roles: ROLE_GUEST }
 
-        - { path: ^/order, roles: ROLE_CUSTOMER }
+        - { path: ^/order/list, roles: ROLE_CUSTOMER }
+        - { path: ^/order/async/list, roles: ROLE_CUSTOMER }
+        - { path: ^/order/show, roles: ROLE_CUSTOMER }
         - { path: ^/order_placement, roles: ROLE_CUSTOMER }
         - { path: ^/invoice, roles: ROLE_CUSTOMER }
 
-        - { path: ^/product, roles: ROLE_USER }
-        - { path: ^/export, roles: ROLE_USER }
+        - { path: ^/product/list, roles: ROLE_GUEST }
+        - { path: ^/product/async/list, roles: ROLE_GUEST }
+        - { path: ^/product/show, roles: ROLE_GUEST }
+        - { path: ^/export, roles: ROLE_GUEST }
 
         - { path: ^/customer, roles: ROLE_ADMIN }
+        - { path: ^/product, roles: ROLE_ADMIN }
+        - { path: ^/order, roles: ROLE_ADMIN }
         - { path: ^/login_attempt, roles: ROLE_ADMIN }
 
         - { path: ^/user, roles: ROLE_SUPER_ADMIN }
 
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        - { path: ^/export/pdf/order_list, roles: ROLE_ADMIN }
+#        - { path: ^/export/pdf/order_list, roles: ROLE_ADMIN }
 
         - { path: ^/, roles: ROLE_CUSTOMER }

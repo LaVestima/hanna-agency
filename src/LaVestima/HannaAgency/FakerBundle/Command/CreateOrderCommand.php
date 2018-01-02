@@ -41,7 +41,7 @@ class CreateOrderCommand extends ContainerAwareCommand
             for ($i = 0; $i < $orderNumber; $i++) {
                 $order = $this->createFakeOrder();
 
-                $output->writeln('Order');
+                $output->writeln('Order ' . ($i+1));
 
                 $productNumber = $this->getContainer()
                     ->get('product_crud_controller')
@@ -50,11 +50,10 @@ class CreateOrderCommand extends ContainerAwareCommand
                 for ($j = 0; $j < rand(1, $productNumber); $j++) {
                     $this->createFakeOrderProduct($order);
 
-                    $output->writeln('OrderProduct');
+//                    $output->writeln('OrderProduct');
                 }
-
-                $output->writeln('Created: ' . ($i+1));
             }
+            $output->writeln('Created: ' . ($i+1));
         }
     }
 

@@ -9,7 +9,7 @@ services:
     customer_crud_controller:
         class: LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudController
 
-    LaVestima\HannaAgency\CustomerBundle\Form\NewCustomerType:
+    LaVestima\HannaAgency\CustomerBundle\Form\CustomerType:
         tags: [form.type]
 
     LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface:

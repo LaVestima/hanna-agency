@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class NewCustomerType extends AbstractType
+class CustomerType extends AbstractType
 {
     private $countryCrudController;
     private $cityCrudController;
@@ -21,7 +21,7 @@ class NewCustomerType extends AbstractType
     private $userCrudController;
 
     /**
-     * NewCustomerType constructor.
+     * CustomerType constructor.
      *
      * @param CountryCrudControllerInterface $countryCrudController
      * @param CityCrudControllerInterface $cityCrudController

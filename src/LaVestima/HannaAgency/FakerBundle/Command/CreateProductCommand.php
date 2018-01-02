@@ -35,10 +35,10 @@ class CreateProductCommand extends BaseCreateCommand
                 for ($j = 0; $j < rand(1, $sizeNumber); $j++) {
                     $this->createFakeProductSize($product);
 
-                    $output->writeln('Product Size');
+//                    $output->writeln('Product Size');
                 }
 
-                $output->writeln('Product');
+                $output->writeln('Product ' . ($i+1));
             }
 
             $output->writeln('Created: ' . $i);

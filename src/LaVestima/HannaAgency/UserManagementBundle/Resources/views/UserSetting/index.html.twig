@@ -2,9 +2,42 @@
 
 {% block title 'User Settings' %}
 
-{% block content %}
-Change settings here!!!!!!!!!!!!!!
-    {{ form_start(form) }}
+{% block actionBar %}
+    <a href="{{ path('user_customer_new') }}">
+        <div class="button action-bar-button">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            Add Customer Data
+        </div>
+    </a>
+{% endblock %}
 
+{% block content %}
+    {# TODO: move to css file #}
+    <style>
+        input[type=checkbox] {
+            width: 20px !important;
+        }
+    </style>
+    {{ form_start(form) }}
+    <table class="entity-new-table">
+        <tr>
+            <td>{{ form_label(form.locale) }}
+                {#--- dropdown ---#}
+            </td>
+            <td>{{ form_widget(form.locale) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.newsletter) }}</td>
+            <td>{{ form_widget(form.newsletter) }}</td>
+        </tr>
+        <tr>
+            <td>{{ form_label(form.darkMode) }}</td>
+            <td>{{ form_widget(form.darkMode) }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ form_widget(form.save) }}</td>
+        </tr>
+    </table>
     {{ form_end(form) }}
 {% endblock %}

@@ -17,6 +17,10 @@ class UserSettingsType extends AbstractType
             ->add('newsletter', CheckboxType::class, [
                 'required' => false
             ])
+            ->add('darkMode', CheckboxType::class, [
+                'required' => false,
+                'mapped' => false // TODO: change, add to entity
+            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Confirm',
             ])

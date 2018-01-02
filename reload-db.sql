@@ -278,44 +278,6 @@ CREATE TABLE IF NOT EXISTS Producers (
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Invoices (
-	ID INTEGER NOT NULL AUTO_INCREMENT,
-	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  Date_Deleted TIMESTAMP NULL,
-	User_Created INTEGER NOT NULL DEFAULT 0,
-  User_Deleted INTEGER,
-	Name VARCHAR(50) NOT NULL,
-	ID_CUSTOMERS INTEGER NOT NULL,
-	Date_Issued TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	Path_Slug VARCHAR(50) NOT NULL DEFAULT '',
-	CONSTRAINT Invoices_PK PRIMARY KEY (ID),
-  CONSTRAINT Invoices_User_Created_FK FOREIGN KEY (User_Created) REFERENCES Users(ID)
-  ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT Invoices_User_Deleted_FK FOREIGN KEY (User_Deleted) REFERENCES Users(ID)
-  ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT Invoices_Name_U UNIQUE(Name),
-	CONSTRAINT Invoices_Path_Slug_U UNIQUE(Path_Slug),
-	CONSTRAINT Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
-	ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS History_Invoices (
-	ID INTEGER NOT NULL AUTO_INCREMENT,
-	ID_INVOICES INTEGER NOT NULL,
-	Date_Edited TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	User_Edited INTEGER NOT NULL,
-	Name VARCHAR(50),
-	ID_CUSTOMERS INTEGER,
-	Date_Issued DATETIME,
-	CONSTRAINT History_Invoices_PK PRIMARY KEY (ID),
-	CONSTRAINT History_Invoices_ID_INVOICES_FK FOREIGN KEY (ID_INVOICES) REFERENCES Invoices(ID)
-	ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT History_Invoices_User_Edited_FK FOREIGN KEY (User_Edited) REFERENCES Users(ID)
-	ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT History_Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
-	ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS Orders (
 	ID INTEGER NOT NULL AUTO_INCREMENT,
 	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -347,6 +309,47 @@ CREATE TABLE IF NOT EXISTS History_Orders (
 	ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT History_Orders_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Invoices (
+	ID INTEGER NOT NULL AUTO_INCREMENT,
+	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	Date_Deleted TIMESTAMP NULL,
+	User_Created INTEGER NOT NULL DEFAULT 0,
+	User_Deleted INTEGER,
+	Name VARCHAR(50) NOT NULL,
+	ID_CUSTOMERS INTEGER NOT NULL,
+	ID_ORDERS INTEGER NOT NULL,
+	Date_Issued TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	Path_Slug VARCHAR(50) NOT NULL DEFAULT '',
+	CONSTRAINT Invoices_PK PRIMARY KEY (ID),
+	CONSTRAINT Invoices_User_Created_FK FOREIGN KEY (User_Created) REFERENCES Users(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT Invoices_User_Deleted_FK FOREIGN KEY (User_Deleted) REFERENCES Users(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT Invoices_Name_U UNIQUE(Name),
+	CONSTRAINT Invoices_Path_Slug_U UNIQUE(Path_Slug),
+	CONSTRAINT Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT Invoices_ID_ORDERS_FK FOREIGN KEY (ID_ORDERS) REFERENCES Orders(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS History_Invoices (
+	ID INTEGER NOT NULL AUTO_INCREMENT,
+	ID_INVOICES INTEGER NOT NULL,
+	Date_Edited TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	User_Edited INTEGER NOT NULL,
+	Name VARCHAR(50),
+	ID_CUSTOMERS INTEGER,
+	Date_Issued DATETIME,
+	CONSTRAINT History_Invoices_PK PRIMARY KEY (ID),
+	CONSTRAINT History_Invoices_ID_INVOICES_FK FOREIGN KEY (ID_INVOICES) REFERENCES Invoices(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT History_Invoices_User_Edited_FK FOREIGN KEY (User_Edited) REFERENCES Users(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT History_Invoices_ID_CUSTOMERS_FK FOREIGN KEY (ID_CUSTOMERS) REFERENCES Customers(ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Products (
@@ -527,45 +530,42 @@ INSERT INTO Sizes (ID, Name) VALUES (7, '44');
 INSERT INTO Roles (ID, Name, Code) VALUES (1, 'Super Administrator', 'ROLE_SUPER_ADMIN');
 INSERT INTO Roles (ID, Name, Code) VALUES (2, 'Administrator', 'ROLE_ADMIN');
 INSERT INTO Roles (ID, Name, Code) VALUES (3, 'Customer', 'ROLE_CUSTOMER');
-INSERT INTO Roles (ID, Name, Code) VALUES (4, 'User', 'ROLE_USER');
+# INSERT INTO Roles (ID, Name, Code) VALUES (4, 'User', 'ROLE_USER');
 INSERT INTO Roles (ID, Name, Code) VALUES (5, 'Guest', 'ROLE_GUEST');
 
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (1, 'guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 5, 'ewWSIGrRBcRtkddBn2FlDzonjEPKbVRyN8qJ69vcaM5xJCuRPc');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (2, '2016-12-02', 'admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2, 'GgUSZbnDcBu6wosgoz8jaaHVpA1euAI1jQa8mEMYAt9LQVPVuw');
-INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (3, '2016-07-07', 'user', 'user@used.user', '$2y$13$LK082JKNh7ME7o6Vn/bjkeDEJfajPXCiegqlDaDESnrGjflvYrNAG', 4, 'HKAZmjMlvAielHIFOwdZkjoA8Us1M6S5jdoXziiJuTU0negPQl');
+# INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (3, '2016-07-07', 'user', 'user@used.user', '$2y$13$LK082JKNh7ME7o6Vn/bjkeDEJfajPXCiegqlDaDESnrGjflvYrNAG', 4, 'HKAZmjMlvAielHIFOwdZkjoA8Us1M6S5jdoXziiJuTU0negPQl');
 INSERT INTO Users (ID, Date_Created, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (4, '2015-01-01', 'admin', 'admin@admin.admin', '$2y$13$J5XJ.bvLTJ0M0kmun722nOiG3C2HCQi2v7NtNiOjWEJXZD2SXwnVi', 1, 'JWcX5wnVXm6cHmRprqymsFRNlaXZIsr8aa1oNNSDT4239wePs6');
 INSERT INTO Users (ID, Login, Email, Password_Hash, ID_ROLES, Path_Slug) VALUES (5, 'customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 3, 'zNZyD0Fmumh3XQImmrPBDa7Fiv6wL2zfiHoswBayMxcuqXT1k6');
 
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (1, 1, 'de', 1);
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (2, 2, 'pl', 0);
-INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (3, 3, 'fr', 0);
+# INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (3, 3, 'fr', 0);
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (4, 4, 'en', 1);
 INSERT INTO Users_Settings (ID, ID_USERS, Locale, Newsletter) VALUES (5, 5, 'ca', 1);
 
--- INSERT INTO Login_Attempts () VALUES ();
-
--- INSERT INTO Tokens () VALUES ();
-
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (1, '9276156937', 'Richard', 'McFarlin', 'M', 5, 6, 'AR 72764', '3240 Green Hill Road', 'RichardRMcFarlin@teleworm.us', '479-316-2396', 2, 5, 'tt53zAw6IewAKQqhLT3tK3Bm4jxYRAOJ48aCif4p6T7BkCQW8v');
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (2, '1132466159', 'Lisa', 'Sanger', 'F', 2, 7, '91595', 'Heiligengeistbrücke 65', 'LisaSanger@teleworm.us', '09805 81 50 95', 1, 1, 'WNyPJ0er9sbE2V5vA2x0cTNPDovu35xdlJEt38BTDCGDLiiVY6');
-INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (3, '5438663546', 'Isobel', 'Briggs', 'F', 9, 10, 'AL9 0LY', '66 Red Lane', 'MeganHicks@teleworm.us', '077 3928 7528', 3, 3, 'F2zMfO7T0P0ilZDedkCuhPlq646b8XcfBHIfhzSIH42fsU4cxk');
+# INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (3, '5438663546', 'Isobel', 'Briggs', 'F', 9, 10, 'AL9 0LY', '66 Red Lane', 'MeganHicks@teleworm.us', '077 3928 7528', 3, 3, 'F2zMfO7T0P0ilZDedkCuhPlq646b8XcfBHIfhzSIH42fsU4cxk');
 INSERT INTO Customers (ID, Identification_Number, First_Name, Last_Name, Gender, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_CURRENCIES, ID_USERS, Path_Slug) VALUES (4, '2211239911', 'Puck', 'van Uitert', 'O', 6, 11, '7605 XX', 'Spreeuwenstraat 73', 'PuckvanUitert@rhyta.com', '06-15368249', 1, 4, 'PN2dJhsPz0h9tonhT3H5dWtkuOWBhZXpHr1h4y6QT4KotU7q9G');
 
 INSERT INTO Producers (ID, Short_Name, Full_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, Path_Slug) VALUES (1, 'Opticomp', 'Opticomp Clothing', 'US773365342', 5, 12, 'CA 92121', '331 Hamill Avenue', 'LarrySLowell@armyspy.com', '858-401-5106', 'ogZ3y7fN2bRYa8nNpBHnB6nNgAKveqxUQTIeZ8fE4NARoGCNic');
 INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, Path_Slug) VALUES (2, 'Omni', 'Omni Architectural Designs', 'Christopher', 'Harris', 'GB028338520', 9, 13, 'PH33 3AF', '50 Old Chapel Road', 'RileyCraig@teleworm.us', '078 2966 5839', 'tRtLZ93FMfzrS4UpUegAQRkCTKgk3NYBiISNwluyleFJx7lV0u');
 INSERT INTO Producers (ID, Short_Name, Full_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_USERS, Path_Slug) VALUES (3, 'Asiatic', 'Asiatic Solutions', 'FR69210542996', 3, 14, '74100', '65, Avenue De Marlioz', 'BrigittePatry@teleworm.us', '04.29.54.23.82', 4, 'jOtz5btgwsFE29KeXWMan1M9jRHt3THBxFGdvoO5Lijt6xlufd');
-INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_USERS, Path_Slug) VALUES (4, 'H & H', 'Hughes & Hatcher', 'Katherine J.', 'Hepp', '6wSyi4BQ10vkRqm', 4, 15, 'ON M5H 1P6', '4370 Adelaide St', 'KatherineJHepp@rhyta.com', '416-981-2808', 3, 'KXFH0ur7He79vxdoqIqANtDEgCWqAXaJIVXyhyD7v8vIUfXFZs');
+# INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_USERS, Path_Slug) VALUES (4, 'H & H', 'Hughes & Hatcher', 'Katherine J.', 'Hepp', '6wSyi4BQ10vkRqm', 4, 15, 'ON M5H 1P6', '4370 Adelaide St', 'KatherineJHepp@rhyta.com', '416-981-2808', 3, 'KXFH0ur7He79vxdoqIqANtDEgCWqAXaJIVXyhyD7v8vIUfXFZs');
 
 INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (1, 2, 2, 'Umgewrmyefi6thiDJZMmz4LHuKrJDjaVbPZzfCgwLS6Fr5FKhs');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (2, 3, 3, 'g11SxwcyZw9ILjAiCi0eVjF6BT8cy5BixERUR0Lm79cGQFTGwJ');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (3, 1, 5, 'ZZgtZjORKCCKKTflMgLr7UpKpC2ErHGE2LqW6tMASMylmPKlBP');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (4, 4, 4, 'DgUqtlNvIMx2uzQz5iqU5perhrHME8tUkVR9aGT095W0rWCk7U');
+# INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (2, 3, 3, 'g11SxwcyZw9ILjAiCi0eVjF6BT8cy5BixERUR0Lm79cGQFTGwJ');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (2, 1, 5, 'ZZgtZjORKCCKKTflMgLr7UpKpC2ErHGE2LqW6tMASMylmPKlBP');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (3, 4, 4, 'DgUqtlNvIMx2uzQz5iqU5perhrHME8tUkVR9aGT095W0rWCk7U');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (4, 2, 1, 'g11SxwcyZw9ILjAiCi0eVjF6BT8cy5BixERUR0Lm79cGQFTGwJ');
 
-INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (1, '1/2016', 2, 1, '2016-02-26', 'fQ5oxD0fkgVdl9NZp6QbO9aDhF4wqbY9FqKfpVckiCOsdk6vpG');
-INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (2, '4/2017', 4, 2, '2017-03-01', 'iqHtsskeLDHD5LtJBfFBzPNB5AWGSrr16IGhCrZA2AtcOH1tFT');
-INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (3, '14/2015', 3, 4, '2015-12-18', 'OsZStBE2IzTOAJtpIgdt9UaAUXb8E38w1rctIaYPLyBA3GfNVb');
-INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (4, '16/2015', 1, 2, '2015-10-15', 'rsooOH9b8LZW8A4c6kb0wDjhpqonhCNWcXo9AgZuHI8HrEV4q0');
-INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (5, '10/2014', 2, 2, '2014-11-01', 'sNQT0j1GFoMrQ8UieAPb7UKAVLg9ID02z07rC13AOdustnEgBe');
+INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, ID_ORDERS, User_Created, Date_Issued, Path_Slug) VALUES (1, '1/2016', 2, 1, 1, '2016-02-26', 'fQ5oxD0fkgVdl9NZp6QbO9aDhF4wqbY9FqKfpVckiCOsdk6vpG');
+INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, ID_ORDERS, User_Created, Date_Issued, Path_Slug) VALUES (2, '4/2017', 4, 2, 2, '2017-03-01', 'iqHtsskeLDHD5LtJBfFBzPNB5AWGSrr16IGhCrZA2AtcOH1tFT');
+# INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (3, '14/2015', 3, 4, '2015-12-18', 'OsZStBE2IzTOAJtpIgdt9UaAUXb8E38w1rctIaYPLyBA3GfNVb');
+INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, ID_ORDERS, User_Created, Date_Issued, Path_Slug) VALUES (4, '16/2015', 1, 3, 2, '2015-10-15', 'rsooOH9b8LZW8A4c6kb0wDjhpqonhCNWcXo9AgZuHI8HrEV4q0');
+INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, ID_ORDERS, User_Created, Date_Issued, Path_Slug) VALUES (5, '10/2014', 2, 4, 2, '2014-11-01', 'sNQT0j1GFoMrQ8UieAPb7UKAVLg9ID02z07rC13AOdustnEgBe');
 
 INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS) VALUES (1, 'Cool Shoe', 'Cool-Shoe-39', 50, 79.99, 3, 2);
 INSERT INTO Products (ID, Name, Path_Slug, Price_Producer, Price_Customer, ID_CATEGORIES, ID_PRODUCERS) VALUES (2, 'TF Hat No. 7', 'TF-Hat-No-7-M', 7, 12.5, 4, 3);
@@ -585,8 +585,8 @@ INSERT INTO Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (3, 'h
 INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (1, 2, 1, 4, 15, 68.99);
 INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (2, 2, 2, 6, 5, 11.99);
 INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (3, 4, 3, 2, 10, 59.99);
-INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (4, 3, 1, 17, 0, 79.99);
-INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (5, 3, 3, 22, 0, 65.99);
+# INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (4, 3, 1, 17, 0, 79.99);
+# INSERT INTO Invoices_Products (ID, ID_INVOICES, ID_PRODUCTS_SIZES, Quantity, Discount, Price_Final) VALUES (5, 3, 3, 22, 0, 65.99);
 
 INSERT INTO Orders_Statuses (ID, Name) VALUES (1, 'Queued');
 INSERT INTO Orders_Statuses (ID, Name) VALUES (2, 'Pending');
@@ -595,8 +595,8 @@ INSERT INTO Orders_Statuses (ID, Name) VALUES (4, 'Rejected');
 
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (1, 1, 1, 1, 5, 10);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (2, 1, 2, 1, 12, 0);
-INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (3, 2, 3, 2, 1, 0);
-INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (4, 2, 1, 3, 1, 0);
+# INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (3, 2, 3, 2, 1, 0);
+# INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (4, 2, 1, 3, 1, 0);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (5, 3, 5, 2, 1, 0);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (6, 3, 6, 4, 1, 0);
 INSERT INTO Orders_Products (ID, ID_ORDERS, ID_PRODUCTS_SIZES, ID_STATUSES, Quantity, Discount) VALUES (7, 4, 3, 2, 15, 3);

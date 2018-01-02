@@ -3,7 +3,7 @@
 {% block title 'User list' %}
 
 {% block entityList %}
-    <table class="entity-list order-list">
+    <table class="entity-list">
         <colgroup>
             <col>
             <col width="150px">
@@ -11,9 +11,24 @@
             <col width="40px">
         </colgroup>
         <tr class="entity-list-header">
-            <th>{{ knp_pagination_sortable(pagination, 'Login', 'u.login') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Email', 'u.email') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Role', 'r.name') }}</th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('user_async_list') }}')">
+                    Login
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.email', '{{ path('user_async_list') }}')">
+                    Email
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'r.name', '{{ path('user_async_list') }}')">
+                    Role
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
             <th></th>
         </tr>
         <tr class="entity-list-filters">

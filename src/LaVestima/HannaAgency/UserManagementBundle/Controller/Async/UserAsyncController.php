@@ -30,6 +30,7 @@ class UserAsyncController extends BaseAsyncController
     public function genericListAction(Request $request)
     {
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->userCrudController
             ->setAlias('u');
@@ -54,7 +55,10 @@ class UserAsyncController extends BaseAsyncController
 
         $this->setQuery($this->userCrudController
             ->join('idRoles', 'r')
-            ->orderBy('login', 'ASC')
+            ->orderBy(
+                isset($sorters) ? $sorters[0]['column'] : 'login',
+                isset($sorters) ? $sorters[0]['direction'] : 'asc'
+            )
             ->getQuery()
         );
         $this->setView('@UserManagement/User/Async/list.html.twig');

@@ -35,11 +35,6 @@ class UserController extends BaseController
      */
     public function listAction(Request $request)
     {
-        $this->setQuery($this->userCrudController->setAlias('u')
-            ->readAllUndeletedEntities()
-            ->join('idRoles', 'r')
-            ->orderBy('login', 'ASC')
-            ->getQuery());
         $this->setView('@UserManagement/User/list.html.twig');
         $this->setActionBar([
             [
@@ -68,11 +63,6 @@ class UserController extends BaseController
      */
 	public function deletedListAction(Request $request)
     {
-        $this->setQuery($this->userCrudController->setAlias('u')
-            ->readAllDeletedEntities()
-            ->join('idRoles', 'r')
-            ->orderBy('login', 'ASC')
-            ->getQuery());
         $this->setView('@UserManagement/User/list.html.twig');
         $this->setActionBar([
             [
