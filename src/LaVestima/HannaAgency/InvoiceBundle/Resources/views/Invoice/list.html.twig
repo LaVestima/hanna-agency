@@ -4,11 +4,38 @@
 
 {% block entityList %}
     <table class="entity-list invoice-list">
-        <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'Name', 'i.name') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Customer', 'c.firstName') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Issued By', 'u.login') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'Date Issued', 'i.dateCreated') }}</th>
+        <colgroup>
+            <col width="200px">
+            <col>
+            <col width="250px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'i.name', '{{ path('invoice_async_list') }}')">
+                    Name
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.firstName', '{{ path('invoice_async_list') }}')">
+                    Customer
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('invoice_async_list') }}')">
+                    Issued By
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'i.dateCreated', '{{ path('invoice_async_list') }}')">
+                    Date Issued
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
         </tr>
         <tr class="entity-list-filters">
             <td>

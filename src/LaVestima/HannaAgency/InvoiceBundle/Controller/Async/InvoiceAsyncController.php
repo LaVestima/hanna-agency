@@ -5,7 +5,6 @@ namespace LaVestima\HannaAgency\InvoiceBundle\Controller\Async;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\Async\BaseAsyncController;
 use LaVestima\HannaAgency\InvoiceBundle\Controller\Crud\InvoiceCrudControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class InvoiceAsyncController extends BaseAsyncController
 {
@@ -30,11 +29,8 @@ class InvoiceAsyncController extends BaseAsyncController
      */
     protected function genericListAction(Request $request)
     {
-        if (!$request->isXmlHttpRequest()) {
-            throw new AccessDeniedHttpException();
-        }
-
         $filters = $request->get('filters');
+        $sorters = $request->get('sorters');
 
         $this->invoiceCrudController
             ->setAlias('i');
@@ -60,7 +56,10 @@ class InvoiceAsyncController extends BaseAsyncController
         $this->setQuery($this->invoiceCrudController
             ->join('idCustomers', 'c')
             ->join('userCreated', 'u')
-            ->orderBy('dateCreated', 'DESC')
+            ->orderBy(
+                isset($sorters) ? $sorters[0]['column'] : 'dateCreated',
+                isset($sorters) ? $sorters[0]['direction'] : 'desc'
+            )
             ->getQuery()
         );
         $this->setView('@Invoice/Invoice/Async/list.html.twig');

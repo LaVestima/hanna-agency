@@ -3,7 +3,62 @@
 {% block title 'Deleted Invoices' %}
 
 {% block entityList %}
-    {% for invoice in pagination %}
-        {{ invoice.dateIssued | date('d.m.Y') }}
-    {% endfor %}
+    <table class="entity-list invoice-list">
+        <colgroup>
+            <col width="200px">
+            <col>
+            <col width="250px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'i.name', '{{ path('invoice_async_deleted_list') }}')">
+                    Name
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'c.firstName', '{{ path('invoice_async_deleted_list') }}')">
+                    Customer
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('invoice_async_deleted_list') }}')">
+                    Issued By
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'i.dateCreated', '{{ path('invoice_async_deleted_list') }}')">
+                    Date Issued
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+        </tr>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'i.name', '{{ path('invoice_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('invoice_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('invoice_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'i.dateCreated', '{{ path('invoice_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('invoice_async_deleted_list') }}');
+        });
+    </script>
 {% endblock %}
