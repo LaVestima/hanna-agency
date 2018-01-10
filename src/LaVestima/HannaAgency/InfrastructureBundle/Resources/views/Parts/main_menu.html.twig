@@ -5,6 +5,9 @@
 <div class="left-menu">
     <div class="left-menu-header">
         <b>MENU</b>
+        <div class="left-menu-close-button">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
     </div>
     <div class="left-menu-item left-menu-subheader">
         {% if app.user %}
@@ -38,21 +41,21 @@
             <li>
                 <a href="{{ path('customer_list') }}">
                     <div class="left-menu-item left-menu-body-row">
-                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                        <i class="fa fa-briefcase" aria-hidden="true"></i>
                         <span>Customers</span>
                     </div>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <div class="left-menu-item left-menu-body-row">
-                        <i class="fa fa-truck" aria-hidden="true"></i>
-                        <span># Producers #</span>
-                    </div>
-                </a>
-            </li>
+            {#<li>#}
+                {#<a href="#">#}
+                    {#<div class="left-menu-item left-menu-body-row">#}
+                        {#<i class="fa fa-truck" aria-hidden="true"></i>#}
+                        {#<span># Producers #</span>#}
+                    {#</div>#}
+                {#</a>#}
+            {#</li>#}
         {% endif %}
-        {% if is_granted('ROLE_USER') %}
+        {% if is_granted('ROLE_GUEST') %}
             <li>
                 <a href="{{ path('product_list') }}">
                     <div class="left-menu-item left-menu-body-row">
@@ -98,11 +101,6 @@
                     {#Admin Panel#}
                 {#</li>#}
             {#</a>#}
-            {#<a href="{{ path('admin_customer_list') }}">#}
-                {#<li class="left-menu-option">#}
-                    {#<span class="glyphicon glyphicon-briefcase"></span> Customers#}
-                {#</li>#}
-            {#</a>#}
             {#<a href="{{ path('admin_country_city_list') }}">#}
                 {#<li class="left-menu-option">#}
                     {#<span class="glyphicon glyphicon-road"></span> Countries/Cities#}
@@ -130,12 +128,6 @@
         {% endif %}
     </ul>
 </div>
-
-{#{% stylesheets filter='scssphp' output='css/app.css'#}
-    {#'@InfrastructureBundle/Resources/public/css/main_menu.scss'#}
-{#%}#}
-{#<link rel="stylesheet" href="{{ asset_url }}" />#}
-{#{% endstylesheets %}#}
 
 {% javascripts
     '@InfrastructureBundle/Resources/public/js/main_menu.js'

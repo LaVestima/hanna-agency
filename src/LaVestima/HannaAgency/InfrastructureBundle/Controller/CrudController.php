@@ -64,9 +64,9 @@ abstract class CrudController extends BaseController implements CrudControllerIn
 
 		$em = $this->manager;
 
-        if ($this->user) {
-            $entity = $em->merge($entity);
-        }
+//        if ($this->user) {
+//            $entity = $em->merge($entity);
+//        }
 
 		$em->persist($entity);
 		$em->flush();
@@ -483,6 +483,8 @@ abstract class CrudController extends BaseController implements CrudControllerIn
         }
 
         $field = $this->generateTableFieldName($field);
+
+        // TODO: fix sorting by dates
 
         $this->query->orderBy(
             $field,

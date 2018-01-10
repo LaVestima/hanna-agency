@@ -5,6 +5,8 @@ namespace LaVestima\HannaAgency\UserManagementBundle\Controller;
 use LaVestima\HannaAgency\CustomerBundle\Controller\Crud\CustomerCrudControllerInterface;
 use LaVestima\HannaAgency\InfrastructureBundle\Controller\BaseController;
 use LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface;
+use LaVestima\HannaAgency\UserManagementBundle\Entity\Users;
+use LaVestima\HannaAgency\UserManagementBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends BaseController
@@ -40,14 +42,17 @@ class UserController extends BaseController
             [
                 'label' => 'New User',
                 'path' => 'user_new',
+                'icon' => 'fa-plus'
             ],
             [
                 'label' => 'Deleted Users',
                 'path' => 'user_deleted_list',
+                'icon' => 'fa-close'
             ],
             [
                 'label' => 'Login History',
                 'path' => 'access_control_login_attempt_list',
+                'icon' => 'fa-history'
             ]
         ]);
 
@@ -63,11 +68,12 @@ class UserController extends BaseController
      */
 	public function deletedListAction(Request $request)
     {
-        $this->setView('@UserManagement/User/list.html.twig');
+        $this->setView('@UserManagement/User/deletedList.html.twig');
         $this->setActionBar([
             [
-                'label' => '< User List',
-                'path' => 'user_list'
+                'label' => 'User List',
+                'path' => 'user_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
@@ -106,10 +112,44 @@ class UserController extends BaseController
 		]);
 	}
 
+    /**
+     * User New Action.
+     *
+     * @param Request $request
+     *
+     * @return mixed|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
 	public function newAction(Request $request)
     {
-        return $this->render('@UserManagement/User/new.html.twig', [
+        $user = new Users();
 
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $user->setPasswordHash('');
+
+            // TODO: send the email with password reset
+
+            $this->get('user_crud_controller')
+                ->createEntity($user);
+
+            $this->addFlash('success', 'User Created!');
+
+            return $this->redirectToRoute('user_list');
+        }
+
+        $this->setView('@UserManagement/User/new.html.twig');
+        $this->setForm($form);
+        $this->setActionBar([
+            [
+                'label' => 'List',
+                'path' => 'user_list',
+                'icon' => 'fa-chevron-left'
+            ]
         ]);
+
+        return $this->baseNewAction();
     }
 }

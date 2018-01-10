@@ -9,6 +9,17 @@ trait ActionControllerTrait
 
     protected $view;
     protected $actionBar;
+    protected $templateEntities;
+
+    /**
+     * Base view render.
+     *
+     * @return mixed
+     */
+    protected function baseRender()
+    {
+        return $this->render($this->view, $this->templateEntities);
+    }
 
     /**
      * Set entity name.
@@ -47,5 +58,29 @@ trait ActionControllerTrait
         $this->actionBar = $actionBar;
 
         return $this;
+    }
+
+
+    /**
+     * Set template entities;
+     *
+     * @param array $templateEntities
+     */
+    protected function setTemplateEntities(array $templateEntities)
+    {
+        $this->templateEntities = $templateEntities;
+    }
+
+    /**
+     * Add template entities.
+     *
+     * @param array $templateEntities
+     */
+    protected function addTemplateEntities(array $templateEntities)
+    {
+        $this->templateEntities = array_merge(
+            $this->templateEntities ?? [],
+            $templateEntities
+        );
     }
 }

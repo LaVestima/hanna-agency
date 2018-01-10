@@ -1,15 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lavestima
- * Date: 01/01/18
- * Time: 19:51
- */
 
 namespace LaVestima\HannaAgency\UserManagementBundle\Form;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-class UserCustomerType
+class UserCustomerType extends AbstractType
 {
-
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+//        $builder->add('')
+    }
 }

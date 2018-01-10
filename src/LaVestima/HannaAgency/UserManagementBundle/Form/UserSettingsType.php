@@ -23,7 +23,6 @@ class UserSettingsType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Confirm',
-            ])
-        ;
+            ]);
     }
 }

@@ -3,6 +3,7 @@ services:
         autowire: true
 
     LaVestima\HannaAgency\UserManagementBundle\Controller\UserController:
+#        public: true
 
     LaVestima\HannaAgency\UserManagementBundle\Controller\Async\UserAsyncController:
 
@@ -14,6 +15,9 @@ services:
 
     user_setting_crud_controller:
         class: LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserSettingCrudController
+
+    LaVestima\HannaAgency\UserManagementBundle\Form\UserType:
+        tags: [form.type]
 
     LaVestima\HannaAgency\UserManagementBundle\Controller\Crud\UserCrudControllerInterface:
         alias: user_crud_controller

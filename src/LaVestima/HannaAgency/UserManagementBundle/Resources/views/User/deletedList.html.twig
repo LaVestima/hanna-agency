@@ -1,0 +1,55 @@
+{% extends '@Infrastructure/baseList.html.twig' %}
+
+{% block title 'Deleted Users' %}
+
+{% block entityList %}
+    <table class="entity-list">
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('user_async_deleted_list') }}')">
+                    Login
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.email', '{{ path('user_async_deleted_list') }}')">
+                    Email
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'r.name', '{{ path('user_async_deleted_list') }}')">
+                    Role
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th></th>
+        </tr>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('user_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'u.email', '{{ path('user_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+            <td>
+                <input type="text" onkeyup="filterSearch(this, 'r.name', '{{ path('user_async_deleted_list') }}')" placeholder="Search..." title="Search">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            filterSearch(undefined, undefined, '{{ path('user_async_deleted_list') }}');
+        });
+    </script>
+{% endblock %}

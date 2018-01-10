@@ -9,9 +9,19 @@
             <col width="400px">
             <col width="100px">
         </colgroup>
-        <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'Date Created', 'la.dateCreated') }}</th>
-            <th>{{ knp_pagination_sortable(pagination, 'User', 'u.login') }}</th>
+        <tr class="entity-list-header">
+            <th>
+                <ua onclick="sortSearch(this, 'la.dateCreated', '{{ path('access_control_login_attempt_async_list') }}')">
+                    Date Created
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua onclick="sortSearch(this, 'u.login', '{{ path('access_control_login_attempt_async_list') }}')">
+                    User
+                    <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                </ua>
+            </th>
             <th>Failed?</th>
         </tr>
         <tr class="entity-list-filters">
@@ -21,9 +31,7 @@
             <td>
                 <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('access_control_login_attempt_async_list') }}')" placeholder="Search..." title="Search">
             </td>
-            <td>
-                {#<input type="text" onkeyup="filterSearch(this, 'pr.shortName', '{{ path('product_async_list') }}')" placeholder="Search..." title="Search">#}
-            </td>
+            <td></td>
         </tr>
         <tbody class="entity-list-content"></tbody>
     </table>

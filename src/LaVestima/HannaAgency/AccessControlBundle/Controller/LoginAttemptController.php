@@ -39,11 +39,12 @@ class LoginAttemptController extends BaseController
         $this->setView('@AccessControl/LoginAttempt/list.html.twig');
         $this->setActionBar([
             [
-                'label' => '< User List',
-                'path' => 'user_list'
+                'label' => 'User List',
+                'path' => 'user_list',
+                'icon' => 'fa-chevron-left'
             ]
         ]);
 
-        return parent::listAction($request);
+        return parent::baseListAction($request);
     }
 }

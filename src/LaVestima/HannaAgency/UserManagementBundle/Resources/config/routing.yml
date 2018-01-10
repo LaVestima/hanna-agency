@@ -18,6 +18,10 @@ user_setting_index:
     path: /user_settings/
     defaults: { _controller: UserManagementBundle:UserSetting:index }
 
+user_customer_new:
+    path: /user_customer/new
+    defaults: { _controller: UserManagementBundle:UserCustomer:new }
+
 user_async_list:
     path: /user/async/list
     defaults: { _controller: UserManagementBundle:Async\UserAsync:list }

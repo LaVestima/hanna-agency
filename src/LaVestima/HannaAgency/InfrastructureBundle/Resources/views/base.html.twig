@@ -64,14 +64,14 @@
                         <ul class="action-bar-export-list">
                             {% if pdfExportPath is defined %}
                                 <li class="hidden">
-                                    <a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
+                                    <a class="button action-bar-button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">
                                         PDF
                                     </a>
                                 </li>
                             {% endif %}
                             {% if excelExportPath is defined %}
                                 <li class="hidden">
-                                    <a class="button" href="{{ excelExportPath }}">
+                                    <a class="button action-bar-button" href="{{ excelExportPath }}">
                                         Excel
                                     </a>
                                 </li>
@@ -117,18 +117,22 @@
                 <span class="copyright">
                     &#9400;
                 </span>
-                2017 Hanna Agency
+                {{ 'now' | date('Y') }} Hanna Agency
             </li>
 
             <li>
-                {# TODO: add link to contact site #}
                 <a href="{{ path('homepage_contact') }}">
                     Contact
                 </a>
             </li>
             <li>
-                MORE...
+                <a href="">
+                    Privacy Policy
+                </a>
             </li>
+            {#<li>#}
+                {#MORE...#}
+            {#</li>#}
         </ul>
     </footer>
 
@@ -140,7 +144,7 @@
         {#</div>#}
     {#{% endif %}#}
 </body>
-{# ----------------------- JS ----------------------- #}
+{# ----------------------- No action bar CSS ----------------------- #}
 {% if ((block('actionBar') is not defined or block('actionBar') is null) and
     (actionBar is not defined or actionBar is null)) or
     (renderActionBar is defined and not renderActionBar)
@@ -151,7 +155,7 @@
 <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
 {% endif %}
-
+{# ----------------------- JS ----------------------- #}
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 {% javascripts

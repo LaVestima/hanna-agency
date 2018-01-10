@@ -39,6 +39,23 @@ $('.left-menu').css({
 $(document).ready(function() {
     leftMenuWidth = $('.left-menu').width();
 
+    $(window).resize(function () {
+        leftMenuWidth = $('.left-menu').width();
+
+        if (!isLeftMenuActive) {
+            $('.left-menu').css({
+                'left': '-' + leftMenuWidth + 'px'
+            });
+            $('.left-menu-button').css({
+                'left': '0'
+            });
+        } else {
+            $('.left-menu-button').css({
+                'left': leftMenuWidth + 'px'
+            });
+        }
+    });
+
     $(".body-overlay").fadeOut(0);
     $(".body-overlay").css("visibility", "visible");
 
@@ -54,6 +71,10 @@ $(document).ready(function() {
         else {
             hideLeftMenu();
         }
+    });
+
+    $(".left-menu-close-button").click(function() {
+        hideLeftMenu();
     });
 
     $(".body-overlay").click(function() {

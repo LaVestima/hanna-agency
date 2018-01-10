@@ -4,8 +4,6 @@ namespace LaVestima\HannaAgency\InfrastructureBundle\Controller\Action;
 
 trait ShowActionControllerTrait
 {
-    protected $templateEntities;
-
     /**
      * Show Action.
      *
@@ -24,15 +22,5 @@ trait ShowActionControllerTrait
         $this->templateEntities['actionBar'] = $this->actionBar;
 
         return $this->render($this->view, $this->templateEntities);
-    }
-
-    /**
-     * Set template entities;
-     *
-     * @param array $templateEntities
-     */
-    protected function setTemplateEntities(array $templateEntities)
-    {
-        $this->templateEntities = $templateEntities;
     }
 }

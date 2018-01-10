@@ -146,6 +146,15 @@ footer {
     }
 }
 
+.center {
+    margin: auto;
+    display: table;
+}
+
+.bold {
+    font-weight: bold;
+}
+
 .top-bar {
     position: fixed;
     top: 0;
@@ -192,6 +201,12 @@ footer {
             }
         }
 
+        .action-bar-export-button {
+            i {
+                margin: 0 5px 0 5px;
+            }
+        }
+
         .action-bar-export {
             position: relative;
             float: right;
@@ -208,7 +223,7 @@ footer {
 
                     a {
                         display: block;
-                        color: $main-font-color;
+                        color: $main-font-color-inverted;
                     }
                 }
             }
@@ -428,6 +443,7 @@ footer {
 
         &:first-child {
             text-align: right;
+            font-weight: bold;
         }
 
         &:last-child {

@@ -41,6 +41,21 @@ $left-menu-item-height: 40px;
         background: #444444;
         color: $main-theme-color-lighter;
         cursor: default;
+
+        .left-menu-close-button {
+            display: none;
+            position: absolute;
+            height: 50px;
+            line-height: 50px;
+            width: 50px;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            
+            &:hover {
+                background: #777;
+            }
+        }
     }
 
     .left-menu-subheader {
@@ -98,5 +113,23 @@ $left-menu-item-height: 40px;
     i {
         margin: 0 5px;
         font-size: larger;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .left-menu {
+        width: 100%;
+
+        .left-menu-header {
+            //line-height: $left-menu-item-height + 30px;
+
+            .left-menu-close-button {
+                display: block;
+            }
+        }
+
+        .left-menu-item {
+            line-height: $left-menu-item-height + 20px;
+        }
     }
 }

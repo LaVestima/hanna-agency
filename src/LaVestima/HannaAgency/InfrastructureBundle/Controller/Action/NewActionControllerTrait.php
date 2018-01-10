@@ -2,31 +2,41 @@
 
 namespace LaVestima\HannaAgency\InfrastructureBundle\Controller\Action;
 
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormInterface;
 
 trait NewActionControllerTrait
 {
     protected $form;
 
-    public function baseNewAction(Request $request)
+    /**
+     * Base New Action.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function baseNewAction()
     {
         if (!isset($this->view)) {
             throw new \Exception('No view defined!');
         }
+        if (!isset($this->form)) {
+            throw new \Exception('No form defined!');
+        }
 
-        return $this->render($this->view, [
+        $this->addTemplateEntities([
             'actionBar' => $this->actionBar,
             'form' => $this->form->createView(),
         ]);
+
+        return $this->baseRender();
     }
 
     /**
      * Set Entity Form.
      *
-     * @param Form $form
+     * @param FormInterface $form
      */
-    public function setForm(Form $form)
+    public function setForm(FormInterface $form)
     {
         $this->form = $form;
     }
