@@ -33,6 +33,8 @@ class AppKernel extends Kernel
             new LaVestima\HannaAgency\ProducerBundle\ProducerBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
+            new LaVestima\HannaAgency\MessageBundle\MessageBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

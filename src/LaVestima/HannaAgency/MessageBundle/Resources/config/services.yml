@@ -1,4 +1,8 @@
 services:
-#    message.example:
-#        class: LaVestima\HannaAgency\MessageBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    password_reset_email_sender:
+        class: LaVestima\HannaAgency\MessageBundle\Sender\PasswordResetEmailSender
+        autowire: true
+
+    password_reser_email_helper:
+        class: LaVestima\HannaAgency\MessageBundle\Sender\Helper\PasswordResetEmailHelper
+        autowire: true
