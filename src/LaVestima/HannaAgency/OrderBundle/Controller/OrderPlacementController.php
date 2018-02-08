@@ -80,10 +80,14 @@ class OrderPlacementController extends BaseController
      */
     public function summaryAction(Request $request) {
         $productPlacement = $request->getSession()->get('productPlacement');
+        $productPlacement->productsSizes = array_values(
+            array_filter($productPlacement->productsSizes)
+        );
         $selectedQuantities = $productPlacement->quantities;
 
         $selectedProductsSizes = [];
         $i = 0;
+
         foreach ($selectedQuantities as $key => $selectedQuantity) {
             if ($selectedQuantity === 0) {
                 $selectedProductsSizes[] = null;
@@ -92,6 +96,7 @@ class OrderPlacementController extends BaseController
                 $i++;
             }
         }
+
         $productPlacement->productsSizes = $selectedProductsSizes;
 
         foreach ($productPlacement->quantities as $key => $quantity) {
@@ -102,8 +107,8 @@ class OrderPlacementController extends BaseController
         }
 
         $form = $this->createForm(OrderSummaryType::class);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $order = new Orders();
@@ -112,37 +117,41 @@ class OrderPlacementController extends BaseController
                 $order = $this->get('order_crud_controller')
                     ->createEntity($order);
 
-                foreach ($selectedProductsSizes as $key => $selectedProductSize) {
-                    $orderProduct = new OrdersProducts();
+                foreach ($productPlacement->productsSizes as $key => $selectedProductSize) {
+                    if (null !== $selectedProductSize) {
+                        $orderProduct = new OrdersProducts();
+                        $orderProduct->setIdOrders($order);
+                        $orderProduct->setIdProductsSizes($selectedProductSize);
+                        $orderProduct->setIdStatuses(
+                            $this->get('order_status_crud_controller')
+                                ->readOneEntityBy(['name' => OrdersStatuses::QUEUED])
+                                ->getResult()
+                        );
+                        $orderProduct->setQuantity($selectedQuantities[$key]);
+                        // TODO: discount
 
-                    $orderProduct->setIdOrders($order);
-                    $orderProduct->setIdProductsSizes($selectedProductSize);
-                    $orderProduct->setIdStatuses(
-                        $this->get('order_status_crud_controller')
-                            ->readOneEntityBy(['name' => OrdersStatuses::QUEUED])
-                            ->getResult()
-                    );
-                    $orderProduct->setQuantity($selectedQuantities[$key]);
-                    // TODO: discount
+                        $this->get('order_product_crud_controller')
+                            ->createEntity($orderProduct);
 
-                    $this->get('order_product_crud_controller')
-                        ->createEntity($orderProduct);
+                        $productSize = $this->get('product_size_crud_controller')
+                            ->readOneEntityBy([
+                                'id' => $selectedProductSize->getId()
+                            ])
+                            ->getResult();
 
-                    $productSize = $this->get('product_size_crud_controller')
-                        ->readOneEntityBy([
-                            'id' => $selectedProductSize->getId()
-                        ])
-                        ->getResult();
+                        $newAvailability = $selectedProductSize->getAvailability() - ($productPlacement->quantities)[$key];
 
-                    $newAvailability = $selectedProductSize->getAvailability() - ($productPlacement->quantities)[$key];
-
-                    $this->get('product_size_crud_controller')
-                        ->updateEntity($productSize, [
-                            'availability' => $newAvailability
-                        ]);
+                        $this->get('product_size_crud_controller')
+                            ->updateEntity($productSize, [
+                                'availability' => $newAvailability
+                            ]);
+                    }
                 }
             } catch (\Exception $e) {
-                // TODO: do something
+                if ($this->isDevEnvironment()) {
+                    var_dump($e->getMessage());
+                    die;
+                }
             }
 
             $this->addFlash('success', 'Order placed successfully!');

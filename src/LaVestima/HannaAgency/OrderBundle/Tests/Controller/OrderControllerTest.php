@@ -34,18 +34,6 @@ class OrderControllerTest extends BaseWebTestCase
         );
     }
 
-    public function testListActionUser()
-    {
-        $this->logInUser();
-
-        $this->client->request('GET', $this->listActionPath);
-
-        $this->assertSame(
-            Response::HTTP_FORBIDDEN,
-            $this->client->getResponse()->getStatusCode()
-        );
-    }
-
     public function testListActionCustomer()
     {
         $this->logInCustomer();
@@ -131,18 +119,6 @@ class OrderControllerTest extends BaseWebTestCase
 
         $this->assertTrue(
             $this->client->getResponse()->isRedirect($this->listActionPath)
-        );
-    }
-
-    public function testShowActionUser()
-    {
-        $this->logInUser();
-
-        $this->client->request('GET', $this->showActionPath . '/' . $this->testPathSlug);
-
-        $this->assertSame(
-            Response::HTTP_FORBIDDEN,
-            $this->client->getResponse()->getStatusCode()
         );
     }
 

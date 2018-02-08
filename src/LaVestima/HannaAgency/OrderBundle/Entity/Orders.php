@@ -29,7 +29,7 @@ class Orders implements EntityInterface, \JsonSerializable
      *
      * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var \DateTime
