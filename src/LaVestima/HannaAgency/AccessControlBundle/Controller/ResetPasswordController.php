@@ -66,7 +66,7 @@ class ResetPasswordController extends BaseController
 
                 $this->addFlash('success', 'Password changed!');
 
-                return $this->redirectToRoute('access_control_login');
+                return $this->redirectToRoute('logout');
             }
 
             return $this->render('@AccessControl/ResetPassword/index.html.twig', [
@@ -81,6 +81,8 @@ class ResetPasswordController extends BaseController
     }
 
     /**
+     * Check if token is active.
+     *
      * @param Tokens $token
      * @return bool
      */
@@ -90,6 +92,8 @@ class ResetPasswordController extends BaseController
     }
 
     /**
+     * Disable token.
+     *
      * @param Tokens $token
      */
     private function disableToken(Tokens $token)
