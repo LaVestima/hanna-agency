@@ -1,0 +1,42 @@
+<h3>API documentation</h3>
+
+<style>
+    code {
+        width: 100%;
+        padding: 10px;
+        background: #cccccc;
+    }
+</style>
+
+<ul>
+    <li>
+        <p>
+            Test API
+        </p>
+        <a href="{{ path('api_ping') }}">
+            <code>
+                {{ url('api_ping') }}
+            </code>
+        </a>
+    </li>
+    <li>
+        <p>
+            Product List
+        </p>
+        <a href="{{ path('api_cget_product') }}">
+            <code>
+                {{ url('api_cget_product') }}
+            </code>
+        </a>
+    </li>
+    <li>
+        <p>
+            Product Details
+        </p>
+        {#<a href="{{ path('api_get_product') }}">#}
+            <code>
+                {{ url('api_get_product', {id: '{id}'}) | url_decode }}
+            </code>
+        {#</a>#}
+    </li>
+</ul>

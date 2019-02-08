@@ -1,0 +1,486 @@
+@import "constants";
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Gudea', sans-serif;
+    font-size: 20px;
+    color: $main-font-color;
+    overflow-y: scroll;
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 50px;
+}
+
+a {
+    text-decoration: none;
+    color: $main-font-color;
+    cursor: pointer;
+
+    &:hover, &:active {
+        text-decoration: none;
+        color: $main-theme-color;
+    }
+}
+
+ua { // Useless Anchor
+    cursor: pointer;
+}
+
+h1 {
+    margin: 0;
+    color: #333333;
+}
+
+input {
+    padding: 2px 5px;
+    border: 1px solid $main-theme-color;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px $main-theme-color-darkerer inset;
+    }
+}
+
+input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    // TODO: maybe finish
+}
+
+select {
+    padding: 2px 0;
+    background: none;
+    border: 1px solid $main-theme-color;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px $main-theme-color-darkerer inset;
+    }
+}
+
+footer {
+    background: #bbbbbb;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+
+    ul {
+        max-width: 1200px;
+        list-style-type: none;
+        padding: 5px;
+        margin: auto;
+
+        li {
+            padding: 0 5px 0 10px;
+            display: inline-block;
+            border-left: 2px solid $main-theme-color;
+
+            &:nth-child(1) {
+                border-left: none;
+            }
+
+            .copyright {
+                font-size: 15px;
+            }
+        }
+    }
+}
+
+::selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
+::-moz-selection {
+    color: $main-font-color-inverted;
+    background: $main-theme-color;
+}
+
+.red {
+    color: #FF0000;
+}
+
+.button, button {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    background: $main-theme-color;
+    color: $main-font-color-inverted;
+    text-align: center;
+    cursor: pointer;
+    font-style: normal;
+    border: none;
+    border-bottom: 5px inset $main-theme-color-darker;
+
+    &:hover {
+        background: $main-theme-color-hover;
+        border-bottom: 5px inset $main-theme-color;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &.inactive {
+        background: $main-theme-color-inactive;
+        border-bottom: 3px inset $main-theme-color-inactive - 50;
+        cursor: default;
+
+        &:hover {
+            border-top: none;
+            background: $main-theme-color-inactive;
+            top: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+
+    &.active {
+        background: $main-theme-color-dark;
+    }
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.page-title {
+    margin: 0 auto;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    background: #bbb;
+
+    //&.page-title-scrolled {
+    //  height: 35px;
+    //
+    //  h1 {
+    //    font-size: 18px;
+    //    line-height: 35px;
+    //  }
+    //}
+
+    h1 {
+        line-height: 60px;
+        font-weight: bold;
+    }
+}
+
+.action-bar {
+    padding: 5px 10px;
+    background: #ddd;
+    box-shadow: 0 3px 3px $main-theme-color;
+
+    .action-bar-content {
+        max-width: 1200px;
+        margin: 0 auto;
+
+        .action-bar-button {
+            font-weight: bold;
+
+            i {
+                margin: 0 5px 0 0;
+            }
+        }
+
+        .action-bar-export {
+            position: relative;
+            float: right;
+
+            .action-bar-export-list {
+                position: absolute;
+                right: 0;
+                padding: 0;
+                list-style: none;
+                text-align: center;
+
+                li {
+                    display: block;
+
+                    a {
+                        display: block;
+                        color: $main-font-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.confirmation-box {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 10%;
+    width: 80%;
+    padding: 15px;
+    text-align: center;
+    background: #ccc;
+    z-index: 70;
+
+    box-shadow: 0 0 10px black;
+
+    .button {
+        min-width: 100px;
+        margin: 20px 10px 0 10px;
+    }
+}
+
+.page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    padding-top: 135px;
+}
+
+.module-box {
+    background: #ccc;
+    margin: 10px 0 10px 0;
+    box-shadow: 3px 3px 10px black;
+    min-height: 40px;
+    overflow: hidden;
+
+    .module-box-title {
+        height: 40px;
+        line-height: 30px;
+        width: 100%;
+        text-align: center;
+        color: #333333;
+        padding: 5px;
+        background: #AAAAAA;
+        font-weight: bold;
+    }
+
+    .module-box-content {
+        text-align: center;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .module-box {
+        width: calc(50% - 20px);
+        display: inline-table;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+.flash-message-list {
+    position: fixed;
+    top: -60px;
+    width: 100%;
+    text-align: center;
+
+    .flash-message {
+        height: 50px;
+        line-height: 50px;
+        width: 70%;
+        margin: 0 auto;
+        box-shadow: 0 0 10px #000;
+    }
+
+    .flash-success {
+        background-color: #00FF26;
+    }
+
+    .flash-notice {
+        background-color: #00EFFF;
+    }
+
+    .flash-warning {
+        background-color: #FFC900;
+    }
+
+    .flash-error {
+        background-color: #F21515;
+        color: #FFFFFF;
+    }
+}
+
+.entity-list {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+
+    th {
+        text-align: center;
+        padding: 5px;
+    }
+
+    td {
+        padding-left: 10px;
+        padding-right: 10px;
+
+        &:last-child {
+            padding-right: 5px;
+        }
+    }
+
+    .entity-list-header {
+        height: 40px;
+        background: #cccccc;
+    }
+
+    .entity-list-filters {
+        td {
+            padding: 5px 0 5px 0;
+
+            input {
+                width: 100%;
+                border-left: 0;
+            }
+
+            &:nth-child(1) {
+                input {
+                    border-left: 1px solid $main-theme-color;
+                }
+            }
+        }
+    }
+
+    .entity-list-row {
+        height: 35px;
+
+        &:nth-child(even) {
+            background: #dddddd;
+        }
+
+        &:hover {
+            background: $main-theme-color-lighter;
+            color: $main-font-color-inverted;
+        }
+
+        .entity-list-cell {
+            padding: 0 10px;
+        }
+    }
+
+    .entity-list-content {
+        margin: 10px 0 0 0;
+    }
+}
+
+.entity-show-table {
+    max-width: 800px;
+    margin: 0 auto;
+
+    td {
+        padding: 5px;
+
+        &:first-child {
+            width: 30%;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        &:last-child {
+            width: 70%;
+            text-align: left;
+        }
+    }
+
+    th {
+        padding: 5px;
+    }
+
+    &.product-sizes-table {
+        margin-bottom: 10px;
+
+        tr {
+            border-top: 1px solid black;
+
+            &:first-child {
+                border-top: none;
+            }
+
+            td {
+                font-weight: normal;
+
+                &:first-child, &:last-child {
+                    width: 50%;
+                    text-align: right;
+                }
+
+                &:first-child {
+                    border-right: 1px solid black;
+                }
+            }
+        }
+    }
+}
+
+.entity-new-table {
+    width: 100%;
+    margin: 0 auto;
+
+    td {
+        padding: 5px;
+
+        &:first-child {
+            text-align: right;
+        }
+
+        &:last-child {
+            input, select {
+                width: 100%;
+            }
+        }
+    }
+}
+
+// TODO: move to other file
+.user-input-table {
+    max-width: 600px;
+    margin: 0 auto;
+
+    td {
+        width: 50%;
+        padding: 5px;
+
+        &:first-child {
+            text-align: right;
+        }
+    }
+}
+
+// TODO: move to other file
+.invoice-total-price-cell {
+    border-top: 2px solid #555555;
+}
+
+.hidden {
+    max-width: 0;
+    max-height: 0;
+    visibility: hidden;
+    display: none;
+    opacity: 0;
+}
+
+.body-overlay {
+    position: fixed;
+    background: #000000;
+    opacity: 0.8;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    z-index: 50;
+}
+
+@import 'Parts/pagination';

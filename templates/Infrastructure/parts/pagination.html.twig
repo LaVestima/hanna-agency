@@ -1,0 +1,68 @@
+{% if pageCount > 1 %}
+    <div class="pagination">
+        {% if first is defined and current == first %}
+            <div class="button first inactive">
+                &lt;&lt;
+            </div>
+            <div class="button previous inactive">
+                &lt;
+            </div>
+        {% elseif first is defined and current != first %}
+            <ua href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+                <div class="button first">
+                    &lt;&lt;
+                </div>
+            </ua>
+        {% endif %}
+
+        {% if previous is defined %}
+            <ua href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+                <div class="button previous">
+                    &lt;
+                </div>
+            </ua>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <ua href="{{ path(route, query|merge({(pageParameterName): page})) }}">
+                    <div class="button page">
+                        {{ page }}
+                    </div>
+                </ua>
+            {% else %}
+                <div class="button active current">
+                    {{ page }}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <ua href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+                <div class="button next">
+                    &gt;
+                </div>
+            </ua>
+        {% endif %}
+
+        {% if last is defined and current == last %}
+            <div class="button next inactive">
+                &gt;
+            </div>
+            <div class="button last inactive">
+                &gt;&gt;
+            </div>
+        {% elseif last is defined and current != last %}
+            <ua href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+                <div class="button last">
+                    &gt;&gt;
+                </div>
+            </ua>
+        {% endif %}
+        <br>
+        <div class="pagination-footer">
+            {{ firstItemNumber }} - {{ lastItemNumber }} / {{ totalCount }}
+        </div>
+    </div>
+{% endif %}
+

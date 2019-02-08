@@ -1,0 +1,17 @@
+.company-top-bar {
+  display: flex;
+  /*justify-content: space-around;*/
+  padding: 0;
+  background: #333333;
+  color: #cccccc;
+}
+.company-top-bar-item {
+  display: inline-block;
+  margin-left: 2em;
+  cursor: pointer;
+  padding: 0.5em;
+}
+.company-top-bar-item:hover {
+  background: #aaaaaa;
+  color: #000;
+}

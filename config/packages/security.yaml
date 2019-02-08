@@ -1,0 +1,61 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory: { memory: ~ }
+        db_provider:
+            entity:
+                class: App\Entity\User
+                property: login
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            form_login:
+                login_path: access_control_login
+                check_path: access_control_login
+                default_target_path: homepage_homepage
+                always_use_default_target_path: false
+                success_handler: authentication_handler
+                failure_handler: authentication_handler
+                use_forward: false
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: /logout
+                target: access_control_login
+            provider: db_provider
+        api:
+            pattern: ^/api
+            stateless: true
+            anonymous: true
+
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+            memory_cost: 1024
+            time_cost: 16
+            threads: 2
+
+    role_hierarchy:
+        ROLE_GUEST: IS_AUTHENTICATED_ANONYMOUSLY
+        ROLE_USER: ROLE_GUEST
+        ROLE_CUSTOMER: ROLE_USER
+        ROLE_ADMIN: ROLE_CUSTOMER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/account_activation, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/forgot_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contact, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        # API
+#        - { path: ^/api }
+
+        - { path: ^/product, roles: ROLE_USER }

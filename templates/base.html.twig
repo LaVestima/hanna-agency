@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% spaceless %}
+                {% if block('title') is defined %}
+                    {{ block('title') }}
+                {% else %}
+                    Hanna Agency
+                {% endif %}
+            {% endspaceless %}</title>
+        <link href="https://fonts.googleapis.com/css?family=Gudea" rel="stylesheet">
+        {% spaceless %}
+        {% block base_stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+            {{ encore_entry_link_tags('main_menu') }}
+        {% endblock %}
+        {% if block('stylesheets') is defined %}
+            {{ block('stylesheets') }}
+        {% endif %}
+        {% endspaceless %}
+    </head>
+    <body>
+        <div class="main-menu">
+            {% include 'Infrastructure/parts/main_menu.html.twig' %}
+        </div>
+        {#{% block actionBar %}{% endblock %}#}
+        {% block body %}{% endblock %}
+
+        <div class="top-bar">
+            {#<div class="page-title">#}
+                {#<h1>{{ block('title') }}</h1>#}
+            {#</div>#}
+
+            <div style="float: right;">
+            {% if not app.user %}
+                {#<li>#}
+                    <a href="{{ path('access_control_login') }}">
+                        <div class="left-menu-item left-menu-footer">
+                            <i class="fa fa-sign-in"></i>
+                            <span>Log in</span>
+                        </div>
+                    </a>
+                {#</li>#}
+            {% elseif app.user %}
+                {#<li>#}
+                    <a href="{{ path('logout') }}">
+                        <div class="left-menu-item left-menu-footer">
+                            <i class="fa fa-sign-out"></i>
+                            <span>Log out</span>
+                        </div>
+                    </a>
+                {#</li>#}
+            {% endif %}
+            </div>
+
+            {# TODO: eventually define all actionBars in controllers, then the first is not needed #}
+            <div class="action-bar">
+                <div class="action-bar-content">
+                    {% if block('actionBar') is defined and block('actionBar') is not null %}
+                        {{ block('actionBar') }}
+                    {% elseif actionBar is defined and actionBar is not null %}
+                        {% set renderActionBar = false %}
+                        {% for button in actionBar %}
+                            {% if button.role is not defined or is_granted(button.role) %}
+                                {% set renderActionBar = true %}
+                                <a href="{{ path(button.path) }}">
+                                    <div class="button action-bar-button">
+                                        {% if button.icon is defined %}
+                                            <i class="fa {{ button.icon }}" aria-hidden="true"></i>
+                                        {% endif %}
+                                        {{ button.label }}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {#{% if isExportAllowed is defined and isExportAllowed %}#}
+                            {#<div class="action-bar-export">#}
+                                {#<div class="button action-bar-button action-bar-export-button">#}
+                                    {#<i class="fa fa-download" aria-hidden="true"></i>#}
+                                {#</div>#}
+                                {#<ul class="action-bar-export-list">#}
+                                    {#{% if pdfExportPath is defined %}#}
+                                        {#<li class="hidden">#}
+                                            {#<a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">#}
+                                                {#PDF#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+                                    {#{% if excelExportPath is defined %}#}
+                                        {#<li class="hidden">#}
+                                            {#<a class="button" href="{{ excelExportPath }}">#}
+                                                {#Excel#}
+                                            {#</a>#}
+                                        {#</li>#}
+                                    {#{% endif %}#}
+                                {#</ul>#}
+                            {#</div>#}
+                        {#{% endif %}#}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            {{ block('content') }}
+        </div>
+
+        <div class="flash-message-list">
+            {% for type, flash_messages in app.session.flashBag.all %}
+                {% for flash_message in flash_messages %}
+                    <div class="flash-message flash-{{ type }}">
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div class="body-overlay"></div>
+
+        <footer>
+            <ul>
+                <li>
+                <span class="copyright">
+                    &#9400;
+                </span>
+                    2017-{{ "now"|date("Y") }} Hanna Agency
+                </li>
+
+                <li>
+                    {#<a href="{{ path('homepage_contact') }}">#}
+                        {#Contact#}
+                    {#</a>#}
+                </li>
+                <li>
+                    MORE...
+                </li>
+            </ul>
+        </footer>
+
+        {# TODO: deploy: delete #}
+        {# Twig dump #}
+            {% if app.debug %}
+                <div style="position: fixed; bottom: 35px;">
+                {{ dump() }}
+                </div>
+            {% endif %}
+        {# Twig dump #}
+
+        {% block base_javascripts %}
+            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('main_menu') }}
+        {% endblock %}
+        {% if block('javascripts') is defined %}
+            {{ block('javascripts') }}
+        {% endif %}
+    </body>
+    {# ----------------------- JS ----------------------- #}
+    {#{% if ((block('actionBar') is not defined or block('actionBar') is null) and#}
+        {#(actionBar is not defined or actionBar is null)) or#}
+        {#(renderActionBar is defined and not renderActionBar)#}
+    {#%}#}
+        {#{% stylesheets filter='scssphp' output='css/no_action_bar.css'#}
+            {#'@InfrastructureBundle/Resources/public/css/no_action_bar.scss'#}
+        {#%}#}
+            {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+        {#{% endstylesheets %}#}
+    {#{% endif %}#}
+
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>#}
+    {#{% javascripts#}
+        {#'@InfrastructureBundle/Resources/public/js/base.js'#}
+        {#'@InfrastructureBundle/Resources/public/js/filters.js'#}
+        {#'@InfrastructureBundle/Resources/public/js/sorters.js'#}
+    {#%}#}
+        {#<script src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#{% if block('javascripts') is defined %}{{ block('javascripts') }}{% endif %}#}
+</html>

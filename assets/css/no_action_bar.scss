@@ -1,0 +1,14 @@
+@import "constants";
+
+.action-bar {
+    display: none;
+}
+
+.page-content {
+    margin: 0 auto;
+    padding-top: 92px;
+}
+
+.top-bar {
+    box-shadow: 0 3px 3px $main-theme-color;
+}

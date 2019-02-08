@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block actionBar %}
+    <a href="{{ path('product_list') }}">
+        <div class="button action-bar-button">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            List
+        </div>
+    </a>
+    {% if product.dateDeleted is null %}
+        {#<div class="button action-bar-button delete-button" onclick="showConfirmationBox('Are You sure You want to delete the product?', '{{ path('product_delete', {'pathSlug': product.pathSlug}) }}')">#}
+            {#Delete Product#}
+        {#</div>#}
+    {% else %}
+        {# TODO: finish #}
+        {#<a href="{{ path('product_restore', {'pathSlug': product.pathSlug}) }}">#}
+        {#<div class="button action-bar-button">#}
+        {#Restore Product#}
+        {#</div>#}
+        {#</a>#}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {#{{ dump() }}#}
+    <div class="module-box">
+        <div class="module-box-title">General</div>
+        <div class="module-box-content">
+            <table class="entity-show-table">
+                <tr>
+                    <td>Name</td>
+                    <td>{{ product.name }}</td>
+                </tr>
+                <tr>
+                    <td>Category</td>
+                    <td>{{ product.idCategories.name }}</td>
+                </tr>
+                <tr>
+                    <td>Producer</td>
+                    <td>
+                        {#<a href="{{ path('producer_show', {'pathSlug': product.idProducers.pathSlug}) }}">#}
+                        {# TODO: add link to producer page #}
+                        <a>
+                            {#{{ product.idProducers.fullName }}#}
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    {% if productSizes is defined and productSizes is not null %}
+        <div class="module-box">
+            <div class="module-box-title">Availability</div>
+            <div class="module-box-content">
+                <table class="entity-show-table product-sizes-table">
+                    <tr>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                    </tr>
+                    {% for productSize in productSizes %}
+                        <tr>
+                            <td>{{ productSize.idSizes.name }}</td>
+                            <td>{{ productSize.availability }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

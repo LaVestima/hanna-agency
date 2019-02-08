@@ -1,0 +1,47 @@
+{% extends 'Infrastructure/baseList.html.twig' %}
+
+{% block title 'Product List' %}
+
+{% block entityList %}
+    <table class="entity-list" entity="product">
+        <colgroup>
+            <col>
+            <col width="150px">
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+        <tr class="entity-list-header">
+            <th>
+                <ua column="p.name" route="product_async_list">
+                    Name
+                    <i class="fas fa-sort-up"></i>
+                </ua>
+            </th>
+            <th>
+                <ua column="c.name" route="product_async_list">
+                    Category
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th>
+                <ua column="pr.shortName" route="product_async_list">
+                    Producer
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                </ua>
+            </th>
+            <th></th>
+        </tr>
+        <tr class="entity-list-filters">
+            <td>
+                <input type="text" placeholder="Search..." title="Search" column="p.name" route="product_async_list">
+            </td>
+            <td>
+                <input type="text" placeholder="Search..." title="Search" column="c.name" route="product_async_list">
+            </td>
+            <td>
+                <input type="text" placeholder="Search..." title="Search" column="pr.shortName" route="product_async_list">
+            </td>
+        </tr>
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}

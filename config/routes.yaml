@@ -1,0 +1,14 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+fos_js_routing:
+  resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+products:
+  type:     rest
+  resource: App\Controller\Api\ProductApiController
+  name_prefix: api_
+  prefix: /api
+
+logout:
+  path: /logout
