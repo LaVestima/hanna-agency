@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS Orders_Statuses;
 DROP TABLE IF EXISTS Invoices_Products;
 DROP TABLE IF EXISTS Products_Shipment_Options;
 DROP TABLE IF EXISTS Shipment_Options;
-DROP TABLE IF EXISTS Images;
+DROP TABLE IF EXISTS Product_Images;
 DROP TABLE IF EXISTS Products_Sizes;
 DROP TABLE IF EXISTS History_Products;
 DROP TABLE IF EXISTS Products;
@@ -407,15 +407,15 @@ CREATE TABLE IF NOT EXISTS Products_Sizes (
 	CONSTRAINT Products_Sizes_Availability_CH CHECK (Availability>=0)
 );
 
-CREATE TABLE IF NOT EXISTS Images (
+CREATE TABLE IF NOT EXISTS Product_Images (
 	ID INTEGER  NOT NULL AUTO_INCREMENT,
 	File_Path VARCHAR(50) NOT NULL,
 	ID_PRODUCTS INTEGER NOT NULL,
 	Sequence_Position INTEGER NOT NULL,
-	CONSTRAINT Images_PK PRIMARY KEY (ID),
-	CONSTRAINT Images_File_Path_U UNIQUE(File_Path),
-	CONSTRAINT Images_Products_Position_U UNIQUE(ID_PRODUCTS, Sequence_Position),
-	CONSTRAINT Images_ID_PRODUCTS_FK FOREIGN KEY (ID_PRODUCTS) REFERENCES Products(ID)
+	CONSTRAINT Product_Images_PK PRIMARY KEY (ID),
+	CONSTRAINT Product_Images_File_Path_U UNIQUE(File_Path),
+	CONSTRAINT Product_Images_Products_Position_U UNIQUE(ID_PRODUCTS, Sequence_Position),
+	CONSTRAINT Product_Images_ID_PRODUCTS_FK FOREIGN KEY (ID_PRODUCTS) REFERENCES Products(ID)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -539,6 +539,7 @@ INSERT INTO Categories (ID, Name) VALUES (2, 'Trousers');
 INSERT INTO Categories (ID, Name) VALUES (3, 'Shoes');
 INSERT INTO Categories (ID, Name) VALUES (4, 'Hats');
 INSERT INTO Categories (ID, Name) VALUES (5, 'Socks');
+INSERT INTO Categories (ID, Name, ID_PARENT) VALUES (6, 'Sandals', 3);
 
 INSERT INTO Sizes (ID, Name) VALUES (1, 'S');
 INSERT INTO Sizes (ID, Name) VALUES (2, 'M');
@@ -602,9 +603,9 @@ INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (4, 
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (5, 2, 4, 8);
 INSERT INTO Products_Sizes (ID, ID_PRODUCTS, ID_SIZES, Availability) VALUES (6, 3, 7, 1);
 
-INSERT INTO Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (1, 'shoes/cool-1.jpg', 1, 1);
-INSERT INTO Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (2, 'shoes/cool-2.jpg', 1, 2);
-INSERT INTO Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (3, 'hats/tf7.png', 2, 1);
+INSERT INTO Product_Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (1, 'images/shoes/cool-1.jpg', 1, 1);
+INSERT INTO Product_Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (2, 'shoes/cool-2.jpg', 1, 2);
+INSERT INTO Product_Images (ID, File_Path, ID_PRODUCTS, Sequence_Position) VALUES (3, 'hats/tf7.png', 2, 1);
 
 INSERT INTO Shipment_Options (ID, Name, Cost) VALUES (1, 'FedEx', 15.50);
 INSERT INTO Shipment_Options (ID, Name, Cost) VALUES (2, 'UPS', 22.50);

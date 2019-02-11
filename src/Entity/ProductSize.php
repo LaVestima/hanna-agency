@@ -35,7 +35,7 @@ class ProductSize implements EntityInterface
     /**
      * @var Product
      *
-     * @ORM\ManyToOne(targetEntity="Product", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Product", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
@@ -45,7 +45,7 @@ class ProductSize implements EntityInterface
     /**
      * @var Size
      *
-     * @ORM\ManyToOne(targetEntity="Size")
+     * @ORM\ManyToOne(targetEntity="Size", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_SIZES", referencedColumnName="ID")
      * })

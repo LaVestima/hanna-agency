@@ -9,7 +9,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * Products
  *
- * @ORM\Table(name="Products", uniqueConstraints={@ORM\UniqueConstraint(name="Products_Name_U", columns={"Name"}), @ORM\UniqueConstraint(name="Products_Path_Slug_U", columns={"Path_Slug"}), @ORM\UniqueConstraint(name="Products_QR_Code_Path_U", columns={"QR_Code_Path"})}, indexes={@ORM\Index(name="Items_ID_CATEGORIES_FK", columns={"ID_CATEGORIES"}), @ORM\Index(name="Items_ID_PRODUCERS_FK", columns={"ID_PRODUCERS"}), @ORM\Index(name="Items_ID_SIZES_FK", columns={"ID_SIZES"})})
+ * @ORM\Table(name="Products", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Products_Name_U", columns={"Name"}),
+ *     @ORM\UniqueConstraint(name="Products_Path_Slug_U", columns={"Path_Slug"}),
+ *     @ORM\UniqueConstraint(name="Products_QR_Code_Path_U", columns={"QR_Code_Path"})
+ * }, indexes={
+ *     @ORM\Index(name="Items_ID_CATEGORIES_FK", columns={"ID_CATEGORIES"}),
+ *     @ORM\Index(name="Items_ID_PRODUCERS_FK", columns={"ID_PRODUCERS"}),
+ *     @ORM\Index(name="Items_ID_SIZES_FK", columns={"ID_SIZES"})
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
 class Product implements EntityInterface
@@ -99,16 +107,16 @@ class Product implements EntityInterface
     private $idCategories;
 
     /**
-     * @var Company
+     * @var Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\ManyToOne(targetEntity="Company")
+     * @ORM\ManyToOne(targetEntity="Producer")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_COMPANIES", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
      * })
      */
-    private $idCompanies;
+    private $idProducers;
 
     public function __construct()
     {
@@ -344,24 +352,24 @@ class Product implements EntityInterface
     /**
      * Set idProducers
      *
-     * @param Company $idCompanies
+     * @param Producer $idProducers
      *
      * @return Product
      */
-    public function setIdCompanies(Company $idCompanies = null)
+    public function setIdProducers(Producer $idProducers = null)
     {
-        $this->idCompanies = $idCompanies;
+        $this->idProducers = $idProducers;
 
         return $this;
     }
 
     /**
-     * Get idCompanies
+     * Get idProducers
      *
-     * @return Company
+     * @return Producer
      */
-    public function getIdCompanies()
+    public function getIdProducers()
     {
-        return $this->idCompanies;
+        return $this->idProducers;
     }
 }

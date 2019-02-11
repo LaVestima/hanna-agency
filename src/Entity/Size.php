@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Sizes
  *
- * @ORM\Table(name="Sizes", uniqueConstraints={@ORM\UniqueConstraint(name="Sizes_Name_U", columns={"Name"})})
+ * @ORM\Table(name="Sizes", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Sizes_Name_U", columns={"Name"})
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\SizeRepository")
  */
 class Size implements EntityInterface
@@ -35,8 +37,6 @@ class Size implements EntityInterface
      * @ORM\Column(name="Note", type="string", length=200, nullable=true)
      */
     private $note;
-
-
 
     /**
      * Get id

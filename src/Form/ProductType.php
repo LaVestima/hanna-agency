@@ -2,13 +2,13 @@
 
 namespace App\Form;
 
-
 use App\Repository\CategoryRepository;
-use App\Repository\CompanyRepository;
+use App\Repository\ProducerRepository;
 use App\Repository\SizeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,31 +22,21 @@ class ProductType extends AbstractType
     private $sizeRepository;
     private $producerRepository;
 
-//    private $categoryCrudController;
-//    private $sizeCrudController;
-//    private $producerCrudController;
-
     /**
      * ProductType constructor.
      *
      * @param CategoryRepository $categoryRepository
      * @param SizeRepository $sizeRepository
-     * @param CompanyRepository $producerRepository
+     * @param ProducerRepository $producerRepository
      */
     public function __construct(
         CategoryRepository $categoryRepository,
         SizeRepository $sizeRepository,
-        CompanyRepository $producerRepository
-//        CategoryCrudControllerInterface $categoryCrudController,
-//        SizeCrudControllerInterface $sizeCrudController,
-//        ProducerCrudController $producerCrudController
+        ProducerRepository $producerRepository
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->sizeRepository = $sizeRepository;
         $this->producerRepository = $producerRepository;
-//        $this->categoryCrudController = $categoryCrudController;
-//        $this->sizeCrudController = $sizeCrudController;
-//        $this->producerCrudController = $producerCrudController;
     }
 
     /**
@@ -59,13 +49,16 @@ class ProductType extends AbstractType
         $categories = $this->categoryRepository->readAllEntities()->getResult();
         $sizes = $this->sizeRepository->readAllEntities()->getResult();
         $producers = $this->producerRepository->readAllEntities()->onlyUndeleted()->getResult();
-
+//var_dump($categories);
         $builder
             ->add('name', TextType::class)
             ->add('idCategories', ChoiceType::class, [
                 'label' => 'Category',
                 'choices' => $categories,
                 'choice_label' => 'name',
+                'choice_value' => function ($entity = null) {
+                    return $entity ? $entity->getId() : '';
+                },
                 'placeholder' => 'Choose a category'
             ])
             ->add('sizes', CollectionType::class, [
@@ -95,7 +88,7 @@ class ProductType extends AbstractType
             ])
 
             ->add('priceProducer', MoneyType::class, [
-                'label' => 'Company Price',
+                'label' => 'Producer Price',
                 'currency' => false
             ])
             ->add('priceCustomer', MoneyType::class, [
@@ -103,11 +96,20 @@ class ProductType extends AbstractType
                 'currency' => false
             ])
             ->add('idProducers', ChoiceType::class, [
-                'label' => 'Company',
+                'label' => 'Producer',
                 'choices' => $producers,
                 'choice_label' => 'fullName',
                 'placeholder' => 'Choose a producer'
             ])
+//            ->add('images', FileType::class, [
+//                'label' => 'Images',
+////                'multiple' => true,
+//                'attr'     => [
+//                    'accept' => 'image/*',
+////                    'multiple' => 'multiple'
+//                ],
+//                'mapped' => false, // TODO: other way?
+//            ])
             // TODO: finish, add more !!!!!!!!!!!!
             ->add('save', SubmitType::class, [
                 'label' => 'Add Product'

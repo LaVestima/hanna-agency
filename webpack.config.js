@@ -21,8 +21,8 @@ Encore
     .addEntry('list', './assets/js/list.js')
     .addEntry('main_menu', './assets/js/main_menu.js')
     .addEntry('producer_show', './assets/js/Producer/show.js')
-    //.addEntry('page1', './assets/js/page1.js')
-    //.addEntry('page2', './assets/js/page2.js')
+    .addEntry('product_new', './assets/js/Product/edit.js')
+
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app

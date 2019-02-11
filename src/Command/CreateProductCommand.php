@@ -6,7 +6,7 @@ use App\Entity\Product;
 use App\Entity\ProductSize;
 use App\Entity\Size;
 use App\Repository\CategoryRepository;
-use App\Repository\CompanyRepository;
+use App\Repository\ProducerRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductSizeRepository;
 use App\Repository\SizeRepository;
@@ -24,7 +24,7 @@ class CreateProductCommand extends BaseCreateCommand
 
     public function __construct(
         CategoryRepository $categoryRepository,
-        CompanyRepository $producerRepository,
+        ProducerRepository $producerRepository,
         ProductRepository $productRepository,
         ProductSizeRepository $productSizeRepository,
         SizeRepository $sizeRepository,

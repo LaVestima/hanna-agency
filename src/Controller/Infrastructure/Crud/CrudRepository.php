@@ -524,13 +524,13 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
     /**
      * Get the result of SQL Query.
      *
-     * @return array|null
+     * @return mixed
      */
     public function getResult()
     {
         $result = $this->getResultAsArray();
 
-        return count($result) === 1 ? $result[0] :
+        return count($result) === 1 ? reset($result) :
             (count($result) === 0 ? null :
             $result);
     }
@@ -542,7 +542,16 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
      */
     public function getResultAsArray()
     {
-        return $this->getQuery()->getResult();
+        $tmpResult = $this->getQuery()->getResult();
+//        var_dump($tmpResult);
+
+        $result = [];
+
+        foreach ($tmpResult as $tr) {
+            $result[$tr->getId()] = $tr;
+        }
+
+        return $result;
     }
 
     /**

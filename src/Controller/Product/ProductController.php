@@ -6,10 +6,12 @@ use App\Controller\Infrastructure\BaseController;
 use App\Entity\Product;
 use App\Entity\ProductSize;
 use App\Form\ProductType;
+use App\Repository\ProductImageRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductSizeRepository;
 use App\Repository\SizeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,15 +23,18 @@ class ProductController extends BaseController
 {
     private $productRepository;
     private $productSizeRepository;
+    private $productImageRepository;
     private $sizeRepository;
 
     public function __construct(
         ProductRepository $productRepository,
         ProductSizeRepository $productSizeRepository,
+        ProductImageRepository $productImageRepository,
         SizeRepository $sizeRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productSizeRepository = $productSizeRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->sizeRepository = $sizeRepository;
     }
 
@@ -82,10 +87,16 @@ class ProductController extends BaseController
             ->readEntitiesBy(['idProducts' => $product->getId()])
             ->getResultAsArray();
 
+        $productImages = $this->productImageRepository
+            ->readEntitiesBy(['idProducts' => $product->getId()])
+            ->orderBy('sequencePosition')
+            ->getResultAsArray();
+
         $this->setView('Product/show.html.twig');
         $this->setTemplateEntities([
             'product' => $product,
             'productSizes' => $productSizes,
+            'productImages' => $productImages,
         ]);
 
         return parent::baseShow();
@@ -102,6 +113,7 @@ class ProductController extends BaseController
         $product = new Product();
 
         $form = $this->createForm(ProductType::class, $product, [
+//            'action' =>
             'isAdmin' => $this->isAdmin(),
         ]);
 
@@ -128,7 +140,16 @@ class ProductController extends BaseController
 
         $form->handleRequest($request);
 
+        var_dump($form->getData());
+        var_dump($request->files->get('file'));
+//        die;
+
         if ($form->isSubmitted() && $form->isValid()) {
+            var_dump($_FILES);
+            var_dump($request->files->get('file'));
+            var_dump($form);
+            die;
+
             $sizes = $form->get('sizes')->getData();
             $availabilities = $form->get('availabilities')->getData();
             $countSizes = count($sizes);
@@ -177,15 +198,110 @@ class ProductController extends BaseController
 
 //        return parent::newAction($request);
         return parent::baseNew($request);
-
-//        $product = new Product();
-//        $product->setName('aaaaaaaaaaaaaaaaaaa');
-//        $product->setPathSlug('ffffffffff');
-//        $product->setPriceProducer(12);
-//        $product->setPriceCustomer(24);
-//
-//        $this->productRepository->createEntity($product);
-//
-//        return new Response('Saved new product with id '.$product->getId());
     }
+
+    /**
+     * @Route("/product/edit/{pathSlug}", name="product_edit")
+     *
+     * @param Request $request
+     * @param string $pathSlug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function edit(Request $request, string $pathSlug)
+    {
+        $product = $this->productRepository
+            ->readOneEntityBy([
+                'pathSlug' => $pathSlug
+            ])
+            ->getResult();
+
+        if (!$product) {
+            $this->addFlash('warning', 'No product found!');
+
+            return $this->redirectToRoute('product_list');
+        }
+
+        $sizes = $this->sizeRepository
+            ->readAllEntities()
+            ->getResult();
+
+        $sizesChoices = [];
+        foreach ($sizes as $s) {
+            $sizesChoices[$s->getName()] = $s->getId();
+        }
+
+        $productSizes = $this->productSizeRepository
+            ->readEntitiesBy(['idProducts' => $product->getId()])
+            ->getResultAsArray();
+
+        $form = $this->createForm(ProductType::class, $product, [
+            'isAdmin' => $this->isAdmin(),
+        ]);
+
+        foreach ($productSizes as $key => $productSize) {
+//            var_dump($productSize);
+//            var_dump(get_object_vars($productSize));
+//            var_dump($productSize->getIdProducts());
+            $size = $productSize->getIdSizes();
+//            var_dump($size);
+
+            $form->get('sizes')
+                ->add($productSize->getId(), ChoiceType::class, [
+                    'label' => 'Size',
+                    'choices' => $sizesChoices,
+                    'data' => $size->getId(),
+//                    'choice_label' => 'name',
+                    'placeholder' => 'Choose a size',
+                    'required' => true,
+                ]);
+
+            $form->get('availabilities')
+                ->add($productSize->getId(), NumberType::class, [
+                    'label' => 'Availability',
+                    'data' => $productSize->getAvailability(),
+                    'empty_data' => 0,
+                    'required' => true,
+                ]);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+//            var_dump($product);
+//            var_dump($form->getData());
+//            var_dump($request->request);
+//            var_dump($request->request->get('product')['availabilities']);
+
+            foreach ($productSizes as $key => $productSize) {
+//                var_dump($productSize->getId());
+//                var_dump($request->request);
+
+                $newSize = $this->sizeRepository
+                    ->readOneEntityBy([
+                        'id' => $request->request->get('product')['sizes'][$productSize->getId()]
+                    ])->getResult();
+
+                $this->productSizeRepository->updateEntity($productSize, [
+                    'idSizes' => $newSize,
+                    'availability' => $request->request->get('product')['availabilities'][$productSize->getId()]
+                ]);
+            }
+
+            $this->productRepository->updateEntity($product, $form->getData());
+
+//            return $this->redirectToRoute('product_show', [
+//                'pathSlug' => $pathSlug,
+//            ]);
+        }
+
+        return $this->render('Product/edit.html.twig', [
+            'product' => $product,
+            'form' => $form->createView()
+        ]);
+    }
+
+//    public function ()
+//    {
+//
+//    }
 }

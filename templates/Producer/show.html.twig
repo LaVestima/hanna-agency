@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ producer.shortName }}{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('producer_show') }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ producer.fullName }}</h1>
+
+    <div class="producer-top-bar">
+        <div class="producer-top-bar-item active" id="top-bar-homepage">
+            Homepage
+        </div>
+        <div class="producer-top-bar-item" id="top-bar-products">
+            Products
+        </div>
+        <div class="producer-top-bar-item" id="top-bar-opinions">
+            Opinions
+        </div>
+        <div class="producer-top-bar-item" id="top-bar-contact">
+            Contact
+        </div>
+    </div>
+
+    <div class="producer-subpage" id="subpage-homepage">
+        HOME
+    </div>
+
+    <div class="producer-subpage hidden" id="subpage-products">
+        <div class="producer-product-list">
+            {% for product in products %}
+            <div class="product-item">
+                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+                    <div>
+                        {% if productsImages[product.id].filePath is defined %}
+                            <img src="{{ asset(productsImages[product.id].filePath) }}" alt="">
+                        {% else %}
+                            <img src="{{ asset('/uploads/images/no-image.png') }}" alt="">
+                        {% endif %}
+                        {{ product.name }}<br>
+                        {{ product.priceCustomer }}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="producer-subpage hidden" id="subpage-contact">
+        if producer:
+        <i class="fas fa-edit"></i>
+        {{ producer.firstName }} {{ producer.lastName }}<br>
+        {{ producer.street }}<br>
+        {{ producer.postalCode }} {{ producer.idCities.name }}<br>
+        {{ producer.idCountries.name }}<br>
+        {{ producer.email | lower }}<br>
+        {{ producer.phone }}<br>
+        VAT: {{ producer.vat }}<br>
+        + MAP?
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('producer_show') }}
+{% endblock %}

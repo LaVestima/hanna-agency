@@ -69,7 +69,7 @@ class ProductAsyncController extends BaseAsyncController
 
         $this->setQuery($this->productCrudController
             ->join('idCategories', 'c')
-            ->join('idCompanies', 'pr')
+            ->join('idProducers', 'pr')
             ->orderBy(
                 isset($sorters) ? $sorters[0]['column'] : 'name',
                 isset($sorters) ? $sorters[0]['direction'] : 'asc'

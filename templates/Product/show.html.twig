@@ -25,6 +25,12 @@
 
 {% block content %}
     {#{{ dump() }}#}
+
+    <div class="module-box">
+        {% for image in productImages %}
+            <img src="{{ asset(image.filePath) }}" width="200">
+        {% endfor %}
+    </div>
     <div class="module-box">
         <div class="module-box-title">General</div>
         <div class="module-box-content">
@@ -40,10 +46,8 @@
                 <tr>
                     <td>Producer</td>
                     <td>
-                        {#<a href="{{ path('producer_show', {'pathSlug': product.idProducers.pathSlug}) }}">#}
-                        {# TODO: add link to producer page #}
-                        <a>
-                            {#{{ product.idProducers.fullName }}#}
+                        <a href="{{ path('producer_show', {'pathSlug': product.idProducers.pathSlug}) }}">
+                            {{ product.idProducers.fullName }}
                         </a>
                     </td>
                 </tr>

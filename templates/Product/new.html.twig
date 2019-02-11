@@ -2,7 +2,27 @@
 
 {% block title 'New Product' %}
 
+{% block stylesheets %}
+    {#<link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.4.3/cropper.min.css" rel="stylesheet">#}
+    {{ encore_entry_link_tags('product_new') }}
+{% endblock %}
+
 {% block content %}
+    {#<div style="width: 500px; height: 500px;">#}
+        {#<img id="product-image" src="{{ asset('uploads/images/shoes/cool-1.jpg') }}" style="max-width: 100%;">#}
+    {#</div>#}
+
+    {#<h1 class="col-sm-offset-3">File Upload in Symfony using Dropzone</h1><hr>#}
+    {#{{ form_start(form) }}#}
+    {#{{ form_widget(form) }}#}
+
+    {#<div class="col-xs-4 pull-right">#}
+        {#<input type="submit" class="btn btn-block btn-primary" value="Add" />#}
+    {#</div>#}
+    {#{{ form_end(form) }}#}
+
+
+    {#{{ form_start(form, {'attr': {'class': 'dropzone'}}) }}#}
     {{ form_start(form) }}
     <table class="entity-new-table">
         {% for fieldName in ['name', 'idCategories', 'priceProducer', 'priceCustomer', 'idProducers'] %}
@@ -48,6 +68,17 @@
             <td>&nbsp;</td>
         </tr>
         <tr>
+            <td colspan="2">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label required" for="">Product Images</label>
+                    <div class="col-sm-10">
+                        <div class="dropzone"></div>
+                        {#<input type="file" name="file" />#}
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <td></td>
             <td>
                 {{ form_widget(form.save) }}
@@ -55,31 +86,10 @@
             </td>
         </tr>
     </table>
-
     {{ form_end(form) }}
 
-    <script type="text/javascript">
-        var sizeCount = '{{ form.sizes | length }}';
+{% endblock %}
 
-        function addSizeForm() {
-            var sizeListPrototype = '<tr><td>{{ form_label(form.sizes) }}</td><td>';
-            sizeListPrototype += '{{ form_widget(form.sizes.vars.prototype) }}';
-            sizeListPrototype += '</td></tr><tr style="border-bottom: 1px solid black;"><td>{{ form_label(form.availabilities) }}</td><td>';
-            sizeListPrototype += '{{ form_widget(form.availabilities.vars.prototype) }}';
-            sizeListPrototype += '</td></tr>';
-
-            sizeListPrototype = sizeListPrototype.replace(/__name__/g, sizeCount);
-            sizeCount++;
-
-            $('.size-list').append(sizeListPrototype);
-        }
-
-        $(function() {
-            $('#add-size').click(function(e) {
-                e.preventDefault();
-
-                addSizeForm();
-            });
-        })
-    </script>
+{% block javascripts %}
+    {{ encore_entry_script_tags('product_new') }}
 {% endblock %}

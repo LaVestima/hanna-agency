@@ -107,6 +107,14 @@ footer {
     background: $main-theme-color;
 }
 
+.hidden {
+    max-width: 0;
+    max-height: 0;
+    visibility: hidden;
+    display: none;
+    opacity: 0;
+}
+
 .red {
     color: #FF0000;
 }
@@ -181,7 +189,7 @@ footer {
 }
 
 .action-bar {
-    padding: 5px 10px;
+    //padding: 5px 10px;
     background: #ddd;
     box-shadow: 0 3px 3px $main-theme-color;
 
@@ -461,14 +469,6 @@ footer {
 // TODO: move to other file
 .invoice-total-price-cell {
     border-top: 2px solid #555555;
-}
-
-.hidden {
-    max-width: 0;
-    max-height: 0;
-    visibility: hidden;
-    display: none;
-    opacity: 0;
 }
 
 .body-overlay {
