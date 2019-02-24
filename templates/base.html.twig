@@ -25,32 +25,6 @@
         <div class="main-menu">
             {% include 'Infrastructure/parts/main_menu.html.twig' %}
         </div>
-        {#{% block actionBar %}{% endblock %}#}
-        {% block body %}{% endblock %}
-
-        <div style="position: fixed; width: 100%; top: 0;">
-            <div style="float: right; background: lightpink; margin: 0.5em; padding: 5px; z-index: 9999999;">
-                {% if not app.user %}
-                    {#<li>#}
-                    <a href="{{ path('access_control_login') }}">
-                        <div class="left-menu-item left-menu-footer">
-                            <span>Log in</span>
-                            <i class="fas fa-sign-in-alt"></i>
-                        </div>
-                    </a>
-                    {#</li>#}
-                {% elseif app.user %}
-                    {#<li>#}
-                    <a href="{{ path('logout') }}">
-                        <div class="left-menu-item left-menu-footer">
-                            <span>Log out</span>
-                            <i class="fas fa-sign-out-alt"></i>
-                        </div>
-                    </a>
-                    {#</li>#}
-                {% endif %}
-            </div>
-        </div>
 
         <div class="top-bar">
             {#<div class="page-title">#}
@@ -106,6 +80,44 @@
             </div>
         </div>
 
+        <div style="position: fixed; right: 0; top: 0; display: flex; flex-direction: row; padding: 10px; z-index: 9999999;">
+            <div>
+                {{ render(controller(
+                    'App\\Controller\\Search\\SearchController::searchBar',
+                    { 'searchQuery': searchQuery | default('') }
+                )) }}
+            </div>
+            <div style="background: #2aabd2; padding: 0.5em;">
+                <a href="{{ path('cart_home') }}">
+                    <div>
+                        <i class="fas fa-shopping-cart"></i>
+                        Your Cart ({{ cartTotal }})
+                    </div>
+                </a>
+            </div>
+            <div style="background: lightpink; padding: 0.5em;">
+                {% if not app.user %}
+                    {#<li>#}
+                    <a href="{{ path('access_control_login') }}">
+                        <div class="left-menu-item left-menu-footer">
+                            <span>Log in</span>
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                    </a>
+                    {#</li>#}
+                {% elseif app.user %}
+                    {#<li>#}
+                    <a href="{{ path('logout') }}">
+                        <div class="left-menu-item left-menu-footer">
+                            <span>Log out</span>
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                    </a>
+                    {#</li>#}
+                {% endif %}
+            </div>
+        </div>
+
         <div class="page-content">
             {{ block('content') }}
         </div>
@@ -140,6 +152,9 @@
                     MORE...
                 </li>
             </ul>
+            <a href="https://stripe.com/">
+                <i class="fab fa-cc-stripe fa-2x"></i>
+            </a>
         </footer>
 
         {# TODO: deploy: delete #}

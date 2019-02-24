@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\ProducerRepository;
 use App\Repository\SizeRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -49,7 +50,7 @@ class ProductType extends AbstractType
         $categories = $this->categoryRepository->readAllEntities()->getResult();
         $sizes = $this->sizeRepository->readAllEntities()->getResult();
         $producers = $this->producerRepository->readAllEntities()->onlyUndeleted()->getResult();
-//var_dump($categories);
+
         $builder
             ->add('name', TextType::class)
             ->add('idCategories', ChoiceType::class, [
@@ -86,7 +87,6 @@ class ProductType extends AbstractType
                 'prototype_data' => 0,
                 'mapped' => false,
             ])
-
             ->add('priceProducer', MoneyType::class, [
                 'label' => 'Producer Price',
                 'currency' => false
@@ -94,13 +94,24 @@ class ProductType extends AbstractType
             ->add('priceCustomer', MoneyType::class, [
                 'label' => 'Customer Price',
                 'currency' => false
-            ])
-            ->add('idProducers', ChoiceType::class, [
-                'label' => 'Producer',
-                'choices' => $producers,
-                'choice_label' => 'fullName',
-                'placeholder' => 'Choose a producer'
-            ])
+            ]);
+
+        if ($options['isAdmin'] && !$options['isProducer']) {
+            $builder
+                ->add('idProducers', ChoiceType::class, [
+                    'label' => 'Producer',
+                    'choices' => $producers,
+                    'choice_label' => 'fullName',
+                    'placeholder' => 'Choose a producer'
+                ]);
+        }
+
+        if ($options['edit']) {
+            $builder
+                ->add('active', CheckboxType::class, [
+                    'required' => false,
+                ]);
+        }
 //            ->add('images', FileType::class, [
 //                'label' => 'Images',
 ////                'multiple' => true,
@@ -111,8 +122,9 @@ class ProductType extends AbstractType
 //                'mapped' => false, // TODO: other way?
 //            ])
             // TODO: finish, add more !!!!!!!!!!!!
+        $builder
             ->add('save', SubmitType::class, [
-                'label' => 'Add Product'
+                'label' => $options['edit'] ? 'Save' : 'Add Product'
             ]);
     }
 
@@ -122,8 +134,11 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefault('isAdmin', null)
+            ->setDefault('edit', false)
             ->setRequired('isAdmin')
-            ->setAllowedTypes('isAdmin', ['boolean']);
+            ->setRequired('isProducer')
+            ->setAllowedTypes('edit', ['boolean'])
+            ->setAllowedTypes('isAdmin', ['boolean'])
+            ->setAllowedTypes('isProducer', ['boolean']);
     }
 }

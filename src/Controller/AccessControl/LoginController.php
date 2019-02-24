@@ -4,21 +4,24 @@ namespace App\Controller\AccessControl;
 
 use App\Controller\Infrastructure\BaseController;
 use App\Repository\LoginAttemptRepository;
-//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-//class LoginController extends Controller
 class LoginController extends BaseController
 {
     const FAILED_LOGIN_MAX_ATTEMPTS = 3;
     const FAILED_LOGIN_RESET_TIME = 10;
 
     private $loginAttemptRepository;
+    private $authenticationUtils;
 
-    public function __construct(LoginAttemptRepository $loginAttemptRepository)
-    {
+    public function __construct(
+        LoginAttemptRepository $loginAttemptRepository,
+        AuthenticationUtils $authenticationUtils
+    ) {
         $this->loginAttemptRepository = $loginAttemptRepository;
+        $this->authenticationUtils = $authenticationUtils;
     }
 
     /**
@@ -34,7 +37,7 @@ class LoginController extends BaseController
     {
         $ipAddress = $request->getClientIp();
 
-        $authenticationUtils = $this->get('security.authentication_utils');
+        $authenticationUtils = $this->authenticationUtils;
 
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();

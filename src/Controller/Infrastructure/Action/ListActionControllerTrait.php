@@ -3,7 +3,6 @@
 namespace App\Controller\Infrastructure\Action;
 
 use Doctrine\ORM\Query;
-use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Symfony\Component\HttpFoundation\Request;
 
 trait ListActionControllerTrait
@@ -25,7 +24,7 @@ trait ListActionControllerTrait
         try {
             $this->configure();
         } catch (\Exception $e) {
-            if ($this->isDevEnvironment()) {
+            if ($this->isEnvDev()) {
                 var_dump($e);
             }
         }
@@ -33,7 +32,6 @@ trait ListActionControllerTrait
         return $this->render($this->view, [
             'isAsync' => $this->isAsync,
             'pagination' => $this->pagination,
-            'actionBar' => $this->actionBar,
         ]);
     }
 
@@ -80,10 +78,7 @@ trait ListActionControllerTrait
      */
     private function paginate()
     {
-        //dump($this->query);
-//        dump($this->get('knp_paginator'));
-
-        return $this->get('knp_paginator')->paginate(
+        return $this->paginator->paginate(
             $this->query,
             $this->request->query->getInt('page', 1),
             $this->getParameter('paginator_entity_limit')

@@ -26,8 +26,10 @@
     {{ form_start(form) }}
     <table class="entity-new-table">
         {% for fieldName in ['name', 'idCategories', 'priceProducer', 'priceCustomer', 'idProducers'] %}
+            {% if form[fieldName] is defined %}
             <tr>
                 <td>
+
                     {{ form_label(form[fieldName]) }}
                     {% if form[fieldName].vars.required %}
                         <span class="red">*</span>
@@ -36,6 +38,7 @@
                 </td>
                 <td>{{ form_widget(form[fieldName]) }}</td>
             </tr>
+            {% endif %}
         {% endfor %}
 
         <tbody class="size-list">
@@ -67,17 +70,17 @@
             <td></td>
             <td>&nbsp;</td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label required" for="">Product Images</label>
-                    <div class="col-sm-10">
-                        <div class="dropzone"></div>
+        {#<tr>#}
+            {#<td colspan="2">#}
+                {#<div class="form-group">#}
+                    {#<label class="col-sm-2 control-label required" for="">Product Images</label>#}
+                    {#<div class="col-sm-10">#}
+                        {#<div class="dropzone"></div>#}
                         {#<input type="file" name="file" />#}
-                    </div>
-                </div>
-            </td>
-        </tr>
+                    {#</div>#}
+                {#</div>#}
+            {#</td>#}
+        {#</tr>#}
         <tr>
             <td></td>
             <td>

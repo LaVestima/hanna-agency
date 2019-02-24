@@ -28,7 +28,7 @@ class User implements UserInterface, \Serializable, EntityInterface
      *
      * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var \DateTime
@@ -74,6 +74,12 @@ class User implements UserInterface, \Serializable, EntityInterface
      * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
+
+
+    public function __construct()
+    {
+        $this->dateCreated = new \DateTime();
+    }
 
     public function __toString() {
         return (string)$this->id;

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -9,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Categories
  *
  * @ORM\Table(name="Categories", uniqueConstraints={@ORM\UniqueConstraint(name="Categories_Name_U", columns={"Name"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
 class Category
 {
@@ -42,7 +43,18 @@ class Category
      */
     private $note;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="idCategories", fetch="EAGER")
+     */
+    private $products;
 
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -100,5 +112,21 @@ class Category
     public function getNote()
     {
         return $this->note;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * @param mixed $products
+     */
+    public function setProducts($products): void
+    {
+        $this->products = $products;
     }
 }

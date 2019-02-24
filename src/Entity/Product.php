@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -99,12 +100,19 @@ class Product implements EntityInterface
      *
      * @Groups({"api"})
      *
-     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_CATEGORIES", referencedColumnName="ID")
      * })
      */
     private $idCategories;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="Active", type="boolean", nullable=false)
+     */
+    private $active = false;
 
     /**
      * @var Producer
@@ -117,6 +125,28 @@ class Product implements EntityInterface
      * })
      */
     private $idProducers;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProductImage", mappedBy="idProducts")
+     */
+    private $productImages;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER")
+     */
+    private $productSizes;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProductParameter", mappedBy="idProducts", fetch="EAGER")
+     */
+    private $productParameters;
+
 
     public function __construct()
     {
@@ -371,5 +401,72 @@ class Product implements EntityInterface
     public function getIdProducers()
     {
         return $this->idProducers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     * @return Product
+     */
+    public function setActive(bool $active): Product
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductImages()
+    {
+        return $this->productImages;
+    }
+
+    /**
+     * @param mixed $productImages
+     */
+    public function setProductImages($productImages): void
+    {
+        $this->productImages = $productImages;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductSizes()
+    {
+        return $this->productSizes;
+    }
+
+    /**
+     * @param mixed $productSizes
+     */
+    public function setProductSizes($productSizes): void
+    {
+        $this->productSizes = $productSizes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductParameters()
+    {
+        return $this->productParameters;
+    }
+
+    /**
+     * @param mixed $productParameters
+     */
+    public function setProductParameters($productParameters): void
+    {
+        $this->productParameters = $productParameters;
     }
 }

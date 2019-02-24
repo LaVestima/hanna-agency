@@ -1,0 +1,6 @@
+{# TODO: movve css to separate file #}
+{% if product.productImages.get(0).filePath is defined %}
+    <img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" style="width: 100%; max-width: 150px; height: 150px;">
+{% else %}
+    <img src="{{ asset('/uploads/images/no-image.png') }}" alt="" style="width: 100%; max-width: 150px; height: 150px;">
+{% endif %}

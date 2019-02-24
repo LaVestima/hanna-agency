@@ -27,7 +27,7 @@ class LoginAttempt implements EntityInterface
      *
      * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var string
@@ -52,6 +52,12 @@ class LoginAttempt implements EntityInterface
      * })
      */
     private $idUsers;
+
+
+    public function __construct()
+    {
+        $this->dateCreated = new \DateTime();
+    }
 
     /**
      * Get id

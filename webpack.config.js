@@ -22,6 +22,8 @@ Encore
     .addEntry('main_menu', './assets/js/main_menu.js')
     .addEntry('producer_show', './assets/js/Producer/show.js')
     .addEntry('product_new', './assets/js/Product/edit.js')
+    .addEntry('product_show', './assets/js/Product/show.js')
+    .addEntry('order_cart', './assets/js/Order/cart.js')
 
 
     // will require an extra script tag for runtime.js

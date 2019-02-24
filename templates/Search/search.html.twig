@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search products{% endblock %}
+
+{% block content %}
+    ###
+    Search fields:<br>
+    - price (min, max)<br>
+    - category<br>
+    -
+    ###<br><br><br>
+
+    Found products:<br>
+    {% for product in products %}
+         {{ product.name }}
+        <br>
+    {% endfor %}
+{% endblock %}

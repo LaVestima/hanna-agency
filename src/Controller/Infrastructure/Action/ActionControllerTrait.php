@@ -5,8 +5,6 @@ namespace App\Controller\Infrastructure\Action;
 trait ActionControllerTrait
 {
     protected $entityName;
-    protected $entityCrudController;
-
     protected $view;
     protected $actionBar;
 

@@ -93,9 +93,10 @@ $(function() {
     sorters = [];
 
     $('.entity-list-content').html('<tr><td>Loading...</td></tr>');
-    filterSearch(undefined, undefined, '/' + $('.entity-list').attr('entity') + '/Async/list');
+    filterSearch(undefined, undefined, '/' + $('.entity-list').attr('entity') + '/async/list');
 
     $('.entity-list-filters input').keyup(function() {
+        console.log(Routing.generate($(this).attr('route')));
         filterSearch($(this), $(this).attr('column'), Routing.generate($(this).attr('route')))
     });
 

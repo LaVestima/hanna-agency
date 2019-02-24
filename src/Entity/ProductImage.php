@@ -41,7 +41,7 @@ class ProductImage implements EntityInterface
     /**
      * @var Product
      *
-     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="productImages")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })

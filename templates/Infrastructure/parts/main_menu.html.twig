@@ -24,6 +24,7 @@
                 </div>
             </a>
         </li>
+
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <li>
                 <a href="{{ path('user_list') }}">
@@ -34,6 +35,7 @@
                 </a>
             </li>
         {% endif %}
+
         {% if is_granted('ROLE_ADMIN') %}
             <li>
                 {#<a href="{{ path('customer_list') }}">#}
@@ -52,16 +54,37 @@
                 </a>
             </li>
         {% endif %}
+
+        {% if is_granted('ROLE_PRODUCER') %}
+            <li>
+                <a href="{{ path('inventory_home') }}">
+                    <div class="left-menu-item left-menu-body-row">
+                        <i class="fas fa-warehouse"></i>
+                        <span>My Inventory</span>
+                    </div>
+                </a>
+            </li>
+        {% endif %}
+
         {% if is_granted('ROLE_USER') %}
+            <li>
+                <a href="{{ path('category_list') }}">
+                    <div class="left-menu-item left-menu-body-row">
+                        <i class="fas fa-list"></i>
+                        <span>Categories</span>
+                    </div>
+                </a>
+            </li>
             <li>
                 <a href="{{ path('product_list') }}">
                     <div class="left-menu-item left-menu-body-row">
-                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                        <i class="fas fa-shopping-basket"></i>
                         <span>Products</span>
                     </div>
                 </a>
             </li>
         {% endif %}
+
         {% if is_granted('ROLE_CUSTOMER') %}
             <li>
                 {#<a href="{{ path('order_list') }}">#}
@@ -98,6 +121,16 @@
                 </a>
             </li>
         {% endif %}
+
+        {#<li>#}
+            {#<a href="{{ path('cart_home') }}">#}
+                {#<div class="left-menu-item left-menu-body-row">#}
+                    {#<i class="fas fa-shopping-cart"></i>#}
+                    {#<span>Cart</span>#}
+                {#</div>#}
+            {#</a>#}
+        {#</li>#}
+
         {#{% endif %}#}
 
         {#{% if is_granted('ROLE_ADMIN') %}#}

@@ -23,3 +23,13 @@ $('#top-bar-contact').on('click', function() {
     $('.producer-top-bar-item').removeClass('active');
     $(this).addClass('active');
 });
+
+
+$(".producer-top-bar-item").on("click", function(e) {
+    window.location.hash = $(e.target).attr("href").substr(1);
+});
+
+$(function() {
+    var hash = window.location.hash;
+    $('.producer-top-bar div[href="' + hash + '"]').click();
+});

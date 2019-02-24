@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    paginator_entity_limit: 15
+    paginator_entity_limit: 30
 
     payment:
         currency: USD
@@ -33,8 +33,15 @@ services:
     authentication_handler:
         class: App\Handler\AuthenticationHandler
 
+    producer_repository:
+        class: App\Repository\ProducerRepository
+        public: true
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Controller\Infrastructure\BaseController:
+        autowire: true
 
     App\Client\StripeClient:
         arguments: ['%stripe_secret_key%', '%payment%', '@doctrine.orm.entity_manager', '@logger']

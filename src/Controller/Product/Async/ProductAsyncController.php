@@ -24,7 +24,7 @@ class ProductAsyncController extends BaseAsyncController
     }
 
     /**
-     * @Route("/product/Async/list", name="product_async_list", options={"expose"=true})
+     * @Route("/product/async/list", name="product_async_list", options={"expose"=true})
      *
      * @return mixed
      */

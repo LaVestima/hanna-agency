@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My inventory{% endblock %}
+
+{% block content %}
+    {#<a href="{{ path('product_new') }}" class="button">Add product</a>#}
+
+    <div>
+        {% for product in products %}
+            <div style="border: 1px solid black; padding: 5px; display: flex; justify-content: space-between;">
+                <div style="width: 150px;">
+                    {#{% if product.productImages.get(0).filePath is defined %}#}
+                        {#<img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" style="width: 100%;">#}
+                    {#{% else %}#}
+                        {#<img src="{{ asset('/uploads/images/no-image.png') }}" alt="" style="width: 100%;">#}
+                    {#{% endif %}#}
+                    {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+                </div>
+                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}" style="width: 50%;">
+                    {% if product.active %}
+                        <i class="far fa-check-circle"></i>
+                    {% else %}
+                        <i class="far fa-circle"></i>
+                        [INACTIVE]
+                    {% endif %}
+                    {{ product.name }}
+                </a>
+                <div style="width: 20%;">
+                    {#Small sales graph here #}
+                    <div id="orderChart{{ product.pathSlug }}" style="height: 100%; width: 100%;"></div>
+                </div>
+                <div>
+                    <a href="{{ path('product_edit', {'pathSlug': product.pathSlug}) }}">
+                        <div style="background: #28a4c9; display: inline-block; padding: 5px; margin: 5px;">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                    </a>
+                    {#<a href="{{ path('product_delete', {'pathSlug': product.pathSlug}) }}">#}
+                        <div style="background: #ac2925; display: inline-block; padding: 5px; margin: 5px;">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    {#</a>#}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <script>{% spaceless %}
+        window.onload = function () {
+            {% for product in products %}
+                var chart = new CanvasJS.Chart("orderChart{{ product.pathSlug }}", {
+                    animationEnabled: true,
+                    axisX: {
+                        labelFontSize: 0
+                    },
+                    data: [{
+                        type: "column",
+                        color: "green",
+                        dataPoints: {{ productOrders[product.id] | json_encode | raw }}
+                    }]
+                });
+
+                chart.render();
+            {% endfor %}
+        }{% endspaceless %}
+    </script>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+{% endblock %}

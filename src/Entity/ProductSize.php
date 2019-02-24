@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="Products_Sizes_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}),
  *     @ORM\Index(name="Products_Sizes_ID_SIZES_FK", columns={"ID_SIZES"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ProductSizeRepository")
  */
 class ProductSize implements EntityInterface
 {
@@ -35,7 +36,7 @@ class ProductSize implements EntityInterface
     /**
      * @var Product
      *
-     * @ORM\ManyToOne(targetEntity="Product", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="productSizes", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
      * })
@@ -51,6 +52,14 @@ class ProductSize implements EntityInterface
      * })
      */
     private $idSizes;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="OrderProduct", mappedBy="idProductsSizes")
+     */
+    private $orderProducts;
+
 
     public function __construct(
         Product $idProducts = null,
@@ -142,5 +151,21 @@ class ProductSize implements EntityInterface
     public function getIdSizes()
     {
         return $this->idSizes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderProducts()
+    {
+        return $this->orderProducts;
+    }
+
+    /**
+     * @param mixed $orderProducts
+     */
+    public function setOrderProducts($orderProducts): void
+    {
+        $this->orderProducts = $orderProducts;
     }
 }

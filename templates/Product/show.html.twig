@@ -24,12 +24,19 @@
 {% endblock %}
 
 {% block content %}
-    {#{{ dump() }}#}
 
     <div class="module-box">
         {% for image in productImages %}
             <img src="{{ asset(image.filePath) }}" width="200">
         {% endfor %}
+    </div>
+    <div class="module-box">
+        ### Choose size (only available) and quantity <br>
+        <input type="text">
+        <a href="#" class="button" id="add-to-cart" data-product="{{ product.pathSlug }}">
+            Add to cart
+            <i class="fas fa-cart-plus"></i>
+        </a>
     </div>
     <div class="module-box">
         <div class="module-box-title">General</div>
@@ -55,7 +62,7 @@
         </div>
     </div>
 
-    {% if productSizes is defined and productSizes is not null %}
+    {#{% if productSizes is defined and productSizes is not null %}#}
         <div class="module-box">
             <div class="module-box-title">Availability</div>
             <div class="module-box-content">
@@ -64,7 +71,8 @@
                         <th>Size</th>
                         <th>Quantity</th>
                     </tr>
-                    {% for productSize in productSizes %}
+                    {#{% for productSize in productSizes %}#}
+                    {% for productSize in product.productSizes %}
                         <tr>
                             <td>{{ productSize.idSizes.name }}</td>
                             <td>{{ productSize.availability }}</td>
@@ -73,5 +81,21 @@
                 </table>
             </div>
         </div>
-    {% endif %}
+    {#{% endif %}#}
+
+    <div class="module-box">
+        <div class="module-box-title">Parameters</div>
+        <div class="module-box-content">
+            {% for productParameter in product.productParameters %}
+                {#{{ dump(productParameter.idParameters) }}#}
+                {{ productParameter.idParameters.name }}
+                {{ productParameter.value }}
+                {{ productParameter.idParameters.unit }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('product_show') }}
 {% endblock %}

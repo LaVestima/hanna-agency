@@ -83,10 +83,6 @@ class ProductController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        $productSizes = $this->productSizeRepository
-            ->readEntitiesBy(['idProducts' => $product->getId()])
-            ->getResultAsArray();
-
         $productImages = $this->productImageRepository
             ->readEntitiesBy(['idProducts' => $product->getId()])
             ->orderBy('sequencePosition')
@@ -95,7 +91,6 @@ class ProductController extends BaseController
         $this->setView('Product/show.html.twig');
         $this->setTemplateEntities([
             'product' => $product,
-            'productSizes' => $productSizes,
             'productImages' => $productImages,
         ]);
 
@@ -105,16 +100,17 @@ class ProductController extends BaseController
     /**
      * @Route("/product/new", name="product_new")
      *
-     * @param EntityManagerInterface $entityManager
+     * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function new(Request $request)
     {
         $product = new Product();
 
         $form = $this->createForm(ProductType::class, $product, [
-//            'action' =>
             'isAdmin' => $this->isAdmin(),
+            'isProducer' => $this->isProducer(),
         ]);
 
         $sizes = $this->sizeRepository
@@ -140,15 +136,15 @@ class ProductController extends BaseController
 
         $form->handleRequest($request);
 
-        var_dump($form->getData());
-        var_dump($request->files->get('file'));
+//        var_dump($form->getData());
+//        var_dump($request->files->get('file'));
 //        die;
 
         if ($form->isSubmitted() && $form->isValid()) {
-            var_dump($_FILES);
-            var_dump($request->files->get('file'));
-            var_dump($form);
-            die;
+//            var_dump($_FILES);
+//            var_dump($request->files->get('file'));
+//            var_dump($form);
+//            die;
 
             $sizes = $form->get('sizes')->getData();
             $availabilities = $form->get('availabilities')->getData();
@@ -161,6 +157,11 @@ class ProductController extends BaseController
 
             try {
                 $product = $form->getData();
+                if ($this->isProducer()) {
+                    $product->setIdProducers($this->getProducer());
+                }
+
+//                var_dump($product);die;
 
                 $product = $this->productRepository
                     ->createEntity($product);
@@ -176,7 +177,7 @@ class ProductController extends BaseController
                         ->createEntity($productSize);
                 }
             } catch (\Exception $e) {
-                if ($this->isDevEnvironment()) {
+                if ($this->isEnvDev()) {
                     var_dump($e->getMessage());die;
                 }
             }
@@ -206,6 +207,7 @@ class ProductController extends BaseController
      * @param Request $request
      * @param string $pathSlug
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function edit(Request $request, string $pathSlug)
     {
@@ -216,9 +218,7 @@ class ProductController extends BaseController
             ->getResult();
 
         if (!$product) {
-            $this->addFlash('warning', 'No product found!');
-
-            return $this->redirectToRoute('product_list');
+            throw new NotFoundHttpException();
         }
 
         $sizes = $this->sizeRepository
@@ -235,7 +235,9 @@ class ProductController extends BaseController
             ->getResultAsArray();
 
         $form = $this->createForm(ProductType::class, $product, [
+            'edit' => true,
             'isAdmin' => $this->isAdmin(),
+            'isProducer' => $this->isProducer()
         ]);
 
         foreach ($productSizes as $key => $productSize) {
@@ -267,15 +269,7 @@ class ProductController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            var_dump($product);
-//            var_dump($form->getData());
-//            var_dump($request->request);
-//            var_dump($request->request->get('product')['availabilities']);
-
             foreach ($productSizes as $key => $productSize) {
-//                var_dump($productSize->getId());
-//                var_dump($request->request);
-
                 $newSize = $this->sizeRepository
                     ->readOneEntityBy([
                         'id' => $request->request->get('product')['sizes'][$productSize->getId()]
@@ -289,9 +283,13 @@ class ProductController extends BaseController
 
             $this->productRepository->updateEntity($product, $form->getData());
 
-//            return $this->redirectToRoute('product_show', [
-//                'pathSlug' => $pathSlug,
-//            ]);
+            if ($this->isProducer()) {
+                return $this->redirectToRoute('inventory_home');
+            } else {
+                return $this->redirectToRoute('product_show', [
+                    'pathSlug' => $pathSlug,
+                ]);
+            }
         }
 
         return $this->render('Product/edit.html.twig', [
@@ -299,9 +297,4 @@ class ProductController extends BaseController
             'form' => $form->createView()
         ]);
     }
-
-//    public function ()
-//    {
-//
-//    }
 }

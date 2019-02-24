@@ -58,7 +58,6 @@ class CreateProductCommand extends BaseCreateCommand
                 $product = $this->createFakeProduct();
 
                 $sizeNumber = $this->sizeRepository
-//                $sizeNumber = $this->getContainer()->get('size_crud_controller')
                     ->countRows();
 
                 for ($j = 0; $j < rand(1, $sizeNumber); $j++) {
@@ -102,7 +101,6 @@ class CreateProductCommand extends BaseCreateCommand
 
         // TODO: check uniqueness, doesn't work
         do {
-//            $randomSize = $this->getContainer()->get('size_crud_controller')
             $randomSize = $this->sizeRepository
                 ->readRandomEntities(1)->getResult();
         } while (!$this->isSizeUniqueForProduct($randomSize, $product));

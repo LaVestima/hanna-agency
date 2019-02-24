@@ -35,7 +35,7 @@ class Producer
      *
      * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var \DateTime
@@ -176,6 +176,11 @@ class Producer
      */
     private $idUsers;
 
+
+    public function __construct()
+    {
+        $this->dateCreated = new \DateTime();
+    }
 
     /**
      * Get id

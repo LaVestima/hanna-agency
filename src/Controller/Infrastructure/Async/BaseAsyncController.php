@@ -4,15 +4,11 @@ namespace App\Controller\Infrastructure\Async;
 
 use App\Controller\Infrastructure\BaseController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Intl\Exception\MethodNotImplementedException;
 
 class BaseAsyncController extends BaseController
 {
-    /**
-     * @var Request
-     */
-    protected $request;
+
     protected $isListDeleted = false;
 
     /**
@@ -25,7 +21,7 @@ class BaseAsyncController extends BaseController
     {
         $this->request = $request;
 
-//        $this->denyNonXhrs();
+        $this->denyNonXhrs();
 
         $this->isListDeleted = false;
         $this->isAsync = true;
@@ -59,17 +55,5 @@ class BaseAsyncController extends BaseController
     protected function genericList(Request $request)
     {
         throw new MethodNotImplementedException('genericListAction');
-    }
-
-    /**
-     * Deny access when request is not asynchronous.
-     *
-     * @throws AccessDeniedHttpException
-     */
-    private function denyNonXhrs()
-    {
-        if (!$this->request->isXmlHttpRequest()) {
-            throw new AccessDeniedHttpException();
-        }
     }
 }

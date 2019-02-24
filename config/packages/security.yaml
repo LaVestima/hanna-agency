@@ -41,7 +41,8 @@ security:
         ROLE_GUEST: IS_AUTHENTICATED_ANONYMOUSLY
         ROLE_USER: ROLE_GUEST
         ROLE_CUSTOMER: ROLE_USER
-        ROLE_ADMIN: ROLE_CUSTOMER
+        ROLE_PRODUCER: ROLE_USER
+        ROLE_ADMIN: [ROLE_CUSTOMER, ROLE_PRODUCER]
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     # Easy way to control access for large sections of your site
@@ -58,4 +59,6 @@ security:
         # API
 #        - { path: ^/api }
 
-        - { path: ^/product, roles: ROLE_USER }
+        - { path: ^/product/edit, roles: ROLE_PRODUCER }
+
+        - { path: ^/inventory, roles: ROLE_PRODUCER }

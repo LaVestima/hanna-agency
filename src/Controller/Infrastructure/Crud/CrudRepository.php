@@ -63,7 +63,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
 	 */
 	public function createEntity(EntityInterface $entity)
     {
-	    if (method_exists($entity, 'setDateCreated')) {
+	    if (method_exists($entity, 'setDateCreated') && !$entity->getDateCreated()) {
             $entity->setDateCreated(new \DateTime('now'));
         }
         if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
@@ -320,7 +320,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateDeleted(new \DateTime('now'));
             $entity->setUserDeleted($this->user);
         } else {
-            if ($this->isDevEnvironment()) {
+            if ($this->isEnvDev()) {
                 throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be deleted');
             }
         }
@@ -347,7 +347,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateDeleted(null);
             $entity->setUserDeleted(null);
         } else {
-            if ($this->isDevEnvironment()) {
+            if ($this->isEnvDev()) {
                 throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be restored');
             }
         }
