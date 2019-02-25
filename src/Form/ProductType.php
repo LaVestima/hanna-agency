@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use App\Repository\ProducerRepository;
 use App\Repository\SizeRepository;
@@ -11,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -46,9 +46,8 @@ class ProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // TODO: maybe only undeleted x2
+        // TODO: maybe only undeleted
         $categories = $this->categoryRepository->readAllEntities()->getResult();
-        $sizes = $this->sizeRepository->readAllEntities()->getResult();
         $producers = $this->producerRepository->readAllEntities()->onlyUndeleted()->getResult();
 
         $builder
@@ -63,29 +62,13 @@ class ProductType extends AbstractType
                 'placeholder' => 'Choose a category'
             ])
             ->add('sizes', CollectionType::class, [
-                'label' => 'Size',
-                'entry_type' => ChoiceType::class,
-                'entry_options' => [
-                    'choices' => $sizes,
-                    'choice_label' => 'name',
-                    'placeholder' => 'Choose a size',
-                ],
+                'label' => 'Sizes',
+                'entry_type' => ProductSizeType::class,
+                'property_path' => 'productSizes',
                 'allow_add' => true,
+                'allow_delete' => true,
                 'prototype' => true,
-                'prototype_data' => '',
-                'mapped' => false,
-            ])
-            ->add('availabilities', CollectionType::class, [
-                'label' => 'Availability',
-                'entry_type' => NumberType::class,
-                'entry_options' => [
-                    'data' => 0,
-                    'empty_data' => 0,
-                ],
-                'allow_add' => true,
-                'prototype' => true,
-                'prototype_data' => 0,
-                'mapped' => false,
+                'by_reference' => false
             ])
             ->add('priceProducer', MoneyType::class, [
                 'label' => 'Producer Price',
@@ -133,6 +116,10 @@ class ProductType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefaults([
+            'data_class' => Product::class
+        ]);
+
         $resolver
             ->setDefault('edit', false)
             ->setRequired('isAdmin')

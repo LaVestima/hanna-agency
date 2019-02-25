@@ -136,7 +136,7 @@ class Product implements EntityInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER", cascade={"persist"}, orphanRemoval=true)
      */
     private $productSizes;
 
@@ -148,9 +148,16 @@ class Product implements EntityInterface
     private $productParameters;
 
 
-    public function __construct()
+    public function addProductSize(ProductSize $productSize)
     {
-        $this->dateCreated = new \DateTime();
+        $productSize->setIdProducts($this);
+        $this->productSizes->add($productSize);
+    }
+
+    public function removeProductSize(ProductSize $productSize)
+    {
+        $this->productSizes->removeElement($productSize);
+
     }
 
     /**

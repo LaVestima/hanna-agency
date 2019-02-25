@@ -5,26 +5,23 @@ import Dropzone from 'dropzone';
 
 require('../../css/Product/edit.scss');
 
-var sizeCount = '{{ form.sizes | length }}';
-
-function addSizeForm() {
-    var sizeListPrototype = '<tr><td>{{ form_label(form.sizes) }}</td><td>';
-    sizeListPrototype += '{{ form_widget(form.sizes.vars.prototype) }}';
-    sizeListPrototype += '</td></tr><tr style="border-bottom: 1px solid black;"><td>{{ form_label(form.availabilities) }}</td><td>';
-    sizeListPrototype += '{{ form_widget(form.availabilities.vars.prototype) }}';
-    sizeListPrototype += '</td></tr>';
-
-    sizeListPrototype = sizeListPrototype.replace(/__name__/g, sizeCount);
-    sizeCount++;
-
-    $('.size-list').append(sizeListPrototype);
-}
-
 $(function() {
-    $('#add-size').click(function(e) {
-        e.preventDefault();
+    $('#add-size').on('click', function() {
+        var list = $($(this).attr('data-list-selector'));
+        var counter = list.data('widget-counter') | list.children().length;
+        var newWidget = list.attr('data-prototype');
 
-        addSizeForm();
+        newWidget = newWidget.replace(/__name__/g, counter);
+        counter++;
+
+        list.data('widget-counter', counter);
+
+        var newElem = $(list.attr('data-widget-tags')).html(newWidget);
+        newElem.appendTo(list);
+    });
+
+    $('#size-fields-list').on('click', '.remove-size', function() {
+        $(this).parent('li').remove();
     });
 });
 

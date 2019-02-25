@@ -117,7 +117,11 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             throw new \InvalidArgumentException();
         }
 
-        $this->manager->flush();
+        try {
+            $this->manager->flush();
+        } catch (\Exception $e) {
+
+        }
 
         return $oldEntity;
 

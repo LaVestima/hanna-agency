@@ -217,9 +217,7 @@ class ProductController extends BaseController
             ])
             ->getResult();
 
-        if (!$product) {
-            throw new NotFoundHttpException();
-        }
+        if (!$product) { throw new NotFoundHttpException(); }
 
         $sizes = $this->sizeRepository
             ->readAllEntities()
@@ -230,57 +228,15 @@ class ProductController extends BaseController
             $sizesChoices[$s->getName()] = $s->getId();
         }
 
-        $productSizes = $this->productSizeRepository
-            ->readEntitiesBy(['idProducts' => $product->getId()])
-            ->getResultAsArray();
-
         $form = $this->createForm(ProductType::class, $product, [
             'edit' => true,
             'isAdmin' => $this->isAdmin(),
             'isProducer' => $this->isProducer()
         ]);
 
-        foreach ($productSizes as $key => $productSize) {
-//            var_dump($productSize);
-//            var_dump(get_object_vars($productSize));
-//            var_dump($productSize->getIdProducts());
-            $size = $productSize->getIdSizes();
-//            var_dump($size);
-
-            $form->get('sizes')
-                ->add($productSize->getId(), ChoiceType::class, [
-                    'label' => 'Size',
-                    'choices' => $sizesChoices,
-                    'data' => $size->getId(),
-//                    'choice_label' => 'name',
-                    'placeholder' => 'Choose a size',
-                    'required' => true,
-                ]);
-
-            $form->get('availabilities')
-                ->add($productSize->getId(), NumberType::class, [
-                    'label' => 'Availability',
-                    'data' => $productSize->getAvailability(),
-                    'empty_data' => 0,
-                    'required' => true,
-                ]);
-        }
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($productSizes as $key => $productSize) {
-                $newSize = $this->sizeRepository
-                    ->readOneEntityBy([
-                        'id' => $request->request->get('product')['sizes'][$productSize->getId()]
-                    ])->getResult();
-
-                $this->productSizeRepository->updateEntity($productSize, [
-                    'idSizes' => $newSize,
-                    'availability' => $request->request->get('product')['availabilities'][$productSize->getId()]
-                ]);
-            }
-
             $this->productRepository->updateEntity($product, $form->getData());
 
             if ($this->isProducer()) {

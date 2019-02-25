@@ -5,6 +5,25 @@
 {% block content %}
     {{ form_start(form) }}
 
+    <ul id="size-fields-list"
+        data-prototype="{{ form_widget(form.sizes.vars.prototype.name)|e }}
+            {{ form_widget(form.sizes.vars.prototype.availability)|e }} <div class=&quot;button remove-size&quot;>-</div>"
+        data-widget-tags="{{ '<li></li>'|e }}"
+        data-widget-counter="{{ form.sizes|length }}">
+    {% for index, size in form.sizes %}
+        <li>
+            {{ form_widget(size.name) }}
+            {{ form_widget(size.availability) }}
+            {{ form_errors(size) }}
+            <div class="button remove-size">-</div>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="button" id="add-size" data-list-selector="#size-fields-list">+</div>
+
     {{ form_end(form) }}
 {% endblock %}
 
+{% block javascripts %}
+    {{ encore_entry_script_tags('product_edit') }}
+{% endblock %}
