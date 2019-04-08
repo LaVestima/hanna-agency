@@ -244,36 +244,6 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
         return $this;
     }
 
-    // TODO: delete
-//    /**
-//     * Read all not deleted Entities from DB (SELECT).
-//     *
-//     * @return $this
-//     */
-//    public function readAllUndeletedEntities()
-//    {
-//        $this->readAllEntities();
-//
-//        $this->query->where($this->alias . '.dateDeleted IS NULL');
-//
-//        return $this;
-//    }
-
-    // TODO: delete
-//    /**
-//     * Read all deleted Entities from DB (SELECT).
-//     *
-//     * @return $this
-//     */
-//    public function readAllDeletedEntities()
-//    {
-//        $this->readAllEntities();
-//
-//        $this->query->where($this->alias . '.dateDeleted IS NOT NULL');
-//
-//        return $this;
-//    }
-
     /**
      * Only include deleted Entities.
      *

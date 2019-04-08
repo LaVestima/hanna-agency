@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Users
- *
- * @ORM\Table(name="Users", uniqueConstraints={@ORM\UniqueConstraint(name="Users_Login_U", columns={"Login"}), @ORM\UniqueConstraint(name="Users_Email_U", columns={"Email"}), @ORM\UniqueConstraint(name="Users_Password_Hash_U", columns={"Password_Hash"})}, indexes={@ORM\Index(name="Users_ID_ROLES_FK", columns={"ID_ROLES"})})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="User_Login_U", columns={"login"}),
+ *     @ORM\UniqueConstraint(name="User_Email_U", columns={"email"}),
+ *     @ORM\UniqueConstraint(name="User_Password_Hash_U", columns={"password_hash"})
+ * }, indexes={
+ *     @ORM\Index(name="User_Role_FK", columns={"role_id"})
+ * })
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface, \Serializable, EntityInterface
@@ -17,8 +23,8 @@ class User implements UserInterface, \Serializable, EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
-     * @ORM\Id
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Id()
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
@@ -26,59 +32,88 @@ class User implements UserInterface, \Serializable, EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateCreated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Deleted", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateDeleted;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Login", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $login;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Email", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Password_Hash", type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $passwordHash;
 
     /**
-     * @var Role
-     *
-     * @ORM\ManyToOne(targetEntity="Role")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_ROLES", referencedColumnName="ID")
-     * })
-     */
-    private $idRoles;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", orphanRemoval=true)
+     */
+    private $addresses;
+
+    /**
+     * @var Role
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * })
+     */
+    private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Token", mappedBy="user", orphanRemoval=true)
+     */
+    private $tokens;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserSetting", mappedBy="user", orphanRemoval=true)
+     */
+    private $userSettings;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\LoginAttempt", mappedBy="user")
+     */
+    private $loginAttempts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Producer", mappedBy="user", orphanRemoval=true)
+     */
+    private $producers;
 
 
     public function __construct()
     {
-        $this->dateCreated = new \DateTime();
+        $this->addresses = new ArrayCollection();
+        $this->tokens = new ArrayCollection();
+        $this->userSettings = new ArrayCollection();
+        $this->loginAttempts = new ArrayCollection();
+        $this->producers = new ArrayCollection();
     }
 
     public function __toString() {
@@ -216,29 +251,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     }
 
     /**
-     * Set idRoles
-     *
-     * @param Role $idRoles
-     *
-     * @return User
-     */
-    public function setIdRoles(Role $idRoles = null)
-    {
-        $this->idRoles = $idRoles;
-
-        return $this;
-    }
-
-    /**
-     * Get idRoles
-     *
-     * @return Role
-     */
-    public function getIdRoles() {
-        return $this->idRoles;
-    }
-
-    /**
      * Set pathSlug
      *
      * @param string $pathSlug
@@ -263,14 +275,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     }
 
 
-
-
-
-
-
-
-
-
     public function getUsername() {
         return $this->login;
     }
@@ -284,7 +288,7 @@ class User implements UserInterface, \Serializable, EntityInterface
     }
 
     public function getRoles() {
-        return [$this->getIdRoles()->getCode()];
+        return [$this->getRole()->getCode()];
     }
 
     public function eraseCredentials() {
@@ -304,5 +308,172 @@ class User implements UserInterface, \Serializable, EntityInterface
             $this->login,
             $this->passwordHash,
             ) = unserialize($serialized);
+    }
+
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Token[]
+     */
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
+    public function addToken(Token $token): self
+    {
+        if (!$this->tokens->contains($token)) {
+            $this->tokens[] = $token;
+            $token->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeToken(Token $token): self
+    {
+        if ($this->tokens->contains($token)) {
+            $this->tokens->removeElement($token);
+            // set the owning side to null (unless already changed)
+            if ($token->getUser() === $this) {
+                $token->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserSetting[]
+     */
+    public function getUserSettings(): Collection
+    {
+        return $this->userSettings;
+    }
+
+    public function addUserSetting(UserSetting $userSetting): self
+    {
+        if (!$this->userSettings->contains($userSetting)) {
+            $this->userSettings[] = $userSetting;
+            $userSetting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSetting(UserSetting $userSetting): self
+    {
+        if ($this->userSettings->contains($userSetting)) {
+            $this->userSettings->removeElement($userSetting);
+            // set the owning side to null (unless already changed)
+            if ($userSetting->getUser() === $this) {
+                $userSetting->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LoginAttempt[]
+     */
+    public function getLoginAttempts(): Collection
+    {
+        return $this->loginAttempts;
+    }
+
+    public function addLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if (!$this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts[] = $loginAttempt;
+            $loginAttempt->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoginAttempt(LoginAttempt $loginAttempt): self
+    {
+        if ($this->loginAttempts->contains($loginAttempt)) {
+            $this->loginAttempts->removeElement($loginAttempt);
+            // set the owning side to null (unless already changed)
+            if ($loginAttempt->getUser() === $this) {
+                $loginAttempt->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Producer[]
+     */
+    public function getProducers(): Collection
+    {
+        return $this->producers;
+    }
+
+    public function addProducer(Producer $producer): self
+    {
+        if (!$this->producers->contains($producer)) {
+            $this->producers[] = $producer;
+            $producer->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProducer(Producer $producer): self
+    {
+        if ($this->producers->contains($producer)) {
+            $this->producers->removeElement($producer);
+            // set the owning side to null (unless already changed)
+            if ($producer->getUser() === $this) {
+                $producer->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

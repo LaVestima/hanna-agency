@@ -1,2 +1,8 @@
 #!/bin/bash
-mysql -u root -ptoor -h localhost < reload-db.sql
+rm src/Migrations/Version*
+echo "DROP DATABASE IF EXISTS ha; CREATE DATABASE ha CHARACTER SET utf8 COLLATE utf8_general_ci;" | mysql -u root -ptoor -h localhost
+
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate --no-interaction
+
+php bin/console doctrine:fixtures:load --append

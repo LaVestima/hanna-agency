@@ -1,0 +1,13 @@
+<div style="width: 20%;">
+    <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
+        <div style="display: inline-block; width: 100%; border: 2px solid black;">
+            <div style="margin: 10px; padding: 10px; display: flex; flex-direction: column;">
+                <div style="margin-bottom: 10px;">
+                    {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+                </div>
+                <span style="height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
+                {{ product.priceCustomer }}
+            </div>
+        </div>
+    </a>
+</div>

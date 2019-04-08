@@ -62,12 +62,11 @@ class AuthenticationHandler implements
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-//        var_dump("yay");die;
         $loginAttempt = new LoginAttempt();
 
         $loginAttempt->setIpAddress($request->getClientIp());
         $loginAttempt->setIsFailed(0);
-        $loginAttempt->setIdUsers($token->getUser());
+        $loginAttempt->setUser($token->getUser());
 
         $this->loginAttemptCrudController
             ->createEntity($loginAttempt);
@@ -76,7 +75,14 @@ class AuthenticationHandler implements
 
         $this->session->getFlashBag()->add('success', 'Logged in!');
 
-        return new RedirectResponse($this->router->generate('homepage_homepage'));
+
+        if ($token->getUser()->getRole()->getCode() == 'ROLE_PRODUCER') {
+            $routeName = 'producer_dashboard';
+        } else {
+            $routeName = 'homepage_homepage';
+        }
+
+        return new RedirectResponse($this->router->generate($routeName));
     }
 
     /**
@@ -89,7 +95,6 @@ class AuthenticationHandler implements
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-//        var_dump("no");die;
         $loginAttempt = new LoginAttempt();
 
         $user = $this->userCrudController
@@ -100,7 +105,7 @@ class AuthenticationHandler implements
 
         $loginAttempt->setIpAddress($request->getClientIp());
         $loginAttempt->setIsFailed(1);
-        $loginAttempt->setIdUsers($user);
+        $loginAttempt->setUser($user);
 
         $this->loginAttemptCrudController
             ->createEntity($loginAttempt);

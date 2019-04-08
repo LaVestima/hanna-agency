@@ -12,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\UniqueConstraint(name="Customers_Identification_Number_U", columns={"Identification_Number"}),
  *     @ORM\UniqueConstraint(name="Customers_Path_Slug_U", columns={"Path_Slug"})
  * }, indexes={
- *     @ORM\Index(name="Customers_ID_ADDRESSES_FK", columns={"ID_ADDRESSES"}),
- *     @ORM\Index(name="Customers_ID_CURRENCIES_FK", columns={"ID_CURRENCIES"}),
  *     @ORM\Index(name="Customers_ID_USERS_FK", columns={"ID_USERS"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
@@ -127,25 +125,25 @@ class Customer implements EntityInterface
      */
     private $pathSlug = '';
 
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
-     * })
-     */
-    private $idCountries;
+//    /**
+//     * @var Country
+//     *
+//     * @ORM\ManyToOne(targetEntity="Country")
+//     * @ORM\JoinColumns({
+//     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
+//     * })
+//     */
+//    private $idCountries;
 
-    /**
-     * @var City
-     *
-     * @ORM\ManyToOne(targetEntity="City")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
-     * })
-     */
-    private $idCities;
+//    /**
+//     * @var City
+//     *
+//     * @ORM\ManyToOne(targetEntity="City")
+//     * @ORM\JoinColumns({
+//     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
+//     * })
+//     */
+//    private $idCities;
 
     /**
      * @var string
@@ -176,12 +174,24 @@ class Customer implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_USERS")
      * })
      */
     private $idUsers;
 
     private $fullName;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $country;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\City")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $city;
 
 
     public function __construct()
@@ -542,49 +552,49 @@ class Customer implements EntityInterface
         return $this->pathSlug;
     }
 
-    /**
-     * Set idCountries
-     *
-     * @param Country $idCountries
-     *
-     * @return $this
-     */
-    public function setIdCountries(Country $idCountries) {
-        $this->idCountries = $idCountries;
+//    /**
+//     * Set idCountries
+//     *
+//     * @param Country $idCountries
+//     *
+//     * @return $this
+//     */
+//    public function setIdCountries(Country $idCountries) {
+//        $this->idCountries = $idCountries;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get idCountries
+//     *
+//     * @return Country
+//     */
+//    public function getIdCountries() {
+//        return $this->idCountries;
+//    }
 
-        return $this;
-    }
-
-    /**
-     * Get idCountries
-     *
-     * @return Country
-     */
-    public function getIdCountries() {
-        return $this->idCountries;
-    }
-
-    /**
-     * Set idCities
-     *
-     * @param City $idCities
-     *
-     * @return $this
-     */
-    public function setIdCities(City $idCities) {
-        $this->idCities = $idCities;
-
-        return $this;
-    }
-
-    /**
-     * Get idCities
-     *
-     * @return City
-     */
-    public function getIdCities() {
-        return $this->idCities;
-    }
+//    /**
+//     * Set idCities
+//     *
+//     * @param City $idCities
+//     *
+//     * @return $this
+//     */
+//    public function setIdCities(City $idCities) {
+//        $this->idCities = $idCities;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get idCities
+//     *
+//     * @return City
+//     */
+//    public function getIdCities() {
+//        return $this->idCities;
+//    }
 
     /**
      * Set postalCode
@@ -685,6 +695,30 @@ class Customer implements EntityInterface
      */
     public function getFullName() {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
     }
 
 //    public function jsonSerialize() // TODO: finish !!!!

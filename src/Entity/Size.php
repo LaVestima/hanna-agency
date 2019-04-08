@@ -6,8 +6,6 @@ use App\Model\Infrastructure\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sizes
- *
  * @ORM\Table(name="Sizes", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="Sizes_Name_U", columns={"Name"})
  * })
@@ -18,7 +16,7 @@ class Size implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -27,14 +25,14 @@ class Size implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $note;
 

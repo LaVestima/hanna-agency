@@ -2,20 +2,23 @@
 
 namespace App\Entity;
 
+use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Countries
- *
- * @ORM\Table(name="Countries", uniqueConstraints={@ORM\UniqueConstraint(name="Countries_Name_U", columns={"Name"})})
- * @ORM\Entity
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Countries_Name_U", columns={"Name"})
+ * })
+ * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
  */
-class Country
+class Country implements EntityInterface
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,25 +27,39 @@ class Country
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Symbol", type="string", length=10, nullable=false)
+     * @ORM\Column(type="string", length=10, nullable=false)
      */
     private $symbol;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="country", orphanRemoval=true)
      */
-    private $note;
+    private $addresses;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\City", mappedBy="country", orphanRemoval=true)
+     */
+    private $cities;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Producer", mappedBy="country", orphanRemoval=true)
+     */
+    private $producers;
 
 
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+        $this->cities = new ArrayCollection();
+        $this->producers = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -103,26 +120,95 @@ class Country
     }
 
     /**
-     * Set note
-     *
-     * @param string $note
-     *
-     * @return Country
+     * @return Collection|Address[]
      */
-    public function setNote($note)
+    public function getAddresses(): Collection
     {
-        $this->note = $note;
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getCountry() === $this) {
+                $address->setCountry(null);
+            }
+        }
 
         return $this;
     }
 
     /**
-     * Get note
-     *
-     * @return string
+     * @return Collection|City[]
      */
-    public function getNote()
+    public function getCities(): Collection
     {
-        return $this->note;
+        return $this->cities;
+    }
+
+    public function addCity(City $city): self
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities[] = $city;
+            $city->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): self
+    {
+        if ($this->cities->contains($city)) {
+            $this->cities->removeElement($city);
+            // set the owning side to null (unless already changed)
+            if ($city->getCountry() === $this) {
+                $city->setCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Producer[]
+     */
+    public function getProducers(): Collection
+    {
+        return $this->producers;
+    }
+
+    public function addProducer(Producer $producer): self
+    {
+        if (!$this->producers->contains($producer)) {
+            $this->producers[] = $producer;
+            $producer->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProducer(Producer $producer): self
+    {
+        if ($this->producers->contains($producer)) {
+            $this->producers->removeElement($producer);
+            // set the owning side to null (unless already changed)
+            if ($producer->getCountry() === $this) {
+                $producer->setCountry(null);
+            }
+        }
+
+        return $this;
     }
 }

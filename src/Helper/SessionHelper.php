@@ -34,7 +34,7 @@ class SessionHelper
 
         $userSettings = $this->userSettingRepository
             ->readOneEntityBy([
-                'idUsers' => $user
+                'user' => $user
             ])->getResult();
 
         $this->session->set('configuration', [

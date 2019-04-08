@@ -31,8 +31,8 @@ class InventoryController extends BaseController
         }
 
         $products =  $this->productRepository->readEntitiesBy([
-            'idProducers' => $producer->getId()
-        ])->getResult();
+            'producer' => $producer->getId()
+        ])->getResultAsArray() ?? [];
 
         $productOrders = [];
         $chartProductOrders = [];

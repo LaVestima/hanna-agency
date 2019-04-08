@@ -34,36 +34,31 @@ class ProducerController extends BaseController
      */
     public function show(string $pathSlug)
     {
-        $producer = $this->producerRepository->readOneEntityBy(['pathSlug' => $pathSlug])->getResult();
+        $producer = $this->producerRepository
+            ->readOneEntityBy([
+                'pathSlug' => $pathSlug
+            ])
+            ->getResult();
 
         if (!$producer) {
             throw new NotFoundHttpException();
         }
 
-        $products = $this->productRepository->readEntitiesBy([
-            'idProducers' => $producer->getId()
-        ])->onlyUndeleted()->getResultAsArray();
-
-        $productsImages = [];
-        foreach ($products as $product) {
-            $image = $this->productImageRepository
-                ->readOneEntityBy([
-                    'idProducts' => $product->getId()
-                ])->orderBy('sequencePosition')
-                ->getResult();
-
-            if ($image && file_exists($image->getFilePath())) {
-                $productsImages[$product->getId()] = $image;
-            }
-        }
-
         $this->setView('Producer/show.html.twig');
         $this->setTemplateEntities([
             'producer' => $producer,
-            'products' => $products,
-            'productsImages' => $productsImages
         ]);
 
         return $this->baseShow();
+    }
+
+    /**
+     * @Route("producer/dashboard", name="producer_dashboard")
+     */
+    public function dashboard()
+    {
+        // TODO: finish
+
+        return $this->render('Producer/dashboard.html.twig');
     }
 }

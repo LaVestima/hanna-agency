@@ -2,29 +2,31 @@
 
 namespace App\Entity;
 
+use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Producers
- *
- * @ORM\Table(name="Producers", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Producers_Path_Slug_U", columns={"Path_Slug"})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Producer_Path_Slug_U", columns={"path_slug"})
  * }, indexes={
- *     @ORM\Index(name="Producers_ID_COUNTRIES_FK", columns={"ID_COUNTRIES"}),
- *     @ORM\Index(name="Producers_ID_CITIES_FK", columns={"ID_CITIES"}),
- *     @ORM\Index(name="Producers_ID_USERS_FK", columns={"ID_USERS"})
+ *     @ORM\Index(name="Producer_Country_FK", columns={"country_id"}),
+ *     @ORM\Index(name="Producer_City_FK", columns={"city_id"}),
+ *     @ORM\Index(name="Producer_User_FK", columns={"user_id"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ProducerRepository")
  */
-class Producer
+class Producer implements EntityInterface
 {
     /**
      * @var integer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -33,28 +35,28 @@ class Producer
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateCreated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Deleted", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateDeleted;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="User_Created", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $userCreated = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="User_Deleted", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $userDeleted;
 
@@ -63,7 +65,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Short_Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $shortName;
 
@@ -72,7 +74,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Full_Name", type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $fullName;
 
@@ -81,7 +83,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="First_Name", type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $firstName;
 
@@ -90,7 +92,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Last_Name", type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $lastName;
 
@@ -99,7 +101,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="VAT", type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $vat;
 
@@ -108,7 +110,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Postal_Code", type="string", length=20, nullable=false)
+     * @ORM\Column(type="string", length=20, nullable=false)
      */
     private $postalCode;
 
@@ -117,7 +119,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Street", type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $street;
 
@@ -126,7 +128,7 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Email", type="string", length=200, nullable=false)
+     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $email;
 
@@ -135,51 +137,51 @@ class Producer
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Phone", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $phone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
 
     /**
-     * @var City
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\City")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_CITIES", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="producers")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idCities;
+    private $city;
 
     /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Country")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="producers")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idCountries;
+    private $country;
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="producer", orphanRemoval=true)
      */
-    private $idUsers;
+    private $products;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Opinion", mappedBy="producer", orphanRemoval=true)
+     */
+    private $opinions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="producers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
 
     public function __construct()
     {
         $this->dateCreated = new \DateTime();
+        $this->products = new ArrayCollection();
+        $this->opinions = new ArrayCollection();
     }
 
     /**
@@ -528,75 +530,109 @@ class Producer
         return $this->pathSlug;
     }
 
-    /**
-     * Set idCities
-     *
-     * @param City $idCities
-     *
-     * @return Producer
-     */
-    public function setIdCities(City $idCities = null)
+    public function getCity(): ?City
     {
-        $this->idCities = $idCities;
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * Get idCities
-     *
-     * @return City
+     * @return Collection|Product[]
      */
-    public function getIdCities()
+    public function getProducts(): Collection
     {
-        return $this->idCities;
+        return $this->products;
     }
 
-    /**
-     * Set idCountries
-     *
-     * @param Country $idCountries
-     *
-     * @return Producer
-     */
-    public function setIdCountries(Country $idCountries = null)
+    public function addProduct(Product $product): self
     {
-        $this->idCountries = $idCountries;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setProducer($this);
+        }
 
         return $this;
     }
 
-    /**
-     * Get idCountries
-     *
-     * @return Country
-     */
-    public function getIdCountries()
+    public function removeProduct(Product $product): self
     {
-        return $this->idCountries;
-    }
-
-    /**
-     * Set idUsers
-     *
-     * @param User $idUsers
-     *
-     * @return Producer
-     */
-    public function setIdUsers(User $idUsers = null)
-    {
-        $this->idUsers = $idUsers;
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getProducer() === $this) {
+                $product->setProducer(null);
+            }
+        }
 
         return $this;
     }
 
-    /**
-     * Get idUsers
-     *
-     * @return User
-     */
-    public function getIdUsers()
+    public function getActiveProducts()
     {
-        return $this->idUsers;
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('active', true));
+
+        return $this->products->matching($criteria);
+    }
+
+    /**
+     * @return Collection|Opinion[]
+     */
+    public function getOpinions(): Collection
+    {
+        return $this->opinions;
+    }
+
+    public function addOpinion(Opinion $opinion): self
+    {
+        if (!$this->opinions->contains($opinion)) {
+            $this->opinions[] = $opinion;
+            $opinion->setProducer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpinion(Opinion $opinion): self
+    {
+        if ($this->opinions->contains($opinion)) {
+            $this->opinions->removeElement($opinion);
+            // set the owning side to null (unless already changed)
+            if ($opinion->getProducer() === $this) {
+                $opinion->setProducer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

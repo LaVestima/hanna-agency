@@ -3,16 +3,26 @@
 {% block title %}Search products{% endblock %}
 
 {% block content %}
-    ###
-    Search fields:<br>
-    - price (min, max)<br>
-    - category<br>
-    -
-    ###<br><br><br>
+    <div style="position: sticky; top: 10px; background: #FFFFFF; box-shadow: 0 0 10px 5px #000; margin: 10px 0;">
+        ###
+        Search fields:<br>
+        - price (min, max)<br>
+        - category<br><br>
 
-    Found products:<br>
-    {% for product in products %}
-         {{ product.name }}
+        <input type="number" placeholder="Price min">
+        <input type="number" placeholder="Price max">
         <br>
+    </div>
+
+    {% if products is empty %}
+        No Products found
+    {% endif %}
+
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    {% for product in products %}
+        {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
     {% endfor %}
+    </div>
+    <br>
+    ### pagination
 {% endblock %}

@@ -29,7 +29,10 @@ class SearchController extends BaseController
         $searchQuery = trim($request->query->get('query'));
 
         $products = $this->productRepository
-            ->readEntitiesBy(['name' => [$searchQuery, 'LIKE']])
+            ->readEntitiesBy([
+                'name' => [$searchQuery, 'LIKE'],
+                'active' => 1
+            ])
             ->getResultAsArray();
 //        var_dump($products);
 

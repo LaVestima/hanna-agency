@@ -4,20 +4,17 @@ namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Products
- *
- * @ORM\Table(name="Products", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Products_Name_U", columns={"Name"}),
- *     @ORM\UniqueConstraint(name="Products_Path_Slug_U", columns={"Path_Slug"}),
- *     @ORM\UniqueConstraint(name="Products_QR_Code_Path_U", columns={"QR_Code_Path"})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Product_Name_U", columns={"name"}),
+ *     @ORM\UniqueConstraint(name="Product_Path_Slug_U", columns={"path_slug"}),
  * }, indexes={
- *     @ORM\Index(name="Items_ID_CATEGORIES_FK", columns={"ID_CATEGORIES"}),
- *     @ORM\Index(name="Items_ID_PRODUCERS_FK", columns={"ID_PRODUCERS"}),
- *     @ORM\Index(name="Items_ID_SIZES_FK", columns={"ID_SIZES"})
+ *     @ORM\Index(name="Product_Category_FK", columns={"category_id"}),
+ *     @ORM\Index(name="Product_Producer_FK", columns={"producer_id"}),
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
@@ -26,9 +23,10 @@ class Product implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @Groups({"api"})
      */
     private $id;
@@ -36,35 +34,35 @@ class Product implements EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateCreated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Deleted", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateDeleted;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="User_Created", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $userCreated = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="User_Deleted", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $userDeleted;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      *
      * @Groups({"api"})
      */
@@ -75,7 +73,7 @@ class Product implements EntityInterface
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Price_Producer", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
      */
     private $priceProducer;
 
@@ -84,54 +82,23 @@ class Product implements EntityInterface
      *
      * @Groups({"api"})
      *
-     * @ORM\Column(name="Price_Customer", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
      */
     private $priceCustomer;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
 
     /**
-     * @var Category
-     *
-     * @Groups({"api"})
-     *
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="products")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_CATEGORIES", referencedColumnName="ID")
-     * })
-     */
-    private $idCategories;
-
-    /**
      * @var boolean
      *
-     * @ORM\Column(name="Active", type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $active = false;
-
-    /**
-     * @var Producer
-     *
-     * @Groups({"api"})
-     *
-     * @ORM\ManyToOne(targetEntity="Producer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCERS", referencedColumnName="ID")
-     * })
-     */
-    private $idProducers;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ProductImage", mappedBy="idProducts")
-     */
-    private $productImages;
 
     /**
      * @var ArrayCollection
@@ -141,11 +108,50 @@ class Product implements EntityInterface
     private $productSizes;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"api"})
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Producer", inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"api"})
+     */
+    private $producer;
+
+    /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProductParameter", mappedBy="idProducts", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="product", orphanRemoval=true, cascade={"persist"})
      */
     private $productParameters;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true, cascade={"persist"})
+     */
+    private $productImages;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductVariant", mappedBy="product", orphanRemoval=true)
+     */
+    private $productVariants;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductShipmentOption", mappedBy="product", orphanRemoval=true)
+     */
+    private $productShipmentOptions;
+
+    public function __construct()
+    {
+        $this->productParameters = new ArrayCollection();
+        $this->productImages = new ArrayCollection();
+        $this->productVariants = new ArrayCollection();
+        $this->productShipmentOptions = new ArrayCollection();
+    }
 
 
     public function addProductSize(ProductSize $productSize)
@@ -157,7 +163,17 @@ class Product implements EntityInterface
     public function removeProductSize(ProductSize $productSize)
     {
         $this->productSizes->removeElement($productSize);
+    }
 
+    public function addProductParameter(ProductParameter $productParameter)
+    {
+        $productParameter->setProduct($this);
+        $this->productParameters->add($productParameter);
+    }
+
+    public function removeProductParameter(ProductParameter $productParameter)
+    {
+        $this->productParameters->removeElement($productParameter);
     }
 
     /**
@@ -363,54 +379,6 @@ class Product implements EntityInterface
     }
 
     /**
-     * Set idCategories
-     *
-     * @param Category $idCategories
-     *
-     * @return Product
-     */
-    public function setIdCategories(Category $idCategories = null)
-    {
-        $this->idCategories = $idCategories;
-
-        return $this;
-    }
-
-    /**
-     * Get idCategories
-     *
-     * @return Category
-     */
-    public function getIdCategories()
-    {
-        return $this->idCategories;
-    }
-
-    /**
-     * Set idProducers
-     *
-     * @param Producer $idProducers
-     *
-     * @return Product
-     */
-    public function setIdProducers(Producer $idProducers = null)
-    {
-        $this->idProducers = $idProducers;
-
-        return $this;
-    }
-
-    /**
-     * Get idProducers
-     *
-     * @return Producer
-     */
-    public function getIdProducers()
-    {
-        return $this->idProducers;
-    }
-
-    /**
      * @return bool
      */
     public function isActive(): bool
@@ -432,22 +400,6 @@ class Product implements EntityInterface
     /**
      * @return mixed
      */
-    public function getProductImages()
-    {
-        return $this->productImages;
-    }
-
-    /**
-     * @param mixed $productImages
-     */
-    public function setProductImages($productImages): void
-    {
-        $this->productImages = $productImages;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getProductSizes()
     {
         return $this->productSizes;
@@ -461,10 +413,34 @@ class Product implements EntityInterface
         $this->productSizes = $productSizes;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getProducer(): ?Producer
+    {
+        return $this->producer;
+    }
+
+    public function setProducer(?Producer $producer): self
+    {
+        $this->producer = $producer;
+
+        return $this;
+    }
+
     /**
-     * @return mixed
+     * @return Collection|ProductParameter[]
      */
-    public function getProductParameters()
+    public function getProductParameters(): Collection
     {
         return $this->productParameters;
     }
@@ -475,5 +451,106 @@ class Product implements EntityInterface
     public function setProductParameters($productParameters): void
     {
         $this->productParameters = $productParameters;
+    }
+
+    /**
+     * @return Collection|ProductImage[]
+     */
+    public function getProductImages(): Collection
+    {
+        return $this->productImages;
+    }
+
+    /**
+     * @param mixed $productImages
+     */
+    public function setProductImages($productImages): void
+    {
+        $this->productImages = $productImages;
+    }
+
+    public function addProductImage(ProductImage $productImage): self
+    {
+        if (!$this->productImages->contains($productImage)) {
+            $this->productImages[] = $productImage;
+            $productImage->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductImage(ProductImage $productImage): self
+    {
+        if ($this->productImages->contains($productImage)) {
+            $this->productImages->removeElement($productImage);
+            // set the owning side to null (unless already changed)
+            if ($productImage->getProduct() === $this) {
+                $productImage->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductVariant[]
+     */
+    public function getProductVariants(): Collection
+    {
+        return $this->productVariants;
+    }
+
+    public function addProductVariant(ProductVariant $productVariant): self
+    {
+        if (!$this->productVariants->contains($productVariant)) {
+            $this->productVariants[] = $productVariant;
+            $productVariant->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductVariant(ProductVariant $productVariant): self
+    {
+        if ($this->productVariants->contains($productVariant)) {
+            $this->productVariants->removeElement($productVariant);
+            // set the owning side to null (unless already changed)
+            if ($productVariant->getProduct() === $this) {
+                $productVariant->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductShipmentOption[]
+     */
+    public function getProductShipmentOptions(): Collection
+    {
+        return $this->productShipmentOptions;
+    }
+
+    public function addProductShipmentOption(ProductShipmentOption $productShipmentOption): self
+    {
+        if (!$this->productShipmentOptions->contains($productShipmentOption)) {
+            $this->productShipmentOptions[] = $productShipmentOption;
+            $productShipmentOption->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductShipmentOption(ProductShipmentOption $productShipmentOption): self
+    {
+        if ($this->productShipmentOptions->contains($productShipmentOption)) {
+            $this->productShipmentOptions->removeElement($productShipmentOption);
+            // set the owning side to null (unless already changed)
+            if ($productShipmentOption->getProduct() === $this) {
+                $productShipmentOption->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

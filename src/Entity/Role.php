@@ -2,21 +2,25 @@
 
 namespace App\Entity;
 
+use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Roles
- *
- * @ORM\Table(name="Roles", uniqueConstraints={@ORM\UniqueConstraint(name="Roles_Name_U", columns={"Name"}), @ORM\UniqueConstraint(name="Roles_Code_U", columns={"Code"})})
- * @ORM\Entity
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Role_Name_U", columns={"name"}),
+ *     @ORM\UniqueConstraint(name="Role_Code_U", columns={"code"})
+ * })
+ * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  */
-class Role
+class Role implements EntityInterface
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
-     * @ORM\Id
+     * @ORM\Id()
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
@@ -24,16 +28,27 @@ class Role
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $name = 'Guest';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Code", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $code = 'ROLE_GUEST';
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="role", orphanRemoval=true)
+     */
+    private $users;
+
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -91,5 +106,36 @@ class Role
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setRole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getRole() === $this) {
+                $user->setRole(null);
+            }
+        }
+
+        return $this;
     }
 }

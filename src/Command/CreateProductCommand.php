@@ -86,8 +86,8 @@ class CreateProductCommand extends BaseCreateCommand
         $product->setName($this->faker->text(50));
         $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);
         $product->setPriceCustomer($this->faker->numberBetween(100, 99999)/100);
-        $product->setIdCategories($randomCategory);
-        $product->setIdProducers($randomProducer);
+        $product->setCategory($randomCategory);
+        $product->setProducer($randomProducer);
 
         $this->productRepository
             ->createEntity($product);

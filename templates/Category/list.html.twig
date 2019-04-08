@@ -2,13 +2,14 @@
 
 {% block content %}
     {% for category in categories %}
-        {{ category.name }}
-        <br>
-        {% for product in category.products %}
-            <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-                {{ product.name }}<br>
-            </a>
-        {% endfor %}
-        <br><br><br>
+        {% if category.products is not empty %}
+            <hr>
+            <h2>{{ category.name }}</h2>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                {% for product in category.products %}
+                    {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endfor %}
 {% endblock %}

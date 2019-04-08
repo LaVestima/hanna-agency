@@ -22,11 +22,7 @@ class CategoryController extends BaseController
     {
         $categories = $this->categoryRepository
             ->readAllEntities()
-            ->getResult();
-
-//        var_dump($categories);
-//        var_dump(sizeof($categories[1]->getProducts()));
-//        var_dump($categories[1]->getProducts());
+            ->getResultAsArray();
 
         return $this->render('Category/list.html.twig', [
             'categories' => $categories

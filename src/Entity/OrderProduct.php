@@ -20,7 +20,7 @@ class OrderProduct implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -29,21 +29,21 @@ class OrderProduct implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="Quantity", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $quantity;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="Discount", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $discount = 0;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $note;
 
@@ -62,7 +62,7 @@ class OrderProduct implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="ProductSize", inversedBy="orderProducts", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCTS_SIZES", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_PRODUCTS_SIZES")
      * })
      */
     private $idProductsSizes;

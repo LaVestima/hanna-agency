@@ -1,12 +1,4 @@
 {{ form_start(form, {'attr': {'id': 'search_bar'}}) }}
     {{ form_widget(form['query']) }}
     <button type="submit"><i class="fas fa-search"></i></button>
-    {#{{ form_widget(form['submit']) | replace({'&lt;': '<', '&gt;': '>', '&quot;': '"'}) | raw }}#}
 {{ form_end(form) }}
-
-{# TODO: separate file #}
-<style>
-    #search_bar {
-        display: flex;
-    }
-</style>

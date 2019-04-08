@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Parameters
- *
- * @ORM\Table(name="Parameters")
+ * @ORM\Table()
  * @ORM\Entity(repositoryClass="App\Repository\ParameterRepository")
  */
 class Parameter implements EntityInterface
@@ -16,7 +16,7 @@ class Parameter implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,16 +25,27 @@ class Parameter implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="text", nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Unit", type="text", nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      */
     private $unit;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="parameter", orphanRemoval=true)
+     */
+    private $productParameters;
+
+
+    public function __construct()
+    {
+        $this->productParameters = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -42,14 +53,6 @@ class Parameter implements EntityInterface
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     /**
@@ -84,5 +87,34 @@ class Parameter implements EntityInterface
         $this->unit = $unit;
     }
 
+    /**
+     * @return Collection|ProductParameter[]
+     */
+    public function getProductParameters(): Collection
+    {
+        return $this->productParameters;
+    }
 
+    public function addProductParameter(ProductParameter $productParameter): self
+    {
+        if (!$this->productParameters->contains($productParameter)) {
+            $this->productParameters[] = $productParameter;
+            $productParameter->setParameter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductParameter(ProductParameter $productParameter): self
+    {
+        if ($this->productParameters->contains($productParameter)) {
+            $this->productParameters->removeElement($productParameter);
+            // set the owning side to null (unless already changed)
+            if ($productParameter->getParameter() === $this) {
+                $productParameter->setParameter(null);
+            }
+        }
+
+        return $this;
+    }
 }

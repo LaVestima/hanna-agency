@@ -14,7 +14,7 @@ class ProductRepository extends CrudRepository
         parent::__construct($registry, Product::class, $tokenStorage);
     }
 
-    public function readCartProducts(array $cart)
+    public function readCartProducts(array $cart = [])
     {
         $this->clearQuery();
 

@@ -6,12 +6,10 @@ use App\Model\Infrastructure\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tokens
- *
- * @ORM\Table(name="Tokens", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Tokens_Token_U", columns={"Token"})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Token_Token_U", columns={"token"})
  * }, indexes={
- *     @ORM\Index(name="Tokens_ID_USERS_FK", columns={"ID_USERS"})
+ *     @ORM\Index(name="Token_User_FK", columns={"user_id"})
  * })
  * @ORM\Entity
  */
@@ -20,7 +18,7 @@ class Token implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -29,34 +27,29 @@ class Token implements EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Expired", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    private $dateExpired = 'CURRENT_TIMESTAMP';
+    private $dateExpired;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Token", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $token;
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idUsers;
-
+    private $user;
 
 
     /**
@@ -141,27 +134,15 @@ class Token implements EntityInterface
         return $this->token;
     }
 
-    /**
-     * Set idUsers
-     *
-     * @param User $idUsers
-     *
-     * @return Token
-     */
-    public function setIdUsers(User $idUsers = null)
+    public function getUser(): ?User
     {
-        $this->idUsers = $idUsers;
-
-        return $this;
+        return $this->user;
     }
 
-    /**
-     * Get idUsers
-     *
-     * @return User
-     */
-    public function getIdUsers()
+    public function setUser(?User $user): self
     {
-        return $this->idUsers;
+        $this->user = $user;
+
+        return $this;
     }
 }

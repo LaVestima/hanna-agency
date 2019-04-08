@@ -65,7 +65,7 @@ class Order implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="User_Created", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="User_Created")
      * })
      */
     private $userCreated;
@@ -75,7 +75,7 @@ class Order implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="User_Deleted", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="User_Deleted")
      * })
      */
     private $userDeleted;

@@ -6,9 +6,9 @@ use App\Model\Infrastructure\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UsersSettings
- *
- * @ORM\Table(name="Users_Settings", uniqueConstraints={@ORM\UniqueConstraint(name="Users_Settings_ID_USERS_U", columns={"ID_USERS"})})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="User_Setting_User_U", columns={"user_id"})
+ * })
  * @ORM\Entity
  */
 class UserSetting implements EntityInterface
@@ -16,7 +16,7 @@ class UserSetting implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,27 +25,22 @@ class UserSetting implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="Locale", type="string", length=2, nullable=false)
+     * @ORM\Column(type="string", length=2, nullable=false)
      */
     private $locale = 'en';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="Newsletter", type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $newsletter = '1';
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userSettings", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idUsers;
-
+    private $user;
 
 
     /**
@@ -106,27 +101,15 @@ class UserSetting implements EntityInterface
         return $this->newsletter;
     }
 
-    /**
-     * Set idUsers
-     *
-     * @param User $idUsers
-     *
-     * @return UserSetting
-     */
-    public function setIdUsers(User $idUsers = null)
+    public function getUser(): ?User
     {
-        $this->idUsers = $idUsers;
-
-        return $this;
+        return $this->user;
     }
 
-    /**
-     * Get idUsers
-     *
-     * @return User
-     */
-    public function getIdUsers()
+    public function setUser(?User $user): self
     {
-        return $this->idUsers;
+        $this->user = $user;
+
+        return $this;
     }
 }

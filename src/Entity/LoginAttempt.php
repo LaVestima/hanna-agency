@@ -8,15 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * LoginAttempts
  *
- * @ORM\Table(name="Login_Attempts", indexes={@ORM\Index(name="Login_Attempts_ID_USERS_FK", columns={"ID_USERS"})})
- * @ORM\Entity
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="Login_Attempt_User_FK", columns={"user_id"})
+ * })
+ * @ORM\Entity(repositoryClass="App\Repository\LoginAttemptRepository")
  */
 class LoginAttempt implements EntityInterface
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -25,33 +27,28 @@ class LoginAttempt implements EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateCreated;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Ip_Address", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $ipAddress;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="Is_Failed", type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $isFailed;
 
     /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_USERS", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="loginAttempts")
      */
-    private $idUsers;
+    private $user;
 
 
     public function __construct()
@@ -141,27 +138,15 @@ class LoginAttempt implements EntityInterface
         return $this->isFailed;
     }
 
-    /**
-     * Set idUsers
-     *
-     * @param User $idUsers
-     *
-     * @return LoginAttempt
-     */
-    public function setIdUsers(User $idUsers = null)
+    public function getUser(): ?User
     {
-        $this->idUsers = $idUsers;
-
-        return $this;
+        return $this->user;
     }
 
-    /**
-     * Get idUsers
-     *
-     * @return User
-     */
-    public function getIdUsers()
+    public function setUser(?User $user): self
     {
-        return $this->idUsers;
+        $this->user = $user;
+
+        return $this;
     }
 }

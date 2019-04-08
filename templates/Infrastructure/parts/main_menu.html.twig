@@ -25,6 +25,17 @@
             </a>
         </li>
 
+        {% if is_granted('ROLE_PRODUCER') %}
+            <li>
+                <a href="{{ path('producer_dashboard') }}">
+                    <div class="left-menu-item left-menu-body-row">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+            </li>
+        {% endif %}
+
         {% if is_granted('ROLE_SUPER_ADMIN') %}
             <li>
                 <a href="{{ path('user_list') }}">

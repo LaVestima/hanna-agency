@@ -2,7 +2,6 @@
 
 namespace App\Controller\AccessControl;
 
-
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\Token;
 use App\Entity\User;
@@ -14,11 +13,16 @@ use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use RandomLib\Factory;
+use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterController extends BaseController
 {
+    private $swiftMailer;
+    private $userPasswordEncoder;
+
     private $roleRepository;
     private $tokenRepository;
     private $userRepository;
@@ -28,11 +32,15 @@ class RegisterController extends BaseController
     private $activationToken;
 
     public function __construct(
+        Swift_Mailer $swiftMailer,
+        UserPasswordEncoderInterface $userPasswordEncoder,
         RoleRepository $roleRepository,
         TokenRepository $tokenRepository,
         UserRepository $userRepository,
         UserSettingRepository $userSettingRepository
     ) {
+        $this->swiftMailer = $swiftMailer;
+        $this->userPasswordEncoder = $userPasswordEncoder;
         $this->roleRepository = $roleRepository;
         $this->tokenRepository = $tokenRepository;
         $this->userRepository = $userRepository;
@@ -52,7 +60,7 @@ class RegisterController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
 
-            $passwordHash = $this->get('security.password_encoder')
+            $passwordHash = $this->userPasswordEncoder
                 ->encodePassword($user, $form->get('password')->getData());
 
             $user->setPasswordHash($passwordHash);
@@ -61,7 +69,7 @@ class RegisterController extends BaseController
                 ->readOneEntityBy(['code' => 'ROLE_GUEST'])
                 ->getResult();
 
-            $user->setIdRoles($defaultRole);
+            $user->setRole($defaultRole);
 
             try {
                 $this->userRepository
@@ -69,7 +77,7 @@ class RegisterController extends BaseController
 
                 $defaultUsersSettings = new UserSetting();
 
-                $defaultUsersSettings->setIdUsers($user);
+                $defaultUsersSettings->setUser($user);
 
                 $this->userSettingRepository
                     ->createEntity($defaultUsersSettings);
@@ -82,8 +90,9 @@ class RegisterController extends BaseController
             $this->setActivationToken($this->generateActivationToken());
 
             $token = new Token();
-            $token->setIdUsers($user);
+            $token->setUser($user);
             $token->setToken($this->activationToken);
+            $token->setDateExpired(new \DateTime('now +1 day'));
 
             $this->tokenRepository
                 ->createEntity($token);
@@ -97,9 +106,9 @@ class RegisterController extends BaseController
             ]);
         }
 
-        return $this->render('AccessControl/register.html.twig', array(
+        return $this->render('AccessControl/register.html.twig', [
             'form' => $form->createView()
-        ));
+        ]);
     }
 
     private function setActivationToken(string $activationToken)
@@ -120,13 +129,12 @@ class RegisterController extends BaseController
 
     protected function sendActivationEmail($email)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject('Registration confirmation')
+        $message = (new \Swift_Message('Registration confirmation'))
             ->setFrom('lavestima@lavestima.com')
             ->setTo($email)
             ->setBcc('test@lavestima.com')
             ->setBody($this->getActivationMessageBody(), 'text/html');
-        $this->get('mailer')->send($message);
+        $this->swiftMailer->send($message);
     }
 
     // TODO: correct message

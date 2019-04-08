@@ -2,20 +2,25 @@
 
 namespace App\Entity;
 
+use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Cities
- *
- * @ORM\Table(name="Cities", uniqueConstraints={@ORM\UniqueConstraint(name="Cities_Name_Countries_U", columns={"Name", "ID_COUNTRIES"})}, indexes={@ORM\Index(name="Cities_ID_COUNTRIES_FK", columns={"ID_COUNTRIES"})})
- * @ORM\Entity
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Cities_Name_Countries_U", columns={"name", "country_id"})
+ * }, indexes={
+ *     @ORM\Index(name="Cities_Country_FK", columns={"country_id"})
+ * })
+ * @ORM\Entity(repositoryClass="App\Repository\CityRepository")
  */
-class City
+class City implements EntityInterface
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,28 +29,33 @@ class City
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Note", type="string", length=200, nullable=true)
+     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $note;
 
     /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_COUNTRIES", referencedColumnName="ID")
-     * })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="cities")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $idCountries;
+    private $country;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Producer", mappedBy="city", orphanRemoval=true)
+     */
+    private $producers;
 
 
+    public function __construct()
+    {
+        $this->producers = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -105,27 +115,46 @@ class City
         return $this->note;
     }
 
-    /**
-     * Set idCountries
-     *
-     * @param Country $idCountries
-     *
-     * @return City
-     */
-    public function setIdCountries(Country $idCountries = null)
+    public function getCountry(): ?Country
     {
-        $this->idCountries = $idCountries;
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * Get idCountries
-     *
-     * @return Country
+     * @return Collection|Producer[]
      */
-    public function getIdCountries()
+    public function getProducers(): Collection
     {
-        return $this->idCountries;
+        return $this->producers;
+    }
+
+    public function addProducer(Producer $producer): self
+    {
+        if (!$this->producers->contains($producer)) {
+            $this->producers[] = $producer;
+            $producer->setCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProducer(Producer $producer): self
+    {
+        if ($this->producers->contains($producer)) {
+            $this->producers->removeElement($producer);
+            // set the owning side to null (unless already changed)
+            if ($producer->getCity() === $this) {
+                $producer->setCity(null);
+            }
+        }
+
+        return $this;
     }
 }

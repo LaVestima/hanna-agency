@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShipmentOptions
- *
- * @ORM\Table(name="Shipment_Options", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Shipment_Options_Name_U", columns={"Name"})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Shipment_Option_Name_U", columns={"name"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ShipmentOptionRepository")
  */
@@ -18,7 +18,7 @@ class ShipmentOption implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -27,16 +27,27 @@ class ShipmentOption implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Cost", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
      */
     private $cost;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductShipmentOption", mappedBy="shipment_option", orphanRemoval=true)
+     */
+    private $productShipmentOptions;
+
+
+    public function __construct()
+    {
+        $this->productShipmentOptions = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -84,5 +95,36 @@ class ShipmentOption implements EntityInterface
     public function setCost(string $cost): void
     {
         $this->cost = $cost;
+    }
+
+    /**
+     * @return Collection|ProductShipmentOption[]
+     */
+    public function getProductShipmentOptions(): Collection
+    {
+        return $this->productShipmentOptions;
+    }
+
+    public function addProductShipmentOption(ProductShipmentOption $productShipmentOption): self
+    {
+        if (!$this->productShipmentOptions->contains($productShipmentOption)) {
+            $this->productShipmentOptions[] = $productShipmentOption;
+            $productShipmentOption->setShipmentOption($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductShipmentOption(ProductShipmentOption $productShipmentOption): self
+    {
+        if ($this->productShipmentOptions->contains($productShipmentOption)) {
+            $this->productShipmentOptions->removeElement($productShipmentOption);
+            // set the owning side to null (unless already changed)
+            if ($productShipmentOption->getShipmentOption() === $this) {
+                $productShipmentOption->setShipmentOption(null);
+            }
+        }
+
+        return $this;
     }
 }

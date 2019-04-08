@@ -10,7 +10,7 @@ parameters:
     payment:
         currency: USD
         decimal: true
-        premium_amount: 100
+#        premium_amount: 100
 
 services:
     # default configuration for services in *this* file

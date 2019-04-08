@@ -30,22 +30,27 @@
 
     <div class="producer-subpage hidden" id="subpage-products">
         <div class="producer-product-list">
-            {% for product in products %}
-            <div class="product-item">
-                <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-                    <div>
-                        {% if productsImages[product.id].filePath is defined %}
-                            <img src="{{ asset(productsImages[product.id].filePath) }}" alt="">
-                        {% else %}
-                            <img src="{{ asset('/uploads/images/no-image.png') }}" alt="">
-                        {% endif %}
-                        {{ product.name }}<br>
-                        {{ product.priceCustomer }}
-                    </div>
-                </a>
-            </div>
+            {% for product in producer.activeProducts %}
+                {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
             {% endfor %}
         </div>
+    </div>
+
+    <div class="producer-subpage hidden" id="subpage-opinions">
+        {% if producer.opinions is empty %}
+            No ratings
+        {% endif %}
+
+        {% for opinion in producer.opinions %}
+            {% for rating in 1..opinion.rating if opinion.rating != 0 %}
+                <img src="{{ asset('uploads/images/_star.png') }}" alt="">
+            {% endfor %}
+            {% for rating in (opinion.rating+1)..5 if opinion.rating != 5 %}
+                <img src="{{ asset('uploads/images/_starg.png') }}" alt="">
+            {% endfor %}
+            {{ opinion.content }}
+            <br>
+        {% endfor %}
     </div>
 
     <div class="producer-subpage hidden" id="subpage-contact">
@@ -53,8 +58,8 @@
         <i class="fas fa-edit"></i>
         {{ producer.firstName }} {{ producer.lastName }}<br>
         {{ producer.street }}<br>
-        {{ producer.postalCode }} {{ producer.idCities.name }}<br>
-        {{ producer.idCountries.name }}<br>
+        {{ producer.postalCode }} {{ producer.city.name }}<br>
+        {{ producer.country.name }}<br>
         {{ producer.email | lower }}<br>
         {{ producer.phone }}<br>
         VAT: {{ producer.vat }}<br>

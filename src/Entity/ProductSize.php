@@ -7,11 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProductsSizes
- *
- * @ORM\Table(name="Products_Sizes", indexes={
- *     @ORM\Index(name="Products_Sizes_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}),
- *     @ORM\Index(name="Products_Sizes_ID_SIZES_FK", columns={"ID_SIZES"})
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="Product_Size_ID_PRODUCTS_FK", columns={"ID_PRODUCTS"}),
+ *     @ORM\Index(name="Product_Size_ID_SIZES_FK", columns={"ID_SIZES"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ProductSizeRepository")
  */
@@ -20,7 +18,7 @@ class ProductSize implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -29,7 +27,7 @@ class ProductSize implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="Availability", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $availability;
 
@@ -38,7 +36,7 @@ class ProductSize implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="productSizes", fetch="EAGER")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_PRODUCTS", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_PRODUCTS")
      * })
      */
     private $idProducts;
@@ -48,7 +46,7 @@ class ProductSize implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="Size", fetch="EAGER")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_SIZES", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="ID_SIZES")
      * })
      */
     private $idSizes;

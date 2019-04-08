@@ -8,6 +8,7 @@
     ### when +/- is pressed, ajax is sent to add/remove from cart,
     quantity is sent back and set to quantity-value and total product price
 
+
     {% for product in products %}
         <div class="product-item" style="display: flex; background: #b2dba1; margin: 1em 0; padding: 1em; justify-content: space-between;">
             {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
@@ -33,13 +34,17 @@
         </div>
     {% endfor %}
 
-    <div class="total-order-price" style="text-align: right">
-        Total price: {{ totalPrice }}
-    </div>
+    {% if products is empty %}
+        <div style="text-align: center; font-size: 1.5em;">No products :(</div>
+    {% else %}
+        <div class="total-order-price" style="text-align: right">
+            Total price: <span id="total-order-price">{{ totalPrice }}</span>
+        </div>
 
-    <pre>### coupons?</pre>
+        <pre>### coupons?</pre>
 
-    <a href="{{ path('cart_summary') }}" class="button">Summary <i class="far fa-arrow-alt-circle-right"></i></a>
+        <a href="{{ path('cart_summary') }}" class="button">Summary <i class="far fa-arrow-alt-circle-right"></i></a>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
