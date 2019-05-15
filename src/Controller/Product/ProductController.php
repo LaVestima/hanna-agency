@@ -3,47 +3,36 @@
 namespace App\Controller\Product;
 
 use App\Controller\Infrastructure\BaseController;
-use App\Entity\Product;
-use App\Entity\ProductSize;
+use App\Entity\ProductImage;
+use App\Form\AddToCartType;
 use App\Form\ProductType;
 use App\Repository\ProductImageRepository;
 use App\Repository\ProductRepository;
-use App\Repository\ProductSizeRepository;
-use App\Repository\SizeRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends BaseController
 {
+    private $kernel;
     private $productRepository;
-    private $productSizeRepository;
     private $productImageRepository;
-    private $sizeRepository;
 
     public function __construct(
+        KernelInterface $kernel,
         ProductRepository $productRepository,
-        ProductSizeRepository $productSizeRepository,
-        ProductImageRepository $productImageRepository,
-        SizeRepository $sizeRepository
+        ProductImageRepository $productImageRepository
     ) {
+        $this->kernel = $kernel;
         $this->productRepository = $productRepository;
-        $this->productSizeRepository = $productSizeRepository;
         $this->productImageRepository = $productImageRepository;
-        $this->sizeRepository = $sizeRepository;
     }
 
     /**
      * @Route("/product/list", name="product_list")
-     *
-     * @param Request $request
-     * @return mixed
-     * @throws \Exception
      */
     public function list(Request $request)
     {
@@ -68,10 +57,6 @@ class ProductController extends BaseController
 
     /**
      * @Route("/product/show/{pathSlug}", name="product_show")
-     *
-     * @param string $pathSlug
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
      */
     public function show(string $pathSlug)
     {
@@ -79,19 +64,20 @@ class ProductController extends BaseController
             ->readOneEntityBy(['pathSlug' => $pathSlug])
             ->getResult();
 
-        if (!$product) {
+        if (!$product) { // TODO: or product not active (except assigned producer)
             throw new NotFoundHttpException();
         }
 
-        $productImages = $this->productImageRepository
-            ->readEntitiesBy(['idProducts' => $product->getId()])
-            ->orderBy('sequencePosition')
-            ->getResultAsArray();
+        $form = $this->createForm(AddToCartType::class, $product, [
+//            'edit' => true,
+//            'isAdmin' => $this->isAdmin(),
+//            'isProducer' => $this->isProducer()
+        ]);
 
         $this->setView('Product/show.html.twig');
         $this->setTemplateEntities([
             'product' => $product,
-            'productImages' => $productImages,
+            'form' => $form->createView()
         ]);
 
         return parent::baseShow();
@@ -99,115 +85,14 @@ class ProductController extends BaseController
 
     /**
      * @Route("/product/new", name="product_new")
-     *
-     * @param Request $request
-     * @return Response
-     * @throws \Exception
      */
     public function new(Request $request)
     {
-        $product = new Product();
 
-        $form = $this->createForm(ProductType::class, $product, [
-            'isAdmin' => $this->isAdmin(),
-            'isProducer' => $this->isProducer(),
-        ]);
-
-        $sizes = $this->sizeRepository
-            ->readAllEntities()
-            ->getResult();
-
-        $form->get('sizes')
-            ->add('0', ChoiceType::class, [
-                'label' => 'Size',
-                'choices' => $sizes,
-                'choice_label' => 'name',
-                'placeholder' => 'Choose a size',
-                'required' => true,
-            ]);
-
-        $form->get('availabilities')
-            ->add('0', NumberType::class, [
-                'label' => 'Availability',
-                'data' => 0,
-                'empty_data' => 0,
-                'required' => true,
-            ]);
-
-        $form->handleRequest($request);
-
-//        var_dump($form->getData());
-//        var_dump($request->files->get('file'));
-//        die;
-
-        if ($form->isSubmitted() && $form->isValid()) {
-//            var_dump($_FILES);
-//            var_dump($request->files->get('file'));
-//            var_dump($form);
-//            die;
-
-            $sizes = $form->get('sizes')->getData();
-            $availabilities = $form->get('availabilities')->getData();
-            $countSizes = count($sizes);
-            $countAvailabilities = count($availabilities);
-
-            if ($countSizes !== $countAvailabilities) {
-                // TODO: error
-            }
-
-            try {
-                $product = $form->getData();
-                if ($this->isProducer()) {
-                    $product->setIdProducers($this->getProducer());
-                }
-
-//                var_dump($product);die;
-
-                $product = $this->productRepository
-                    ->createEntity($product);
-
-                foreach ($sizes as $key => $size) {
-                    $productSize = new ProductSize(
-                        $product,
-                        $size,
-                        $availabilities[$key]
-                    );
-
-                    $this->productSizeRepository
-                        ->createEntity($productSize);
-                }
-            } catch (\Exception $e) {
-                if ($this->isEnvDev()) {
-                    var_dump($e->getMessage());die;
-                }
-            }
-
-            $this->addFlash('success', 'Product added!');
-
-            return $this->redirectToRoute('product_list');
-        }
-
-        $this->setView('Product/new.html.twig');
-        $this->setForm($form);
-        $this->setActionBar([
-            [
-                'label' => 'List',
-                'path' => 'product_list',
-                'icon' => 'fa-chevron-left'
-            ]
-        ]);
-
-//        return parent::newAction($request);
-        return parent::baseNew($request);
     }
 
     /**
      * @Route("/product/edit/{pathSlug}", name="product_edit")
-     *
-     * @param Request $request
-     * @param string $pathSlug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function edit(Request $request, string $pathSlug)
     {
@@ -219,15 +104,6 @@ class ProductController extends BaseController
 
         if (!$product) { throw new NotFoundHttpException(); }
 
-        $sizes = $this->sizeRepository
-            ->readAllEntities()
-            ->getResult();
-
-        $sizesChoices = [];
-        foreach ($sizes as $s) {
-            $sizesChoices[$s->getName()] = $s->getId();
-        }
-
         $form = $this->createForm(ProductType::class, $product, [
             'edit' => true,
             'isAdmin' => $this->isAdmin(),
@@ -236,8 +112,87 @@ class ProductController extends BaseController
 
         $form->handleRequest($request);
 
+        // TODO: doesn't work if middle/first images are removed
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->productRepository->updateEntity($product, $form->getData());
+            $productImages = $product->getProductImages();
+            echo 'Count productImages: ' . count($productImages) . '<br>'; // total in form; old + new
+            $hashedImages = [];
+//var_dump(array_keys($productImages));
+            $productImageIndex = 0;
+
+            foreach ($productImages as &$productImage) {
+//                echo ($productImageIndex + 1) . '<br>';
+                echo $productImage->getSequencePosition() . '<br>';
+                echo ($productImage->getFilePath() ?? 'NO') . '<br>';
+
+                if ($productImage->getFilePath() && file_exists($productImage->getFilePath())) {
+                    echo md5_file($productImage->getFilePath()) . '<br>';
+                    $hashedImages[] = md5_file($productImage->getFilePath());
+                    $productImage->setSequencePosition($productImageIndex + 1);
+//                    $productImages[$productImageIndex]->setSequencePosition($productImageIndex + 1);
+                } else {
+                    $productImages->removeElement($productImage);
+                }
+
+                $productImageIndex++;
+                unset($productImage);
+            }
+
+            $newProduct = $form->getData();
+
+            $images = $form->get('images');
+            echo 'Count images ' . count($images) . '<br>';
+
+            foreach ($images as $imageIndex => $image) { // New files added in the form
+                $uploadedProductImage = $image->get('file')->getData();
+
+//                echo ($imageIndex + 1) . '<br>';
+                echo ($uploadedProductImage ? $uploadedProductImage->getRealPath() : 'NO') . '<br>';
+
+                if ($uploadedProductImage) {
+                    $tmpFilePath = $uploadedProductImage->getRealPath();
+                    $fileName = md5(uniqid()) . '.' . $uploadedProductImage->guessExtension();
+
+                    if (!in_array(md5_file($tmpFilePath), $hashedImages)) {
+                        $uploadDir = $this->kernel->getProjectDir() . '/public/uploads/images/';
+
+                        try {
+                            $uploadedProductImage->move(
+                                $uploadDir,
+                                $fileName
+                            );
+                        } catch (FileException $e) {
+                            // TODO: handle exception if something happens during file upload
+                        }
+
+                        $addedProductImage = new ProductImage();
+                        $addedProductImage->setFilePath('uploads/images/' . $fileName);
+                        $addedProductImage->setProduct($product);
+                        $addedProductImage->setSequencePosition($imageIndex + 1);
+
+                        $productImages->add($addedProductImage);
+                    }
+                }
+            }
+
+            foreach ($productImages as $productImage) {
+//                echo ($productImage->getFilePath() ?? 'NO') . '<br>';
+                var_dump($productImage->getFilePath(), $productImage->getSequencePosition());
+                echo '<br>';
+            }
+
+            $newProduct->setProductImages($productImages);
+//            var_dump($newProduct->getProductImages());
+
+            foreach ($newProduct->getProductImages() as $pi) {
+                echo $pi->getId() . '<br>';
+            }
+
+//            die;
+
+//            var_dump($form->getData());die;
+
+            $this->productRepository->updateEntity($product, $newProduct);
 
             if ($this->isProducer()) {
                 return $this->redirectToRoute('inventory_home');
