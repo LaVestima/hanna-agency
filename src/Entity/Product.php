@@ -100,12 +100,12 @@ class Product implements EntityInterface
      */
     private $active = false;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $productSizes;
+//    /**
+//     * @var ArrayCollection
+//     *
+//     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER", cascade={"persist"}, orphanRemoval=true)
+//     */
+//    private $productSizes;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
@@ -126,17 +126,17 @@ class Product implements EntityInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="product", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="product", orphanRemoval=true)
      */
     private $productParameters;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true, fetch="EAGER", cascade={"persist"})
      */
     private $productImages;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductVariant", mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductVariant", mappedBy="product", orphanRemoval=true, cascade={"persist"})
      */
     private $productVariants;
 
@@ -154,16 +154,16 @@ class Product implements EntityInterface
     }
 
 
-    public function addProductSize(ProductSize $productSize)
-    {
-        $productSize->setIdProducts($this);
-        $this->productSizes->add($productSize);
-    }
-
-    public function removeProductSize(ProductSize $productSize)
-    {
-        $this->productSizes->removeElement($productSize);
-    }
+//    public function addProductSize(ProductSize $productSize)
+//    {
+//        $productSize->setIdProducts($this);
+//        $this->productSizes->add($productSize);
+//    }
+//
+//    public function removeProductSize(ProductSize $productSize)
+//    {
+//        $this->productSizes->removeElement($productSize);
+//    }
 
     public function addProductParameter(ProductParameter $productParameter)
     {
@@ -397,21 +397,21 @@ class Product implements EntityInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProductSizes()
-    {
-        return $this->productSizes;
-    }
-
-    /**
-     * @param mixed $productSizes
-     */
-    public function setProductSizes($productSizes): void
-    {
-        $this->productSizes = $productSizes;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getProductSizes()
+//    {
+//        return $this->productSizes;
+//    }
+//
+//    /**
+//     * @param mixed $productSizes
+//     */
+//    public function setProductSizes($productSizes): void
+//    {
+//        $this->productSizes = $productSizes;
+//    }
 
     public function getCategory(): ?Category
     {

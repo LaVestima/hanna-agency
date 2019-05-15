@@ -9,11 +9,6 @@
         {% for product in products %}
             <div style="border: 1px solid black; padding: 5px; display: flex; justify-content: space-between;">
                 <div style="width: 150px;">
-                    {#{% if product.productImages.get(0).filePath is defined %}#}
-                        {#<img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" style="width: 100%;">#}
-                    {#{% else %}#}
-                        {#<img src="{{ asset('/uploads/images/no-image.png') }}" alt="" style="width: 100%;">#}
-                    {#{% endif %}#}
                     {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
                 </div>
                 <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}" style="width: 50%;">
@@ -63,7 +58,7 @@
 
                 chart.render();
             {% endfor %}
-        }{% endspaceless %}
+        };{% endspaceless %}
     </script>
 
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

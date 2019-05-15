@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * OrdersStatuses
  *
- * @ORM\Table(name="Orders_Statuses", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Orders_Statuses_Name_U", columns={"Name"})
+ * @ORM\Table(uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Orders_Statuses_Name_U", columns={"name"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\OrderStatusRepository")
  */
@@ -23,7 +25,7 @@ class OrderStatus implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -32,9 +34,19 @@ class OrderStatus implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OrderProductVariant", mappedBy="status", orphanRemoval=true)
+     */
+    private $orderProductVariants;
+
+    public function __construct()
+    {
+        $this->orderProductVariants = new ArrayCollection();
+    }
 
 
     /**
@@ -69,5 +81,36 @@ class OrderStatus implements EntityInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|OrderProductVariant[]
+     */
+    public function getOrderProductVariants(): Collection
+    {
+        return $this->orderProductVariants;
+    }
+
+    public function addOrderProductVariant(OrderProductVariant $orderProductVariant): self
+    {
+        if (!$this->orderProductVariants->contains($orderProductVariant)) {
+            $this->orderProductVariants[] = $orderProductVariant;
+            $orderProductVariant->setStatus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProductVariant(OrderProductVariant $orderProductVariant): self
+    {
+        if ($this->orderProductVariants->contains($orderProductVariant)) {
+            $this->orderProductVariants->removeElement($orderProductVariant);
+            // set the owning side to null (unless already changed)
+            if ($orderProductVariant->getStatus() === $this) {
+                $orderProductVariant->setStatus(null);
+            }
+        }
+
+        return $this;
     }
 }

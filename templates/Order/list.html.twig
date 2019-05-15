@@ -1,0 +1,110 @@
+{#{% extends 'Infrastructure/baseList.html.twig' %}#}
+{% extends 'base.html.twig' %}
+
+{% block title 'Order List'%}
+
+{#{% set isExportAllowed = true %}#}
+{#{% set pdfExportPath = path('export_pdf_order_list') %}#}
+{#{% set pdfExportJson = [] %}#}
+
+{#{% for order in pagination %}#}
+    {#{% set pdfExportJson = pdfExportJson | merge([order.pathSlug]) %}#}
+{#{% endfor %}#}
+
+{#{% set pdfExportJson = pdfExportJson | json_encode %}#}
+{#{% block title %}#}
+    {#{% if listType == '' %}#}
+        {#Order List#}
+    {#{% elseif listType == 'deleted' %}#}
+        {#Deleted Order List#}
+    {#{% endif %}#}
+{#{% endblock %}#}
+
+{% block content %}
+    {# TODO: maybe #}
+    {#{{ render(controller(#}
+    {#'ExportBundle:PDFExport:orderList',#}
+    {#{'pathSlugsJson': '{"aa":3}'}#}
+    {#)) }}#}
+
+    {% for order in orders %}
+        <div style="border: 1px solid black; margin: 0.5em 0; padding: 10px; ">
+            [{{ order.status }}]
+            ID: {{ order.code }}<br>
+            Placed: {{ order.dateCreated | date('Y.m.d H:i:s') }}
+            <a href="{{ path('order_show', {code: order.code}) }}"><i class="far fa-arrow-alt-circle-right"></i></a>
+            <div style="background: #ccc;">
+            {% for orderProductVariant in order.orderProductVariants %}
+                [{{ orderProductVariant.status.name }}]
+                {{ orderProductVariant.productVariant.product.name }} - {{ orderProductVariant.productVariant.variant.name }}
+                <br>
+            {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <table class="entity-list">
+        <colgroup>
+            <col width="200px">
+            <col width="200px">
+            <col>
+            <col width="200px">
+            <col width="40px">
+        </colgroup>
+{#        <tr class="entity-list-header">#}
+{#            <th>#}
+{#                <ua onclick="sortSearch(this, 'o.dateCreated', '{{ path('order_async_list') }}')">#}
+{#                    Date Created#}
+{#                    <i class="fa fa-sort-desc" aria-hidden="true"></i>#}
+{#                </ua>#}
+{#            </th>#}
+{#            <th>#}
+{#                <ua onclick="sortSearch(this, 'o.status', '{{ path('order_async_list') }}')">#}
+{#                    Status#}
+{#                    <i class="fa fa-sort" aria-hidden="true"></i>#}
+{#                </ua>#}
+{#            </th>#}
+{#            {% if is_granted('ROLE_ADMIN') %}#}
+{#                <th>#}
+{#                    <ua onclick="sortSearch(this, 'c.lastName', '{{ path('order_async_list') }}')">#}
+{#                        Customer#}
+{#                        <i class="fa fa-sort" aria-hidden="true"></i>#}
+{#                    </ua>#}
+{#                </th>#}
+{#                <th>#}
+{#                    <ua onclick="sortSearch(this, 'u.login', '{{ path('order_async_list') }}')">#}
+{#                        User Created#}
+{#                        <i class="fa fa-sort" aria-hidden="true"></i>#}
+{#                    </ua>#}
+{#                </th>#}
+{#            {% endif %}#}
+{#            <th></th>#}
+{#        </tr>#}
+{#        <tr class="entity-list-filters">#}
+{#            <td>#}
+{#                <input type="text" onkeyup="filterSearch(this, 'o.dateCreated', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">#}
+{#            </td>#}
+{#            <td>#}
+{#                #}{# TODO: make it work #}
+{#                <input type="text" onkeyup="filterSearch(this, 'o.status', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">#}
+{#            </td>#}
+{#            {% if is_granted('ROLE_ADMIN') %}#}
+{#                <td>#}
+{#                    <input type="text" onkeyup="filterSearch(this, 'CONCAT(c.firstName, \' \', c.lastName)', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">#}
+{#                </td>#}
+{#                <td>#}
+{#                    <input type="text" onkeyup="filterSearch(this, 'u.login', '{{ path('order_async_list') }}')" placeholder="Search..." title="Search">#}
+{#                </td>#}
+{#            {% endif %}#}
+{#        </tr>#}
+        <tbody class="entity-list-content"></tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            {#filterSearch(undefined, undefined, '{{ path('order_async_list') }}');#}
+        });
+    </script>
+{% endblock %}

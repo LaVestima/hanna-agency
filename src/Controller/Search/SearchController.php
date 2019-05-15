@@ -19,10 +19,6 @@ class SearchController extends BaseController
 
     /**
      * @Route("/search", name="search_home")
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
      */
     public function home(Request $request)
     {

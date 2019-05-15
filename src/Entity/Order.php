@@ -9,12 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Orders
  *
- * @ORM\Table(name="Orders", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"Path_Slug"})
+ * @ORM\Table(name="order_2983", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"path_slug"})
  * }, indexes={
- *     @ORM\Index(name="Orders_User_Created_FK", columns={"User_Created"}),
- *     @ORM\Index(name="Orders_User_Deleted_FK", columns={"User_Deleted"}),
- *     @ORM\Index(name="Orders_ID_CUSTOMERS_FK", columns={"ID_CUSTOMERS"})
+ *     @ORM\Index(name="Orders_User_Created_FK", columns={"user_created"}),
+ *     @ORM\Index(name="Orders_User_Deleted_FK", columns={"user_deleted"}),
+ *     @ORM\Index(name="Orders_User_FK", columns={"user_id"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\OrderRepository")
  */
@@ -23,7 +23,7 @@ class Order implements EntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -32,40 +32,30 @@ class Order implements EntityInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Created", type="datetime", nullable=false)
+     * @ORM\Column(type="datetime", nullable=false)
      */
-    private $dateCreated = 'CURRENT_TIMESTAMP';
+    private $dateCreated;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="Date_Deleted", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateDeleted;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Path_Slug", type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
     private $pathSlug = '';
-
-    /**
-     * @var Customer
-     *
-     * @ORM\ManyToOne(targetEntity="Customer", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ID_CUSTOMERS", referencedColumnName="ID")
-     * })
-     */
-    private $idCustomers;
 
     /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="User_Created")
+     *   @ORM\JoinColumn(name="user_created")
      * })
      */
     private $userCreated;
@@ -75,19 +65,33 @@ class Order implements EntityInterface
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="User_Deleted")
+     *   @ORM\JoinColumn(name="user_deleted")
      * })
      */
     private $userDeleted;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="OrderProduct", mappedBy="idOrders")
-     */
-    private $orderProducts;
-
     private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OrderProductVariant", mappedBy="order", orphanRemoval=true, fetch="EAGER")
+     */
+    private $orderProductVariants;
+
+    /**
+     * @ORM\Column(type="string", length=24)
+     */
+    private $code;
+
+    public function __construct()
+    {
+        $this->orderProductVariants = new ArrayCollection();
+    }
 
 
     /**
@@ -166,28 +170,6 @@ class Order implements EntityInterface
     }
 
     /**
-     * Set idCustomers
-     *
-     * @param Customer $idCustomers
-     *
-     * @return Order
-     */
-    public function setIdCustomers(Customer $idCustomers = null) {
-        $this->idCustomers = $idCustomers;
-
-        return $this;
-    }
-
-    /**
-     * Get idCustomers
-     *
-     * @return Customer
-     */
-    public function getIdCustomers() {
-        return $this->idCustomers;
-    }
-
-    /**
      * Set userCreated
      *
      * @param User $userCreated
@@ -238,6 +220,21 @@ class Order implements EntityInterface
     }
 
     public function getStatus() {
+        // TODO: finish status determination
+
+        foreach ($this->orderProductVariants as $orderProductVariant) {
+            if ($orderProductVariant->getStatus()->getName() == OrderStatus::REJECTED) {
+                $this->status = OrderStatus::REJECTED;
+
+                break;
+            }
+
+
+        }
+
+
+
+
         return $this->status;
     }
 
@@ -254,17 +251,17 @@ class Order implements EntityInterface
     /**
      * @return mixed
      */
-    public function getOrderProducts()
+    public function getOrderProductVariants()
     {
-        return $this->orderProducts;
+        return $this->orderProductVariants;
     }
 
     /**
-     * @param mixed $orderProducts
+     * @param mixed $orderProductVariants
      */
-    public function setOrderProducts($orderProducts): void
+    public function setOrderProductVariants($orderProductVariants): void
     {
-        $this->orderProducts = $orderProducts;
+        $this->orderProductVariants = $orderProductVariants;
     }
 
     static public function getStatusColumnQuery()
@@ -302,5 +299,52 @@ class Order implements EntityInterface
                 ELSE \'\'
             END) AS status
          ';
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function addOrderProduct(OrderProductVariant $orderProduct): self
+    {
+        if (!$this->orderProductVariants->contains($orderProduct)) {
+            $this->orderProductVariants[] = $orderProduct;
+            $orderProduct->setOrder1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderProductVariant $orderProduct): self
+    {
+        if ($this->orderProductVariants->contains($orderProduct)) {
+            $this->orderProductVariants->removeElement($orderProduct);
+            // set the owning side to null (unless already changed)
+            if ($orderProduct->getOrder1() === $this) {
+                $orderProduct->setOrder1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
     }
 }

@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
 use App\Repository\ProducerRepository;
-use App\Repository\SizeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,23 +19,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductType extends AbstractType
 {
     private $categoryRepository;
-    private $sizeRepository;
     private $producerRepository;
 
     /**
      * ProductType constructor.
      *
      * @param CategoryRepository $categoryRepository
-     * @param SizeRepository $sizeRepository
      * @param ProducerRepository $producerRepository
      */
     public function __construct(
         CategoryRepository $categoryRepository,
-        SizeRepository $sizeRepository,
         ProducerRepository $producerRepository
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->sizeRepository = $sizeRepository;
         $this->producerRepository = $producerRepository;
     }
 
@@ -47,12 +42,12 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         // TODO: maybe only undeleted
-        $categories = $this->categoryRepository->readAllEntities()->getResult();
+        $categories = $this->categoryRepository->readAllEntities()->getResultAsArray();
         $producers = $this->producerRepository->readAllEntities()->onlyUndeleted()->getResult();
 
         $builder
             ->add('name', TextType::class)
-            ->add('idCategories', ChoiceType::class, [
+            ->add('category', ChoiceType::class, [
                 'label' => 'Category',
                 'choices' => $categories,
                 'choice_label' => 'name',
@@ -61,15 +56,56 @@ class ProductType extends AbstractType
                 },
                 'placeholder' => 'Choose a category'
             ])
-            ->add('sizes', CollectionType::class, [
-                'label' => 'Sizes',
-                'entry_type' => ProductSizeType::class,
-                'property_path' => 'productSizes',
+            ->add('variants', CollectionType::class, [
+                'label' => 'Variants',
+                'entry_type' => ProductVariantType::class,
+                'property_path' => 'productVariants',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'by_reference' => false
+                'by_reference' => false,
             ])
+            ->add('parameters', CollectionType::class, [
+                'label' => 'Parameters',
+                'entry_type' => ProductParameterType::class,
+                'property_path' => 'productParameters',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false,
+            ])
+            ->add('images', CollectionType::class, [
+                'label' => 'Images',
+                'entry_type' => ProductImageType::class,
+//                'entry_options' => [
+//                    'data_class' => null,
+//                    'attr' => [
+//                        'accept' => 'image/*',
+//                    ],
+//                ],
+                'property_path' => 'productImages',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false,
+                'required' => false,
+            ])
+//            ->add('images', CollectionType::class, [
+//                'label' => 'Images',
+//                'entry_type' => FileType::class,
+//                'entry_options' => [
+//                    'data_class' => null,
+//                    'attr' => [
+//                        'accept' => 'image/*',
+//                    ],
+//                ],
+//                'property_path' => 'productImages',
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+//                'by_reference' => false,
+//                'required' => false,
+//            ])
             ->add('priceProducer', MoneyType::class, [
                 'label' => 'Producer Price',
                 'currency' => false
@@ -95,16 +131,7 @@ class ProductType extends AbstractType
                     'required' => false,
                 ]);
         }
-//            ->add('images', FileType::class, [
-//                'label' => 'Images',
-////                'multiple' => true,
-//                'attr'     => [
-//                    'accept' => 'image/*',
-////                    'multiple' => 'multiple'
-//                ],
-//                'mapped' => false, // TODO: other way?
-//            ])
-            // TODO: finish, add more !!!!!!!!!!!!
+        // TODO: finish, add more !!!!!!!!!!!!
         $builder
             ->add('save', SubmitType::class, [
                 'label' => $options['edit'] ? 'Save' : 'Add Product'

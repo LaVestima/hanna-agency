@@ -13,4 +13,13 @@ class CategoryRepository extends CrudRepository
     {
         parent::__construct($registry, Category::class, $tokenStorage);
     }
+
+    public function onlyActiveProducts()
+    {
+        $this->query
+            ->join($this->alias . '.products', 'pro', 'WITH', 'pro.category=ent.id')
+            ->where('pro.active = 1');
+
+        return $this;
+    }
 }

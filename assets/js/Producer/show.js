@@ -16,6 +16,14 @@ $('#top-bar-products').on('click', function() {
     $(this).addClass('active');
 });
 
+$('#top-bar-opinions').on('click', function() {
+    $('.producer-subpage').addClass('hidden');
+    $('#subpage-opinions').removeClass('hidden');
+
+    $('.producer-top-bar-item').removeClass('active');
+    $(this).addClass('active');
+});
+
 $('#top-bar-contact').on('click', function() {
     $('.producer-subpage').addClass('hidden');
     $('#subpage-contact').removeClass('hidden');

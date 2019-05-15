@@ -256,6 +256,10 @@ CREATE TABLE IF NOT EXISTS History_Customers (
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS Addresses (
+  ID INTEGER NOT NULL AUTO_INCREMENT,
+);
+
 CREATE TABLE IF NOT EXISTS Producers (
 	ID INTEGER  NOT NULL AUTO_INCREMENT,
 	Date_Created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -329,6 +333,7 @@ CREATE TABLE IF NOT EXISTS Orders (
 	Date_Deleted TIMESTAMP NULL,
 	User_Created INTEGER NOT NULL,
 	User_Deleted INTEGER,
+	Identifier VARCHAR(16) NOT NULL,
 	ID_CUSTOMERS INTEGER NOT NULL,
 	Path_Slug VARCHAR(50) NOT NULL DEFAULT '',
 	CONSTRAINT Orders_PK PRIMARY KEY (ID),
@@ -623,10 +628,10 @@ INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID
 INSERT INTO Producers (ID, Short_Name, Full_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_USERS, Path_Slug) VALUES (3, 'Asiatic', 'Asiatic Solutions', 'FR69210542996', 3, 14, '74100', '65, Avenue De Marlioz', 'BrigittePatry@teleworm.us', '04.29.54.23.82', 2, 'jOtz5btgwsFE29KeXWMan1M9jRHt3THBxFGdvoO5Lijt6xlufd');
 INSERT INTO Producers (ID, Short_Name, Full_Name, First_Name, Last_Name, VAT, ID_COUNTRIES, ID_CITIES, Postal_Code, Street, Email, Phone, ID_USERS, Path_Slug) VALUES (4, 'H & H', 'Hughes & Hatcher', 'Katherine J.', 'Hepp', '6wSyi4BQ10vkRqm', 4, 15, 'ON M5H 1P6', '4370 Adelaide St', 'KatherineJHepp@rhyta.com', '416-981-2808', NULL, 'KXFH0ur7He79vxdoqIqANtDEgCWqAXaJIVXyhyD7v8vIUfXFZs');
 
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (1, 2, 2, 'Umgewrmyefi6thiDJZMmz4LHuKrJDjaVbPZzfCgwLS6Fr5FKhs');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (2, 3, 3, 'g11SxwcyZw9ILjAiCi0eVjF6BT8cy5BixERUR0Lm79cGQFTGwJ');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (3, 1, 5, 'ZZgtZjORKCCKKTflMgLr7UpKpC2ErHGE2LqW6tMASMylmPKlBP');
-INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Path_Slug) VALUES (4, 4, 4, 'DgUqtlNvIMx2uzQz5iqU5perhrHME8tUkVR9aGT095W0rWCk7U');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Identifier, Path_Slug) VALUES (1, 2, 2, '4412092054742340', 'Umgewrmyefi6thiDJZMmz4LHuKrJDjaVbPZzfCgwLS6Fr5FKhs');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Identifier, Path_Slug) VALUES (2, 3, 3, '2736910162510412', 'g11SxwcyZw9ILjAiCi0eVjF6BT8cy5BixERUR0Lm79cGQFTGwJ');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Identifier, Path_Slug) VALUES (3, 1, 5, '0661588995464321', 'ZZgtZjORKCCKKTflMgLr7UpKpC2ErHGE2LqW6tMASMylmPKlBP');
+INSERT INTO Orders (ID, ID_CUSTOMERS, User_Created, Identifier, Path_Slug) VALUES (4, 4, 4, '0158142312283984', 'DgUqtlNvIMx2uzQz5iqU5perhrHME8tUkVR9aGT095W0rWCk7U');
 
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (1, '1/2016', 2, 1, '2016-02-26', 'fQ5oxD0fkgVdl9NZp6QbO9aDhF4wqbY9FqKfpVckiCOsdk6vpG');
 INSERT INTO Invoices (ID, Name, ID_CUSTOMERS, User_Created, Date_Issued, Path_Slug) VALUES (2, '4/2017', 4, 2, '2017-03-01', 'iqHtsskeLDHD5LtJBfFBzPNB5AWGSrr16IGhCrZA2AtcOH1tFT');
@@ -653,6 +658,7 @@ INSERT INTO Parameters (ID, Name, Unit) VALUES (1, 'Weight', 'g');
 INSERT INTO Parameters (ID, Name, Unit) VALUES (2, 'Material', '');
 
 INSERT INTO Products_Parameters (ID, ID_PRODUCTS, ID_PARAMETERS, Value) VALUES (1, 1, 1, '250');
+INSERT INTO Products_Parameters (ID, ID_PRODUCTS, ID_PARAMETERS, Value) VALUES (2, 1, 2, 'Wool');
 
 INSERT INTO Shipment_Options (ID, Name, Cost) VALUES (1, 'FedEx', 15.50);
 INSERT INTO Shipment_Options (ID, Name, Cost) VALUES (2, 'UPS', 22.50);

@@ -176,6 +176,11 @@ class Producer implements EntityInterface
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $frontpage_html;
+
 
     public function __construct()
     {
@@ -632,6 +637,18 @@ class Producer implements EntityInterface
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getFrontpageHtml(): ?string
+    {
+        return $this->frontpage_html;
+    }
+
+    public function setFrontpageHtml(?string $frontpage_html): self
+    {
+        $this->frontpage_html = $frontpage_html;
 
         return $this;
     }

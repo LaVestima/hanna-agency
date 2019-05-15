@@ -47,7 +47,7 @@ class Token implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tokens")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 

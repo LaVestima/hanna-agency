@@ -9,32 +9,36 @@
     quantity is sent back and set to quantity-value and total product price
 
 
-    {% for product in products %}
+    {% for productVariant in productVariants %}
+{#        {{ dump(productVariant) }}#}
+        {% set product = productVariant.product %}
         <div class="product-item" style="display: flex; background: #b2dba1; margin: 1em 0; padding: 1em; justify-content: space-between;">
-            {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+            {% include 'Product/parts/_firstImage.html.twig' with {'product': productVariant.product} %}
 
-            <span style="width: 50%;">{{ product.name }}</span>
+            <span style="width: 50%;">{{ product.name }} - {{ productVariant.variant.name }}</span>
 
             <div class="pricing" style="display: inline-block; width: 35%;">
                 {#<ua class="button quantity-decrease">-</ua>#}
                 {#<span class="quantity-value">{{ cart[product.pathSlug].quantity }}</span>#}
-                <input type="number" class="quantity-value" min="1" value="{{ cart[product.pathSlug].quantity }}" data-product-price="{{ product.priceCustomer }}" style="width: 3em; font-size: 20px;">
+                <input type="number" class="quantity-value" min="1" value="{{ cart[productVariant.identifier].quantity }}" data-product-price="{{ product.priceCustomer }}" style="width: 3em; font-size: 20px;">
                 {#<ua class="button quantity-increase" data-product="{{ product.pathSlug }}">+</ua>#}
                 x {{ product.priceCustomer }} =
                 <span class="total-product-price">
-                    {{ (product.priceCustomer * cart[product.pathSlug].quantity) | number_format(2, '.', '') }}
+                    {{ (product.priceCustomer * cart[productVariant.identifier].quantity) | number_format(2, '.', '') }}
                 </span>
 
-                {% set totalPrice = totalPrice + product.priceCustomer * cart[product.pathSlug].quantity %}
+                {% set totalPrice = totalPrice + product.priceCustomer * cart[productVariant.identifier].quantity %}
             </div>
 
             <div>
-                <i class="fas fa-trash-alt"></i>
+                <a href="{{ path('remove_product_from_cart', {'identifier': productVariant.identifier}) }}">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
             </div>
         </div>
     {% endfor %}
 
-    {% if products is empty %}
+    {% if productVariants is empty %}
         <div style="text-align: center; font-size: 1.5em;">No products :(</div>
     {% else %}
         <div class="total-order-price" style="text-align: right">

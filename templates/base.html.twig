@@ -11,10 +11,16 @@
                 {% endif %}
             {% endspaceless %}</title>
         <link href="https://fonts.googleapis.com/css?family=Gudea" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         {% spaceless %}
         {% block base_stylesheets %}
             {{ encore_entry_link_tags('app') }}
             {{ encore_entry_link_tags('main_menu') }}
+            <style>
+                #search_bar {
+                    display: flex;
+                }
+            </style>
         {% endblock %}
         {% if block('stylesheets') is defined %}
             {{ block('stylesheets') }}
@@ -161,7 +167,7 @@
         {# Twig dump #}
             {% if app.debug %}
                 <div style="position: fixed; bottom: 35px;">
-                {#{{ dump() }}#}
+                {{ dump() }}
                 </div>
             {% endif %}
         {# Twig dump #}

@@ -14,6 +14,7 @@ use App\Repository\UserSettingRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use RandomLib\Factory;
 use Swift_Mailer;
+use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -129,11 +130,12 @@ class RegisterController extends BaseController
 
     protected function sendActivationEmail($email)
     {
-        $message = (new \Swift_Message('Registration confirmation'))
+        $message = (new Swift_Message('Registration confirmation'))
             ->setFrom('lavestima@lavestima.com')
             ->setTo($email)
             ->setBcc('test@lavestima.com')
             ->setBody($this->getActivationMessageBody(), 'text/html');
+        
         $this->swiftMailer->send($message);
     }
 

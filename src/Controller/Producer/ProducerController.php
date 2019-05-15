@@ -27,10 +27,6 @@ class ProducerController extends BaseController
 
     /**
      * @Route("/producer/show/{pathSlug}", name="producer_show")
-     *
-     * @param string $pathSlug
-     * @return mixed
-     * @throws \Exception
      */
     public function show(string $pathSlug)
     {

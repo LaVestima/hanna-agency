@@ -3,88 +3,139 @@
 namespace App\Controller\Order;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Form\PaymentType;
 use App\Repository\ProductRepository;
+use App\Repository\ProductVariantRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends BaseController
 {
     private $productRepository;
+    private $productVariantRepository;
 
-    public function __construct(ProductRepository $productRepository)
-    {
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductVariantRepository $productVariantRepository
+    ) {
         $this->productRepository = $productRepository;
+        $this->productVariantRepository = $productVariantRepository;
     }
 
     /**
      * @Route("/cart", name="cart_home")
-     *
-     * @param Request $request
-     * @return Response
      */
     public function home(Request $request)
     {
         $cart = $request->getSession()->get('cart');
 
-        $products = $this->productRepository
-            ->readCartProducts($cart)
-            ->getResult();
+        $productVariants = (!empty($cart)) ? $this->productVariantRepository
+            ->readCartProductVariants($cart ?? [])
+            ->getResultAsArray() : [];
 
-//        var_dump($products);
+        if ($productVariants && count($productVariants) !== count($cart)) {
+            foreach ($cart as $cartItemIdentifier => $cartItem) {
+                $productVariantOk = false;
+
+                foreach ($productVariants as $productVariant) {
+                    if ($cartItemIdentifier == $productVariant->getIdentifier()) {
+                        $productVariantOk = true;
+                    }
+                }
+
+                if (!$productVariantOk) {
+                    unset($cart[$cartItemIdentifier]);
+                }
+            }
+
+            $request->getSession()->set('cart', $cart);
+        }
 
         return $this->render('Order/cart.html.twig', [
-            'products' => $products,
+            'productVariants' => $productVariants,
             'cart' => $cart
         ]);
     }
 
     /**
      * @Route("/cart_summary", name="cart_summary")
-     *
-     * @param Request $request
-     * @return Response
      */
     public function summary(Request $request)
     {
-        return $this->render('Order/cart_summary.html.twig');
+        // TODO: get products from session
+        // TODO: save products from cart to finalCart in session (block the changes in cart)
+        // or make the user select the products they want to buy
+
+        $form = $this->createForm(PaymentType::class, null, [
+            'paymentChargeRoute' => $this->generateUrl('payment_charge')
+        ]);
+
+        return $this->render('Order/cart_summary.html.twig', [
+            'form' => $form->createView(),
+            'stripe_public_key' => $this->getParameter('stripe_public_key'),
+        ]);
+    }
+
+    /**
+     * @Route("/remove_from_cart/{identifier}", name="remove_product_from_cart")
+     */
+    public function removeProduct(string $identifier, Request $request)
+    {
+        $productVariant = $this->productVariantRepository
+            ->readOneEntityBy([
+                'identifier' => $identifier
+            ])->getResult();
+
+        if (!$productVariant) {
+            // TODO: redirect to /cart with error
+
+
+            return $this->redirectToRoute('cart_home');
+        }
+
+        $cart = $request->getSession()->get('cart');
+
+        if (array_key_exists($productVariant->getIdentifier(), $cart)) {
+            unset($cart[$productVariant->getIdentifier()]);
+
+            $request->getSession()->set('cart', $cart);
+        }
+
+        return $this->redirectToRoute('cart_home');
     }
 
     /**
      * @Route("/add_to_cart", name="add_product_to_cart", options={"expose"=true})
-     *
-     * @param Request $request
-     * @return Response
      */
     public function addProduct(Request $request)
     {
+        $addToCartData = $request->query->get('add_to_cart');
+
         $this->request = $request;
         $this->denyNonXhrs();
 
-        $productPathSlug = $request->query->get('product');
+        $productVariantIdentifier = $addToCartData['productVariant'] ?? null;
 
-//        var_dump($request->query->get('product'));
-//        var_dump($request->request);
+        if ($productVariantIdentifier) {
+            if ($this->isCsrfTokenValid('add_to_cart', $request->query->get('_csrf_token'))) {
+                $session = $request->getSession();
 
-        $session = $request->getSession();
+                $cart = $session->get('cart');
 
-        $cart = $session->get('cart');
-//        var_dump($cart);
+                if (array_key_exists($productVariantIdentifier, $cart ?? [])) {
+                    $cart[$productVariantIdentifier]['quantity'] += $addToCartData['quantity'];
+                } else {
+                    $cart[$productVariantIdentifier] = [
+                        'quantity' => (int)$addToCartData['quantity']
+                    ];
+                }
 
-        var_dump(array_key_exists($productPathSlug, $cart ?? []));
+                $session->set('cart', $cart);
 
-        if (array_key_exists($productPathSlug, $cart ?? [])) {
-            $cart[$productPathSlug]['quantity']++;
-        } else {
-            $cart[$productPathSlug] = [
-                'quantity' => 1
-            ];
+                // TODO: add session data to DB, for further retrieval
+            }
         }
-
-        $session->set('cart', $cart);
-
-//        var_dump($session->get('cart'));
 
         return new Response('ok');
     }

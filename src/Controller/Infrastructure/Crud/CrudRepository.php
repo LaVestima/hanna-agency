@@ -72,6 +72,9 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
         if (method_exists($entity, 'setPathSlug')) {
 	        $entity->setPathSlug(CrudHelper::generatePathSlug());
         }
+        if (method_exists($entity, 'setIdentifier')) {
+            $entity->setIdentifier(CrudHelper::generatePathSlug());
+        }
 
 		$em = $this->manager;
 
@@ -132,7 +135,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
      * Read Entities from DB with given value (SELECT + WHERE).
      *
      * @param array $keyValueArray
-     * @return mixed
+     * @return self
      * @throws \Exception
      */
     public function readEntitiesBy(array $keyValueArray)
@@ -459,6 +462,14 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
 
         return $this;
     }
+
+//    public function fetchJoin(string $otherEntity, string $otherEntityAlias = '')
+//    {
+//        $this->query->leftJoin(($otherEntityAlias !== '' ? $otherEntityAlias : $this->alias) . '.' . $otherEntity, $otherEntity);
+////        $this->query->leftJoin(($this->alias) . '.' . $otherEntity, $otherEntity);
+//
+//        return $this;
+//    }
 
     /**
      * Sort the read Entities (ORDER BY)

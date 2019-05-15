@@ -6,25 +6,35 @@ use App\Entity\Address;
 use App\Entity\Category;
 use App\Entity\City;
 use App\Entity\Country;
+use App\Entity\Order;
+use App\Entity\OrderStatus;
 use App\Entity\Parameter;
 use App\Entity\Producer;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Entity\ProductParameter;
+use App\Entity\ProductVariant;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\UserSetting;
+use App\Entity\Variant;
 use App\Repository\AddressRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
+use App\Repository\OrderRepository;
+use App\Repository\OrderStatusRepository;
 use App\Repository\ParameterRepository;
 use App\Repository\ProducerRepository;
 use App\Repository\ProductImageRepository;
 use App\Repository\ProductParameterRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductVariantRepository;
 use App\Repository\RoleRepository;
 use App\Repository\SizeRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserSettingRepository;
+use App\Repository\VariantRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -35,41 +45,56 @@ class AppFixtures extends Fixture
     private $categoryRepository;
     private $cityRepository;
     private $countryRepository;
+    private $orderRepository;
+    private $orderStatusRepository;
     private $parameterRepository;
     private $producerRepository;
     private $productImageRepository;
     private $productParameterRepository;
     private $productRepository;
+    private $productVariantRepository;
     private $roleRepository;
 //    private $sizeRepository;
     private $userRepository;
+    private $userSettingRepository;
+    private $variantRepository;
 
     public function __construct(
         AddressRepository $addressRepository,
         CategoryRepository $categoryRepository,
         CityRepository $cityRepository,
         CountryRepository $countryRepository,
+        OrderRepository $orderRepository,
+        OrderStatusRepository $orderStatusRepository,
         ParameterRepository $parameterRepository,
         ProducerRepository $producerRepository,
         ProductImageRepository $productImageRepository,
         ProductParameterRepository $productParameterRepository,
         ProductRepository $productRepository,
+        ProductVariantRepository $productVariantRepository,
         RoleRepository $roleRepository,
 //        SizeRepository $sizeRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        UserSettingRepository $userSettingRepository,
+        VariantRepository $variantRepository
     ) {
         $this->addressRepository = $addressRepository;
         $this->categoryRepository = $categoryRepository;
         $this->cityRepository = $cityRepository;
         $this->countryRepository = $countryRepository;
+        $this->orderRepository = $orderRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
         $this->parameterRepository = $parameterRepository;
         $this->producerRepository = $producerRepository;
         $this->productImageRepository = $productImageRepository;
         $this->productParameterRepository = $productParameterRepository;
         $this->productRepository = $productRepository;
+        $this->productVariantRepository = $productVariantRepository;
         $this->roleRepository = $roleRepository;
 //        $this->sizeRepository = $sizeRepository;
         $this->userRepository = $userRepository;
+        $this->userSettingRepository = $userSettingRepository;
+        $this->variantRepository = $variantRepository;
     }
 
     public function load(ObjectManager $manager)
@@ -78,11 +103,15 @@ class AppFixtures extends Fixture
 
         $this->loadUsers();
 
+        $this->loadUserSettings();
+
         $this->loadCountries();
 
         $this->loadCities();
 
         $this->loadProducers();
+
+        $this->loadOrders();
 
         $this->loadAddresses();
 
@@ -95,6 +124,12 @@ class AppFixtures extends Fixture
         $this->loadProductParameters();
 
         $this->loadProductImages();
+
+        $this->loadVariants();
+
+        $this->loadProductVariants();
+
+        $this->loadOrderStatuses();
     }
 
     private function loadRoles()
@@ -132,8 +167,27 @@ class AppFixtures extends Fixture
             $user->setLogin($ud[0]);
             $user->setEmail($ud[1]);
             $user->setPasswordHash($ud[2]);
-            $user->setRole($this->roleRepository->findOneBy(['code' => 'ROLE_PRODUCER']));
+            $user->setRole($this->roleRepository->findOneBy(['id' => $ud[3]]));
             $this->userRepository->createEntity($user);
+        }
+    }
+
+    private function loadUserSettings()
+    {
+        $userSettingData = [
+            [1, 'de', 1],
+            [2, 'pl', 0],
+            [3, 'fr', 0],
+            [4, 'en', 1],
+            [5, 'ca', 1],
+        ];
+
+        foreach ($userSettingData as $usd) {
+            $userSetting = new UserSetting();
+            $userSetting->setUser($this->userRepository->findOneBy(['id' => $usd[0]]))
+                ->setLocale($usd[1])
+                ->setNewsletter($usd[2]);
+            $this->userSettingRepository->createEntity($userSetting);
         }
     }
 
@@ -223,6 +277,22 @@ class AppFixtures extends Fixture
             $producer->setPhone($pd[10]);
             $producer->setUser($this->userRepository->findOneBy(['id' => $pd[11]]));
             $this->producerRepository->createEntity($producer);
+        }
+    }
+
+    private function loadOrders()
+    {
+        $orderData = [
+            [5, 5, '441209205474295847260340']
+        ];
+
+        foreach ($orderData as $od) {
+            $order = new Order();
+            $order
+                ->setUser($this->userRepository->findOneBy(['id' => $od[0]]))
+                ->setUserCreated($this->userRepository->findOneBy(['id' => $od[1]]))
+                ->setCode($od[2]);
+            $this->orderRepository->createEntity($order);
         }
     }
 
@@ -324,6 +394,57 @@ class AppFixtures extends Fixture
             $productImage->setProduct($this->productRepository->findOneBy(['id' => $pid[1]]));
             $productImage->setSequencePosition($pid[2]);
             $this->productImageRepository->createEntity($productImage);
+        }
+    }
+
+    private function loadVariants()
+    {
+        $variantData = [
+            ['Black'],
+            ['White'],
+            ['Red'],
+        ];
+
+        foreach ($variantData as $vd) {
+            $variant = new Variant();
+            $variant->setName($vd[0]);
+            $this->variantRepository->createEntity($variant);
+        }
+    }
+
+    private function loadProductVariants()
+    {
+        $productVariantData = [
+            [1, 1, 2],
+            [1, 2, 3],
+            [2, 1, 55],
+            [2, 3, 9999]
+        ];
+
+        foreach ($productVariantData as $pvd) {
+            $productVariant = new ProductVariant();
+            $productVariant->setProduct($this->productRepository->findOneBy(['id' => $pvd[0]]))
+                ->setVariant($this->variantRepository->findOneBy(['id' => $pvd[1]]))
+                ->setAvailability($pvd[2]);
+            $this->productVariantRepository->createEntity($productVariant);
+        }
+    }
+
+    private function loadOrderStatuses()
+    {
+        $orderStatusData = [
+            ['Queued'],
+            ['Pending'],
+            ['Completed'],
+            ['Rejected'],
+        ];
+
+        foreach ($orderStatusData as $osd) {
+            $orderStatus = new OrderStatus();
+
+            $orderStatus->setName($osd[0]);
+
+            $this->orderStatusRepository->createEntity($orderStatus);
         }
     }
 }

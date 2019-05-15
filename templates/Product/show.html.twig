@@ -26,17 +26,34 @@
 {% block content %}
 
     <div class="module-box">
-        {% for image in productImages %}
+        {#{% for image in productImages %}#}
+        {% for image in product.productImages %}
             <img src="{{ asset(image.filePath) }}" width="200">
         {% endfor %}
     </div>
     <div class="module-box">
-        ### Choose size (only available) and quantity <br>
-        <input type="text">
-        <a href="#" class="button" id="add-to-cart" data-product="{{ product.pathSlug }}">
-            Add to cart
-            <i class="fas fa-cart-plus"></i>
-        </a>
+        <div class="module-box-title">Variants</div>
+        <div class="module-box-content">
+{#            {% for variant in product.productVariants %}#}
+{#                {{ variant.variant.name }}#}
+{#                #}{#TODO: change variant id to some code/pathSlug#}
+{#                <input type="radio" value="{{ variant.variant.id }}">#}
+{#                <br>#}
+{#            {% endfor %}#}
+{#            ### Choose size (only available) and quantity <br>#}
+{#            Quantity:#}
+{#            <input type="number" value="1">#}
+{#            <a href="#" class="button" id="add-to-cart" data-product="{{ product.pathSlug }}">#}
+{#                Add to cart#}
+{#                <i class="fas fa-cart-plus"></i>#}
+{#            </a>#}
+
+{#            <hr>#}
+
+            {{ form_start(form) }}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('add_to_cart') }}">
+            {{ form_end(form) }}
+        </div>
     </div>
     <div class="module-box">
         <div class="module-box-title">General</div>
@@ -48,13 +65,13 @@
                 </tr>
                 <tr>
                     <td>Category</td>
-                    <td>{{ product.idCategories.name }}</td>
+                    <td>{{ product.category.name }}</td>
                 </tr>
                 <tr>
                     <td>Producer</td>
                     <td>
-                        <a href="{{ path('producer_show', {'pathSlug': product.idProducers.pathSlug}) }}">
-                            {{ product.idProducers.fullName }}
+                        <a href="{{ path('producer_show', {'pathSlug': product.producer.pathSlug}) }}">
+                            {{ product.producer.fullName }}
                         </a>
                     </td>
                 </tr>
@@ -62,35 +79,34 @@
         </div>
     </div>
 
-    {#{% if productSizes is defined and productSizes is not null %}#}
+    {% if product.productVariants is defined and product.productVariants is not null %}
         <div class="module-box">
             <div class="module-box-title">Availability</div>
             <div class="module-box-content">
                 <table class="entity-show-table product-sizes-table">
                     <tr>
-                        <th>Size</th>
+                        <th>Variant</th>
                         <th>Quantity</th>
                     </tr>
-                    {#{% for productSize in productSizes %}#}
-                    {% for productSize in product.productSizes %}
+                    {% for productVariant in product.productVariants %}
                         <tr>
-                            <td>{{ productSize.idSizes.name }}</td>
-                            <td>{{ productSize.availability }}</td>
+                            <td>{{ productVariant.variant.name }}</td>
+                            <td>{{ productVariant.availability }}</td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
-    {#{% endif %}#}
+    {% endif %}
 
     <div class="module-box">
         <div class="module-box-title">Parameters</div>
         <div class="module-box-content">
             {% for productParameter in product.productParameters %}
-                {#{{ dump(productParameter.idParameters) }}#}
-                {{ productParameter.idParameters.name }}
+                {{ productParameter.parameter.name }}
                 {{ productParameter.value }}
-                {{ productParameter.idParameters.unit }}
+                {{ productParameter.parameter.unit }}
+                <br>
             {% endfor %}
         </div>
     </div>

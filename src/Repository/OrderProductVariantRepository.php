@@ -7,7 +7,7 @@ use App\Entity\OrderProductVariant;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class OrderProductRepository extends CrudRepository
+class OrderProductVariantRepository extends CrudRepository
 {
     public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
     {

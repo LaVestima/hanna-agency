@@ -3,21 +3,20 @@
 namespace App\Controller\Inventory;
 
 use App\Controller\Infrastructure\BaseController;
-use App\Repository\ProducerRepository;
 use App\Repository\ProductRepository;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class InventoryController extends BaseController
 {
-//    private $producerRepository;
     private $productRepository;
 
     public function __construct(
-//        ProducerRepository $producerRepository,
         ProductRepository $productRepository
     ) {
-//        $this->producerRepository = $producerRepository;
         $this->productRepository = $productRepository;
     }
 
@@ -37,23 +36,23 @@ class InventoryController extends BaseController
         $productOrders = [];
         $chartProductOrders = [];
 
-        $period = new \DatePeriod(
-            new \DateTime('now - 6 days'),
-            new \DateInterval('P1D'),
-            new \DateTime('now + 1 day')
+        $period = new DatePeriod(
+            new DateTime('now - 6 days'),
+            new DateInterval('P1D'),
+            new DateTime('now + 1 day')
         );
 
         foreach ($products as $product) {
             $productOrders[$product->getId()] = [];
-            foreach ($product->getProductSizes() as $productSize) {
-                foreach ($productSize->getOrderProducts() as $orderProduct) {
-                    $orderDate = $orderProduct->getIdOrders()->getDateCreated()->format('Y-m-d');
+            foreach ($product->getProductVariants() as $productVariant) {
+                foreach ($productVariant->getOrderProductVariants() as $orderProductVariant) {
+                    $orderDate = $orderProductVariant->getOrder()->getDateCreated()->format('Y-m-d');
 
                     if (!array_key_exists($orderDate, $productOrders[$product->getId()])) {
                         $productOrders[$product->getId()][$orderDate] = 0;
                     }
 
-                    $productOrders[$product->getId()][$orderDate] += $orderProduct->getQuantity();
+                    $productOrders[$product->getId()][$orderDate] += $orderProductVariant->getQuantity();
                 }
             }
 

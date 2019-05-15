@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Order'%}
+
+{% block content %}
+    TODO: order tracking, status (add more: shipped, ...)<br>
+
+    {% for orderProductVariant in order.orderProductVariants %}
+        {% set product = orderProductVariant.productVariant.product %}
+
+        <div>
+            {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+            {{ product.name }} ({{ orderProductVariant.productVariant.variant.name }})
+            {{ orderProductVariant.quantity }}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -106,6 +106,12 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $producers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="user")
+     */
+    private $orders;
+
+
 
     public function __construct()
     {
@@ -114,6 +120,7 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->userSettings = new ArrayCollection();
         $this->loginAttempts = new ArrayCollection();
         $this->producers = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function __toString() {
@@ -471,6 +478,37 @@ class User implements UserInterface, \Serializable, EntityInterface
             // set the owning side to null (unless already changed)
             if ($producer->getUser() === $this) {
                 $producer->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
             }
         }
 

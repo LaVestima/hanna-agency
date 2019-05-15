@@ -3,14 +3,16 @@
 namespace App\Command;
 
 use App\Entity\Order;
-use App\Entity\OrderProduct;
+use App\Entity\OrderProductVariant;
 use App\Entity\ProductSize;
+use App\Helper\RandomHelper;
 use App\Repository\CustomerRepository;
 use App\Repository\OrderProductRepository;
 use App\Repository\OrderRepository;
 use App\Repository\OrderStatusRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductSizeRepository;
+use App\Repository\ProductVariantRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +25,8 @@ class CreateOrderCommand extends BaseCreateCommand
     private $orderRepository;
     private $orderStatusRepository;
     private $productRepository;
-    private $productSizeRepository;
+//    private $productSizeRepository;
+    private $productVariantRepository;
     private $userRepository;
 
     public function __construct(
@@ -32,7 +35,8 @@ class CreateOrderCommand extends BaseCreateCommand
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         ProductRepository $productRepository,
-        ProductSizeRepository $productSizeRepository,
+//        ProductSizeRepository $productSizeRepository,
+        ProductVariantRepository $productVariantRepository,
         UserRepository $userRepository,
         $name = null
     ) {
@@ -41,7 +45,8 @@ class CreateOrderCommand extends BaseCreateCommand
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->productRepository = $productRepository;
-        $this->productSizeRepository = $productSizeRepository;
+//        $this->productSizeRepository = $productSizeRepository;
+        $this->productVariantRepository = $productVariantRepository;
         $this->userRepository = $userRepository;
 
         parent::__construct($name);
@@ -57,7 +62,6 @@ class CreateOrderCommand extends BaseCreateCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        echo 'fffffffffffffff';die;
         $orderNumber = (int)$input->getArgument('number') ?: 1;
 
         if ($orderNumber < 1) {
@@ -74,7 +78,7 @@ class CreateOrderCommand extends BaseCreateCommand
                 for ($j = 0; $j < rand(1, $productNumber); $j++) {
                     $this->createFakeOrderProduct($order);
 
-                    $output->writeln('OrderProduct');
+                    $output->writeln('OrderProductVariant');
                 }
 
                 $output->writeln('Created: ' . ($i+1));
@@ -86,16 +90,13 @@ class CreateOrderCommand extends BaseCreateCommand
     {
         $order = new Order();
 
-        $randomCustomer = $this->customerRepository
-            ->readRandomEntities(1)
-            ->getResult();
-
         $randomUser = $this->userRepository
             ->readRandomEntities(1)
             ->getResult();
 
         $order->setDateCreated($this->faker->dateTimeBetween('-7 days', 'now'));
-        $order->setIdCustomers($randomCustomer);
+        $order->setCode(RandomHelper::generateString(24, 'N'));
+        $order->setUser($randomUser);
         $order->setUserCreated($randomUser);
 
         $this->orderRepository
@@ -106,26 +107,30 @@ class CreateOrderCommand extends BaseCreateCommand
 
     private function createFakeOrderProduct(Order $order)
     {
-        $orderProduct = new OrderProduct();
+        $orderProductVariant = new OrderProductVariant();
 
-        do {
-            $randomProductSize = $this->productSizeRepository
-                ->readRandomEntities(1)
-                ->getResult();
-        } while (!$this->isProductUniqueForOrder($randomProductSize, $order));
+        $randomProductVariant = $this->productVariantRepository
+            ->readRandomEntities(1)
+            ->getResult();
+
+//        do {
+//            $randomProductSize = $this->productSizeRepository
+//                ->readRandomEntities(1)
+//                ->getResult();
+//        } while (!$this->isProductUniqueForOrder($randomProductSize, $order));
 
         $randomStatus = $this->orderStatusRepository
             ->readRandomEntities(1)->getResult();
 
-        $orderProduct->setIdOrders($order);
-        $orderProduct->setIdProductsSizes($randomProductSize);
-        $orderProduct->setIdStatuses($randomStatus);
-        $orderProduct->setQuantity($this->faker->numberBetween(1, 10));
-        $orderProduct->setDiscount($this->faker->numberBetween(0, 100));
+        $orderProductVariant->setOrder($order);
+        $orderProductVariant->setProductVariant($randomProductVariant);
+        $orderProductVariant->setStatus($randomStatus);
+        $orderProductVariant->setQuantity($this->faker->numberBetween(1, 10));
+        $orderProductVariant->setDiscount($this->faker->numberBetween(0, 100));
 
-        $this->orderProductRepository->createEntity($orderProduct);
+        $this->orderProductRepository->createEntity($orderProductVariant);
 
-        return $orderProduct;
+        return $orderProductVariant;
     }
 
     private function isProductUniqueForOrder(ProductSize $productSize, Order $order)

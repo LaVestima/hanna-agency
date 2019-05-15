@@ -31,6 +31,14 @@ $(function() {
         newPrice = Number.parseFloat(newQuantity * productPrice).toFixed(2);
 
         $(this).parent('.pricing').find('.total-product-price').text(newPrice);
+
+        var totalOrderPrice = 0;
+
+        $('.total-product-price').each(function () {
+            totalOrderPrice += Number.parseFloat($(this).text());
+        });
+
+        $('#total-order-price').text(totalOrderPrice)
     });
 
 });

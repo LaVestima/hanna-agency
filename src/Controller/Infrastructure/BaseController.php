@@ -127,7 +127,7 @@ class BaseController extends AbstractController
     {
         return $this->producerRepository
             ->readOneEntityBy([
-                'idUsers' => $this->getUser()
+                'user' => $this->getUser()
             ])->getResult();
     }
 

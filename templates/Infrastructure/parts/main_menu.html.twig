@@ -94,16 +94,16 @@
                     </div>
                 </a>
             </li>
-        {% endif %}
+{#        {% endif %}#}
 
-        {% if is_granted('ROLE_CUSTOMER') %}
+{#        {% if is_granted('ROLE_CUSTOMER') %}#}
             <li>
-                {#<a href="{{ path('order_list') }}">#}
+                <a href="{{ path('order_list') }}">
                     <div class="left-menu-item left-menu-body-row">
                         <i class="fa fa-file-text-o" aria-hidden="true"></i>
                         <span>Orders</span>
                     </div>
-                {#</a>#}
+                </a>
             </li>
             <li>
                 {#<a href="{{ path('invoice_list') }}">#}

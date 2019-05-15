@@ -16,12 +16,17 @@ class CategoryController extends BaseController
     }
 
     /**
-     * @Route("/category/list", name="category_list")
+     * @Route("/categories", name="category_list")
      */
     public function list()
     {
+        // TODO: only active
         $categories = $this->categoryRepository
             ->readAllEntities()
+            ->onlyActiveProducts()
+//            ->readEntitiesBy([
+//                'products.active' => true
+//            ])
             ->getResultAsArray();
 
         return $this->render('Category/list.html.twig', [

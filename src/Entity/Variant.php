@@ -29,6 +29,7 @@ class Variant implements EntityInterface
      */
     private $productVariants;
 
+
     public function __construct()
     {
         $this->productVariants = new ArrayCollection();

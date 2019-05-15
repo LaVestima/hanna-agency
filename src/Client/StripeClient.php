@@ -2,7 +2,6 @@
 
 namespace App\Client;
 
-
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -20,18 +19,31 @@ class StripeClient
         $this->em = $em;
         $this->logger = $logger;
     }
-    public function createPremiumCharge(User $user, $token)
+
+    public function createCharge($orderCode, User $user, $amount, $token)
     {
         try {
             $charge = \Stripe\Charge::create([
-                'amount' => $this->config['decimal'] ? $this->config['premium_amount'] * 100 : $this->config['premium_amount'],
+                'amount' => $this->config['decimal'] ? $amount * 100 : $amount,
                 'currency' => $this->config['currency'],
-                'description' => 'Premium blog access',
+                'description' => 'Order ' . $orderCode,
                 'source' => $token,
-                'receipt_email' => $user->getEmail(),
+//                'receipt_email' => $user->getEmail(),
+                'receipt_email' => 'szymon.grabia@gmail.com',
+                'metadata' => [
+//                    'order_id' => 2 // TODO: change
+                ]
             ]);
         } catch (\Stripe\Error\Base $e) {
-            $this->logger->error(sprintf('%s exception encountered when creating a premium payment: "%s"', get_class($e), $e->getMessage()), ['exception' => $e]);
+            $this->logger->error(
+                sprintf(
+                    '%s exception encountered when creating a premium payment: "%s"',
+                    get_class($e),
+                    $e->getMessage()
+                ), [
+                    'exception' => $e
+                ]
+            );
             throw $e;
         }
 //        $user->setChargeId($charge->id);
