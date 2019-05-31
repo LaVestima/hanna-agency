@@ -106,11 +106,7 @@ class ProductType extends AbstractType
 //                'by_reference' => false,
 //                'required' => false,
 //            ])
-            ->add('priceProducer', MoneyType::class, [
-                'label' => 'Producer Price',
-                'currency' => false
-            ])
-            ->add('priceCustomer', MoneyType::class, [
+            ->add('price', MoneyType::class, [
                 'label' => 'Customer Price',
                 'currency' => false
             ]);

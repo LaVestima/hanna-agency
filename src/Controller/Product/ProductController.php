@@ -3,6 +3,7 @@
 namespace App\Controller\Product;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Form\AddToCartType;
 use App\Form\ProductType;
@@ -11,10 +12,14 @@ use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/product")
+ */
 class ProductController extends BaseController
 {
     private $kernel;
@@ -32,7 +37,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("/product/list", name="product_list")
+     * @Route("_list", name="product_list")
      */
     public function list(Request $request)
     {
@@ -56,7 +61,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("/product/show/{pathSlug}", name="product_show")
+     * @Route("/{pathSlug}", name="product_show")
      */
     public function show(string $pathSlug)
     {
@@ -64,8 +69,8 @@ class ProductController extends BaseController
             ->readOneEntityBy(['pathSlug' => $pathSlug])
             ->getResult();
 
-        if (!$product) { // TODO: or product not active (except assigned producer)
-            throw new NotFoundHttpException();
+        if (!$product || (false === $product->getActive() && $this->getProducer() !== $product->getProducer())) {
+            throw new HttpException(404);
         }
 
         $form = $this->createForm(AddToCartType::class, $product, [
@@ -84,7 +89,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("/product/new", name="product_new")
+     * @Route("/new", name="product_new")
      */
     public function new(Request $request)
     {
@@ -92,7 +97,7 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("/product/edit/{pathSlug}", name="product_edit")
+     * @Route("/edit/{pathSlug}", name="product_edit")
      */
     public function edit(Request $request, string $pathSlug)
     {
@@ -207,5 +212,31 @@ class ProductController extends BaseController
             'product' => $product,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/activate/{pathSlug}", name="product_activate")
+     */
+    public function activate(Product $product)
+    {
+        // TODO: check user permission
+
+        $product->setActive(true);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('inventory_home');
+    }
+
+    /**
+     * @Route("/deactivate/{pathSlug}", name="product_deactivate")
+     */
+    public function deactivate(Product $product)
+    {
+        // TODO: check user permission
+
+        $product->setActive(false);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('inventory_home');
     }
 }

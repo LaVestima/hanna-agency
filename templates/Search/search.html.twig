@@ -3,22 +3,40 @@
 {% block title %}Search products{% endblock %}
 
 {% block content %}
-    <div style="position: sticky; top: 10px; background: #FFFFFF; box-shadow: 0 0 10px 5px #000; margin: 10px 0;">
-        ###
-        Search fields:<br>
-        - price (min, max)<br>
+    <div style="position: sticky; top: 70px; background: #FFFFFF; box-shadow: 0 0 5px 2px #000; margin: 10px 0; z-index: 2;">
+        ###  Search fields:<br>
         - category<br><br>
 
-        <input type="number" placeholder="Price min">
-        <input type="number" placeholder="Price max">
-        <br>
+        {{ form_start(form) }}
+
+        <div style="display: flex;">
+            <div style="margin: 1em">
+                Search query<br>
+                {{ form_widget(form.query) }}
+            </div>
+
+            <div style="margin: 1em">
+                Price<br>
+                {{ form_widget(form.priceMin) }}
+                {{ form_widget(form.priceMax) }}
+            </div>
+
+            <div style="margin: 1em">
+                {{ form_label(form.sorting) }}<br>
+                {{ form_widget(form.sorting) }}
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+
+        TODO: filtering (categories?, parameters?, ...), sorting (price, dateAdded, opinions/ratings, ...)
     </div>
 
     {% if products is empty %}
         No Products found
     {% endif %}
 
-    <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly;">
     {% for product in products %}
         {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
     {% endfor %}

@@ -1,0 +1,17 @@
+{% for category in categories if category.parent is null  %}
+    <div class="dropright">
+        <a href="">
+            <span>{{ category.name }}</span>
+        </a>
+        <span style="float: right;"><i class="fas fa-chevron-right"></i></span>
+        <div class="dropright-content">
+        {% for categoryIn in categories if categoryIn.parent == category  %}
+            <a href="">
+                <div>
+                    {{ categoryIn.name }}
+                </div>
+            </a>
+        {% endfor %}
+        </div>
+    </div>
+{% endfor %}

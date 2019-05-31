@@ -30,6 +30,19 @@
                             <i class="fas fa-edit"></i>
                         </div>
                     </a>
+                    {% if product.active %}
+                        <a href="{{ path('product_deactivate', {'pathSlug': product.pathSlug}) }}">
+                            <div style="background: #ff9900; display: inline-block; padding: 5px; margin: 5px;">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('product_activate', {'pathSlug': product.pathSlug}) }}">
+                            <div style="background: #ff9900; display: inline-block; padding: 5px; margin: 5px;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </a>
+                    {% endif %}
                     {#<a href="{{ path('product_delete', {'pathSlug': product.pathSlug}) }}">#}
                         <div style="background: #ac2925; display: inline-block; padding: 5px; margin: 5px;">
                             <i class="fas fa-trash-alt"></i>

@@ -3,13 +3,11 @@
 namespace App\Command;
 
 use App\Entity\Product;
-use App\Entity\ProductSize;
 use App\Entity\ProductVariant;
 use App\Entity\Size;
 use App\Repository\CategoryRepository;
 use App\Repository\ProducerRepository;
 use App\Repository\ProductRepository;
-use App\Repository\ProductSizeRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\SizeRepository;
 use App\Repository\VariantRepository;
@@ -22,7 +20,6 @@ class CreateProductCommand extends BaseCreateCommand
     private $categoryRepository;
     private $producerRepository;
     private $productRepository;
-//    private $productSizeRepository;
     private $productVariantRepository;
     private $sizeRepository;
     private $variantRepository;
@@ -31,7 +28,6 @@ class CreateProductCommand extends BaseCreateCommand
         CategoryRepository $categoryRepository,
         ProducerRepository $producerRepository,
         ProductRepository $productRepository,
-//        ProductSizeRepository $productSizeRepository,
         ProductVariantRepository $productVariantRepository,
         SizeRepository $sizeRepository,
         VariantRepository $variantRepository,
@@ -40,7 +36,6 @@ class CreateProductCommand extends BaseCreateCommand
         $this->categoryRepository = $categoryRepository;
         $this->producerRepository = $producerRepository;
         $this->productRepository = $productRepository;
-//        $this->productSizeRepository = $productSizeRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->sizeRepository = $sizeRepository;
         $this->variantRepository = $variantRepository;
@@ -92,8 +87,7 @@ class CreateProductCommand extends BaseCreateCommand
             ->readRandomEntities(1)->getResult();
 
         $product->setName($this->faker->text(50));
-        $product->setPriceProducer($this->faker->numberBetween(100, 99999)/100);
-        $product->setPriceCustomer($this->faker->numberBetween(100, 99999)/100);
+        $product->setPrice($this->faker->numberBetween(100, 99999)/100);
         $product->setCategory($randomCategory);
         $product->setProducer($randomProducer);
         $product->setActive(rand(0, 1));
@@ -137,14 +131,14 @@ class CreateProductCommand extends BaseCreateCommand
         $this->productVariantRepository->createEntity($productVariant);
     }
 
-    private function isSizeUniqueForProduct(Size $size, Product $product)
-    {
-        $productSize = $this->productSizeRepository
-            ->readOneEntityBy([
-                'idSizes' => $size->getId(),
-                'idProducts' => $product->getId(),
-            ])->getResult();
-
-        return $productSize ? false : true;
-    }
+//    private function isSizeUniqueForProduct(Size $size, Product $product)
+//    {
+//        $productSize = $this->productSizeRepository
+//            ->readOneEntityBy([
+//                'idSizes' => $size->getId(),
+//                'idProducts' => $product->getId(),
+//            ])->getResult();
+//
+//        return $productSize ? false : true;
+//    }
 }

@@ -9,6 +9,9 @@ use App\Repository\ProductRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/producer")
+ */
 class ProducerController extends BaseController
 {
     private $producerRepository;
@@ -26,7 +29,7 @@ class ProducerController extends BaseController
     }
 
     /**
-     * @Route("/producer/show/{pathSlug}", name="producer_show")
+     * @Route("/show/{pathSlug}", name="producer_show")
      */
     public function show(string $pathSlug)
     {
@@ -36,20 +39,19 @@ class ProducerController extends BaseController
             ])
             ->getResult();
 
-        if (!$producer) {
-            throw new NotFoundHttpException();
-        }
+        if (!$producer) { throw new NotFoundHttpException(); }
 
         $this->setView('Producer/show.html.twig');
         $this->setTemplateEntities([
             'producer' => $producer,
+            'editable' => ($producer == $this->getProducer())
         ]);
 
         return $this->baseShow();
     }
 
     /**
-     * @Route("producer/dashboard", name="producer_dashboard")
+     * @Route("/dashboard", name="producer_dashboard")
      */
     public function dashboard()
     {

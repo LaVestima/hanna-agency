@@ -17,8 +17,69 @@
             {{ encore_entry_link_tags('app') }}
             {{ encore_entry_link_tags('main_menu') }}
             <style>
-                #search_bar {
+                /* !!! MOVE TO SEPARATE FILE !!! */
+                #top-bar-wrapper {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 999;
+                }
+                #top-bar {
+                    max-width: 1200px;
+                    margin: 0.5em auto;
                     display: flex;
+                    justify-content: space-between;
+                    background: #aaa;
+                }
+                .top-bar-item {
+                    padding: 0.5em;
+                }
+                .dropdown {
+                    position: relative;
+                    display: inline-block;
+                    /*cursor: pointer;*/
+                }
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f9f9f9;
+                    min-width: 160px;
+                    /*padding: 1em;*/
+                    z-index: 1;
+                }
+                .dropdown-content div {
+                    padding: 0.5em;
+                }
+                .dropdown-content div:hover {
+                    background: #aaa;
+                }
+                .dropdown-content-left {
+                    right: 0;
+                }
+                .dropdown-content-right {
+                    left: 0;
+                }
+                .dropdown:hover .dropdown-content {
+                    display: block;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                }
+                .dropright {
+                    position: relative;
+                }
+                .dropright-content {
+                    display: none;
+                    position: absolute;
+                    /*right: 0;*/
+                    left: 160px;
+                    top: 0;
+                    background-color: #f9f9f9;
+                    min-width: 160px;
+                    /*padding: 12px 16px;*/
+                    z-index: 2;
+                }
+                .dropright:hover .dropright-content {
+                    display: block;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                 }
             </style>
         {% endblock %}
@@ -28,99 +89,93 @@
         {% endspaceless %}
     </head>
     <body>
-        <div class="main-menu">
-            {% include 'Infrastructure/parts/main_menu.html.twig' %}
-        </div>
-
-        <div class="top-bar">
-            {#<div class="page-title">#}
-                {#<h1>{{ block('title') }}</h1>#}
-            {#</div>#}
-
-            {# TODO: eventually define all actionBars in controllers, then the first is not needed #}
-            <div class="action-bar">
-                <div class="action-bar-content">
-                    {% if block('actionBar') is defined and block('actionBar') is not null %}
-                        {{ block('actionBar') }}
-                    {% elseif actionBar is defined and actionBar is not null %}
-                        {% set renderActionBar = false %}
-                        {% for button in actionBar %}
-                            {% if button.role is not defined or is_granted(button.role) %}
-                                {% set renderActionBar = true %}
-                                <a href="{{ path(button.path) }}">
-                                    <div class="button action-bar-button">
-                                        {% if button.icon is defined %}
-                                            <i class="fa {{ button.icon }}" aria-hidden="true"></i>
-                                        {% endif %}
-                                        {{ button.label }}
-                                    </div>
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-
-                        {#{% if isExportAllowed is defined and isExportAllowed %}#}
-                            {#<div class="action-bar-export">#}
-                                {#<div class="button action-bar-button action-bar-export-button">#}
-                                    {#<i class="fa fa-download" aria-hidden="true"></i>#}
-                                {#</div>#}
-                                {#<ul class="action-bar-export-list">#}
-                                    {#{% if pdfExportPath is defined %}#}
-                                        {#<li class="hidden">#}
-                                            {#<a class="button" href="{{ pdfExportPath }}/{{ pdfExportJson ?? pdfExportPathSlug }}">#}
-                                                {#PDF#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-                                    {#{% if excelExportPath is defined %}#}
-                                        {#<li class="hidden">#}
-                                            {#<a class="button" href="{{ excelExportPath }}">#}
-                                                {#Excel#}
-                                            {#</a>#}
-                                        {#</li>#}
-                                    {#{% endif %}#}
-                                {#</ul>#}
-                            {#</div>#}
-                        {#{% endif %}#}
-                    {% endif %}
+        <div id="top-bar-wrapper">
+            <div id="top-bar" style=""> <!-- actual top bar -->
+                <div class="dropdown">
+                    <div class="top-bar-item" style="background: #d62728;">
+                        <i class="fas fa-bars"></i> Categories
+                    </div>
+                    <div class="dropdown-content dropdown-content-right">
+                        {{ render(controller(
+                            'App\\Controller\\Category\\CategoryController::waterfallList',
+                            { 'searchQuery': searchQuery | default('') }
+                        )) }}
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <div style="position: fixed; right: 0; top: 0; display: flex; flex-direction: row; padding: 10px; z-index: 9999999;">
-            <div>
+                <a href="{{ path('homepage_homepage') }}">
+                    <div class="top-bar-item">
+                        <i class="fas fa-globe"></i>
+                        <span>EJAS</span>
+                    </div>
+                </a>
                 {{ render(controller(
                     'App\\Controller\\Search\\SearchController::searchBar',
                     { 'searchQuery': searchQuery | default('') }
                 )) }}
-            </div>
-            <div style="background: #2aabd2; padding: 0.5em;">
                 <a href="{{ path('cart_home') }}">
-                    <div>
+                    <div class="top-bar-item" style="background: #2aabd2;">
                         <i class="fas fa-shopping-cart"></i>
-                        Your Cart ({{ cartTotal }})
+                        ({{ cartTotal }})
                     </div>
                 </a>
-            </div>
-            <div style="background: lightpink; padding: 0.5em;">
-                {% if not app.user %}
-                    {#<li>#}
-                    <a href="{{ path('access_control_login') }}">
-                        <div class="left-menu-item left-menu-footer">
-                            <span>Log in</span>
-                            <i class="fas fa-sign-in-alt"></i>
+                <div class="dropdown">
+                    <div class="top-bar-item" style="background: #985f0d;">
+                        <i class="fas fa-user"></i>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-content dropdown-content-left">
+                        <div style="padding: 0 0 1em 0; background: #bbb;">
+                            {% if not app.user %}
+                                <a href="{{ path('access_control_login') }}">
+                                    <div>
+                                        <span>Log in</span>
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </div>
+                                </a>
+                            {% elseif app.user %}
+                                <i class="fas fa-user-circle"></i> {{ app.user.login }}
+                                <a href="{{ path('logout') }}">
+                                    <div class="button">
+                                        <span>Log out</span>
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </div>
+                                </a>
+                            {% endif %}
                         </div>
-                    </a>
-                    {#</li>#}
-                {% elseif app.user %}
-                    {#<li>#}
-                    <a href="{{ path('logout') }}">
-                        <div class="left-menu-item left-menu-footer">
-                            <span>Log out</span>
-                            <i class="fas fa-sign-out-alt"></i>
-                        </div>
-                    </a>
-                    {#</li>#}
-                {% endif %}
+
+                        <hr>
+
+                        {% if is_granted('ROLE_PRODUCER') %}
+                            <b>{{ app.user.producers[0].shortName }}</b>
+                            <a href="{{ path('producer_dashboard') }}">
+                                <div>
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Dashboard</span>
+                                </div>
+                            </a>
+                            <a href="{{ path('inventory_home') }}">
+                                <div>
+                                    <i class="fas fa-warehouse"></i>
+                                    <span>My Inventory</span>
+                                </div>
+                            </a>
+                        {% endif %}
+
+                        <hr>
+
+                        <a href="{{ path('order_list') }}">
+                            <div style="padding: 0.5em 0;">
+                                <i class="fas fa-list"></i> Orders
+                            </div>
+                        </a>
+{#                        <a href="{{ path('') }}">#}
+                            <div>
+                                <i class="fas fa-cog"></i> Settings
+                            </div>
+{#                        </a>#}
+
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -150,9 +205,9 @@
                 </li>
 
                 <li>
-                    {#<a href="{{ path('homepage_contact') }}">#}
-                        {#Contact#}
-                    {#</a>#}
+                    <a href="{{ path('homepage_contact') }}">
+                        Contact
+                    </a>
                 </li>
                 <li>
                     MORE...

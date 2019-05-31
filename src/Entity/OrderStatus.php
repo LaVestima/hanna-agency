@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrdersStatuses
- *
  * @ORM\Table(uniqueConstraints={
  *     @ORM\UniqueConstraint(name="Orders_Statuses_Name_U", columns={"name"})
  * })

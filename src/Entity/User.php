@@ -111,6 +111,11 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PageVisit", mappedBy="user")
+     */
+    private $pageVisits;
+
 
 
     public function __construct()
@@ -121,6 +126,7 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->loginAttempts = new ArrayCollection();
         $this->producers = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->pageVisits = new ArrayCollection();
     }
 
     public function __toString() {
@@ -509,6 +515,37 @@ class User implements UserInterface, \Serializable, EntityInterface
             // set the owning side to null (unless already changed)
             if ($order->getUser() === $this) {
                 $order->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PageVisit[]
+     */
+    public function getPageVisits(): Collection
+    {
+        return $this->pageVisits;
+    }
+
+    public function addPageVisit(PageVisit $pageVisit): self
+    {
+        if (!$this->pageVisits->contains($pageVisit)) {
+            $this->pageVisits[] = $pageVisit;
+            $pageVisit->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePageVisit(PageVisit $pageVisit): self
+    {
+        if ($this->pageVisits->contains($pageVisit)) {
+            $this->pageVisits->removeElement($pageVisit);
+            // set the owning side to null (unless already changed)
+            if ($pageVisit->getUser() === $this) {
+                $pageVisit->setUser(null);
             }
         }
 

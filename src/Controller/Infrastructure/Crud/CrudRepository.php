@@ -48,6 +48,9 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
 
 		if ($tokenStorage->getToken()) {
             $this->user = $tokenStorage->getToken()->getUser();
+            if ($this->user === 'anon.') {
+                $this->user = null;
+            }
         }
 
         $this->clearQuery();
@@ -67,7 +70,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateCreated(new \DateTime('now'));
         }
         if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
-            $entity->setUserCreated($this->user->getId());
+            $entity->setUserCreated($this->user);
         }
         if (method_exists($entity, 'setPathSlug')) {
 	        $entity->setPathSlug(CrudHelper::generatePathSlug());
@@ -78,7 +81,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
 
 		$em = $this->manager;
 
-        if ($this->user) {
+        if ($em->contains($entity)) {
             $entity = $em->merge($entity);
         }
 

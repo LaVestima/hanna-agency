@@ -79,7 +79,7 @@ class Order implements EntityInterface
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="OrderProductVariant", mappedBy="order", orphanRemoval=true, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="OrderProductVariant", mappedBy="order", orphanRemoval=true, fetch="EAGER", cascade={"persist"})
      */
     private $orderProductVariants;
 

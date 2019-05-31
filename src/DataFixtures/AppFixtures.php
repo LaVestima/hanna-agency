@@ -15,6 +15,7 @@ use App\Entity\ProductImage;
 use App\Entity\ProductParameter;
 use App\Entity\ProductVariant;
 use App\Entity\Role;
+use App\Entity\Store;
 use App\Entity\User;
 use App\Entity\UserSetting;
 use App\Entity\Variant;
@@ -32,6 +33,7 @@ use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\RoleRepository;
 use App\Repository\SizeRepository;
+use App\Repository\StoreRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use App\Repository\VariantRepository;
@@ -55,6 +57,7 @@ class AppFixtures extends Fixture
     private $productVariantRepository;
     private $roleRepository;
 //    private $sizeRepository;
+    private $storeRepository;
     private $userRepository;
     private $userSettingRepository;
     private $variantRepository;
@@ -74,6 +77,7 @@ class AppFixtures extends Fixture
         ProductVariantRepository $productVariantRepository,
         RoleRepository $roleRepository,
 //        SizeRepository $sizeRepository,
+        StoreRepository $storeRepository,
         UserRepository $userRepository,
         UserSettingRepository $userSettingRepository,
         VariantRepository $variantRepository
@@ -92,6 +96,7 @@ class AppFixtures extends Fixture
         $this->productVariantRepository = $productVariantRepository;
         $this->roleRepository = $roleRepository;
 //        $this->sizeRepository = $sizeRepository;
+        $this->storeRepository = $storeRepository;
         $this->userRepository = $userRepository;
         $this->userSettingRepository = $userSettingRepository;
         $this->variantRepository = $variantRepository;
@@ -110,6 +115,7 @@ class AppFixtures extends Fixture
         $this->loadCities();
 
         $this->loadProducers();
+        $this->loadStores();
 
         $this->loadOrders();
 
@@ -280,6 +286,19 @@ class AppFixtures extends Fixture
         }
     }
 
+    private function loadStores()
+    {
+        $storeData = [
+            ['<h1>Welcome stranger</h1><h2>Take a look at my products!</h2>']
+        ];
+
+        foreach ($storeData as $sd) {
+            $store = new Store();
+            $store->setFrontPageHtml($sd[0]);
+            $this->storeRepository->createEntity($store);
+        }
+    }
+
     private function loadOrders()
     {
         $orderData = [
@@ -319,7 +338,10 @@ class AppFixtures extends Fixture
             ['Shoes'],
             ['Hats'],
             ['Socks'],
-            ['Sandals', 3]
+            ['Sandals', 3],
+            ['Trainers', 3],
+            ['Flip Flops', 3],
+            ['Chelsea Boots', 3],
         ];
 
         foreach ($categoryData as $cd) {
@@ -333,18 +355,17 @@ class AppFixtures extends Fixture
     private function loadProducts()
     {
         $productData = [
-            ['Cool Shoe', 50, 79.99, 3, 2],
-            ['TF Hat No. 7', 7, 12.5, 4, 3],
-            ['Simple Top Hat', 55, 65.99, 4, 2],
+            ['Cool Shoe', 79.99, 3, 2],
+            ['TF Hat No. 7', 12.5, 4, 3],
+            ['Simple Top Hat', 65.99, 4, 2],
         ];
 
         foreach ($productData as $pd) {
             $product = new Product();
             $product->setName($pd[0]);
-            $product->setPriceProducer($pd[1]);
-            $product->setPriceCustomer($pd[2]);
-            $product->setCategory($this->categoryRepository->findOneBy(['id' => $pd[3]]));
-            $product->setProducer($this->producerRepository->findOneBy(['id' => $pd[4]]));
+            $product->setPrice($pd[1]);
+            $product->setCategory($this->categoryRepository->findOneBy(['id' => $pd[2]]));
+            $product->setProducer($this->producerRepository->findOneBy(['id' => $pd[3]]));
             $this->productRepository->createEntity($product);
         }
     }

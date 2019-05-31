@@ -75,16 +75,7 @@ class Product implements EntityInterface
      *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
      */
-    private $priceProducer;
-
-    /**
-     * @var string
-     *
-     * @Groups({"api"})
-     *
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
-     */
-    private $priceCustomer;
+    private $price;
 
     /**
      * @var string
@@ -99,13 +90,6 @@ class Product implements EntityInterface
      * @ORM\Column(type="boolean", nullable=false)
      */
     private $active = false;
-
-//    /**
-//     * @var ArrayCollection
-//     *
-//     * @ORM\OneToMany(targetEntity="ProductSize", mappedBy="idProducts", fetch="EAGER", cascade={"persist"}, orphanRemoval=true)
-//     */
-//    private $productSizes;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
@@ -133,6 +117,9 @@ class Product implements EntityInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true, fetch="EAGER", cascade={"persist"})
      */
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\ProductImage", mappedBy="product", orphanRemoval=true, cascade={"persist"})
+//     */
     private $productImages;
 
     /**
@@ -152,18 +139,6 @@ class Product implements EntityInterface
         $this->productVariants = new ArrayCollection();
         $this->productShipmentOptions = new ArrayCollection();
     }
-
-
-//    public function addProductSize(ProductSize $productSize)
-//    {
-//        $productSize->setIdProducts($this);
-//        $this->productSizes->add($productSize);
-//    }
-//
-//    public function removeProductSize(ProductSize $productSize)
-//    {
-//        $this->productSizes->removeElement($productSize);
-//    }
 
     public function addProductParameter(ProductParameter $productParameter)
     {
@@ -307,51 +282,27 @@ class Product implements EntityInterface
     }
 
     /**
-     * Set priceProducer
+     * Set price
      *
-     * @param string $priceProducer
+     * @param string $price
      *
      * @return Product
      */
-    public function setPriceProducer($priceProducer)
+    public function setPrice($price)
     {
-        $this->priceProducer = $priceProducer;
+        $this->price = $price;
 
         return $this;
     }
 
     /**
-     * Get priceProducer
+     * Get price
      *
      * @return string
      */
-    public function getPriceProducer()
+    public function getPrice()
     {
-        return $this->priceProducer;
-    }
-
-    /**
-     * Set priceCustomer
-     *
-     * @param string $priceCustomer
-     *
-     * @return Product
-     */
-    public function setPriceCustomer($priceCustomer)
-    {
-        $this->priceCustomer = $priceCustomer;
-
-        return $this;
-    }
-
-    /**
-     * Get priceCustomer
-     *
-     * @return string
-     */
-    public function getPriceCustomer()
-    {
-        return $this->priceCustomer;
+        return $this->price;
     }
 
     /**
@@ -381,7 +332,7 @@ class Product implements EntityInterface
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function getActive(): bool
     {
         return $this->active;
     }

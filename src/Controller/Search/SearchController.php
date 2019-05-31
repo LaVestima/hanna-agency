@@ -3,6 +3,7 @@
 namespace App\Controller\Search;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Form\AdvancedSearchType;
 use App\Form\SearchBarType;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,16 +25,33 @@ class SearchController extends BaseController
     {
         $searchQuery = trim($request->query->get('query'));
 
-        $products = $this->productRepository
-            ->readEntitiesBy([
-                'name' => [$searchQuery, 'LIKE'],
-                'active' => 1
-            ])
-            ->getResultAsArray();
-//        var_dump($products);
+        $form = $this->createForm(AdvancedSearchType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+//            var_dump($form->getData());
+
+            // TODO: custom query?
+            $products = $this->productRepository->getProductsBySearchQuery(
+                $form->get('query')->getData(),
+                $form->get('priceMin')->getData(),
+                $form->get('priceMax')->getData(),
+                $form->get('sorting')->getData()
+            );
+        } else {
+            $products = $this->productRepository
+                ->readEntitiesBy([
+                    'name' => [$searchQuery, 'LIKE'],
+                    'active' => 1
+                ])
+                ->getResultAsArray();
+
+            $form->get('query')->setData($searchQuery);
+        }
 
         return $this->render('Search/search.html.twig', [
             'products' => $products,
+            'form' => $form->createView(),
             'searchQuery' => $searchQuery
         ]);
     }

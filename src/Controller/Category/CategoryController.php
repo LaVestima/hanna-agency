@@ -4,7 +4,6 @@ namespace App\Controller\Category;
 
 use App\Controller\Infrastructure\BaseController;
 use App\Repository\CategoryRepository;
-use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends BaseController
 {
@@ -15,21 +14,13 @@ class CategoryController extends BaseController
         $this->categoryRepository = $categoryRepository;
     }
 
-    /**
-     * @Route("/categories", name="category_list")
-     */
-    public function list()
+    public function waterfallList()
     {
-        // TODO: only active
         $categories = $this->categoryRepository
             ->readAllEntities()
-            ->onlyActiveProducts()
-//            ->readEntitiesBy([
-//                'products.active' => true
-//            ])
             ->getResultAsArray();
 
-        return $this->render('Category/list.html.twig', [
+        return $this->render('Category/waterfallList.html.twig', [
             'categories' => $categories
         ]);
     }

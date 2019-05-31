@@ -14,21 +14,37 @@ class ProductRepository extends CrudRepository
         parent::__construct($registry, Product::class, $tokenStorage);
     }
 
-//    public function readCartProducts(array $cart = [])
-//    {
-//        $this->clearQuery();
-//
-//        $this->query->select($this->alias)
-//            ->from($this->entityClass, $this->alias);
-//
-//        $cartCounter = 0;
-//
-//        foreach ($cart as $productPathSlug => $q) {
-//            $this->query->orWhere($this->alias . '.pathSlug = :pathSlug' . $cartCounter)
-//                ->setParameter('pathSlug' . $cartCounter, $productPathSlug);
-//            $cartCounter++;
-//        }
-//
-//        return $this;
-//    }
+    public function readRecommendedProducts(User $user)
+    {
+        // TODO: read order history, search products similar to those in orders
+        // (by some parameters, producers, etc)
+        // TODO: some machine learning?
+    }
+
+    public function getProductsBySearchQuery(string $searchQuery, $priceMin, $priceMax, $sorting)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.name LIKE :param_query')
+            ->andWhere('p.price > ?1')
+            ->andWhere('p.price < ?2')
+            ->setParameters([
+                'param_query' => '%' . $searchQuery . '%',
+                1 => $priceMin,
+                2 => $priceMax,
+            ]);
+
+        switch ($sorting) {
+            case 'priceAsc':
+                $qb->orderBy('p.price', 'ASC');
+                break;
+            case 'priceDesc':
+                $qb->orderBy('p.price', 'DESC');
+                break;
+            case 'mostRelevant':
+            default:
+                // TODO: sort by the most relevant
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

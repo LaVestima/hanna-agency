@@ -20,14 +20,14 @@
             <div class="pricing" style="display: inline-block; width: 35%;">
                 {#<ua class="button quantity-decrease">-</ua>#}
                 {#<span class="quantity-value">{{ cart[product.pathSlug].quantity }}</span>#}
-                <input type="number" class="quantity-value" min="1" value="{{ cart[productVariant.identifier].quantity }}" data-product-price="{{ product.priceCustomer }}" style="width: 3em; font-size: 20px;">
+                <input type="number" class="quantity-value" min="1" value="{{ cart[productVariant.identifier].quantity }}" data-product-price="{{ product.price }}" style="width: 3em; font-size: 20px;">
                 {#<ua class="button quantity-increase" data-product="{{ product.pathSlug }}">+</ua>#}
-                x {{ product.priceCustomer }} =
+                x {{ product.price }} =
                 <span class="total-product-price">
-                    {{ (product.priceCustomer * cart[productVariant.identifier].quantity) | number_format(2, '.', '') }}
+                    {{ (product.price * cart[productVariant.identifier].quantity) | number_format(2, '.', '') }}
                 </span>
 
-                {% set totalPrice = totalPrice + product.priceCustomer * cart[productVariant.identifier].quantity %}
+                {% set totalPrice = totalPrice + product.price * cart[productVariant.identifier].quantity %}
             </div>
 
             <div>
