@@ -60,6 +60,11 @@ class Category implements EntityInterface
      */
     private $children;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $identifier;
+
 
     public function __construct()
     {
@@ -203,6 +208,18 @@ class Category implements EntityInterface
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Form\DataTransformer\IdentifierToCategoryTransformer;
+use App\Repository\CategoryRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -12,11 +14,32 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class AdvancedSearchType extends AbstractType
 {
+    private $categoryToIdentifierTransformer;
+    private $categoryRepository;
+
+    public function __construct(
+        IdentifierToCategoryTransformer $categoryToIdentifierTransformer,
+        CategoryRepository $categoryRepository
+    ) {
+        $this->categoryToIdentifierTransformer = $categoryToIdentifierTransformer;
+        $this->categoryRepository = $categoryRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $categories = $this->categoryRepository->findAll();
+
         $builder
             ->setMethod('GET')
-            ->add('query', TextType::class)
+            ->add('query', TextType::class, [
+                'label' => 'Search query',
+                'required' => false,
+            ])
+            ->add('category', ChoiceType::class, [
+                'choices' => $categories,
+                'choice_label' => 'name',
+                'choice_value' => 'identifier'
+            ])
             ->add('priceMin', IntegerType::class, [
                 'attr' => [
                     'min' => 0,
@@ -48,5 +71,8 @@ class AdvancedSearchType extends AbstractType
                 'label' => 'Search'
             ])
         ;
+
+        $builder->get('category')
+            ->addModelTransformer($this->categoryToIdentifierTransformer);
     }
 }

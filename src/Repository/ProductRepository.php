@@ -9,8 +9,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ProductRepository extends CrudRepository
 {
-    public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
-    {
+    private $categoryRepository;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        TokenStorageInterface $tokenStorage,
+        CategoryRepository $categoryRepository
+    ) {
+        $this->categoryRepository = $categoryRepository;
+
         parent::__construct($registry, Product::class, $tokenStorage);
     }
 
@@ -21,16 +28,21 @@ class ProductRepository extends CrudRepository
         // TODO: some machine learning?
     }
 
-    public function getProductsBySearchQuery(string $searchQuery, $priceMin, $priceMax, $sorting)
+    public function getProductsByAdvancedSearch($searchQuery, $categoryIdentifier, $priceMin = 0, $priceMax = 999999999999, $sorting = null)
     {
         $qb = $this->createQueryBuilder('p');
-        $qb->where('p.name LIKE :param_query')
-            ->andWhere('p.price > ?1')
-            ->andWhere('p.price < ?2')
+        $qb->where('p.name LIKE :paramQuery')
+            ->andWhere('p.category = :paramCategory')
+            ->andWhere('p.price >= :paramPriceMin')
+            ->andWhere('p.price <= :paramPriceMax')
+            ->andWhere('p.active = 1')
             ->setParameters([
-                'param_query' => '%' . $searchQuery . '%',
-                1 => $priceMin,
-                2 => $priceMax,
+                'paramQuery' => '%' . $searchQuery . '%',
+                'paramCategory' => $this->categoryRepository->findOneBy([
+                    'identifier' => $categoryIdentifier
+                ]),
+                'paramPriceMin' => $priceMin,
+                'paramPriceMax' => $priceMax,
             ]);
 
         switch ($sorting) {

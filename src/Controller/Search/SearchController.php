@@ -24,29 +24,25 @@ class SearchController extends BaseController
     public function home(Request $request)
     {
         $searchQuery = trim($request->query->get('query'));
+        $searchCategory = trim($request->query->get('category'));
 
         $form = $this->createForm(AdvancedSearchType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            var_dump($form->getData());
-
-            // TODO: custom query?
-            $products = $this->productRepository->getProductsBySearchQuery(
+            $products = $this->productRepository->getProductsByAdvancedSearch(
                 $form->get('query')->getData(),
+                $form->get('category')->getData(),
                 $form->get('priceMin')->getData(),
                 $form->get('priceMax')->getData(),
                 $form->get('sorting')->getData()
             );
         } else {
             $products = $this->productRepository
-                ->readEntitiesBy([
-                    'name' => [$searchQuery, 'LIKE'],
-                    'active' => 1
-                ])
-                ->getResultAsArray();
+                ->getProductsByAdvancedSearch($searchQuery, $searchCategory);
 
             $form->get('query')->setData($searchQuery);
+            $form->get('category')->setData($searchCategory);
         }
 
         return $this->render('Search/search.html.twig', [

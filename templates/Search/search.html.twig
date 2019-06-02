@@ -5,14 +5,18 @@
 {% block content %}
     <div style="position: sticky; top: 70px; background: #FFFFFF; box-shadow: 0 0 5px 2px #000; margin: 10px 0; z-index: 2;">
         ###  Search fields:<br>
-        - category<br><br>
 
         {{ form_start(form) }}
 
         <div style="display: flex;">
             <div style="margin: 1em">
-                Search query<br>
+                {{ form_label(form.query) }}<br>
                 {{ form_widget(form.query) }}
+            </div>
+
+            <div style="margin: 1em">
+                {{ form_label(form.category) }}<br>
+                {{ form_widget(form.category) }}
             </div>
 
             <div style="margin: 1em">

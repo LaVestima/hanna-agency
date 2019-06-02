@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Orders
- *
  * @ORM\Table(name="order_2983", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="Orders_Path_Slug_U", columns={"path_slug"})
  * }, indexes={

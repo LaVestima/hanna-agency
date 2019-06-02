@@ -1,12 +1,12 @@
-{% for category in categories if category.parent is null  %}
+{% for category in categories if category.parent is null %}
     <div class="dropright">
-        <a href="">
+        <a href="{{ path('search_home', {'category': category.identifier}) }}">
             <span>{{ category.name }}</span>
         </a>
         <span style="float: right;"><i class="fas fa-chevron-right"></i></span>
         <div class="dropright-content">
-        {% for categoryIn in categories if categoryIn.parent == category  %}
-            <a href="">
+        {% for categoryIn in categories if categoryIn.parent == category %}
+            <a href="{{ path('search_home', {'category': categoryIn.identifier}) }}">
                 <div>
                     {{ categoryIn.name }}
                 </div>
