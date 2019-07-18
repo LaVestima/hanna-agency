@@ -3,7 +3,7 @@
 {% block title %}{{ producer.shortName }}{% endblock %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('producer_show') }}
+    {{ encore_entry_link_tags('store_show') }}
 {% endblock %}
 
 {% block content %}
@@ -52,10 +52,10 @@
 
         {% for opinion in producer.opinions %}
             {% for rating in 1..opinion.rating if opinion.rating != 0 %}
-                <img src="{{ asset('uploads/images/_star.png') }}" alt="">
+                <img src="{{ asset('uploads/images/_star_4.png') }}" alt="">
             {% endfor %}
             {% for rating in (opinion.rating+1)..5 if opinion.rating != 5 %}
-                <img src="{{ asset('uploads/images/_starg.png') }}" alt="">
+                <img src="{{ asset('uploads/images/_star_0.png') }}" alt="">
             {% endfor %}
             {{ opinion.content }}
             <br>
@@ -77,5 +77,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('producer_show') }}
+    {{ encore_entry_script_tags('store_show') }}
 {% endblock %}

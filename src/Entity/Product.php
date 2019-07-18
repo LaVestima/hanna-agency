@@ -10,11 +10,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Product_Name_U", columns={"name"}),
  *     @ORM\UniqueConstraint(name="Product_Path_Slug_U", columns={"path_slug"}),
  * }, indexes={
  *     @ORM\Index(name="Product_Category_FK", columns={"category_id"}),
- *     @ORM\Index(name="Product_Producer_FK", columns={"producer_id"}),
+ *     @ORM\Index(name="Product_Store_FK", columns={"store_id"}),
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  */
@@ -62,7 +61,7 @@ class Product implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @ORM\Column(type="text", nullable=false)
      *
      * @Groups({"api"})
      */
@@ -100,17 +99,17 @@ class Product implements EntityInterface
     private $category;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Producer", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="Store", inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      *
      * @Groups({"api"})
      */
-    private $producer;
+    private $store;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductParameter", mappedBy="product", orphanRemoval=true, cascade={"persist"})
      */
     private $productParameters;
 
@@ -132,12 +131,18 @@ class Product implements EntityInterface
      */
     private $productShipmentOptions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductReview", mappedBy="product", orphanRemoval=true)
+     */
+    private $productReviews;
+
     public function __construct()
     {
         $this->productParameters = new ArrayCollection();
         $this->productImages = new ArrayCollection();
         $this->productVariants = new ArrayCollection();
         $this->productShipmentOptions = new ArrayCollection();
+        $this->productReviews = new ArrayCollection();
     }
 
     public function addProductParameter(ProductParameter $productParameter)
@@ -376,14 +381,14 @@ class Product implements EntityInterface
         return $this;
     }
 
-    public function getProducer(): ?Producer
+    public function getStore(): ?Store
     {
-        return $this->producer;
+        return $this->store;
     }
 
-    public function setProducer(?Producer $producer): self
+    public function setStore(?Store $store): self
     {
-        $this->producer = $producer;
+        $this->store = $store;
 
         return $this;
     }
@@ -499,6 +504,37 @@ class Product implements EntityInterface
             // set the owning side to null (unless already changed)
             if ($productShipmentOption->getProduct() === $this) {
                 $productShipmentOption->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductReview[]
+     */
+    public function getProductReviews(): Collection
+    {
+        return $this->productReviews;
+    }
+
+    public function addProductReview(ProductReview $productReview): self
+    {
+        if (!$this->productReviews->contains($productReview)) {
+            $this->productReviews[] = $productReview;
+            $productReview->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductReview(ProductReview $productReview): self
+    {
+        if ($this->productReviews->contains($productReview)) {
+            $this->productReviews->removeElement($productReview);
+            // set the owning side to null (unless already changed)
+            if ($productReview->getProduct() === $this) {
+                $productReview->setProduct(null);
             }
         }
 

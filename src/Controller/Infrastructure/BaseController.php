@@ -6,7 +6,7 @@ use App\Controller\Infrastructure\Action\ActionControllerTrait;
 use App\Controller\Infrastructure\Action\ListActionControllerTrait;
 use App\Controller\Infrastructure\Action\NewActionControllerTrait;
 use App\Controller\Infrastructure\Action\ShowActionControllerTrait;
-use App\Repository\ProducerRepository;
+use App\Repository\StoreRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +34,7 @@ class BaseController extends AbstractController
      */
     protected $paginator;
 
-    private $producerRepository;
+    private $storeRepository;
 
     /**
      * @var AuthorizationCheckerInterface
@@ -45,25 +45,25 @@ class BaseController extends AbstractController
      * @required
      * @param SessionInterface $session
      */
-    public function setSession(SessionInterface $session)
+    public function setSession(SessionInterface $session): void
     {
         $this->session = $session;
     }
 
     /**
      * @required
-     * @param ProducerRepository $producerRepository
+     * @param StoreRepository $storeRepository
      */
-    public function setProducerRepository(ProducerRepository $producerRepository)
+    public function setStoreRepository(StoreRepository $storeRepository): void
     {
-        $this->producerRepository = $producerRepository;
+        $this->storeRepository = $storeRepository;
     }
 
     /**
      * @required
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker)
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorizationChecker): void
     {
         $this->authorizationChecker = $authorizationChecker;
     }
@@ -72,7 +72,7 @@ class BaseController extends AbstractController
      * @required
      * @param PaginatorInterface $paginator
      */
-    public function setPaginator(PaginatorInterface $paginator)
+    public function setPaginator(PaginatorInterface $paginator): void
     {
         $this->paginator = $paginator;
     }
@@ -96,7 +96,7 @@ class BaseController extends AbstractController
     /**
      * @return bool
      */
-    public function isEnvDev()
+    public function isEnvDev(): bool
     {
         return $this->getParameter('kernel.environment') === 'dev';
     }
@@ -106,7 +106,7 @@ class BaseController extends AbstractController
      *
      * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->authorizationChecker
             ->isGranted('ROLE_ADMIN');
@@ -115,19 +115,19 @@ class BaseController extends AbstractController
     /**
      * @return bool
      */
-    protected function isProducer()
+    protected function isStore(): bool
     {
-        return $this->getProducer() !== null;
+        return $this->getStore() !== null;
     }
 
     /**
      * @return mixed
      */
-    protected function getProducer()
+    protected function getStore()
     {
-        return $this->producerRepository
+        return $this->storeRepository
             ->readOneEntityBy([
-                'user' => $this->getUser()
+                'owner' => $this->getUser()
             ])->getResult();
     }
 
@@ -136,7 +136,7 @@ class BaseController extends AbstractController
      *
      * @throws AccessDeniedHttpException
      */
-    protected function denyNonXhrs()
+    protected function denyNonXhrs(): void
     {
         if (!$this->request->isXmlHttpRequest()) {
             throw new AccessDeniedHttpException();

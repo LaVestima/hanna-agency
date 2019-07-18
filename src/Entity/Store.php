@@ -11,15 +11,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Producer_Path_Slug_U", columns={"path_slug"})
+ *     @ORM\UniqueConstraint(name="Store_Path_Slug_U", columns={"path_slug"})
  * }, indexes={
- *     @ORM\Index(name="Producer_Country_FK", columns={"country_id"}),
- *     @ORM\Index(name="Producer_City_FK", columns={"city_id"}),
- *     @ORM\Index(name="Producer_User_FK", columns={"user_id"})
+ *     @ORM\Index(name="Store_Country_FK", columns={"country_id"}),
+ *     @ORM\Index(name="Store_City_FK", columns={"city_id"}),
+ *     @ORM\Index(name="Store_Owner_FK", columns={"owner_id"})
  * })
- * @ORM\Entity(repositoryClass="App\Repository\ProducerRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\StoreRepository")
  */
-class Producer implements EntityInterface
+class Store implements EntityInterface
 {
     /**
      * @var integer
@@ -161,7 +161,7 @@ class Producer implements EntityInterface
     private $country;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="producer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="store", orphanRemoval=true)
      */
     private $products;
 
@@ -171,15 +171,15 @@ class Producer implements EntityInterface
     private $opinions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="producers")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $frontpage_html;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="stores")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
 
 
     public function __construct()
@@ -204,7 +204,7 @@ class Producer implements EntityInterface
      *
      * @param \DateTime $dateCreated
      *
-     * @return Producer
+     * @return Store
      */
     public function setDateCreated($dateCreated)
     {
@@ -228,7 +228,7 @@ class Producer implements EntityInterface
      *
      * @param \DateTime $dateDeleted
      *
-     * @return Producer
+     * @return Store
      */
     public function setDateDeleted($dateDeleted)
     {
@@ -252,7 +252,7 @@ class Producer implements EntityInterface
      *
      * @param integer $userCreated
      *
-     * @return Producer
+     * @return Store
      */
     public function setUserCreated($userCreated)
     {
@@ -276,7 +276,7 @@ class Producer implements EntityInterface
      *
      * @param integer $userDeleted
      *
-     * @return Producer
+     * @return Store
      */
     public function setUserDeleted($userDeleted)
     {
@@ -300,7 +300,7 @@ class Producer implements EntityInterface
      *
      * @param string $shortName
      *
-     * @return Producer
+     * @return Store
      */
     public function setShortName($shortName)
     {
@@ -324,7 +324,7 @@ class Producer implements EntityInterface
      *
      * @param string $fullName
      *
-     * @return Producer
+     * @return Store
      */
     public function setFullName($fullName)
     {
@@ -348,7 +348,7 @@ class Producer implements EntityInterface
      *
      * @param string $firstName
      *
-     * @return Producer
+     * @return Store
      */
     public function setFirstName($firstName)
     {
@@ -372,7 +372,7 @@ class Producer implements EntityInterface
      *
      * @param string $lastName
      *
-     * @return Producer
+     * @return Store
      */
     public function setLastName($lastName)
     {
@@ -396,7 +396,7 @@ class Producer implements EntityInterface
      *
      * @param string $vat
      *
-     * @return Producer
+     * @return Store
      */
     public function setVat($vat)
     {
@@ -420,7 +420,7 @@ class Producer implements EntityInterface
      *
      * @param string $postalCode
      *
-     * @return Producer
+     * @return Store
      */
     public function setPostalCode($postalCode)
     {
@@ -444,7 +444,7 @@ class Producer implements EntityInterface
      *
      * @param string $street
      *
-     * @return Producer
+     * @return Store
      */
     public function setStreet($street)
     {
@@ -468,7 +468,7 @@ class Producer implements EntityInterface
      *
      * @param string $email
      *
-     * @return Producer
+     * @return Store
      */
     public function setEmail($email)
     {
@@ -492,7 +492,7 @@ class Producer implements EntityInterface
      *
      * @param string $phone
      *
-     * @return Producer
+     * @return Store
      */
     public function setPhone($phone)
     {
@@ -516,7 +516,7 @@ class Producer implements EntityInterface
      *
      * @param string $pathSlug
      *
-     * @return Producer
+     * @return Store
      */
     public function setPathSlug($pathSlug)
     {
@@ -571,7 +571,7 @@ class Producer implements EntityInterface
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setProducer($this);
+            $product->setStore($this);
         }
 
         return $this;
@@ -582,8 +582,8 @@ class Producer implements EntityInterface
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
             // set the owning side to null (unless already changed)
-            if ($product->getProducer() === $this) {
-                $product->setProducer(null);
+            if ($product->getStore() === $this) {
+                $product->setStore(null);
             }
         }
 
@@ -629,18 +629,6 @@ class Producer implements EntityInterface
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getFrontpageHtml(): ?string
     {
         return $this->frontpage_html;
@@ -649,6 +637,18 @@ class Producer implements EntityInterface
     public function setFrontpageHtml(?string $frontpage_html): self
     {
         $this->frontpage_html = $frontpage_html;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

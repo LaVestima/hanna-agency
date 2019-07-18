@@ -1,4 +1,4 @@
-require('../../css/Producer/show.scss');
+require('../../css/Store/show.scss');
 
 $('#top-bar-homepage').on('click', function() {
     $('.producer-subpage').addClass('hidden');

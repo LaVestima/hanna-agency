@@ -3,13 +3,13 @@
 namespace App\Command;
 
 use App\Entity\Product;
+use App\Entity\ProductReview;
 use App\Entity\ProductVariant;
-use App\Entity\Size;
 use App\Repository\CategoryRepository;
-use App\Repository\ProducerRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductReviewRepository;
 use App\Repository\ProductVariantRepository;
-use App\Repository\SizeRepository;
+use App\Repository\StoreRepository;
 use App\Repository\VariantRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,26 +18,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateProductCommand extends BaseCreateCommand
 {
     private $categoryRepository;
-    private $producerRepository;
+    private $storeRepository;
     private $productRepository;
+    private $productReviewRepository;
     private $productVariantRepository;
-    private $sizeRepository;
     private $variantRepository;
 
     public function __construct(
         CategoryRepository $categoryRepository,
-        ProducerRepository $producerRepository,
+        StoreRepository $storeRepository,
         ProductRepository $productRepository,
+        ProductReviewRepository $productReviewRepository,
         ProductVariantRepository $productVariantRepository,
-        SizeRepository $sizeRepository,
         VariantRepository $variantRepository,
         $name = null
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->producerRepository = $producerRepository;
+        $this->storeRepository = $storeRepository;
         $this->productRepository = $productRepository;
+        $this->productReviewRepository = $productReviewRepository;
         $this->productVariantRepository = $productVariantRepository;
-        $this->sizeRepository = $sizeRepository;
         $this->variantRepository = $variantRepository;
 
         parent::__construct($name);
@@ -61,12 +61,18 @@ class CreateProductCommand extends BaseCreateCommand
             for ($i = 0; $i < $productNumber; $i++) {
                 $product = $this->createFakeProduct();
 
-                $variantCount = rand(1, $this->variantRepository->countRows());
+                $variantCount = random_int(1, $this->variantRepository->countRows());
 
                 for ($j = 0; $j < $variantCount; $j++) {
                     $this->createProductVariants($product);
 
                     $output->writeln('Product Variant');
+                }
+
+                for ($j = 0; $j < rand(1, 100); $j++) {
+                    $this->createProductReview($product);
+
+                    $output->writeln('Product Review');
                 }
 
                 $output->writeln('Product');
@@ -83,38 +89,20 @@ class CreateProductCommand extends BaseCreateCommand
         $randomCategory = $this->categoryRepository
             ->readRandomEntities(1)->getResult();
 
-        $randomProducer = $this->producerRepository
+        $randomProducer = $this->storeRepository
             ->readRandomEntities(1)->getResult();
 
         $product->setName($this->faker->text(50));
         $product->setPrice($this->faker->numberBetween(100, 99999)/100);
         $product->setCategory($randomCategory);
-        $product->setProducer($randomProducer);
-        $product->setActive(rand(0, 1));
+        $product->setStore($randomProducer);
+        $product->setActive(random_int(0, 1));
 
         $this->productRepository
             ->createEntity($product);
 
         return $product;
     }
-
-//    private function createFakeProductSize(Product $product)
-//    {
-//        $productSize = new ProductSize();
-//
-//        // TODO: check uniqueness, doesn't work
-//        do {
-//            $randomSize = $this->sizeRepository
-//                ->readRandomEntities(1)->getResult();
-//        } while (!$this->isSizeUniqueForProduct($randomSize, $product));
-//
-//        $productSize->setIdProducts($product);
-//        $productSize->setAvailability($this->faker->numberBetween(0, 200));
-//        $productSize->setIdSizes($randomSize);
-//
-//        $this->productSizeRepository
-//            ->createEntity($productSize);
-//    }
 
     private function createProductVariants(Product $product)
     {
@@ -131,14 +119,14 @@ class CreateProductCommand extends BaseCreateCommand
         $this->productVariantRepository->createEntity($productVariant);
     }
 
-//    private function isSizeUniqueForProduct(Size $size, Product $product)
-//    {
-//        $productSize = $this->productSizeRepository
-//            ->readOneEntityBy([
-//                'idSizes' => $size->getId(),
-//                'idProducts' => $product->getId(),
-//            ])->getResult();
-//
-//        return $productSize ? false : true;
-//    }
+    private function createProductReview(Product $product)
+    {
+        $productReview = new ProductReview();
+        $productReview
+            ->setProduct($product)
+            ->setRating(random_int(1, 5))
+            ->setContent($this->faker->text);
+
+        $this->productReviewRepository->createEntity($productReview);
+    }
 }
