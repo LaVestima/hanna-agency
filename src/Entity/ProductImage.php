@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Helper\RandomHelper;
 use App\Model\Infrastructure\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -48,7 +49,9 @@ class ProductImage implements EntityInterface
 
     private $file;
 
-    private $tempFilename;
+    private $tmpFilePath;
+
+    private $fileName;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productImages", cascade={"persist"})
@@ -56,33 +59,30 @@ class ProductImage implements EntityInterface
      */
     private $product;
 
-    // TODO: finish file upload
-    public function setFile(UploadedFile $file)
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(UploadedFile $file): void
     {
         $this->file = $file;
-
-        if (null !== $this->filePath) {
-            $this->tempFilename = $this->filePath;
-
-            $this->filePath = null;
-//            $this->alt = null;
-        }
     }
 
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preUpload()
+    public function preUpload(): void
     {
-        // If there is no file (optional field), nothing is done
         if (null === $this->file) {
             return;
         }
 
-        // The name of the file is its id, one should just store also its extension
-        // To make it clean, we should rename this attribute to "extension" rather than "url"
-        $this->filePath = $this->file->guessExtension();
+        $this->fileName = RandomHelper::generateString(64) . '.' . $this->file->guessExtension();
+        $this->filePath = $this->getUploadDir() . $this->fileName;
+        // TODO: get the correct position
+        $this->sequencePosition = random_int(5, 100);
 
         // And we generate the alt attribute of the <img> tag, the value of the file name on the user's PC
 //        $this->alt = $this->file->getClientOriginalName();
@@ -92,58 +92,54 @@ class ProductImage implements EntityInterface
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload()
+    public function upload(): void
     {
+        var_dump('upload');
         if (null === $this->file) {
             return;
         }
 
         // If we had an old file, we delete it
-        if (null !== $this->tempFilename) {
-            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->tempFilename;
+//        if (null !== $this->tempFilename) {
+//            $oldFile = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->tempFilename;
+//
+//            if (file_exists($oldFile)) {
+//                unlink($oldFile);
+//            }
+//        }
 
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
-        }
-
-        // We move the sent file to the directory of our choice
         $this->file->move(
-            $this->getUploadRootDir(), // The destination directory
-            $this->id . '.' . $this->filePath   // The name of the file to create, here "extension_id"
+            $this->getUploadRootDir() . $this->getUploadDir(),
+            $this->fileName
         );
     }
 
     /**
      * @ORM\PreRemove()
      */
-    public function preRemoveUpload()
+    public function preRemoveUpload(): void
     {
-        // On sauvegarde temporairement le nom du fichier, car il dépend de l'id
-        $this->tempFilename = $this->getUploadRootDir() . '/' . $this->id . '.' . $this->filePath;
+        $this->tmpFilePath = $this->filePath;
     }
 
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload()
+    public function removeUpload(): void
     {
-        // En PostRemove, on n'a pas accès à l'id, on utilise notre nom sauvegardé
-        if (file_exists($this->tempFilename)) {
-            // On supprime le fichier
-            unlink($this->tempFilename);
+        if (file_exists($this->tmpFilePath)) {
+            unlink($this->tmpFilePath);
         }
     }
 
-    public function getUploadDir()
+    public function getUploadDir(): string
     {
-        return 'uploads/images';
+        return 'uploads/images/';
     }
 
-    protected function getUploadRootDir()
+    protected function getUploadRootDir(): string
     {
-        // On retourne le chemin relatif vers l'image pour notre code PHP
-        return __DIR__.'/../../../../public/'.$this->getUploadDir();
+        return __DIR__ . '/../../public/';
     }
 
 

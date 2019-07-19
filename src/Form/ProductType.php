@@ -4,12 +4,10 @@ namespace App\Form;
 
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
-use App\Repository\ProducerRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,20 +17,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductType extends AbstractType
 {
     private $categoryRepository;
-    private $producerRepository;
 
     /**
      * ProductType constructor.
      *
      * @param CategoryRepository $categoryRepository
-     * @param ProducerRepository $producerRepository
      */
     public function __construct(
-        CategoryRepository $categoryRepository,
-        ProducerRepository $producerRepository
+        CategoryRepository $categoryRepository
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->producerRepository = $producerRepository;
     }
 
     /**
@@ -43,7 +37,6 @@ class ProductType extends AbstractType
     {
         // TODO: maybe only undeleted
         $categories = $this->categoryRepository->readAllEntities()->getResultAsArray();
-        $producers = $this->producerRepository->readAllEntities()->onlyUndeleted()->getResult();
 
         $builder
             ->add('name', TextType::class)
@@ -77,12 +70,6 @@ class ProductType extends AbstractType
             ->add('images', CollectionType::class, [
                 'label' => 'Images',
                 'entry_type' => ProductImageType::class,
-//                'entry_options' => [
-//                    'data_class' => null,
-//                    'attr' => [
-//                        'accept' => 'image/*',
-//                    ],
-//                ],
                 'property_path' => 'productImages',
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -90,36 +77,10 @@ class ProductType extends AbstractType
                 'by_reference' => false,
                 'required' => false,
             ])
-//            ->add('images', CollectionType::class, [
-//                'label' => 'Images',
-//                'entry_type' => FileType::class,
-//                'entry_options' => [
-//                    'data_class' => null,
-//                    'attr' => [
-//                        'accept' => 'image/*',
-//                    ],
-//                ],
-//                'property_path' => 'productImages',
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'prototype' => true,
-//                'by_reference' => false,
-//                'required' => false,
-//            ])
             ->add('price', MoneyType::class, [
                 'label' => 'Customer Price',
                 'currency' => false
             ]);
-
-        if ($options['isAdmin'] && !$options['isProducer']) {
-            $builder
-                ->add('idProducers', ChoiceType::class, [
-                    'label' => 'Producer',
-                    'choices' => $producers,
-                    'choice_label' => 'fullName',
-                    'placeholder' => 'Choose a producer'
-                ]);
-        }
 
         if ($options['edit']) {
             $builder

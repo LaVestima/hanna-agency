@@ -4,16 +4,11 @@ namespace App\Controller\Product;
 
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\Product;
-use App\Entity\ProductImage;
 use App\Form\AddToCartType;
 use App\Form\ProductType;
 use App\Repository\ProductImageRepository;
 use App\Repository\ProductRepository;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,55 +32,18 @@ class ProductController extends BaseController
     }
 
     /**
-     * @Route("_list", name="product_list")
-     */
-    public function list(Request $request)
-    {
-        $this->setView('Product/list.html.twig');
-        $this->setActionBar([
-            [
-                'label' => 'New Product',
-                'path' => 'product_new',
-                'role' => 'ROLE_ADMIN',
-                'icon' => 'fa-plus'
-            ],
-//            [
-//                'label' => 'Deleted Products',
-//                'path' => 'product_deleted_list',
-//                'role' => 'ROLE_ADMIN',
-//                'icon' => 'fa-close'
-//            ]
-        ]);
-
-        return parent::baseList($request);
-    }
-
-    /**
      * @Route("/{pathSlug}", name="product_show")
      */
-    public function show(string $pathSlug)
+    public function show(Product $product)
     {
-        $product = $this->productRepository
-            ->readOneEntityBy(['pathSlug' => $pathSlug])
-            ->getResult();
+        $this->denyAccessUnlessGranted('view', $product);
 
-        if (!$product || (false === $product->getActive() && $this->getProducer() !== $product->getProducer())) {
-            throw new HttpException(404);
-        }
+        $form = $this->createForm(AddToCartType::class, $product);
 
-        $form = $this->createForm(AddToCartType::class, $product, [
-//            'edit' => true,
-//            'isAdmin' => $this->isAdmin(),
-//            'isProducer' => $this->isProducer()
-        ]);
-
-        $this->setView('Product/show.html.twig');
-        $this->setTemplateEntities([
+        return $this->render('Product/show.html.twig', [
             'product' => $product,
             'form' => $form->createView()
         ]);
-
-        return parent::baseShow();
     }
 
     /**
@@ -99,111 +57,30 @@ class ProductController extends BaseController
     /**
      * @Route("/edit/{pathSlug}", name="product_edit")
      */
-    public function edit(Request $request, string $pathSlug)
+    public function edit(Request $request, Product $product)
     {
-        $product = $this->productRepository
-            ->readOneEntityBy([
-                'pathSlug' => $pathSlug
-            ])
-            ->getResult();
-
-        if (!$product) { throw new NotFoundHttpException(); }
+        $this->denyAccessUnlessGranted('edit', $product);
 
         $form = $this->createForm(ProductType::class, $product, [
             'edit' => true,
             'isAdmin' => $this->isAdmin(),
-            'isProducer' => $this->isProducer()
+            'isProducer' => $this->isStore()
         ]);
 
         $form->handleRequest($request);
 
-        // TODO: doesn't work if middle/first images are removed
         if ($form->isSubmitted() && $form->isValid()) {
-            $productImages = $product->getProductImages();
-            echo 'Count productImages: ' . count($productImages) . '<br>'; // total in form; old + new
-            $hashedImages = [];
-//var_dump(array_keys($productImages));
-            $productImageIndex = 0;
+            $product = $form->getData();
 
-            foreach ($productImages as &$productImage) {
-//                echo ($productImageIndex + 1) . '<br>';
-                echo $productImage->getSequencePosition() . '<br>';
-                echo ($productImage->getFilePath() ?? 'NO') . '<br>';
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($product);
+            $em->flush();
 
-                if ($productImage->getFilePath() && file_exists($productImage->getFilePath())) {
-                    echo md5_file($productImage->getFilePath()) . '<br>';
-                    $hashedImages[] = md5_file($productImage->getFilePath());
-                    $productImage->setSequencePosition($productImageIndex + 1);
-//                    $productImages[$productImageIndex]->setSequencePosition($productImageIndex + 1);
-                } else {
-                    $productImages->removeElement($productImage);
-                }
-
-                $productImageIndex++;
-                unset($productImage);
-            }
-
-            $newProduct = $form->getData();
-
-            $images = $form->get('images');
-            echo 'Count images ' . count($images) . '<br>';
-
-            foreach ($images as $imageIndex => $image) { // New files added in the form
-                $uploadedProductImage = $image->get('file')->getData();
-
-//                echo ($imageIndex + 1) . '<br>';
-                echo ($uploadedProductImage ? $uploadedProductImage->getRealPath() : 'NO') . '<br>';
-
-                if ($uploadedProductImage) {
-                    $tmpFilePath = $uploadedProductImage->getRealPath();
-                    $fileName = md5(uniqid()) . '.' . $uploadedProductImage->guessExtension();
-
-                    if (!in_array(md5_file($tmpFilePath), $hashedImages)) {
-                        $uploadDir = $this->kernel->getProjectDir() . '/public/uploads/images/';
-
-                        try {
-                            $uploadedProductImage->move(
-                                $uploadDir,
-                                $fileName
-                            );
-                        } catch (FileException $e) {
-                            // TODO: handle exception if something happens during file upload
-                        }
-
-                        $addedProductImage = new ProductImage();
-                        $addedProductImage->setFilePath('uploads/images/' . $fileName);
-                        $addedProductImage->setProduct($product);
-                        $addedProductImage->setSequencePosition($imageIndex + 1);
-
-                        $productImages->add($addedProductImage);
-                    }
-                }
-            }
-
-            foreach ($productImages as $productImage) {
-//                echo ($productImage->getFilePath() ?? 'NO') . '<br>';
-                var_dump($productImage->getFilePath(), $productImage->getSequencePosition());
-                echo '<br>';
-            }
-
-            $newProduct->setProductImages($productImages);
-//            var_dump($newProduct->getProductImages());
-
-            foreach ($newProduct->getProductImages() as $pi) {
-                echo $pi->getId() . '<br>';
-            }
-
-//            die;
-
-//            var_dump($form->getData());die;
-
-            $this->productRepository->updateEntity($product, $newProduct);
-
-            if ($this->isProducer()) {
+            if ($this->isStore()) {
                 return $this->redirectToRoute('inventory_home');
             } else {
                 return $this->redirectToRoute('product_show', [
-                    'pathSlug' => $pathSlug,
+                    'pathSlug' => $product->getPathSlug(),
                 ]);
             }
         }
@@ -219,7 +96,7 @@ class ProductController extends BaseController
      */
     public function activate(Product $product)
     {
-        // TODO: check user permission
+        $this->denyAccessUnlessGranted('edit', $product);
 
         $product->setActive(true);
         $this->getDoctrine()->getManager()->flush();
@@ -232,10 +109,24 @@ class ProductController extends BaseController
      */
     public function deactivate(Product $product)
     {
-        // TODO: check user permission
+        $this->denyAccessUnlessGranted('edit', $product);
 
         $product->setActive(false);
         $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('inventory_home');
+    }
+
+    /**
+     * @Route("/delete/{pathSlug}", name="product_delete")
+     */
+    public function delete(Product $product)
+    {
+        $this->denyAccessUnlessGranted('delete', $product);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($product);
+        $em->flush();
 
         return $this->redirectToRoute('inventory_home');
     }

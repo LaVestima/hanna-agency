@@ -15,7 +15,6 @@ class ProductImageType extends AbstractType
     {
         $builder
             ->add('file', FileType::class, [
-                'mapped' => false,
                 'attr' => [
                     'accept' => 'image/*',
                 ],
