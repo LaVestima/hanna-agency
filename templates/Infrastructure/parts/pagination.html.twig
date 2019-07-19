@@ -8,28 +8,28 @@
                 &lt;
             </div>
         {% elseif first is defined and current != first %}
-            <ua href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">
                 <div class="button first">
                     &lt;&lt;
                 </div>
-            </ua>
+            </a>
         {% endif %}
 
         {% if previous is defined %}
-            <ua href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
                 <div class="button previous">
                     &lt;
                 </div>
-            </ua>
+            </a>
         {% endif %}
 
         {% for page in pagesInRange %}
             {% if page != current %}
-                <ua href="{{ path(route, query|merge({(pageParameterName): page})) }}">
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">
                     <div class="button page">
                         {{ page }}
                     </div>
-                </ua>
+                </a>
             {% else %}
                 <div class="button active current">
                     {{ page }}
@@ -38,11 +38,11 @@
         {% endfor %}
 
         {% if next is defined %}
-            <ua href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">
                 <div class="button next">
                     &gt;
                 </div>
-            </ua>
+            </a>
         {% endif %}
 
         {% if last is defined and current == last %}
@@ -53,11 +53,11 @@
                 &gt;&gt;
             </div>
         {% elseif last is defined and current != last %}
-            <ua href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
                 <div class="button last">
                     &gt;&gt;
                 </div>
-            </ua>
+            </a>
         {% endif %}
         <br>
         <div class="pagination-footer">
@@ -65,4 +65,3 @@
         </div>
     </div>
 {% endif %}
-

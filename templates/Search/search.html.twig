@@ -4,7 +4,7 @@
 
 {% block content %}
     <div style="position: sticky; top: 70px; background: #FFFFFF; box-shadow: 0 0 5px 2px #000; margin: 10px 0; z-index: 2;">
-        ###  Search fields:<br>
+{#        ###  Search fields:<br>#}
 
         {{ form_start(form) }}
 
@@ -21,7 +21,7 @@
 
             <div style="margin: 1em">
                 Price<br>
-                {{ form_widget(form.priceMin) }}
+                {{ form_widget(form.priceMin) }} to
                 {{ form_widget(form.priceMax) }}
             </div>
 
@@ -36,15 +36,19 @@
         TODO: filtering (categories?, parameters?, ...), sorting (price, dateAdded, opinions/ratings, ...)
     </div>
 
-    {% if products is empty %}
+    Found: {{ pagination.getTotalItemCount }}
+
+    {% if pagination is empty %}
         No Products found
     {% endif %}
 
     <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly;">
-    {% for product in products %}
+    {% for product in pagination %}
         {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
     {% endfor %}
     </div>
-    <br>
-    ### pagination
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 {% endblock %}

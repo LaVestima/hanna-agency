@@ -7,6 +7,8 @@ use App\Repository\ProductRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,15 +25,21 @@ class InventoryController extends BaseController
     /**
      * @Route("/inventory", name="inventory_home")
      */
-    public function home()
+    public function home(Request $request, PaginatorInterface $paginator)
     {
-        if (!$producer = $this->getProducer()) {
+        if (!$store = $this->getStore()) {
             throw new AccessDeniedHttpException();
         }
 
-        $products =  $this->productRepository->readEntitiesBy([
-            'producer' => $producer->getId()
-        ])->getResultAsArray() ?? [];
+        $productsQuery = $this->productRepository->readEntitiesBy([
+            'store' => $store->getId()
+        ])->getQuery();
+
+        $pagination = $paginator->paginate(
+            $productsQuery,
+            $request->query->getInt('page', 1),
+            20
+        );
 
         $productOrders = [];
         $chartProductOrders = [];
@@ -42,7 +50,7 @@ class InventoryController extends BaseController
             new DateTime('now + 1 day')
         );
 
-        foreach ($products as $product) {
+        foreach ($pagination as $product) {
             $productOrders[$product->getId()] = [];
             foreach ($product->getProductVariants() as $productVariant) {
                 foreach ($productVariant->getOrderProductVariants() as $orderProductVariant) {
@@ -74,17 +82,8 @@ class InventoryController extends BaseController
             }
         }
 
-        $this->setActionBar([
-            [
-                'label' => 'New Product',
-                'path' => 'product_new',
-//                'role' => 'ROLE_ADMIN',
-                'icon' => 'fa-plus'
-            ]
-        ]);
-
         return $this->render('Inventory/inventory.html.twig', [
-            'products' => $products,
+            'pagination' => $pagination,
             'productOrders' => $chartProductOrders
         ]);
     }

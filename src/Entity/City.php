@@ -47,7 +47,7 @@ class City implements EntityInterface
     private $country;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Producer", mappedBy="city", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Store", mappedBy="city", orphanRemoval=true)
      */
     private $producers;
 
@@ -128,14 +128,14 @@ class City implements EntityInterface
     }
 
     /**
-     * @return Collection|Producer[]
+     * @return Collection|Store[]
      */
     public function getProducers(): Collection
     {
         return $this->producers;
     }
 
-    public function addProducer(Producer $producer): self
+    public function addProducer(Store $producer): self
     {
         if (!$this->producers->contains($producer)) {
             $this->producers[] = $producer;
@@ -145,7 +145,7 @@ class City implements EntityInterface
         return $this;
     }
 
-    public function removeProducer(Producer $producer): self
+    public function removeProducer(Store $producer): self
     {
         if ($this->producers->contains($producer)) {
             $this->producers->removeElement($producer);

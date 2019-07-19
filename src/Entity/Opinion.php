@@ -17,7 +17,7 @@ class Opinion
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Producer", inversedBy="opinions")
+     * @ORM\ManyToOne(targetEntity="Store", inversedBy="opinions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $producer;
@@ -38,12 +38,12 @@ class Opinion
         return $this->id;
     }
 
-    public function getProducer(): ?Producer
+    public function getProducer(): ?Store
     {
         return $this->producer;
     }
 
-    public function setProducer(?Producer $producer): self
+    public function setProducer(?Store $producer): self
     {
         $this->producer = $producer;
 
