@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(uniqueConstraints={
- *     @ORM\UniqueConstraint(name="Store_Path_Slug_U", columns={"path_slug"})
+ *     @ORM\UniqueConstraint(name="Store_Path_Slug_U", columns={"identifier"})
  * }, indexes={
  *     @ORM\Index(name="Store_Country_FK", columns={"country_id"}),
  *     @ORM\Index(name="Store_City_FK", columns={"city_id"}),
@@ -146,7 +146,7 @@ class Store implements EntityInterface
      *
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    private $pathSlug = '';
+    private $identifier = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="producers")
@@ -512,27 +512,27 @@ class Store implements EntityInterface
     }
 
     /**
-     * Set pathSlug
+     * Set identifier
      *
-     * @param string $pathSlug
+     * @param string $identifier
      *
      * @return Store
      */
-    public function setPathSlug($pathSlug)
+    public function setIdentifier($identifier)
     {
-        $this->pathSlug = $pathSlug;
+        $this->identifier = $identifier;
 
         return $this;
     }
 
     /**
-     * Get pathSlug
+     * Get identifier
      *
      * @return string
      */
-    public function getPathSlug()
+    public function getIdentifier()
     {
-        return $this->pathSlug;
+        return $this->identifier;
     }
 
     public function getCity(): ?City

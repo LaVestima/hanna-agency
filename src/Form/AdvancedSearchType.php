@@ -38,7 +38,9 @@ class AdvancedSearchType extends AbstractType
             ->add('category', ChoiceType::class, [
                 'choices' => $categories,
                 'choice_label' => 'name',
-                'choice_value' => 'identifier'
+                'choice_value' => 'identifier',
+                'required' => false,
+                'placeholder' => 'Choose an option',
             ])
             ->add('priceMin', IntegerType::class, [
                 'attr' => [
@@ -65,6 +67,7 @@ class AdvancedSearchType extends AbstractType
                     'Most relevant' => 'mostRelevant',
                     'Price ascending' => 'priceAsc',
                     'Price descending' => 'priceDesc',
+                    'Reviews descending' => 'reviewDesc'
                 ]
             ])
             ->add('submit', SubmitType::class, [
@@ -74,5 +77,10 @@ class AdvancedSearchType extends AbstractType
 
         $builder->get('category')
             ->addModelTransformer($this->categoryToIdentifierTransformer);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 's_a';
     }
 }

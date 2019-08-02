@@ -5,38 +5,40 @@ namespace App\DataFixtures;
 use App\Entity\Address;
 use App\Entity\Category;
 use App\Entity\City;
+use App\Entity\Conversation;
 use App\Entity\Country;
+use App\Entity\Message;
 use App\Entity\Order;
 use App\Entity\OrderStatus;
 use App\Entity\Parameter;
-use App\Entity\Producer;
+use App\Entity\Store;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Entity\ProductParameter;
 use App\Entity\ProductVariant;
 use App\Entity\Role;
-use App\Entity\Store;
 use App\Entity\User;
 use App\Entity\UserSetting;
 use App\Entity\Variant;
 use App\Repository\AddressRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
+use App\Repository\ConversationRepository;
 use App\Repository\CountryRepository;
+use App\Repository\MessageRepository;
 use App\Repository\OrderRepository;
 use App\Repository\OrderStatusRepository;
 use App\Repository\ParameterRepository;
-use App\Repository\ProducerRepository;
 use App\Repository\ProductImageRepository;
 use App\Repository\ProductParameterRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\RoleRepository;
-use App\Repository\SizeRepository;
 use App\Repository\StoreRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use App\Repository\VariantRepository;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -46,17 +48,17 @@ class AppFixtures extends Fixture
     private $addressRepository;
     private $categoryRepository;
     private $cityRepository;
+    private $conversationRepository;
     private $countryRepository;
+    private $messageRepository;
     private $orderRepository;
     private $orderStatusRepository;
     private $parameterRepository;
-    private $producerRepository;
     private $productImageRepository;
     private $productParameterRepository;
     private $productRepository;
     private $productVariantRepository;
     private $roleRepository;
-//    private $sizeRepository;
     private $storeRepository;
     private $userRepository;
     private $userSettingRepository;
@@ -66,17 +68,17 @@ class AppFixtures extends Fixture
         AddressRepository $addressRepository,
         CategoryRepository $categoryRepository,
         CityRepository $cityRepository,
+        ConversationRepository $conversationRepository,
         CountryRepository $countryRepository,
+        MessageRepository $messageRepository,
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         ParameterRepository $parameterRepository,
-        ProducerRepository $producerRepository,
         ProductImageRepository $productImageRepository,
         ProductParameterRepository $productParameterRepository,
         ProductRepository $productRepository,
         ProductVariantRepository $productVariantRepository,
         RoleRepository $roleRepository,
-//        SizeRepository $sizeRepository,
         StoreRepository $storeRepository,
         UserRepository $userRepository,
         UserSettingRepository $userSettingRepository,
@@ -85,17 +87,17 @@ class AppFixtures extends Fixture
         $this->addressRepository = $addressRepository;
         $this->categoryRepository = $categoryRepository;
         $this->cityRepository = $cityRepository;
+        $this->conversationRepository = $conversationRepository;
         $this->countryRepository = $countryRepository;
+        $this->messageRepository = $messageRepository;
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->parameterRepository = $parameterRepository;
-        $this->producerRepository = $producerRepository;
         $this->productImageRepository = $productImageRepository;
         $this->productParameterRepository = $productParameterRepository;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->roleRepository = $roleRepository;
-//        $this->sizeRepository = $sizeRepository;
         $this->storeRepository = $storeRepository;
         $this->userRepository = $userRepository;
         $this->userSettingRepository = $userSettingRepository;
@@ -114,7 +116,6 @@ class AppFixtures extends Fixture
 
         $this->loadCities();
 
-        $this->loadProducers();
         $this->loadStores();
 
         $this->loadOrders();
@@ -136,14 +137,18 @@ class AppFixtures extends Fixture
         $this->loadProductVariants();
 
         $this->loadOrderStatuses();
+
+        $this->loadConversations();
+
+        $this->loadMessages();
     }
 
-    private function loadRoles()
+    private function loadRoles(): void
     {
         $roleData = [
             ['Super Administrator', 'ROLE_SUPER_ADMIN'],
             ['Administrator', 'ROLE_ADMIN'],
-            ['Producer', 'ROLE_PRODUCER'],
+            ['Store', 'ROLE_PRODUCER'],
             ['Customer', 'ROLE_CUSTOMER'],
             ['User', 'ROLE_USER'],
             ['Guest', 'ROLE_GUEST']
@@ -157,7 +162,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadUsers()
+    private function loadUsers(): void
     {
         $userData = [
             ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1],
@@ -178,7 +183,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadUserSettings()
+    private function loadUserSettings(): void
     {
         $userSettingData = [
             [1, 'de', 1],
@@ -197,7 +202,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadCountries()
+    private function loadCountries(): void
     {
         $countryData = [
             ['Poland', 'PL'],
@@ -220,7 +225,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadCities()
+    private function loadCities(): void
     {
         $cityData = [
             ['Warsaw', 1],
@@ -248,9 +253,9 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadProducers()
+    private function loadStores(): void
     {
-        $producerData = [
+        $storeData = [
             [
                 'Opticomp', 'Opticomp Clothing', null, null,
                 'US773365342', 5, 12, 'CA 92121', '331 Hamill Avenue', 'LarrySLowell@armyspy.com',
@@ -268,38 +273,25 @@ class AppFixtures extends Fixture
             ]
         ];
 
-        foreach ($producerData as $pd) {
-            $producer = new Producer();
-            $producer->setShortName($pd[0]);
-            $producer->setFullName($pd[1]);
-            $producer->setFirstName($pd[2]);
-            $producer->setLastName($pd[3]);
-            $producer->setVat($pd[4]);
-            $producer->setCountry($this->countryRepository->findOneBy(['id' => $pd[5]]));
-            $producer->setCity($this->cityRepository->findOneBy(['id' => $pd[6]]));
-            $producer->setPostalCode($pd[7]);
-            $producer->setStreet($pd[8]);
-            $producer->setEmail($pd[9]);
-            $producer->setPhone($pd[10]);
-            $producer->setUser($this->userRepository->findOneBy(['id' => $pd[11]]));
-            $this->producerRepository->createEntity($producer);
-        }
-    }
-
-    private function loadStores()
-    {
-        $storeData = [
-            ['<h1>Welcome stranger</h1><h2>Take a look at my products!</h2>']
-        ];
-
         foreach ($storeData as $sd) {
             $store = new Store();
-            $store->setFrontPageHtml($sd[0]);
+            $store->setShortName($sd[0]);
+            $store->setFullName($sd[1]);
+            $store->setFirstName($sd[2]);
+            $store->setLastName($sd[3]);
+            $store->setVat($sd[4]);
+            $store->setCountry($this->countryRepository->findOneBy(['id' => $sd[5]]));
+            $store->setCity($this->cityRepository->findOneBy(['id' => $sd[6]]));
+            $store->setPostalCode($sd[7]);
+            $store->setStreet($sd[8]);
+            $store->setEmail($sd[9]);
+            $store->setPhone($sd[10]);
+            $store->setOwner($this->userRepository->findOneBy(['id' => $sd[11]]));
             $this->storeRepository->createEntity($store);
         }
     }
 
-    private function loadOrders()
+    private function loadOrders(): void
     {
         $orderData = [
             [5, 5, '441209205474295847260340']
@@ -315,7 +307,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadAddresses()
+    private function loadAddresses(): void
     {
         $addressData = [
             ['Home', 'producer', 9]
@@ -330,9 +322,12 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadCategories()
+    private function loadCategories(): void
     {
         $categoryData = [
+            ['Electronics'],
+            ['Clothing'],
+            ['Toys'],
             ['Shirts'],
             ['Trousers'],
             ['Shoes'],
@@ -352,12 +347,13 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadProducts()
+    private function loadProducts(): void
     {
         $productData = [
-            ['Cool Shoe', 79.99, 3, 2],
+            ['Cool Shoe', 79.99, 3, 2, 'Cool-Shoe-39', true],
             ['TF Hat No. 7', 12.5, 4, 3],
             ['Simple Top Hat', 65.99, 4, 2],
+            ['11cm Baby Rubber Race Squeaky Duck Bath Toys for Children Fun Educational Musical Big Yellow Duck Bathroom Water Bathing Toys', 1.75, 3, 2, '11cm-Baby-Rubber-Race-Squeaky-Duck-Bath-Toys-for-Children-Fun-Educational-Musical-Big-Yellow-Duck-Bathroom-Water-Bathing-Toys', true],
         ];
 
         foreach ($productData as $pd) {
@@ -365,12 +361,14 @@ class AppFixtures extends Fixture
             $product->setName($pd[0]);
             $product->setPrice($pd[1]);
             $product->setCategory($this->categoryRepository->findOneBy(['id' => $pd[2]]));
-            $product->setProducer($this->producerRepository->findOneBy(['id' => $pd[3]]));
+            $product->setStore($this->storeRepository->findOneBy(['id' => $pd[3]]));
+            $product->setPathSlug($pd[4] ?? null);
+            $product->setActive($pd[5] ?? false);
             $this->productRepository->createEntity($product);
         }
     }
 
-    private function loadParameters()
+    private function loadParameters(): void
     {
         $parameterData = [
             ['Weight', 'g'],
@@ -385,7 +383,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadProductParameters()
+    private function loadProductParameters(): void
     {
         $productParameterData = [
             [1, 1, '250'],
@@ -401,12 +399,16 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadProductImages()
+    private function loadProductImages(): void
     {
         $productImageData = [
             ['uploads/images/shoes/cool-1.jpg', 1, 1],
             ['uploads/images/shoes/cool-2.jpg', 1, 2],
             ['uploads/images/hats/tf7.jpg', 2, 1],
+            ['uploads/images/duck-1.jpg', 4, 1],
+            ['uploads/images/duck-2.jpg', 4, 2],
+            ['uploads/images/duck-3.jpg', 4, 3],
+            ['uploads/images/duck-4.jpg', 4, 4],
         ];
 
         foreach ($productImageData as $pid) {
@@ -418,7 +420,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadVariants()
+    private function loadVariants(): void
     {
         $variantData = [
             ['Black'],
@@ -433,7 +435,7 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadProductVariants()
+    private function loadProductVariants(): void
     {
         $productVariantData = [
             [1, 1, 2],
@@ -451,13 +453,14 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadOrderStatuses()
+    private function loadOrderStatuses(): void
     {
         $orderStatusData = [
-            ['Queued'],
-            ['Pending'],
+            ['Placed'],
+            ['Paid'],
+            ['Shipped'],
             ['Completed'],
-            ['Rejected'],
+            ['Cancelled'],
         ];
 
         foreach ($orderStatusData as $osd) {
@@ -466,6 +469,40 @@ class AppFixtures extends Fixture
             $orderStatus->setName($osd[0]);
 
             $this->orderStatusRepository->createEntity($orderStatus);
+        }
+    }
+
+    private function loadConversations(): void
+    {
+        $conversationData = [
+            [5, 3]
+        ];
+
+        foreach ($conversationData as $cd) {
+            $conversation = new Conversation();
+            $conversation->setUserFrom($this->userRepository->findOneBy(['id' => $cd[0]]));
+            $conversation->setUserTo($this->userRepository->findOneBy(['id' => $cd[1]]));
+
+            $this->conversationRepository->createEntity($conversation);
+        }
+    }
+
+    private function loadMessages(): void
+    {
+        $messageData = [
+            [1, '2019-07-02 12:32:22', 'Hello, I have a question', 1, true],
+            [1, '2019-07-03 09:01:23', 'Hi', 0, false]
+        ];
+
+        foreach ($messageData as $md) {
+            $message = new Message();
+            $message->setConversation($this->conversationRepository->findOneBy(['id' => $md[0]]))
+                ->setDateCreated(new DateTime($md[1]))
+                ->setContent($md[2])
+                ->setIsRead($md[3])
+                ->setIsFromInitiator($md[4]);
+
+            $this->messageRepository->createEntity($message);
         }
     }
 }

@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ producer.shortName }}{% endblock %}
+{% block title %}{{ store.shortName }}{% endblock %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('store_show') }}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ producer.fullName }}</h1>
+    <h1>{{ store.fullName }}</h1>
 
     <div class="producer-top-bar">
         <div class="producer-top-bar-item active" id="top-bar-homepage" href="#homepage">
@@ -34,23 +34,23 @@
     <div class="producer-subpage" id="subpage-homepage">
         Customizable frontpage
         <hr>
-        {{ producer.frontpageHtml | raw }}
+        {{ store.frontpageHtml | raw }}
     </div>
 
     <div class="producer-subpage hidden" id="subpage-products">
         <div class="producer-product-list">
-            {% for product in producer.activeProducts %}
+            {% for product in store.activeProducts %}
                 {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
             {% endfor %}
         </div>
     </div>
 
     <div class="producer-subpage hidden" id="subpage-opinions">
-        {% if producer.opinions is empty %}
+        {% if store.opinions is empty %}
             No ratings
         {% endif %}
 
-        {% for opinion in producer.opinions %}
+        {% for opinion in store.opinions %}
             {% for rating in 1..opinion.rating if opinion.rating != 0 %}
                 <img src="{{ asset('uploads/images/_star_4.png') }}" alt="">
             {% endfor %}
@@ -63,15 +63,15 @@
     </div>
 
     <div class="producer-subpage hidden" id="subpage-contact">
-        if producer:
+        if store:
         <i class="fas fa-edit"></i>
-        {{ producer.firstName }} {{ producer.lastName }}<br>
-        {{ producer.street }}<br>
-        {{ producer.postalCode }} {{ producer.city.name }}<br>
-        {{ producer.country.name }}<br>
-        {{ producer.email | lower }}<br>
-        {{ producer.phone }}<br>
-        VAT: {{ producer.vat }}<br>
+        {{ store.firstName }} {{ store.lastName }}<br>
+        {{ store.street }}<br>
+        {{ store.postalCode }} {{ store.city.name }}<br>
+        {{ store.country.name }}<br>
+        {{ store.email | lower }}<br>
+        {{ store.phone }}<br>
+        VAT: {{ store.vat }}<br>
         + MAP?
     </div>
 {% endblock %}

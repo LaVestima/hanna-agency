@@ -6,10 +6,8 @@ use App\Controller\Infrastructure\BaseController;
 use App\Entity\Product;
 use App\Form\AddToCartType;
 use App\Form\ProductType;
-use App\Repository\ProductImageRepository;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,22 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProductController extends BaseController
 {
-    private $kernel;
     private $productRepository;
-    private $productImageRepository;
 
     public function __construct(
-        KernelInterface $kernel,
-        ProductRepository $productRepository,
-        ProductImageRepository $productImageRepository
+        ProductRepository $productRepository
     ) {
-        $this->kernel = $kernel;
         $this->productRepository = $productRepository;
-        $this->productImageRepository = $productImageRepository;
     }
 
     /**
-     * @Route("/{pathSlug}", name="product_show")
+     * @Route("/show/{pathSlug}", name="product_show")
      */
     public function show(Product $product)
     {
@@ -51,7 +43,28 @@ class ProductController extends BaseController
      */
     public function new(Request $request)
     {
+        $this->denyAccessUnlessGranted('create_product');
 
+        $form = $this->createForm(ProductType::class, null, [
+            'edit' => false,
+            'isAdmin' => $this->isAdmin(),
+            'isProducer' => $this->isStore()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+            $product->setStore($this->getStore());
+
+            $this->productRepository->createEntity($product);
+
+            return $this->redirectToRoute('inventory_home');
+        }
+
+        return $this->render('Product/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -76,13 +89,7 @@ class ProductController extends BaseController
             $em->persist($product);
             $em->flush();
 
-            if ($this->isStore()) {
-                return $this->redirectToRoute('inventory_home');
-            } else {
-                return $this->redirectToRoute('product_show', [
-                    'pathSlug' => $product->getPathSlug(),
-                ]);
-            }
+            return $this->redirectToRoute('inventory_home');
         }
 
         return $this->render('Product/edit.html.twig', [

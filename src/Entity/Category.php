@@ -65,6 +65,11 @@ class Category implements EntityInterface
      */
     private $identifier;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $icon;
+
 
     public function __construct()
     {
@@ -220,6 +225,18 @@ class Category implements EntityInterface
     public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }

@@ -2,31 +2,8 @@
 
 {% block title %}{{ product.name }}{% endblock %}
 
-{% block actionBar %}
-    <a href="{{ path('product_list') }}">
-        <div class="button action-bar-button">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-            List
-        </div>
-    </a>
-    {% if product.dateDeleted is null %}
-        {#<div class="button action-bar-button delete-button" onclick="showConfirmationBox('Are You sure You want to delete the product?', '{{ path('product_delete', {'pathSlug': product.pathSlug}) }}')">#}
-            {#Delete Product#}
-        {#</div>#}
-    {% else %}
-        {# TODO: finish #}
-        {#<a href="{{ path('product_restore', {'pathSlug': product.pathSlug}) }}">#}
-        {#<div class="button action-bar-button">#}
-        {#Restore Product#}
-        {#</div>#}
-        {#</a>#}
-    {% endif %}
-{% endblock %}
-
 {% block content %}
-
     <div class="module-box">
-        {#{% for image in productImages %}#}
         {% for image in product.productImages %}
             <img src="{{ asset(image.filePath) }}" width="200">
         {% endfor %}
@@ -34,22 +11,6 @@
     <div class="module-box">
         <div class="module-box-title">Variants</div>
         <div class="module-box-content">
-{#            {% for variant in product.productVariants %}#}
-{#                {{ variant.variant.name }}#}
-{#                #}{#TODO: change variant id to some code/pathSlug#}
-{#                <input type="radio" value="{{ variant.variant.id }}">#}
-{#                <br>#}
-{#            {% endfor %}#}
-{#            ### Choose size (only available) and quantity <br>#}
-{#            Quantity:#}
-{#            <input type="number" value="1">#}
-{#            <a href="#" class="button" id="add-to-cart" data-product="{{ product.pathSlug }}">#}
-{#                Add to cart#}
-{#                <i class="fas fa-cart-plus"></i>#}
-{#            </a>#}
-
-{#            <hr>#}
-
             {{ form_start(form) }}
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('add_to_cart') }}">
             {{ form_end(form) }}
@@ -70,9 +31,10 @@
                 <tr>
                     <td>Producer</td>
                     <td>
-                        <a href="{{ path('producer_show', {'pathSlug': product.producer.pathSlug}) }}">
-                            {{ product.producer.fullName }}
+                        <a href="{{ path('store_show', {'identifier': product.store.identifier}) }}">
+                            {{ product.store.fullName }}
                         </a>
+                        (Joined: {{ product.store.dateCreated | date('Y-m') }})
                     </td>
                 </tr>
             </table>
@@ -107,6 +69,36 @@
                 {{ productParameter.value }}
                 {{ productParameter.parameter.unit }}
                 <br>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="module-box">
+        <div class="module-box-title">Reviews</div>
+        <div class="module-box-content">
+            {% for review in product.productReviews %}
+                {% for rating in 1..review.rating if review.rating != 0 %}
+                    <img src="{{ asset('uploads/images/_star_4.png') }}" alt="" width="30">
+                {% endfor %}
+                {% for rating in (review.rating+1)..5 if review.rating != 5 %}
+                    <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="30">
+                {% endfor %}
+                {{ review.content }}
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="module-box">
+        <div class="module-box-title">Orders</div>
+        <div class="module-box-content">
+            {% for productVariant in product.productVariants %}
+                {% for orderProductVariant in productVariant.orderProductVariants %}
+                    {{ orderProductVariant.order.user.login }} -
+                    {{ orderProductVariant.quantity }} x {{ orderProductVariant.productVariant.variant.name }}
+                    ({{ orderProductVariant.order.dateCreated | date('d.m.Y') }})
+                    <br>
+                {% endfor %}
             {% endfor %}
         </div>
     </div>

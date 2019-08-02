@@ -2,14 +2,10 @@
 
 namespace App\Helper;
 
-use RandomLib\Factory;
-
 class CrudHelper {
-    public static function generatePathSlug() {
-        $factory = new Factory();
-        $generator = $factory->getMediumStrengthGenerator();
-
-        $pathSlug = $generator->generateString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    public static function generatePathSlug(string $entityName) {
+        $pathSlug = str_replace(' ', '-', $entityName);
+        $pathSlug = strtolower($pathSlug);
 
         return $pathSlug;
     }

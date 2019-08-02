@@ -87,7 +87,6 @@ class BaseController extends AbstractController
             $cartTotal += $item['quantity'];
         }
 
-        $parameters['actionBar'] = $this->actionBar;
         $parameters['cartTotal'] = $cartTotal;
 
         return parent::render($view, $parameters, $response);
@@ -125,10 +124,7 @@ class BaseController extends AbstractController
      */
     protected function getStore()
     {
-        return $this->storeRepository
-            ->readOneEntityBy([
-                'owner' => $this->getUser()
-            ])->getResult();
+        return $this->getUser()->getStores()[0];
     }
 
     /**

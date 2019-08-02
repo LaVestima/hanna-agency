@@ -15,7 +15,11 @@
         <div class="product-item" style="display: flex; background: #b2dba1; margin: 1em 0; padding: 1em; justify-content: space-between;">
             {% include 'Product/parts/_firstImage.html.twig' with {'product': productVariant.product} %}
 
-            <span style="width: 50%;">{{ product.name }} - {{ productVariant.variant.name }}</span>
+            <span style="width: 50%;">
+                <a href="{{ path('product_show', {pathSlug: product.pathSlug}) }}">
+                   {{ product.name }} - {{ productVariant.variant.name }}
+                </a>
+            </span>
 
             <div class="pricing" style="display: inline-block; width: 35%;">
                 {#<ua class="button quantity-decrease">-</ua>#}

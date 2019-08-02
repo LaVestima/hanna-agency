@@ -79,7 +79,7 @@ class Product implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=512, nullable=false)
      */
     private $pathSlug = '';
 

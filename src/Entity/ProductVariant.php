@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Helper\RandomHelper;
 use App\Model\Infrastructure\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductVariantRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class ProductVariant implements EntityInterface
 {
@@ -149,5 +151,13 @@ class ProductVariant implements EntityInterface
     public function getAvailability()
     {
         return $this->availability;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setNewIdentifier()
+    {
+        $this->setIdentifier(RandomHelper::generateString(50));
     }
 }

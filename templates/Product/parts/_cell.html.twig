@@ -1,12 +1,38 @@
-<div style="display: inline-block; width: 19%;">
+<div style="width: calc(20% - 1em); margin: 0.25em;">
     <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
         <div style="display: inline-block; width: 100%; border: 2px solid black;">
             <div style="margin: 10px; padding: 10px; display: flex; flex-direction: column;">
-                <div style="margin-bottom: 10px; text-align: center;">
+                <div style="margin-bottom: 10px; text-align: center; border-radius: 1em;">
                     {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
                 </div>
                 <span style="height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
-                € {{ product.price }}
+                <span>{{ product.store.shortName }}</span>
+                <span>€ {{ product.price }}</span>
+                <div>
+                    {% if product.productReviews|length > 0 %}
+                        {% set ratingAvg = 0 %}
+                        {% for review in product.productReviews %}
+                            {% set ratingAvg = (ratingAvg + review.rating) %}
+                        {% endfor %}
+                        {% set ratingAvg = ratingAvg / (product.productReviews|length) %}
+
+                        {% set ratingAvgRounded = ratingAvg|round(0, 'ceil') %}
+
+                        ({{ product.productReviews|length }})
+                        {% for rating in 1..(ratingAvgRounded-1) if (ratingAvgRounded-1) != 0 %}
+                            <img src="{{ asset('uploads/images/_star_4.png') }}" alt="" width="15">
+                        {% endfor %}
+                        <img src="{{ asset('uploads/images/_star_' ~ ((ratingAvg - (ratingAvgRounded-1)) * 4)|round ~ '.png') }}" alt="" width="15">
+                        {% for rating in (ratingAvgRounded+1)..5 if ratingAvgRounded != 5 %}
+                            <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15">
+                        {% endfor %}
+                    {% else %}
+                        (0)
+                        {% for rating in 1..5 %}
+                            <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15">
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </a>

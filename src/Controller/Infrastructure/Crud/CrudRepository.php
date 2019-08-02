@@ -4,6 +4,7 @@ namespace App\Controller\Infrastructure\Crud;
 
 use App\Controller\Infrastructure\BaseController;
 use App\Helper\CrudHelper;
+use App\Helper\RandomHelper;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityNotFoundException;
@@ -72,11 +73,11 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
         if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
             $entity->setUserCreated($this->user);
         }
-        if (method_exists($entity, 'setPathSlug')) {
-	        $entity->setPathSlug(CrudHelper::generatePathSlug());
+        if (method_exists($entity, 'setPathSlug') && !$entity->getPathSlug()) {
+	        $entity->setPathSlug(RandomHelper::generateString(50));
         }
-        if (method_exists($entity, 'setIdentifier')) {
-            $entity->setIdentifier(CrudHelper::generatePathSlug());
+        if (method_exists($entity, 'setIdentifier') && !$entity->getIdentifier()) {
+            $entity->setIdentifier(RandomHelper::generateString(50));
         }
 
 		$em = $this->manager;

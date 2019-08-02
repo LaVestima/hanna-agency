@@ -27,6 +27,9 @@ class InventoryController extends BaseController
      */
     public function home(Request $request, PaginatorInterface $paginator)
     {
+        // TODO: check access
+
+        // TODO: remove
         if (!$store = $this->getStore()) {
             throw new AccessDeniedHttpException();
         }

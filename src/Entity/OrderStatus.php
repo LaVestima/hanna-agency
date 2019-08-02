@@ -15,10 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OrderStatus implements EntityInterface
 {
-    const QUEUED = 'Queued';
-    const PENDING = 'Pending';
+    const PLACED = 'Placed';
+    const PAID = 'Paid';
+    const SHIPPED = 'Shipped';
     const COMPLETED = 'Completed';
-    const REJECTED = 'Rejected';
+    const CANCELLED = 'Cancelled';
 
     /**
      * @var integer

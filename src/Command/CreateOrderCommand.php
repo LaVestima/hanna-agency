@@ -94,7 +94,7 @@ class CreateOrderCommand extends BaseCreateCommand
             ->readRandomEntities(1)
             ->getResult();
 
-        $order->setDateCreated($this->faker->dateTimeBetween('-7 days', 'now'));
+        $order->setDateCreated($this->faker->dateTimeBetween('-30 days', 'now'));
         $order->setCode(RandomHelper::generateString(24, 'N'));
         $order->setUser($randomUser);
         $order->setUserCreated($randomUser);

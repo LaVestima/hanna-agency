@@ -75,8 +75,8 @@ class AuthenticationHandler implements
 
         $this->session->getFlashBag()->add('success', 'Logged in!');
 
-        if ($token->getUser()->getRole()->getCode() == 'ROLE_PRODUCER') {
-            $routeName = 'producer_dashboard';
+        if ($token->getUser()->getRole()->getCode() === 'ROLE_PRODUCER') {
+            $routeName = 'store_dashboard';
         } else {
             $routeName = 'homepage_homepage';
         }
