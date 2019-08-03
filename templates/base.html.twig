@@ -15,21 +15,44 @@
         {% spaceless %}
         {% block base_stylesheets %}
             {{ encore_entry_link_tags('app') }}
-            {{ encore_entry_link_tags('main_menu') }}
+{#            {{ encore_entry_link_tags('main_menu') }}#}
             <style>
                 /* !!! MOVE TO SEPARATE FILE !!! */
                 #top-bar-wrapper {
                     position: fixed;
                     top: 0;
                     width: 100%;
+                    background: #fff;
+                    border-bottom: 3px solid black;
                     z-index: 999;
+                }
+                #config-bar {
+                    display: flex;
+                    justify-content: flex-end;
+                    font-size: 16px;
+                    height: 55px;
+                    background: rgb(172,167,255);
+                    background: linear-gradient(90deg, rgba(172,167,255,1) 0%, rgba(52,144,255,1) 0%, rgba(0,0,0,1) 100%);
+                }
+                #config-bar .config-bar-item {
+                    /*list-style: none;*/
+                    /*display: flex;*/
+                    flex-direction: column;
+                    /*justify-content: center;*/
+                    text-align: center;
+                    color: #fff;
+                    padding: 0.5em 1em;
+                }
+                #config-bar .config-bar-item:hover {
+                    background: #add8e6;
                 }
                 #top-bar {
                     max-width: 1200px;
                     margin: 0.5em auto;
                     display: flex;
                     justify-content: space-between;
-                    background: #aaa;
+                    align-items: center;
+                    /*background: #aaa;*/
                 }
                 .top-bar-item {
                     padding: 0.5em;
@@ -42,6 +65,7 @@
                 .dropdown-content {
                     display: none;
                     position: absolute;
+                    top: 44px;
                     background-color: #f9f9f9;
                     min-width: 160px;
                     /*padding: 1em;*/
@@ -81,6 +105,35 @@
                     display: block;
                     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
                 }
+
+
+
+
+                .tooltip {
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .tooltip .tooltiptext {
+                    visibility: hidden;
+                    width: 120px;
+                    background-color: black;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px 0;
+
+                    /* Position the tooltip */
+                    position: absolute;
+                    z-index: 1;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -60px;
+                }
+
+                .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                }
             </style>
         {% endblock %}
         {% if block('stylesheets') is defined %}
@@ -90,10 +143,10 @@
     </head>
     <body>
         <div id="top-bar-wrapper">
-            <div id="top-bar" style=""> <!-- actual top bar -->
+            <div id="top-bar" style="">
                 <div class="dropdown">
                     <div class="top-bar-item" style="background: #d62728;">
-                        <i class="fas fa-bars"></i> Categories
+                        <i class="fas fa-bars"></i> ???
                     </div>
                     <div class="dropdown-content dropdown-content-right">
                         {{ render(controller(
@@ -105,19 +158,53 @@
                 <a href="{{ path('homepage_homepage') }}">
                     <div class="top-bar-item">
                         <i class="fas fa-globe"></i>
-                        <span>EJAS</span>
+{#                        <span>EUbuy</span>#}
+                        <span>EuEuEuEuBuy</span>
                     </div>
                 </a>
                 {{ render(controller(
                     'App\\Controller\\Search\\SearchController::searchBar',
-                    { 'searchQuery': searchQuery | default('') }
+                    {
+                        'searchQuery': searchQuery | default(''),
+                        'searchCategory': searchCategory | default('')
+                    }
                 )) }}
+{#                <a href="{{ path('cart_home') }}">#}
+                    <div class="top-bar-item tooltip">
+                        <i class="fas fa-globe"></i>
+                        <span class="tooltiptext">???</span>
+                    </div>
+{#                </a>#}
                 <a href="{{ path('cart_home') }}">
-                    <div class="top-bar-item" style="background: #2aabd2;">
+                    <div class="top-bar-item tooltip">
                         <i class="fas fa-shopping-cart"></i>
-                        ({{ cartTotal }})
+{#                        ({{ cartTotal }})#}
+                        <span class="tooltiptext">Cart</span>
+                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 50%; padding: 0.25em; min-width: 1em; text-align: center; font-size: 16px;">{{ cartTotal }}</span>
                     </div>
                 </a>
+{#                <a href="{{ path('conversation_list') }}">#}
+                    <div class="top-bar-item tooltip">
+                        <i class="fas fa-heart"></i>
+                        <span class="tooltiptext">Wishlist</span>
+                    </div>
+{#                </a>#}
+                <a href="{{ path('conversation_list') }}">
+                    <div class="top-bar-item tooltip">
+                        <i class="fas fa-envelope"></i>
+                        <span class="tooltiptext">Messages</span>
+                    </div>
+                </a>
+{#                <a href="{{ path('conversation_list') }}">#}
+                <div class="top-bar-item tooltip">
+                    <i class="fas fa-question"></i>
+                    <span class="tooltiptext">Help</span>
+                </div>
+{#                </a>#}
+
+
+
+
                 <div class="dropdown">
                     <div class="top-bar-item" style="background: #985f0d;">
                         <i class="fas fa-user"></i>
@@ -146,8 +233,8 @@
                         <hr>
 
                         {% if is_granted('ROLE_PRODUCER') %}
-                            <b>{{ app.user.producers[0].shortName }}</b>
-                            <a href="{{ path('producer_dashboard') }}">
+                            <b>{{ app.user.stores[0].shortName }}</b>
+                            <a href="{{ path('store_dashboard') }}">
                                 <div>
                                     <i class="fas fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
@@ -221,15 +308,15 @@
         {# TODO: deploy: delete #}
         {# Twig dump #}
             {% if app.debug %}
-                <div style="position: fixed; bottom: 35px;">
-                {{ dump() }}
+                <div style="position: fixed; bottom: 35px; left:10px;">
+{#                {{ dump() }}#}
                 </div>
             {% endif %}
         {# Twig dump #}
 
         {% block base_javascripts %}
             {{ encore_entry_script_tags('app') }}
-            {{ encore_entry_script_tags('main_menu') }}
+{#            {{ encore_entry_script_tags('main_menu') }}#}
         {% endblock %}
         {% if block('javascripts') is defined %}
             {{ block('javascripts') }}

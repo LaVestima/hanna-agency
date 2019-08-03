@@ -55,17 +55,19 @@ class SearchController extends BaseController
         return $this->render('Search/search.html.twig', [
             'pagination' => $pagination,
             'form' => $form->createView(),
-            'searchQuery' => $searchQuery
+            'searchQuery' => $searchQuery,
+            'searchCategory' => $searchCategory
         ]);
     }
 
-    public function searchBar(string $searchQuery = '')
+    public function searchBar(string $searchQuery = '', string $searchCategory = '')
     {
         $form = $this->createForm(SearchBarType::class, null, [
             'action' => $this->generateUrl('search_home')
         ]);
 
         $form->get('query')->setData($searchQuery);
+        $form->get('category')->setData($searchCategory);
 
         return $this->render('Search/parts/searchBar.html.twig', [
             'form' => $form->createView()

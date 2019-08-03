@@ -1,6 +1,22 @@
 <div>
+    {# TODO: SEPARATE FILE #}
+    <style>
+        #search_bar #query {
+            border-radius: 2em 0 0 2em;
+            padding-left: 1em;
+            border: 2px solid black;
+            border-right: none;
+        }
+        #search_bar #category {
+            border: 2px solid black;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            padding: 0.5em;
+        }
+    </style>
     {{ form_start(form, {'attr': {'id': 'search_bar', 'style': 'display: flex'}}) }}
         {{ form_widget(form['query']) }}
-        <button type="submit"><i class="fas fa-search"></i></button>
+        {{ form_widget(form['category']) }}
+        <button type="submit" style="border-radius: 0 2em 2em 0; padding-right: 1em; border: 2px solid black; border-left: none;"><i class="fas fa-search"></i></button>
     {{ form_end(form) }}
 </div>

@@ -3,52 +3,74 @@
 {% block title %}Search products{% endblock %}
 
 {% block content %}
-    <div style="position: sticky; top: 70px; background: #FFFFFF; box-shadow: 0 0 5px 2px #000; margin: 10px 0; z-index: 2;">
-{#        ###  Search fields:<br>#}
+    <style>
+        #form-filters input, #form-filters select {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
 
-        {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'id': 'form-filters'}}) }}
+    <div style="display: flex; position: relative; width: 100%;">
+        <div id="filtering-bar" style="width: 15%; background: #ffffff; padding: 0.5em; margin: 0.5em;">
+            <h2>Filters</h2>
+{#        TODO: filtering (categories?, parameters?, ...), sorting (price, dateAdded, opinions/ratings, ...)#}
+            <div style="display: flex; flex-direction: column;">
+                <div>
+                    {{ form_label(form.query) }}<br>
+                    {{ form_widget(form.query) }}
+                </div>
 
-        <div style="display: flex;">
-            <div style="margin: 1em">
-                {{ form_label(form.query) }}<br>
-                {{ form_widget(form.query) }}
-            </div>
+                <div>
+                    {{ form_label(form.category) }}<br>
+                    {{ form_widget(form.category) }}
+                </div>
 
-            <div style="margin: 1em">
-                {{ form_label(form.category) }}<br>
-                {{ form_widget(form.category) }}
-            </div>
+                <div>
+                    Price<br>
+                    {{ form_widget(form.priceMin) }} to
+                    {{ form_widget(form.priceMax) }}
+                </div>
 
-            <div style="margin: 1em">
-                Price<br>
-                {{ form_widget(form.priceMin) }} to
-                {{ form_widget(form.priceMax) }}
-            </div>
+                <div>
+                    {{ form_label(form.country) }}<br>
+                    {{ form_widget(form.country) }}
+                </div>
 
-            <div style="margin: 1em">
-                {{ form_label(form.sorting) }}<br>
-                {{ form_widget(form.sorting) }}
+                <div style="margin: 1em 0; text-align: right;">
+                    {{ form_widget(form.submit) }}
+                </div>
             </div>
         </div>
 
-        {{ form_end(form) }}
+        <div style="width: 85%;">
+            <div id="sorting-bar" style="background: #ffffff; padding: 0.5em; margin: 0.5em;">
+{#                <h2>Sorting</h2>#}
 
-        TODO: filtering (categories?, parameters?, ...), sorting (price, dateAdded, opinions/ratings, ...)
+                <div style="display: inline-block; margin: 1em;">
+                    {{ form_label(form.sorting) }}<br>
+                    {{ form_widget(form.sorting) }}
+                </div>
+            </div>
+
+            <div>
+                Found: {{ pagination.getTotalItemCount }}
+
+                {% if pagination is empty %}
+                    No Products found
+                {% endif %}
+
+                <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start;">
+                    {% for product in pagination %}
+                        {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
+                    {% endfor %}
+                </div>
+
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        </div>
     </div>
-
-    Found: {{ pagination.getTotalItemCount }}
-
-    {% if pagination is empty %}
-        No Products found
-    {% endif %}
-
-    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-evenly;">
-    {% for product in pagination %}
-        {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
-    {% endfor %}
-    </div>
-
-    <div class="navigation">
-        {{ knp_pagination_render(pagination) }}
-    </div>
+    {{ form_end(form) }}
 {% endblock %}
