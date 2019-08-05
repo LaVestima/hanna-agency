@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Controller\Infrastructure\Crud\CrudRepository;
 use App\Entity\OrderStatus;
 use App\Entity\Store;
+use App\Helper\CrudHelper;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -13,6 +14,13 @@ class StoreRepository extends CrudRepository
     public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
     {
         parent::__construct($registry, Store::class, $tokenStorage);
+    }
+
+    public function createEntity($entity)
+    {
+        $entity->setIdentifier(CrudHelper::generatePathSlug($entity->getFullName()));
+
+        parent::createEntity($entity);
     }
 
     public function findOrdersByStatus(OrderStatus $orderStatus, Store $store)

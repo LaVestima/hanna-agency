@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {{ subuser.user.email }}<br>
+
+    {% for role in subuser.roles %}
+        {{ role }}<br>
+    {% endfor %}
+{% endblock %}

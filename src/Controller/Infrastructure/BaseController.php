@@ -5,7 +5,6 @@ namespace App\Controller\Infrastructure;
 use App\Controller\Infrastructure\Action\ActionControllerTrait;
 use App\Controller\Infrastructure\Action\ListActionControllerTrait;
 use App\Controller\Infrastructure\Action\NewActionControllerTrait;
-use App\Controller\Infrastructure\Action\ShowActionControllerTrait;
 use App\Repository\StoreRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +18,6 @@ class BaseController extends AbstractController
 {
     use ActionControllerTrait;
     use ListActionControllerTrait;
-    use ShowActionControllerTrait;
     use NewActionControllerTrait;
 
     /**

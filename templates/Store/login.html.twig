@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1>{{ store.fullName }}</h1>
+
+        <div style="padding: 2em; border: 1px solid black; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+{#            <input type="text">#}
+            <span>Logging in as {{ user.email }}</span>
+
+            {{ form_start(form) }}
+                {{ form_widget(form.password) }}
+                {{ form_widget(form.submit) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

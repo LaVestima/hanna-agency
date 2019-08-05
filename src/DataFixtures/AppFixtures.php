@@ -11,12 +11,14 @@ use App\Entity\Message;
 use App\Entity\Order;
 use App\Entity\OrderStatus;
 use App\Entity\Parameter;
+use App\Entity\ShipmentOption;
 use App\Entity\Store;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Entity\ProductParameter;
 use App\Entity\ProductVariant;
 use App\Entity\Role;
+use App\Entity\StoreSubuser;
 use App\Entity\User;
 use App\Entity\UserSetting;
 use App\Entity\Variant;
@@ -34,7 +36,9 @@ use App\Repository\ProductParameterRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\RoleRepository;
+use App\Repository\ShipmentOptionRepository;
 use App\Repository\StoreRepository;
+use App\Repository\StoreSubuserRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use App\Repository\VariantRepository;
@@ -59,7 +63,9 @@ class AppFixtures extends Fixture
     private $productRepository;
     private $productVariantRepository;
     private $roleRepository;
+    private $shipmentOptionRepository;
     private $storeRepository;
+    private $storeSubuserRepository;
     private $userRepository;
     private $userSettingRepository;
     private $variantRepository;
@@ -79,7 +85,9 @@ class AppFixtures extends Fixture
         ProductRepository $productRepository,
         ProductVariantRepository $productVariantRepository,
         RoleRepository $roleRepository,
+        ShipmentOptionRepository $shipmentOptionRepository,
         StoreRepository $storeRepository,
+        StoreSubuserRepository $storeSubuserRepository,
         UserRepository $userRepository,
         UserSettingRepository $userSettingRepository,
         VariantRepository $variantRepository
@@ -98,7 +106,9 @@ class AppFixtures extends Fixture
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->roleRepository = $roleRepository;
+        $this->shipmentOptionRepository = $shipmentOptionRepository;
         $this->storeRepository = $storeRepository;
+        $this->storeSubuserRepository = $storeSubuserRepository;
         $this->userRepository = $userRepository;
         $this->userSettingRepository = $userSettingRepository;
         $this->variantRepository = $variantRepository;
@@ -141,6 +151,10 @@ class AppFixtures extends Fixture
         $this->loadConversations();
 
         $this->loadMessages();
+
+        $this->loadShipmentOptions();
+
+        $this->loadStoreSubusers();
     }
 
     private function loadRoles(): void
@@ -503,6 +517,39 @@ class AppFixtures extends Fixture
                 ->setIsFromInitiator($md[4]);
 
             $this->messageRepository->createEntity($message);
+        }
+    }
+
+    private function loadShipmentOptions()
+    {
+        $shipmentOptionsData = [
+            ['DHL', 11.50],
+            ['ADC', 7.90],
+            ['Fedex', 5.00]
+        ];
+
+        foreach ($shipmentOptionsData as $sod) {
+            $shipmentOption = new ShipmentOption();
+            $shipmentOption->setName($sod[0])
+                ->setCost($sod[1]);
+
+            $this->shipmentOptionRepository->createEntity($shipmentOption);
+        }
+    }
+
+    private function loadStoreSubusers()
+    {
+        $storeSubuserData = [
+            [3, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ'], // pass: store
+        ];
+
+        foreach ($storeSubuserData as $ssd) {
+            $storeSubuser = new StoreSubuser();
+            $storeSubuser->setUser($this->userRepository->findOneBy(['id' => $ssd[0]]))
+                ->setStore($this->storeRepository->findOneBy(['id' => $ssd[1]]))
+                ->setPasswordHash($ssd[2]);
+
+            $this->storeSubuserRepository->createEntity($storeSubuser);
         }
     }
 }

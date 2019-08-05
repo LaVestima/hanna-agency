@@ -181,12 +181,18 @@ class Store implements EntityInterface
      */
     private $owner;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StoreSubuser", mappedBy="store", orphanRemoval=true)
+     */
+    private $storeSubusers;
+
 
     public function __construct()
     {
         $this->dateCreated = new \DateTime();
         $this->products = new ArrayCollection();
         $this->opinions = new ArrayCollection();
+        $this->storeSubusers = new ArrayCollection();
     }
 
     /**
@@ -649,6 +655,37 @@ class Store implements EntityInterface
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StoreSubuser[]
+     */
+    public function getStoreSubusers(): Collection
+    {
+        return $this->storeSubusers;
+    }
+
+    public function addStoreSubuser(StoreSubuser $storeSubuser): self
+    {
+        if (!$this->storeSubusers->contains($storeSubuser)) {
+            $this->storeSubusers[] = $storeSubuser;
+            $storeSubuser->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoreSubuser(StoreSubuser $storeSubuser): self
+    {
+        if ($this->storeSubusers->contains($storeSubuser)) {
+            $this->storeSubusers->removeElement($storeSubuser);
+            // set the owning side to null (unless already changed)
+            if ($storeSubuser->getStore() === $this) {
+                $storeSubuser->setStore(null);
+            }
+        }
 
         return $this;
     }

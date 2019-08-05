@@ -157,7 +157,8 @@
                 </div>
                 <a href="{{ path('homepage_homepage') }}">
                     <div class="top-bar-item">
-                        <i class="fas fa-globe"></i>
+{#                        <i class="fas fa-globe"></i>#}
+                        <i class="fas fa-ambulance"></i>
 {#                        <span>EUbuy</span>#}
                         <span>EuEuEuEuBuy</span>
                     </div>
@@ -180,7 +181,7 @@
                         <i class="fas fa-shopping-cart"></i>
 {#                        ({{ cartTotal }})#}
                         <span class="tooltiptext">Cart</span>
-                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 50%; padding: 0.25em; min-width: 1em; text-align: center; font-size: 16px;">{{ cartTotal }}</span>
+                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;">{{ cartTotal }}</span>
                     </div>
                 </a>
 {#                <a href="{{ path('conversation_list') }}">#}
@@ -248,6 +249,18 @@
                             </a>
                         {% endif %}
 
+                        {% if app.user %}
+                            {% if is_granted('ROLE_STORE_SUBUSER') %}
+                                <a class="button" href="{{ path('store_logout') }}">Store Logout</a>
+                            {% else %}
+                                {% for store in app.user.stores %}
+                                    <a class="button" href="{{ path('store_login', {'identifier': store.identifier}) }}">
+                                        {{ store.shortName }} login <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+
                         <hr>
 
                         <a href="{{ path('order_list') }}">
@@ -260,7 +273,6 @@
                                 <i class="fas fa-cog"></i> Settings
                             </div>
 {#                        </a>#}
-
                     </div>
                 </div>
             </div>
@@ -271,12 +283,25 @@
         </div>
 
         <div class="flash-message-list">
-            {% for type, flash_messages in app.session.flashBag.all %}
-                {% for flash_message in flash_messages %}
-                    <div class="flash-message flash-{{ type }}">
-                        {{ flash_message }}
-                    </div>
-                {% endfor %}
+            {% for message in app.flashes('success') %}
+                <div class="flash-message flash-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('notice') %}
+                <div class="flash-message flash-notice">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('warning') %}
+                <div class="flash-message flash-warning">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="flash-message flash-error">
+                    {{ message }}
+                </div>
             {% endfor %}
         </div>
 
@@ -309,13 +334,14 @@
         {# Twig dump #}
             {% if app.debug %}
                 <div style="position: fixed; bottom: 35px; left:10px;">
-{#                {{ dump() }}#}
+                {{ dump() }}
                 </div>
             {% endif %}
         {# Twig dump #}
 
         {% block base_javascripts %}
             {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('flash_message') }}
 {#            {{ encore_entry_script_tags('main_menu') }}#}
         {% endblock %}
         {% if block('javascripts') is defined %}

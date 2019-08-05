@@ -5,15 +5,18 @@ namespace App\Controller\Store;
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\OrderStatus;
 use App\Entity\Store;
+use App\Form\StoreLoginType;
 use App\Repository\OrderProductVariantRepository;
 use App\Repository\OrderStatusRepository;
-use App\Repository\ProductImageRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StoreRepository;
+use App\Repository\StoreSubuserRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @Route("/store")
@@ -23,35 +26,114 @@ class StoreController extends BaseController
     private $orderProductVariantRepository;
     private $orderStatusRepository;
     private $storeRepository;
+    private $storeSubuserRepository;
     private $productRepository;
-    private $productImageRepository;
 
     public function __construct(
         OrderProductVariantRepository $orderProductVariantRepository,
         OrderStatusRepository $orderStatusRepository,
         StoreRepository $storeRepository,
-        ProductRepository $productRepository,
-        ProductImageRepository $productImageRepository
+        StoreSubuserRepository $storeSubuserRepository,
+        ProductRepository $productRepository
     ) {
         $this->orderProductVariantRepository = $orderProductVariantRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->storeRepository = $storeRepository;
+        $this->storeSubuserRepository = $storeSubuserRepository;
         $this->productRepository = $productRepository;
-        $this->productImageRepository = $productImageRepository;
     }
 
     /**
-     * @Route("/show/{pathSlug}", name="store_show")
+     * @Route("/show/{identifier}", name="store_show")
      */
     public function show(Store $store)
     {
-        $this->setView('Store/show.html.twig');
-        $this->setTemplateEntities([
-            'producer' => $store,
+        // TODO: check access
+
+        return $this->render('Store/show.html.twig', [
+            'store' => $store,
             'editable' => $store === $this->getStore()
         ]);
+    }
 
-        return $this->baseShow();
+    /**
+     * @Route("/login/{identifier}", name="store_login")
+     */
+    public function login(Store $store, Request $request)
+    {
+        $user = $this->getUser();
+
+        $storeSubuser = $this->storeSubuserRepository->findOneBy([
+            'user' => $user,
+            'store' => $store
+        ]);
+
+        if (!$storeSubuser) {
+            var_dump('error!!!!!!!!!!!!');
+            die();
+            // TODO: show error page
+        }
+
+
+        // TODO: check access (only user with this store assigned to? otherwise, error message and no login form)
+
+        $form = $this->createForm(StoreLoginType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (password_verify($form->get('password')->getData(), $storeSubuser->getPasswordHash())) {
+                $user->addRoles(array_merge(['ROLE_STORE_SUBUSER'], $storeSubuser->getRoles()));
+
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+
+                $this->container->get('security.token_storage')->setToken($token);
+
+                $this->addFlash('success', 'Successfully logged in');
+            } else {
+                $this->addFlash('error', 'Wrong password');
+            }
+        }
+
+        return $this->render('Store/login.html.twig', [
+            'store' => $store,
+            'user' => $this->getUser(),
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/logout", name="store_logout")
+     */
+    public function logout()
+    {
+        $user = $this->getUser();
+
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+
+        $this->container->get('security.token_storage')->setToken($token);
+
+        $this->addFlash('success', 'Successfully logged out');
+
+        return $this->redirectToRoute('homepage_homepage');
+    }
+
+    /**
+     * @Route("/subuser/settings")
+     */
+    public function subuserSettings()
+    {
+        // TODO: check if user is store admin
+
+        // TODO: get current store in other way
+        $subuser = $this->storeSubuserRepository->findOneBy([
+            'id' => 1
+        ]);
+
+//        'omni-architectural-designs'
+
+        return $this->render('Store/subuser_settings.html.twig', [
+            'subuser' => $subuser
+        ]);
     }
 
     /**
@@ -59,14 +141,29 @@ class StoreController extends BaseController
      */
     public function dashboard()
     {
-
-        // TODO: check if user is a store
+        $this->denyAccessUnlessGranted('view_dashboard');
 
         $store = $this->getStore();
 
         $orderProductVariants = $this->orderProductVariantRepository
             ->getByStore($store);
 
+        $chartOrderProductVariants = $this->generateOrderProductVariantsChartData($orderProductVariants);
+
+        $ordersPending = $this->storeRepository->findOrdersByStatus(
+            $this->orderStatusRepository->findOneBy(['name' => OrderStatus::PAID]),
+            $store
+        );
+//        var_dump($ordersPending);
+
+        return $this->render('Producer/dashboard.html.twig', [
+            'chartOrderProductVariants' => $chartOrderProductVariants,
+            'ordersPending' => $ordersPending
+        ]);
+    }
+
+    private function generateOrderProductVariantsChartData($orderProductVariants)
+    {
         $quantityOrderProductVariants = [];
         $chartOrderProductVariants = [];
 
@@ -83,7 +180,9 @@ class StoreController extends BaseController
         foreach ($orderProductVariants as $orderProductVariant) {
             $orderDateCreated = $orderProductVariant->getOrder()->getDateCreated();
 
-            $quantityOrderProductVariants[$orderDateCreated->format('Y-m-d')] += $orderProductVariant->getQuantity();
+            if ($orderDateCreated >= $period->getStartDate() && $orderDateCreated <= $period->getEndDate()) {
+                $quantityOrderProductVariants[$orderDateCreated->format('Y-m-d')] += $orderProductVariant->getQuantity();
+            }
         }
 
         $dateCounter = 0;
@@ -95,15 +194,6 @@ class StoreController extends BaseController
             $dateCounter++;
         }
 
-        $ordersPending = $this->storeRepository->findOrdersByStatus(
-            $this->orderStatusRepository->findOneBy(['name' => OrderStatus::PAID]),
-            $store
-        );
-//        var_dump($ordersPending);
-
-        return $this->render('Producer/dashboard.html.twig', [
-            'chartOrderProductVariants' => $chartOrderProductVariants,
-            'ordersPending' => $ordersPending
-        ]);
+        return $chartOrderProductVariants;
     }
 }
