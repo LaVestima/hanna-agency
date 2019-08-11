@@ -1,6 +1,6 @@
 {# TODO: movve css to separate file #}
 {% if product.productImages.get(0).filePath is defined %}
-    <img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" style="width: 100%; max-width: 150px; height: 150px; object-fit: cover; border-radius: 0.5em;">
+    <img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" style="width: 100%; object-fit: cover; border-radius: 0.5em;">
 {% else %}
-    <img src="{{ asset('/uploads/images/no-image.png') }}" alt="" style="width: 100%; max-width: 150px; height: 150px; border-radius: 0.5em;">
+    <img src="{{ asset('/uploads/images/no-image.png') }}" alt="" style="width: 100%; border-radius: 0.5em;">
 {% endif %}

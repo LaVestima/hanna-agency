@@ -3,8 +3,8 @@
 namespace App\Controller\Order;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Order;
 use App\Repository\OrderRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,8 +26,7 @@ class OrderController extends BaseController
         $orders = $this->orderRepository->readEntitiesBy([
             'user' => $this->getUser()
         ])
-//            ->fetchJoin('orderProductVariants')
-            ->getResultAsArray();
+        ->getResultAsArray();
 
 
         return $this->render('Order/list.html.twig', [
@@ -38,13 +37,11 @@ class OrderController extends BaseController
     /**
      * @Route("/order/{code}", name="order_show")
      */
-    public function show(string $code)
+//    public function show(string $code)
+    public function show(Order $order)
     {
-        $order = $this->orderRepository->readOneEntityBy([
-            'code' => $code,
-        ])->getResult();
-
-        if (!$order) { throw new HttpException(404); }
+        // TODO: fix access control
+        // TODO: either user who placed or store subuser
         if ($order->getUser() != $this->getUser()) { throw new HttpException(401); }
 
         return $this->render('Order/show.html.twig', [

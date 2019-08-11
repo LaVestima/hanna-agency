@@ -13,7 +13,9 @@
 {#        {{ dump(productVariant) }}#}
         {% set product = productVariant.product %}
         <div class="product-item" style="display: flex; background: #b2dba1; margin: 1em 0; padding: 1em; justify-content: space-between;">
-            {% include 'Product/parts/_firstImage.html.twig' with {'product': productVariant.product} %}
+            <div style="max-width: 150px;">
+                {% include 'Product/parts/_firstImage.html.twig' with {'product': productVariant.product} %}
+            </div>
 
             <span style="width: 50%;">
                 <a href="{{ path('product_show', {pathSlug: product.pathSlug}) }}">

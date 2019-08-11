@@ -3,5 +3,60 @@
 {% block title 'Dashboard' %}
 
 {% block content %}
+    <style>
+        .dashboard-section-row {
+            display: flex;
+        }
+        .dashboard-section {
+            border: 1px solid black;
+            margin: 0.25em;
+            padding: 0.5em;
+        }
+        .dashboard-section-half {
+            width: 50%;
+        }
+    </style>
+
     Producer Dashboard
+
+    <div class="dashboard-section-row">
+        <div class="dashboard-section dashboard-section-half">
+            <b>Pending orders</b><br>
+            {% for order in ordersPending %}
+                <a href="{{ path('order_show', {'code': order.code}) }}">{{ order.code }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="dashboard-section dashboard-section-half">
+            <b>Messages</b><br>
+        </div>
+    </div>
+
+    <div class="dashboard-section-row">
+        <div class="dashboard-section dashboard-section-half">
+            <b>Orders (30 days)</b>
+            <div id="orderProductVariantChart" style="height: 250px;"></div>
+        </div>
+        <div class="dashboard-section dashboard-section-half">
+        </div>
+    </div>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script>{% spaceless %}
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("orderProductVariantChart", {
+                animationEnabled: true,
+                axisX: {
+                    // labelFontSize: 0
+                },
+                data: [{
+                    type: "column",
+                    color: "green",
+                    dataPoints: {{ chartOrderProductVariants | json_encode | raw }}
+                }]
+            });
+
+            chart.render();
+        };{% endspaceless %}
+    </script>
 {% endblock %}

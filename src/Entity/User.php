@@ -102,11 +102,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     private $loginAttempts;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Producer", mappedBy="user", orphanRemoval=true)
-     */
-    private $producers;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="user")
      */
     private $orders;
@@ -116,6 +111,36 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $pageVisits;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Store", mappedBy="owner")
+     */
+    private $stores;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userFrom")
+     */
+    private $conversationsSent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userTo")
+     */
+    private $conversationsReceived;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductReview", mappedBy="user")
+     */
+    private $productReviews;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StoreSubuser", mappedBy="user", orphanRemoval=true)
+     */
+    private $storeSubusers;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
 
 
     public function __construct()
@@ -124,9 +149,13 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->tokens = new ArrayCollection();
         $this->userSettings = new ArrayCollection();
         $this->loginAttempts = new ArrayCollection();
-        $this->producers = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->pageVisits = new ArrayCollection();
+        $this->stores = new ArrayCollection();
+        $this->conversationsSent = new ArrayCollection();
+        $this->conversationsReceived = new ArrayCollection();
+        $this->productReviews = new ArrayCollection();
+        $this->storeSubusers = new ArrayCollection();
     }
 
     public function __toString() {
@@ -300,8 +329,33 @@ class User implements UserInterface, \Serializable, EntityInterface
         return $this->passwordHash;
     }
 
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     public function getRoles() {
-        return [$this->getRole()->getCode()];
+//        return [$this->getRole()->getCode(), 'ROLE_BBB'];
+
+        $roles = $this->roles;
+
+        if (empty($roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return array_unique($roles);
+    }
+
+    public function addRole(string $role)
+    {
+        $this->roles[] = $role;
+    }
+
+    public function addRoles(array $roles)
+    {
+        $this->roles = array_merge($this->roles, $roles);
     }
 
     public function eraseCredentials() {
@@ -460,37 +514,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     }
 
     /**
-     * @return Collection|Producer[]
-     */
-    public function getProducers(): Collection
-    {
-        return $this->producers;
-    }
-
-    public function addProducer(Producer $producer): self
-    {
-        if (!$this->producers->contains($producer)) {
-            $this->producers[] = $producer;
-            $producer->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProducer(Producer $producer): self
-    {
-        if ($this->producers->contains($producer)) {
-            $this->producers->removeElement($producer);
-            // set the owning side to null (unless already changed)
-            if ($producer->getUser() === $this) {
-                $producer->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Order[]
      */
     public function getOrders(): Collection
@@ -546,6 +569,161 @@ class User implements UserInterface, \Serializable, EntityInterface
             // set the owning side to null (unless already changed)
             if ($pageVisit->getUser() === $this) {
                 $pageVisit->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Store[]
+     */
+    public function getStores(): Collection
+    {
+        return $this->stores;
+    }
+
+    public function addStore(Store $store): self
+    {
+        if (!$this->stores->contains($store)) {
+            $this->stores[] = $store;
+            $store->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStore(Store $store): self
+    {
+        if ($this->stores->contains($store)) {
+            $this->stores->removeElement($store);
+            // set the owning side to null (unless already changed)
+            if ($store->getOwner() === $this) {
+                $store->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Conversation[]
+     */
+    public function getConversationsSent(): Collection
+    {
+        return $this->conversationsSent;
+    }
+
+    public function addConversationsSent(Conversation $conversationsSent): self
+    {
+        if (!$this->conversationsSent->contains($conversationsSent)) {
+            $this->conversationsSent[] = $conversationsSent;
+            $conversationsSent->setUserFrom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationsSent(Conversation $conversationsSent): self
+    {
+        if ($this->conversationsSent->contains($conversationsSent)) {
+            $this->conversationsSent->removeElement($conversationsSent);
+            // set the owning side to null (unless already changed)
+            if ($conversationsSent->getUserFrom() === $this) {
+                $conversationsSent->setUserFrom(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Conversation[]
+     */
+    public function getConversationsReceived(): Collection
+    {
+        return $this->conversationsReceived;
+    }
+
+    public function addConversationsReceived(Conversation $conversationsReceived): self
+    {
+        if (!$this->conversationsReceived->contains($conversationsReceived)) {
+            $this->conversationsReceived[] = $conversationsReceived;
+            $conversationsReceived->setUserTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationsReceived(Conversation $conversationsReceived): self
+    {
+        if ($this->conversationsReceived->contains($conversationsReceived)) {
+            $this->conversationsReceived->removeElement($conversationsReceived);
+            // set the owning side to null (unless already changed)
+            if ($conversationsReceived->getUserTo() === $this) {
+                $conversationsReceived->setUserTo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductReview[]
+     */
+    public function getProductReviews(): Collection
+    {
+        return $this->productReviews;
+    }
+
+    public function addProductReview(ProductReview $productReview): self
+    {
+        if (!$this->productReviews->contains($productReview)) {
+            $this->productReviews[] = $productReview;
+            $productReview->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductReview(ProductReview $productReview): self
+    {
+        if ($this->productReviews->contains($productReview)) {
+            $this->productReviews->removeElement($productReview);
+            // set the owning side to null (unless already changed)
+            if ($productReview->getUser() === $this) {
+                $productReview->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StoreSubuser[]
+     */
+    public function getStoreSubusers(): Collection
+    {
+        return $this->storeSubusers;
+    }
+
+    public function addStoreSubuser(StoreSubuser $storeSubuser): self
+    {
+        if (!$this->storeSubusers->contains($storeSubuser)) {
+            $this->storeSubusers[] = $storeSubuser;
+            $storeSubuser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoreSubuser(StoreSubuser $storeSubuser): self
+    {
+        if ($this->storeSubusers->contains($storeSubuser)) {
+            $this->storeSubusers->removeElement($storeSubuser);
+            // set the owning side to null (unless already changed)
+            if ($storeSubuser->getUser() === $this) {
+                $storeSubuser->setUser(null);
             }
         }
 

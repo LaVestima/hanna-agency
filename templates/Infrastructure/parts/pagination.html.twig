@@ -1,67 +1,122 @@
 {% if pageCount > 1 %}
-    <div class="pagination">
-        {% if first is defined and current == first %}
-            <div class="button first inactive">
-                &lt;&lt;
-            </div>
-            <div class="button previous inactive">
-                &lt;
-            </div>
-        {% elseif first is defined and current != first %}
-            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">
-                <div class="button first">
-                    &lt;&lt;
-                </div>
-            </a>
-        {% endif %}
+<style>
+    .pagination span {
+        margin: 0 0.5em;
+    }
+</style>
 
-        {% if previous is defined %}
-            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
-                <div class="button previous">
-                    &lt;
-                </div>
-            </a>
-        {% endif %}
-
-        {% for page in pagesInRange %}
-            {% if page != current %}
+<div class="pagination" style="display: flex; justify-content: flex-end; align-items: center; margin-right: 0;">
+    {% for page in pagesInRange %}
+        {% if page != current %}
+            <span>
                 <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">
-                    <div class="button page">
-                        {{ page }}
-                    </div>
-                </a>
-            {% else %}
-                <div class="button active current">
                     {{ page }}
-                </div>
-            {% endif %}
-        {% endfor %}
-
-        {% if next is defined %}
-            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">
-                <div class="button next">
-                    &gt;
-                </div>
-            </a>
+                </a>
+            </span>
+        {% else %}
+            <span>
+                <b>
+                    {{ page }}
+                </b>
+            </span>
         {% endif %}
+    {% endfor %}
 
-        {% if last is defined and current == last %}
-            <div class="button next inactive">
-                &gt;
+    ...
+
+    <span>
+        <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
+            {{ last }}
+        </a>
+    </span>
+
+    <div>
+        <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+            <div style="background: #D3D3D3; border-radius: 0.5em; padding: 0.5em 0.75em;">
+                Next
+                <i class="fas fa-chevron-right"></i>
             </div>
-            <div class="button last inactive">
-                &gt;&gt;
-            </div>
-        {% elseif last is defined and current != last %}
-            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
-                <div class="button last">
-                    &gt;&gt;
-                </div>
-            </a>
-        {% endif %}
-        <br>
-        <div class="pagination-footer">
-            {{ firstItemNumber }} - {{ lastItemNumber }} / {{ totalCount }}
-        </div>
+        </a>
     </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#    <div class="pagination">#}
+{#        {% if first is defined and current == first %}#}
+{#            <div class="button first inactive">#}
+{#                &lt;&lt;#}
+{#            </div>#}
+{#            <div class="button previous inactive">#}
+{#                &lt;#}
+{#            </div>#}
+{#        {% elseif first is defined and current != first %}#}
+{#            <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">#}
+{#                <div class="button first">#}
+{#                    &lt;&lt;#}
+{#                </div>#}
+{#            </a>#}
+{#        {% endif %}#}
+
+{#        {% if previous is defined %}#}
+{#            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">#}
+{#                <div class="button previous">#}
+{#                    &lt;#}
+{#                </div>#}
+{#            </a>#}
+{#        {% endif %}#}
+
+{#        {% for page in pagesInRange %}#}
+{#            {% if page != current %}#}
+{#                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">#}
+{#                    <div class="button page">#}
+{#                        {{ page }}#}
+{#                    </div>#}
+{#                </a>#}
+{#            {% else %}#}
+{#                <div class="button active current">#}
+{#                    {{ page }}#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+
+{#        {% if next is defined %}#}
+{#            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">#}
+{#                <div class="button next">#}
+{#                    &gt;#}
+{#                </div>#}
+{#            </a>#}
+{#        {% endif %}#}
+
+{#        {% if last is defined and current == last %}#}
+{#            <div class="button next inactive">#}
+{#                &gt;#}
+{#            </div>#}
+{#            <div class="button last inactive">#}
+{#                &gt;&gt;#}
+{#            </div>#}
+{#        {% elseif last is defined and current != last %}#}
+{#            <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">#}
+{#                <div class="button last">#}
+{#                    &gt;&gt;#}
+{#                    {{ last }}#}
+{#                </div>#}
+{#            </a>#}
+{#        {% endif %}#}
+{#        <br>#}
+{#        <div class="pagination-footer">#}
+{#            {{ firstItemNumber }} - {{ lastItemNumber }} / {{ totalCount }}#}
+{#        </div>#}
+{#    </div>#}
 {% endif %}

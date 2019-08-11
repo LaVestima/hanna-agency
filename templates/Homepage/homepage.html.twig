@@ -3,6 +3,153 @@
 {% block title 'Homepage' %}
 
 {% block content %}
-    Homepage<br>
-    Many modules here <br>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+            grid-template-areas:
+                'categories banner banner account account'
+                'categories banner banner item1 item2'
+                'top-companies deals-week deals-week deals-week deals-week'
+            ;
+
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+        @media screen and (max-width: 800px) {
+            .grid-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    'banner banner'
+                    'categories deals-week'
+                    /*'categories banner banner item1 item2'*/
+                    /*'top-companies deals-week deals-week deals-week deals-week'*/
+                ;
+            }
+        }
+
+        .grid-container > div {
+            background-color: #ffffff;
+            padding: 20px 20px;
+            border-radius: 5px;
+        }
+        .grid-categories {
+            grid-area: categories;
+        }
+        .grid-banner {
+            grid-area: banner;
+        }
+        .grid-account {
+            grid-area: account;
+        }
+        .grid-item1 {
+            grid-area: item1;
+        }
+        .grid-item2 {
+            grid-area: item2;
+        }
+        .grid-top-companies {
+            grid-area: top-companies;
+            background-color: initial !important;
+            padding: 5px !important;
+        }
+        .grid-deals-week {
+            grid-area: deals-week;
+        }
+    </style>
+
+    <div class="grid-container">
+        <div class="grid-categories">
+            <b>Categories</b>
+            {{ render(controller(
+                'App\\Controller\\Category\\CategoryController::waterfallList',
+                { 'searchQuery': searchQuery | default('') }
+            )) }}
+        </div>
+        <div class="grid-banner">
+            BANNER
+        </div>
+        <div class="grid-account">
+            ACCOUNT
+            {% if not app.user %}
+                <a href="{{ path('access_control_login') }}">
+                    <div>
+                        <i class="fas fa-user fa-2x" style="margin: 0 0 0.5em 0;"></i><br>
+                        <span>Log in / Sign up</span>
+                    </div>
+                </a>
+            {% else %}
+                <div>
+                    <div>Logged in as {{ app.user.login }}</div>
+                    <div>Notif</div>
+                    <div>Messages?</div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="grid-item1">
+
+        </div>
+        <div class="grid-item2"></div>
+        <div class="grid-top-companies">
+            Top rated companies <i class="fas fa-chevron-right"></i>
+            <div style="display: flex; flex-direction: column;">
+{#                <div style="background: #444; width: 100%; margin: 0.5em;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur atque cum delectus eius eveniet facilis maxime minima sed sint voluptatem.</div>#}
+{#                <div style="background: #444; margin: 0.5em;"></div>#}
+                {% for company in stores %}
+                    <div style="background: #444; padding: 1em; height: 2em; margin: 0.5em; color: #fff; border-radius: 5px;">
+                        {{ company.shortName }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="grid-deals-week">
+            Best deals this week <i class="fas fa-chevron-right"></i>
+            <div>
+            {% for product in products %}
+{#                {{ dump(product) }}#}
+                {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+{#    <div style="display: flex; justify-content: space-between;">#}
+{#        <div style="background: #fff; width: 25%; border-radius: 10px; padding: 1em; margin: 0 0.5em;">#}
+{#            <b>Categories</b>#}
+{#            {{ render(controller(#}
+{#                'App\\Controller\\Category\\CategoryController::waterfallList',#}
+{#                { 'searchQuery': searchQuery | default('') }#}
+{#            )) }}#}
+{#        </div>#}
+{#        <div style="background: #fff; width: 50%; border-radius: 10px; margin: 0 0.5em;">#}
+{#            banner#}
+{#        </div>#}
+{#        <div style="background: #fff; width: 25%; display: flex; justify-content: center; align-items: center; text-align: center; border-radius: 10px; margin: 0 0.5em;">#}
+{#            {% if not app.user %}#}
+{#            <a href="{{ path('access_control_login') }}">#}
+{#                <div>#}
+{#                    <i class="fas fa-user fa-2x" style="margin: 0 0 0.5em 0;"></i><br>#}
+{#                    <span>Log in / Sign up</span>#}
+{#                </div>#}
+{#            </a>#}
+{#            {% else %}#}
+{#                <div>#}
+{#                    <div>Logged in as {{ app.user.login }}</div>#}
+{#                    <div>Notif</div>#}
+{#                    <div>Messages?</div>#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+
+
+{#    Homepage<br>#}
+{#    Many modules here <br>#}
+{#    {% for product in products %}#}
+{#        {{ product.name }}#}
+{#    {% endfor %}#}
 {% endblock %}

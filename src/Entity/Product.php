@@ -136,6 +136,11 @@ class Product implements EntityInterface
      */
     private $productReviews;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->productParameters = new ArrayCollection();
@@ -537,6 +542,18 @@ class Product implements EntityInterface
                 $productReview->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
