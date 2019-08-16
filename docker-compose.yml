@@ -1,0 +1,57 @@
+version: '3'
+services:
+    apache:
+        build: .docker/apache
+        container_name: ejas_apache
+        restart: always
+        ports:
+          - 80:80
+        volumes:
+          - .docker/config/vhosts:/etc/apache2/sites-enabled
+          - .:/home/wwwroot/ejas
+        depends_on:
+          - php
+
+    mysql:
+        image: mysql
+        container_name: ejas_mysql
+        restart: always
+        command: "--default-authentication-plugin=mysql_native_password"
+        volumes:
+            - .docker/data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: toor
+            MYSQL_DATABASE: ejas
+            MYSQL_USER: ejas
+            MYSQL_PASSWORD: ejas
+
+    php:
+        build: .docker/php
+        container_name: ejas_php
+        restart: always
+        volumes:
+          - .:/home/wwwroot/ejas
+        environment:
+          - maildev_host=ejas_maildev
+        depends_on:
+          - maildev
+          - mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: ejas_phpmyadmin
+        restart: always
+        environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3306
+        ports:
+            - 8080:80
+        links:
+            - mysql
+
+    maildev:
+        image: djfarrelly/maildev
+        container_name: ejas_maildev
+        restart: always
+        ports:
+          - 8001:80

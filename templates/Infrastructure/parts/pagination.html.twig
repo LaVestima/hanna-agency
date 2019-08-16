@@ -6,6 +6,16 @@
 </style>
 
 <div class="pagination" style="display: flex; justify-content: flex-end; align-items: center; margin-right: 0;">
+{#    {{ current - (pagesInRange|length - 1) }}#}
+    {% if last > pagesInRange|length and current - (pagesInRange|length - 1)/2 > first %}
+    <span>
+        <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">
+            {{ first }}
+        </a>
+    </span>
+    ...
+    {% endif %}
+
     {% for page in pagesInRange %}
         {% if page != current %}
             <span>
@@ -22,32 +32,33 @@
         {% endif %}
     {% endfor %}
 
-    ...
 
+
+    {% if last > pagesInRange | length and current + (pagesInRange|length - 1)/2 < last %}
+    ...
     <span>
         <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">
             {{ last }}
         </a>
     </span>
+    {% endif %}
 
     <div>
+        {% if next is defined %}
         <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">
             <div style="background: #D3D3D3; border-radius: 0.5em; padding: 0.5em 0.75em;">
                 Next
                 <i class="fas fa-chevron-right"></i>
             </div>
         </a>
+        {% else %}
+        <div style="background: #D3D3D3; border-radius: 0.5em; padding: 0.5em 0.75em; color: #aaa;">
+            Next
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        {% endif %}
     </div>
 </div>
-
-
-
-
-
-
-
-
-
 
 
 

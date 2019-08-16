@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,6 +41,11 @@ class ProductType extends AbstractType
 
         $builder
             ->add('name', TextType::class)
+            ->add('description', TextareaType::class)
+            ->add('price', MoneyType::class, [
+                'label' => 'Customer Price',
+                'currency' => false
+            ])
             ->add('category', ChoiceType::class, [
                 'label' => 'Category',
                 'choices' => $categories,
@@ -77,10 +83,7 @@ class ProductType extends AbstractType
                 'by_reference' => false,
                 'required' => false,
             ])
-            ->add('price', MoneyType::class, [
-                'label' => 'Customer Price',
-                'currency' => false
-            ]);
+        ;
 
         if ($options['edit']) {
             $builder
@@ -88,6 +91,7 @@ class ProductType extends AbstractType
                     'required' => false,
                 ]);
         }
+
         // TODO: finish, add more !!!!!!!!!!!!
         $builder
             ->add('save', SubmitType::class, [

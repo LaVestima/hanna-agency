@@ -6,5 +6,5 @@ knp_paginator:
     sort_direction_name: direction # sort direction query parameter name
     distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
   template:
-    pagination: 'Infrastructure/Parts/pagination.html.twig'     # sliding pagination controls template
-    sortable: 'Infrastructure/Parts/sortable_link.html.twig' # sort link template
+    pagination: 'Infrastructure/parts/pagination.html.twig'     # sliding pagination controls template
+    sortable: 'Infrastructure/parts/sortable_link.html.twig' # sort link template
