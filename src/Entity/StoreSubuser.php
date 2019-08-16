@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Model\Infrastructure\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StoreSubuserRepository")
  */
-class StoreSubuser
+class StoreSubuser implements EntityInterface
 {
     /**
      * @ORM\Id()

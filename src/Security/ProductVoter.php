@@ -54,6 +54,8 @@ class ProductVoter extends Voter
 
     private function canView(Product $product, User $user): bool
     {
+        if ($this->canEdit($product, $user)) { return true; }
+
         if (!$product->getActive() && !$user->getStores()->contains($product->getStore())) {
             return false;
         }

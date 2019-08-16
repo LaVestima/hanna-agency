@@ -2,7 +2,7 @@
 
 {% block title 'Log in' %}
 
-{% block actionBar %}
+{% block content %}
     <a href="{{ path('access_control_register') }}">
         <div class="button action-bar-button">
             <i class="fa fa-user-plus" aria-hidden="true"></i>
@@ -10,14 +10,12 @@
         </div>
     </a>
     {#<a href="{{ path('access_control_forgot_password') }}">#}
-        <div class="button action-bar-button">
-            <i class="fa fa-lock" aria-hidden="true"></i>
-            Forgot Password
-        </div>
+    <div class="button action-bar-button">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        Forgot Password
+    </div>
     {#</a>#}
-{% endblock %}
 
-{% block content %}
     {% if not app.user %}
         <form action="{{ path('access_control_login') }}" method="POST">
             {% if loginDisabled %}

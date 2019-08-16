@@ -18,6 +18,7 @@ Encore
      * and one CSS file (e.g. app.scss) if you JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('flash_message', './assets/js/flash_message.js')
     .addEntry('list', './assets/js/list.js')
     .addEntry('main_menu', './assets/js/main_menu.js')
     .addEntry('store_show', './assets/js/Store/show.js')

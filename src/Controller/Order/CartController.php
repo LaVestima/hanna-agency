@@ -3,6 +3,7 @@
 namespace App\Controller\Order;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Form\CartSummaryType;
 use App\Form\PaymentType;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
@@ -30,7 +31,7 @@ class CartController extends BaseController
     {
         $cart = $request->getSession()->get('cart');
 
-        $productVariants = (!empty($cart)) ? $this->productVariantRepository
+        $productVariants = !empty($cart) ? $this->productVariantRepository
             ->readCartProductVariants($cart ?? [])
             ->getResultAsArray() : [];
 
@@ -39,7 +40,7 @@ class CartController extends BaseController
                 $productVariantOk = false;
 
                 foreach ($productVariants as $productVariant) {
-                    if ($cartItemIdentifier == $productVariant->getIdentifier()) {
+                    if ($cartItemIdentifier === $productVariant->getIdentifier()) {
                         $productVariantOk = true;
                     }
                 }
@@ -71,9 +72,15 @@ class CartController extends BaseController
             'paymentChargeRoute' => $this->generateUrl('payment_charge')
         ]);
 
+        $cartSummaryForm = $this->createForm(CartSummaryType::class, null, [
+            'user' => $this->getUser()
+        ]);
+
         return $this->render('Order/cart_summary.html.twig', [
             'form' => $form->createView(),
+            'cartSummaryForm' => $cartSummaryForm->createView(),
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
+            'addresses' => $this->getUser()->getAddresses()
         ]);
     }
 
@@ -119,22 +126,33 @@ class CartController extends BaseController
 
         if ($productVariantIdentifier) {
             if ($this->isCsrfTokenValid('add_to_cart', $request->query->get('_csrf_token'))) {
-                $session = $request->getSession();
+                $productVariant = $this->productVariantRepository->findOneBy([
+                    'identifier' => $productVariantIdentifier
+                ]);
 
-                $cart = $session->get('cart');
-
-                if (array_key_exists($productVariantIdentifier, $cart ?? [])) {
-                    $cart[$productVariantIdentifier]['quantity'] += $addToCartData['quantity'];
+                if ($productVariant->getAvailability() < $addToCartData['quantity']) {
+                    // TODO: return error
+                    echo 'Not enough products available!';
                 } else {
-                    $cart[$productVariantIdentifier] = [
-                        'quantity' => (int)$addToCartData['quantity']
-                    ];
+                    $session = $request->getSession();
+
+                    $cart = $session->get('cart');
+
+                    if (array_key_exists($productVariantIdentifier, $cart ?? [])) {
+                        $cart[$productVariantIdentifier]['quantity'] += $addToCartData['quantity'];
+                    } else {
+                        $cart[$productVariantIdentifier] = [
+                            'quantity' => (int)$addToCartData['quantity']
+                        ];
+                    }
+
+                    $session->set('cart', $cart);
+
+                    // TODO: add session data to DB, for further retrieval
                 }
-
-                $session->set('cart', $cart);
-
-                // TODO: add session data to DB, for further retrieval
             }
+        } else {
+            // TODO: return error
         }
 
         return new Response('ok');

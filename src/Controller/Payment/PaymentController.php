@@ -6,13 +6,15 @@ use App\Client\StripeClient;
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\Order;
 use App\Entity\OrderProductVariant;
+use App\Entity\OrderStatus;
 use App\Form\PaymentType;
 use App\Helper\RandomHelper;
-use App\Repository\OrderProductVariantRepository;
 use App\Repository\OrderRepository;
-use App\Repository\ProductRepository;
+use App\Repository\OrderStatusRepository;
 use App\Repository\ProductVariantRepository;
+use Exception;
 use Stripe\Error\Base;
+use Stripe\Error\Card;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,22 +24,22 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PaymentController extends BaseController
 {
-    private $orderProductVariantRepository;
     private $orderRepository;
-    private $productRepository;
+    private $orderStatusRepository;
     private $productVariantRepository;
     private $stripeClient;
 
+    private $cart;
+    private $productVariants;
+
     public function __construct(
-        OrderProductVariantRepository $orderProductVariantRepository,
         OrderRepository $orderRepository,
-        ProductRepository $productRepository,
+        OrderStatusRepository $orderStatusRepository,
         ProductVariantRepository $productVariantRepository,
         StripeClient $stripeClient
     ) {
-        $this->orderProductVariantRepository = $orderProductVariantRepository;
         $this->orderRepository = $orderRepository;
-        $this->productRepository = $productRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->stripeClient = $stripeClient;
     }
@@ -48,52 +50,38 @@ class PaymentController extends BaseController
     public function charge(Request $request)
     {
         $form = $this->createForm(PaymentType::class);
-
         $form->handleRequest($request);
 
-        $redirect = null;
+        $redirectUrl = null;
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $cart = $request->getSession()->get('cart');
+                $this->cart = $request->getSession()->get('cart');
 
-                if (empty($cart)) {
-                    throw new \Exception('Cart is empty');
+                if (empty($this->cart)) {
+                    throw new Exception('Cart is empty');
+                    // TODO; redirect to error page
                 }
 
-                $productVariants = (!empty($cart)) ? $this->productVariantRepository
-                    ->readCartProductVariants($cart ?? [])
-                    ->getResultAsArray() : [];
+                $this->productVariants = $this->productVariantRepository
+                    ->readCartProductVariants($this->cart ?? [])
+                    ->getResultAsArray();
 
-                $amount = 0;
-
-                foreach ($productVariants as $productVariant) {
-                    $amount += $productVariant->getProduct()->getPriceCustomer();
-                }
-
-                $orderCode = RandomHelper::generateString(24, 'N');
+                $order = $this->createNewOrder();
 
                 $this->stripeClient->createCharge(
-                    $orderCode,
+                    $order->getCode(),
                     $this->getUser(),
-                    $amount, // TODO: how to get amount?
+                    $this->calculateCartTotal(),
                     $form->get('token')->getData()
                 );
 
-                $order = new Order();
-                $order->setCode($orderCode);
-                $order->setUser($this->getUser());
-                $this->orderRepository->createEntity($order);
-
-                foreach ($productVariants as $productVariant) {
-                    $orderProductVariant = new OrderProductVariant();
-                    $orderProductVariant->setOrder($order);
-                    $orderProductVariant->setProductVariant($productVariant);
-                    // TODO: ...
-                    $this->orderProductVariantRepository->createEntity($orderProductVariant);
+                foreach ($this->productVariants as $productVariant) {
+                    $this->productVariantRepository->updateEntity($productVariant, [
+                        'availability' =>
+                            $productVariant->getAvailability() - $this->cart[$productVariant->getIdentifier()]['quantity']
+                    ]);
                 }
-
-                // TODO: add productVariants to order
 
                 // TODO: update order status to PAID
 
@@ -101,35 +89,75 @@ class PaymentController extends BaseController
 
                 $request->getSession()->remove('cart');
 
-                $redirect = $this->generateUrl('payment_success');
+                $redirectUrl = $this->generateUrl('payment_success');
             } catch (Base $e) {
                 if ($this->isEnvDev()) {
-                    var_dump($e);
+                    var_dump($e->getMessage());die;
+
                 }
 
                 // TODO: maybe also store failed payments?
 
                 $this->addFlash('warning', sprintf(
                         'Unable to take payment, %s',
-                        $e instanceof \Stripe\Error\Card ? lcfirst($e->getMessage()) : 'please try again.'
+                        $e instanceof Card ? lcfirst($e->getMessage()) : 'please try again.'
                     )
                 );
 
-                $redirect = $this->generateUrl('payment_failure');
-            } catch (\Exception $e) {
+                $redirectUrl = $this->generateUrl('payment_failure');
+            } catch (Exception $e) {
                 if ($this->isEnvDev()) {
-                    var_dump($e);
+                    var_dump($e->getMessage());
                 }
-            } finally {
-
             }
         } else {
-            $redirect = $this->generateUrl('payment_failure');
+            $redirectUrl = $this->generateUrl('payment_failure');
         }
 
-        if (!$redirect) { throw new HttpException(400); }
+        if (!$redirectUrl) { throw new HttpException(400); }
 
-        return $this->redirect($redirect);
+        return $this->redirect($redirectUrl);
+    }
+
+    private function calculateCartTotal()
+    {
+        $amount = 0;
+
+        foreach ($this->productVariants as $productVariant) {
+            $amount +=
+                $this->cart[$productVariant->getIdentifier()]['quantity']
+                * $productVariant->getProduct()->getPrice();
+        }
+
+        return $amount;
+    }
+
+    private function createNewOrder(): Order
+    {
+        $orderCode = RandomHelper::generateString(24, 'N');
+
+        $order = new Order();
+        $order->setCode($orderCode);
+        $order->setUser($this->getUser());
+//        $order->setStatus(OrderStatus::QUEUED); // TODO: other way?
+
+        $orderProductVariants = [];
+
+        foreach ($this->productVariants as $productVariant) {
+            $orderProductVariant = new OrderProductVariant();
+
+            $orderProductVariant->setOrder($order);
+            $orderProductVariant->setProductVariant($productVariant);
+            $orderProductVariant->setQuantity($this->cart[$productVariant->getIdentifier()]['quantity']);
+            $orderProductVariant->setStatus($this->orderStatusRepository->findOneBy(['name' => OrderStatus::PLACED]));
+
+            $orderProductVariants[] = $orderProductVariant;
+        }
+
+        $order->setOrderProductVariants($orderProductVariants);
+        $this->orderRepository->createEntity($order);
+
+        return $order;
     }
 
     /**

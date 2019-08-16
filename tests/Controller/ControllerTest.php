@@ -13,12 +13,31 @@ class ControllerTest extends WebTestCase
      */
     public function testPage200($url, $role = 'ROLE_ANON')
     {
-        $credentials = $this->getCredentialsForRole($role);
-
-        $client = self::createClient([], $credentials);
+        $client = static::createClient([], $this->getCredentialsForRole($role));
         $client->request('GET', $url);
 
+//        if (!$client->getResponse()->isSuccessful()) {
+//            $block = $crawler->filter('div.text_exception > h1');
+//            if ($block->count()) {
+//                $error = $block->text();
+//                var_dump($error);
+//            }
+//        }
+
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @dataProvider provideUrls403
+     * @param $url
+     * @param $role
+     */
+    public function testPage403($url, $role = 'ROLE_ANON')
+    {
+        $client = self::createClient([], $this->getCredentialsForRole($role));
+        $client->request('GET', $url);
+
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
     /**
@@ -28,9 +47,7 @@ class ControllerTest extends WebTestCase
      */
     public function testPage404($url, $role = 'ROLE_ANON')
     {
-        $credentials = $this->getCredentialsForRole($role);
-
-        $client = self::createClient([], $credentials);
+        $client = self::createClient([], $this->getCredentialsForRole($role));
         $client->request('GET', $url);
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -54,14 +71,34 @@ class ControllerTest extends WebTestCase
     public function provideUrls200()
     {
         return [
+            [''],
             ['/'],
+            ['/login'],
             ['/contact'],
-            ['/producer/list'],
-            ['/product/list', 'ROLE_USER'],
+            ['/cart'],
             ['/product/show/Cool-Shoe-39', 'ROLE_USER'],
-            ['/order/list'],
-            ['/user/list', 'ROLE_ADMIN']
-            // ...
+            ['/product/show/Cool-Shoe-39', 'ROLE_ADMIN'],
+            ['/product/show/Cool-Shoe-39', 'ROLE_PRODUCER'],
+            ['/product/edit/Cool-Shoe-39', 'ROLE_PRODUCER'],
+            ['/store/dashboard', 'ROLE_PRODUCER'],
+            ['/orders', 'ROLE_USER'],
+            ['/settings', 'ROLE_USER'],
+            ['/conversations', 'ROLE_USER'],
+            ['/inventory', 'ROLE_PRODUCER'],
+            ['/search'], // TODO: ???
+            ['/search?query=duck'],
+//            ['/search?category=.....'], // TODO: finish
+            // TODO: orders,
+            // TODO: ...
+        ];
+    }
+
+    public function provideUrls403()
+    {
+        return [
+            ['/product/edit/Cool-Shoe-39', 'ROLE_USER'],
+            ['/product/activate/Cool-Shoe-39', 'ROLE_USER'],
+            ['/product/deactivate/Cool-Shoe-39', 'ROLE_USER'],
         ];
     }
 
@@ -70,16 +107,24 @@ class ControllerTest extends WebTestCase
         return [
             ['/asdf'],
             ['/product'],
-            ['/product/show/Cool-Shoe-390', 'ROLE_USER'],
+            ['/product/show/a', 'ROLE_USER'],
         ];
     }
 
     public function provideUrls302()
     {
         return [
-            ['/product/list'],
-            ['/product/show/Cool-Shoe-39'],
-            ['/product/show/Cool-Shoe-390'],
+            ['/logout'],
+            ['/store/dashboard'],
+            ['/orders'],
+            ['/settings'],
+            ['/conversations'],
+            ['/inventory'],
+            ['/product/activate/Cool-Shoe-39', 'ROLE_PRODUCER'],
+            ['/product/deactivate/Cool-Shoe-39', 'ROLE_PRODUCER'],
+//            ['/product/list'],
+//            ['/product/show/Cool-Shoe-39'],
+//            ['/product/show/Cool-Shoe-390'],
         ];
     }
 
@@ -99,6 +144,13 @@ class ControllerTest extends WebTestCase
                 $credentials = [
                     'PHP_AUTH_USER' => 'admin',
                     'PHP_AUTH_PW' => 'admin'
+                ];
+
+                break;
+            case 'ROLE_PRODUCER':
+                $credentials = [
+                    'PHP_AUTH_USER' => 'producer',
+                    'PHP_AUTH_PW' => 'producer'
                 ];
 
                 break;

@@ -181,7 +181,7 @@ class AppFixtures extends Fixture
         $userData = [
             ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1],
             ['admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2],
-            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3],
+            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, ['ROLE_PRODUCER']],
             ['customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4],
             ['user', 'user@used.user', '$argon2i$v=19$m=1024,t=16,p=2$d2lGTmgxWTg3QVlJSTY4Zw$qGqrYwn8FexTo3Hu7prerL5Q1GgNUByXBADUBHpSQ0M', 5],
             ['guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 6],
@@ -193,6 +193,7 @@ class AppFixtures extends Fixture
             $user->setEmail($ud[1]);
             $user->setPasswordHash($ud[2]);
             $user->setRole($this->roleRepository->findOneBy(['id' => $ud[3]]));
+            $user->setRoles($ud[4] ?? []);
             $this->userRepository->createEntity($user);
         }
     }
@@ -364,7 +365,7 @@ class AppFixtures extends Fixture
     private function loadProducts(): void
     {
         $productData = [
-            ['Cool Shoe', 79.99, 3, 2, 'Cool-Shoe-39', true],
+            ['Cool Shoe', 79.99, 3, 2, 'Cool-Shoe-39', true, 'The greatest shoe in the world. Exclusive here!!!'],
             ['TF Hat No. 7', 12.5, 4, 3],
             ['Simple Top Hat', 65.99, 4, 2],
             ['11cm Baby Rubber Race Squeaky Duck Bath Toys for Children Fun Educational Musical Big Yellow Duck Bathroom Water Bathing Toys', 1.75, 3, 2, '11cm-Baby-Rubber-Race-Squeaky-Duck-Bath-Toys-for-Children-Fun-Educational-Musical-Big-Yellow-Duck-Bathroom-Water-Bathing-Toys', true],
@@ -378,6 +379,7 @@ class AppFixtures extends Fixture
             $product->setStore($this->storeRepository->findOneBy(['id' => $pd[3]]));
             $product->setPathSlug($pd[4] ?? null);
             $product->setActive($pd[5] ?? false);
+            $product->setDescription($pd[6] ?? null);
             $this->productRepository->createEntity($product);
         }
     }

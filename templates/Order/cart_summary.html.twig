@@ -14,14 +14,57 @@
     ### somehow lock the session when summary is viewed, so you can't add more products in other tabs
     <br>
 
-    ### products from the cart
-    <br>
+    {{ form_start(cartSummaryForm) }}
 
-    ### chosen delivery option
-    <br>
+    <div style="border: 1px solid black">
+        ### products from the cart
+    </div>
+    <div style="border: 1px solid black; display: flex; justify-content: space-around;">
+        <div style="border: 1px solid black; display: inline-block; width: 50%;">
+            <b>Shipment option</b>
+            {{ form_widget(cartSummaryForm.shipmentOption) }}
 
-    ### Accept some things...
-    <br>
+            <style>
+                #cart_summary_shipmentOption input {
+                    position: absolute;
+                    /*width: 30px;*/
+                }
+                #cart_summary_shipmentOption label {
+                    background: #0f0;
+                    padding: 1em;
+                    margin: 0.5em;
+                    cursor: pointer;
+                    border: 1px solid black;
+                }
+                #cart_summary_shipmentOption label:hover {
+                    background: #ff0;
+                }
+            </style>
+        </div>
+        <div style="border: 1px solid black; display: inline-block; width: 50%;">
+            <b>Delivery address</b>
+{#            {% for address in addresses %}#}
+{#                <div style="border: 1px solid #122b40">#}
+{#                    <h3>{{ address.name }}</h3>#}
+{#                    {{ address.country.name }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+            {{ form_widget(cartSummaryForm.address) }}
+            <div>
+                Add new/other + FORM
+            </div>
+        </div>
+    </div>
+    <div style="border: 1px solid black">
+        <div style="border: 1px solid black; display: inline-block;">
+            ### Accept some things...
+        </div>
+        <div style="border: 1px solid black; display: inline-block;">
+            ### continue to payment
+        </div>
+    </div>
+
+    {{ form_end(cartSummaryForm) }}
 
     {{ form_start(form, {attr: {id: form.vars.id}}) }}
     <div class="form-group">
@@ -32,7 +75,6 @@
         <div id="card-errors" class="help-block" role="alert"></div>
     </div>
     {{ form_widget(form.token) }}
-    User MUST be logged in, correct!
     <button type="submit" class="button">PAY <i class="fas fa-hand-holding-usd"></i></button>
     {{ form_end(form) }}
 

@@ -65,32 +65,30 @@ class CreateProductCommand extends BaseCreateCommand
 
                 for ($j = 0; $j < $variantCount; $j++) {
                     $this->createProductVariants($product);
-
-                    $output->writeln('Product Variant');
                 }
 
-                for ($j = 0; $j < rand(1, 100); $j++) {
+                $productReviewNumber = random_int(1, 20);
+
+                for ($j = 0; $j < $productReviewNumber; $j++) {
                     $this->createProductReview($product);
-
-                    $output->writeln('Product Review');
                 }
 
-                $output->writeln('Product');
+                $output->writeln('Product ' . ($i+1));
             }
 
             $output->writeln('Created: ' . $i);
         }
     }
 
-    private function createFakeProduct()
+    private function createFakeProduct(): Product
     {
         $product = new Product();
 
         $randomCategory = $this->categoryRepository
-            ->readRandomEntities(1)->getResult();
+            ->readRandomEntities(1)[0];
 
         $randomProducer = $this->storeRepository
-            ->readRandomEntities(1)->getResult();
+            ->readRandomEntities(1)[0];
 
         $product->setName($this->faker->text(50));
         $product->setPrice($this->faker->numberBetween(100, 99999)/100);
@@ -104,12 +102,12 @@ class CreateProductCommand extends BaseCreateCommand
         return $product;
     }
 
-    private function createProductVariants(Product $product)
+    private function createProductVariants(Product $product): void
     {
         $productVariant = new ProductVariant();
 
         $randomVariant = $this->variantRepository
-            ->readRandomEntities(1)->getResult();
+            ->readRandomEntities(1)[0];//->getResult();
 
         $productVariant
             ->setProduct($product)
@@ -119,7 +117,7 @@ class CreateProductCommand extends BaseCreateCommand
         $this->productVariantRepository->createEntity($productVariant);
     }
 
-    private function createProductReview(Product $product)
+    private function createProductReview(Product $product): void
     {
         $productReview = new ProductReview();
         $productReview

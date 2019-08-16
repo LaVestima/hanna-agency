@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    ### TODO: password change, account delete, 2FA
+
+    <style>
+        .settings-section {
+            background: #DDDDDD;
+            border: 1px solid black;
+            margin: 1em;
+            padding: 1em;
+        }
+    </style>
+
+    {{ form_start(userInformationForm) }}
+
+    {{ form_end(userInformationForm) }}
+
+    {{ form_start(form) }}
+
+    <div class="settings-section">
+        {{ form_row(form.newsletter) }}
+    </div>
+
+
+
+    <div class="settings-section">
+        <a class="button" href="">Delete account</a>
+    </div>
+
+    {{ form_end(form) }}
+
+    {{ form_start(changePasswordForm) }}
+    <div class="settings-section">
+        {{ form_row(changePasswordForm.oldPassword) }}
+        {{ form_row(changePasswordForm.newPassword) }}
+        {{ form_row(changePasswordForm.submit) }}
+    </div>
+    {{ form_end(changePasswordForm) }}
+{% endblock %}

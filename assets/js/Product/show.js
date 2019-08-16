@@ -1,18 +1,19 @@
 $(function() {
-    $('#add-to-cart').on('click', function() {
-        console.log('ajax');
+    $('#add_to_cart_form').on('submit', function(e) {
+        e.preventDefault();
+
+        var form = $('#add_to_cart_form');
+
         $.ajax({
             type: "GET",
             url: Routing.generate('add_product_to_cart'),
-            data: {
-                product: $(this).attr('data-product'),
-            }
+            data: form.serialize(),
         }).done(function(data) {
-            // $('.names-table').html(data);
             console.log(data);
         }).fail(function() {
-            // $('.names-table').html('Connection error!');
+            console.log('error!');
         });
-    });
 
+        return false;
+    });
 });

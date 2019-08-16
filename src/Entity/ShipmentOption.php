@@ -76,9 +76,11 @@ class ShipmentOption implements EntityInterface
     /**
      * @param string $name
      */
-    public function setName(string $name): void
+    public function setName(string $name): ShipmentOption
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -92,9 +94,11 @@ class ShipmentOption implements EntityInterface
     /**
      * @param string $cost
      */
-    public function setCost(string $cost): void
+    public function setCost(string $cost): ShipmentOption
     {
         $this->cost = $cost;
+
+        return $this;
     }
 
     /**

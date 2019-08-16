@@ -370,30 +370,28 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
         }
 
         if ($numberOfEntities === null) {
-            $numberOfEntities = rand(1, $this->countRows());
+            $numberOfEntities = random_int(1, $this->countRows());
         }
 
         if ($numberOfEntities === 1) {
             do {
                 $entity = $this->readOneEntityBy([
-                    'id' => rand(1, $this->getLastId())
+                    'id' => random_int(1, $this->getLastId())
                 ]);
             } while (!$entity->getResult());
 
-            return $this;
+            return [$entity->getResult()];
         } elseif ($numberOfEntities > 1) {
             $entities = [];
 
             for ($i = 0; $i < $numberOfEntities; $i++) {
-                do {
-                    $entity = $this->readOneEntityBy(['id' => rand(1, $this->getLastId())]);
+                $entity = $this->readOneEntityBy(['id' => random_int(1, $this->getLastId())]);
 
-                    if (!$entitiesCanRepeat && in_array($entity, $entities)) {
-                        $entity = null;
-                    }
-                } while (!$entity);
+                if (!$entitiesCanRepeat && in_array($entity, $entities)) {
+                    $entity = null;
+                }
 
-                $entities[] = $entity;
+                $entities[] = $entity->getResult();
             }
 
             return $entities;

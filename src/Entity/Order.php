@@ -221,8 +221,8 @@ class Order implements EntityInterface
         // TODO: finish status determination
 
         foreach ($this->orderProductVariants as $orderProductVariant) {
-            if ($orderProductVariant->getStatus()->getName() == OrderStatus::REJECTED) {
-                $this->status = OrderStatus::REJECTED;
+            if ($orderProductVariant->getStatus()->getName() == OrderStatus::CANCELLED) {
+                $this->status = OrderStatus::CANCELLED;
 
                 break;
             }
@@ -231,6 +231,8 @@ class Order implements EntityInterface
         }
 
 
+        // TODO: wrong, correct
+        $this->status = OrderStatus::PAID;
 
 
         return $this->status;

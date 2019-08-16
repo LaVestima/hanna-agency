@@ -47,7 +47,7 @@ input {
 
     &:focus {
         outline: none;
-        box-shadow: 0 0 5px $main-theme-color-darkerer inset;
+        //box-shadow: 0 0 5px $main-theme-color-darkerer inset;
     }
 }
 
@@ -59,12 +59,12 @@ input[type=checkbox] {
 
 select {
     padding: 2px 0;
-    background: none;
+    //background: none;
     border: 1px solid $main-theme-color;
 
     &:focus {
         outline: none;
-        box-shadow: 0 0 5px $main-theme-color-darkerer inset;
+        //box-shadow: 0 0 5px $main-theme-color-darkerer inset;
     }
 }
 
@@ -129,17 +129,21 @@ footer {
     position: relative;
     display: inline-block;
     padding: 10px;
-    background: $main-theme-color;
+    //background: $main-theme-color;
+    background: #000000;
     color: $main-font-color-inverted;
     text-align: center;
     cursor: pointer;
     font-style: normal;
-    border: none;
-    border-bottom: 5px inset $main-theme-color-darker;
+    //border: none;
+    border: 1px solid black;
+    //border-bottom: 5px inset $main-theme-color-darker;
 
     &:hover {
-        background: $main-theme-color-hover;
-        border-bottom: 5px inset $main-theme-color;
+        //background: $main-theme-color-hover;
+        background: #FFFFFF;
+        color: #000000;
+        //border-bottom: 5px inset $main-theme-color;
     }
 
     &:focus {
@@ -194,46 +198,6 @@ footer {
     }
 }
 
-.action-bar {
-    //padding: 5px 10px;
-    background: #ddd;
-    box-shadow: 0 3px 3px $main-theme-color;
-
-    .action-bar-content {
-        max-width: 1200px;
-        margin: 0 auto;
-
-        .action-bar-button {
-            font-weight: bold;
-
-            i {
-                margin: 0 5px 0 0;
-            }
-        }
-
-        .action-bar-export {
-            position: relative;
-            float: right;
-
-            .action-bar-export-list {
-                position: absolute;
-                right: 0;
-                padding: 0;
-                list-style: none;
-                text-align: center;
-
-                li {
-                    display: block;
-
-                    a {
-                        display: block;
-                        color: $main-font-color;
-                    }
-                }
-            }
-        }
-    }
-}
 
 .confirmation-box {
     display: none;
@@ -255,8 +219,8 @@ footer {
 }
 
 .page-content {
-    max-width: 1200px;
-    margin: 6em auto 5em auto;
+    max-width: 1500px;
+    margin: 2em auto 10em auto;
     padding: 10px;
     padding-top: 35px;
 }
@@ -298,6 +262,7 @@ footer {
     top: -60px;
     width: 100%;
     text-align: center;
+    z-index: 9999;
 
     .flash-message {
         height: 50px;
