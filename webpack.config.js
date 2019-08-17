@@ -20,12 +20,11 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('flash_message', './assets/js/flash_message.js')
     .addEntry('list', './assets/js/list.js')
-    .addEntry('main_menu', './assets/js/main_menu.js')
     .addEntry('store_show', './assets/js/Store/show.js')
-    // .addEntry('product_new', './assets/js/Product/edit.js')
     .addEntry('product_edit', './assets/js/Product/edit.js')
     .addEntry('product_show', './assets/js/Product/show.js')
     .addEntry('order_cart', './assets/js/Order/cart.js')
+    .addEntry('search_home', './assets/js/Search/home.js')
 
 
     // will require an extra script tag for runtime.js

@@ -163,10 +163,6 @@ footer {
             margin-bottom: 0;
         }
     }
-
-    &.active {
-        background: $main-theme-color-dark;
-    }
 }
 
 .top-bar {
@@ -290,138 +286,6 @@ footer {
     }
 }
 
-.entity-list {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-
-    th {
-        text-align: center;
-        padding: 5px;
-    }
-
-    td {
-        padding-left: 10px;
-        padding-right: 10px;
-
-        &:last-child {
-            padding-right: 5px;
-        }
-    }
-
-    .entity-list-header {
-        height: 40px;
-        background: #cccccc;
-    }
-
-    .entity-list-filters {
-        td {
-            padding: 5px 0 5px 0;
-
-            input {
-                width: 100%;
-                border-left: 0;
-            }
-
-            &:nth-child(1) {
-                input {
-                    border-left: 1px solid $main-theme-color;
-                }
-            }
-        }
-    }
-
-    .entity-list-row {
-        height: 35px;
-
-        &:nth-child(even) {
-            background: #dddddd;
-        }
-
-        &:hover {
-            background: $main-theme-color-lighter;
-            color: $main-font-color-inverted;
-        }
-
-        .entity-list-cell {
-            padding: 0 10px;
-        }
-    }
-
-    .entity-list-content {
-        margin: 10px 0 0 0;
-    }
-}
-
-.entity-show-table {
-    max-width: 800px;
-    margin: 0 auto;
-
-    td {
-        padding: 5px;
-
-        &:first-child {
-            width: 30%;
-            text-align: right;
-            font-weight: bold;
-        }
-
-        &:last-child {
-            width: 70%;
-            text-align: left;
-        }
-    }
-
-    th {
-        padding: 5px;
-    }
-
-    &.product-sizes-table {
-        margin-bottom: 10px;
-
-        tr {
-            border-top: 1px solid black;
-
-            &:first-child {
-                border-top: none;
-            }
-
-            td {
-                font-weight: normal;
-
-                &:first-child, &:last-child {
-                    width: 50%;
-                    text-align: right;
-                }
-
-                &:first-child {
-                    border-right: 1px solid black;
-                }
-            }
-        }
-    }
-}
-
-.entity-new-table {
-    width: 100%;
-    margin: 0 auto;
-
-    td {
-        padding: 5px;
-
-        &:first-child {
-            text-align: right;
-        }
-
-        &:last-child {
-            input, select {
-                width: 100%;
-            }
-        }
-    }
-}
-
 // TODO: move to other file
 .user-input-table {
     max-width: 600px;
@@ -452,6 +316,12 @@ footer {
     width: 100%;
     visibility: hidden;
     z-index: 50;
+}
+
+.ui-effects-transfer {
+    border: 5px dotted gray;
+    background: red;
+    opacity: 0.5;
 }
 
 @import 'Parts/pagination';

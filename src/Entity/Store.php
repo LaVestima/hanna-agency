@@ -46,19 +46,19 @@ class Store implements EntityInterface
      */
     private $dateDeleted;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    private $userCreated = '0';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $userDeleted;
+//    /**
+//     * @var integer
+//     *
+//     * @ORM\Column(type="integer", nullable=false)
+//     */
+//    private $userCreated = '0';
+//
+//    /**
+//     * @var integer
+//     *
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $userDeleted;
 
     /**
      * @var string
@@ -186,6 +186,11 @@ class Store implements EntityInterface
      */
     private $storeSubusers;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active = false;
+
 
     public function __construct()
     {
@@ -253,53 +258,53 @@ class Store implements EntityInterface
         return $this->dateDeleted;
     }
 
-    /**
-     * Set userCreated
-     *
-     * @param integer $userCreated
-     *
-     * @return Store
-     */
-    public function setUserCreated($userCreated)
-    {
-        $this->userCreated = $userCreated;
-
-        return $this;
-    }
-
-    /**
-     * Get userCreated
-     *
-     * @return integer
-     */
-    public function getUserCreated()
-    {
-        return $this->userCreated;
-    }
-
-    /**
-     * Set userDeleted
-     *
-     * @param integer $userDeleted
-     *
-     * @return Store
-     */
-    public function setUserDeleted($userDeleted)
-    {
-        $this->userDeleted = $userDeleted;
-
-        return $this;
-    }
-
-    /**
-     * Get userDeleted
-     *
-     * @return integer
-     */
-    public function getUserDeleted()
-    {
-        return $this->userDeleted;
-    }
+//    /**
+//     * Set userCreated
+//     *
+//     * @param integer $userCreated
+//     *
+//     * @return Store
+//     */
+//    public function setUserCreated($userCreated)
+//    {
+//        $this->userCreated = $userCreated;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get userCreated
+//     *
+//     * @return integer
+//     */
+//    public function getUserCreated()
+//    {
+//        return $this->userCreated;
+//    }
+//
+//    /**
+//     * Set userDeleted
+//     *
+//     * @param integer $userDeleted
+//     *
+//     * @return Store
+//     */
+//    public function setUserDeleted($userDeleted)
+//    {
+//        $this->userDeleted = $userDeleted;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get userDeleted
+//     *
+//     * @return integer
+//     */
+//    public function getUserDeleted()
+//    {
+//        return $this->userDeleted;
+//    }
 
     /**
      * Set shortName
@@ -686,6 +691,18 @@ class Store implements EntityInterface
                 $storeSubuser->setStore(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

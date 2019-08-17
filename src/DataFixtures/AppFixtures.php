@@ -179,7 +179,7 @@ class AppFixtures extends Fixture
     private function loadUsers(): void
     {
         $userData = [
-            ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1],
+            ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1, ['ROLE_SUPER_ADMIN']],
             ['admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2],
             ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, ['ROLE_PRODUCER']],
             ['customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4],
@@ -235,7 +235,7 @@ class AppFixtures extends Fixture
         foreach ($countryData as $cd) {
             $country = new Country();
             $country->setName($cd[0]);
-            $country->setSymbol($cd[1]);
+            $country->setCode($cd[1]);
             $this->countryRepository->createEntity($country);
         }
     }
@@ -274,17 +274,17 @@ class AppFixtures extends Fixture
             [
                 'Opticomp', 'Opticomp Clothing', null, null,
                 'US773365342', 5, 12, 'CA 92121', '331 Hamill Avenue', 'LarrySLowell@armyspy.com',
-                '858-401-5106', 4
+                '858-401-5106', 4, true
             ],
             [
                 'Omni', 'Omni Architectural Designs', 'Christopher', 'Harris',
                 'GB028338520', 9, 13, 'PH33 3AF', '50 Old Chapel Road', 'RileyCraig@teleworm.us',
-                '078 2966 5839', 3
+                '078 2966 5839', 3, true
             ],
             [
                 'Asiatic', 'Asiatic Solutions', null, null,
                 'FR69210542996', 3, 14, '74100', '65, Avenue De Marlioz', 'BrigittePatry@teleworm.us',
-                '04.29.54.23.82', 2
+                '04.29.54.23.82', 2, true
             ]
         ];
 
@@ -302,6 +302,7 @@ class AppFixtures extends Fixture
             $store->setEmail($sd[9]);
             $store->setPhone($sd[10]);
             $store->setOwner($this->userRepository->findOneBy(['id' => $sd[11]]));
+            $store->setActive($sd[12]);
             $this->storeRepository->createEntity($store);
         }
     }

@@ -5,6 +5,9 @@ namespace App\Controller\Store;
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\OrderStatus;
 use App\Entity\Store;
+use App\Entity\StoreSubuser;
+use App\Entity\User;
+use App\Form\StoreApplyType;
 use App\Form\StoreLoginType;
 use App\Repository\OrderProductVariantRepository;
 use App\Repository\OrderStatusRepository;
@@ -89,6 +92,8 @@ class StoreController extends BaseController
                 $this->container->get('security.token_storage')->setToken($token);
 
                 $this->addFlash('success', 'Successfully logged in');
+
+                // TODO: redirect to dashboard???
             } else {
                 $this->addFlash('error', 'Wrong password');
             }
@@ -118,21 +123,31 @@ class StoreController extends BaseController
     }
 
     /**
-     * @Route("/subuser/settings")
+     * @Route("/apply", name="store_apply")
      */
-    public function subuserSettings()
+    public function apply(Request $request)
     {
-        // TODO: check if user is store admin
+        // TODO: access control: logged in
+        $this->denyAccessUnlessGranted('store_apply', $this->getUser());
 
-        // TODO: get current store in other way
-        $subuser = $this->storeSubuserRepository->findOneBy([
-            'id' => 1
-        ]);
+        $store = new Store();
 
-//        'omni-architectural-designs'
+        $form = $this->createForm(StoreApplyType::class, $store);
+        $form->handleRequest($request);
 
-        return $this->render('Store/subuser_settings.html.twig', [
-            'subuser' => $subuser
+        if ($form->isSubmitted() && $form->isValid()) {
+            $store = $form->getData();
+            $store->setActive(false);
+            $store->setOwner($this->getUser());
+
+            $this->getDoctrine()->getRepository(Store::class)
+                ->createEntity($store);
+
+
+        }
+
+        return $this->render('Store/apply.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 

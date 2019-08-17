@@ -79,13 +79,7 @@ class BaseController extends AbstractController
     public function render(string $view, array $parameters = array(), Response $response = null): Response
     {
         $cart = $this->session->get('cart') ?? [];
-        $cartTotal = 0;
-
-        foreach ($cart as $item) {
-            $cartTotal += $item['quantity'];
-        }
-
-        $parameters['cartTotal'] = $cartTotal;
+        $parameters['cartTotal'] = array_sum(array_column($cart, 'quantity'));
 
         return parent::render($view, $parameters, $response);
     }

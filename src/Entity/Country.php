@@ -32,13 +32,6 @@ class Country implements EntityInterface
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=10, nullable=false)
-     */
-    private $symbol;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="country", orphanRemoval=true)
      */
     private $addresses;
@@ -52,6 +45,11 @@ class Country implements EntityInterface
      * @ORM\OneToMany(targetEntity="Store", mappedBy="country", orphanRemoval=true)
      */
     private $producers;
+
+    /**
+     * @ORM\Column(type="string", length=3)
+     */
+    private $code;
 
 
     public function __construct()
@@ -93,30 +91,6 @@ class Country implements EntityInterface
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set symbol
-     *
-     * @param string $symbol
-     *
-     * @return Country
-     */
-    public function setSymbol($symbol)
-    {
-        $this->symbol = $symbol;
-
-        return $this;
-    }
-
-    /**
-     * Get symbol
-     *
-     * @return string
-     */
-    public function getSymbol()
-    {
-        return $this->symbol;
     }
 
     /**
@@ -208,6 +182,18 @@ class Country implements EntityInterface
                 $producer->setCountry(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

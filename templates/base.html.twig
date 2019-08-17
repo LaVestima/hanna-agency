@@ -143,6 +143,11 @@
     </head>
     <body>
         <div id="top-bar-wrapper">
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <div style="width: 100%; background: red;">
+                    ADMIN
+                </div>
+            {% endif %}
             <div id="top-bar" style="">
                 <a href="{{ path('homepage_homepage') }}">
                     <div class="top-bar-item">
@@ -170,7 +175,7 @@
                         <i class="fas fa-shopping-cart"></i>
 {#                        ({{ cartTotal }})#}
                         <span class="tooltiptext">Cart</span>
-                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;">{{ cartTotal }}</span>
+                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;" id="top-bar-icon-cart-total">{{ cartTotal }}</span>
                     </div>
                 </a>
 {#                <a href="{{ path('conversation_list') }}">#}
@@ -220,7 +225,7 @@
                             {% endif %}
                         </div>
 
-                        <hr>
+{#                        <hr>#}
 
                         {% if is_granted('ROLE_PRODUCER') %}
                             <b>{{ app.user.stores[0].shortName }}</b>
@@ -241,17 +246,26 @@
                         {% if app.user %}
                             {% if is_granted('ROLE_STORE_SUBUSER') %}
                                 <a class="button" href="{{ path('store_logout') }}">Store Logout</a>
-                            {% else %}
-                                {% for store in app.user.stores %}
-                                    <a class="button" href="{{ path('store_login', {'identifier': store.identifier}) }}">
-                                        {{ store.shortName }} login <i class="fas fa-chevron-right"></i>
+                            {% elseif app.user.stores is not empty %}
+{#                                {% for store in app.user.stores %}#}
+                                    <a class="button" href="{{ path('store_login', {'identifier': app.user.stores[0].identifier}) }}">
+                                        {{ app.user.stores[0].shortName }} login <i class="fas fa-chevron-right"></i>
                                     </a>
-                                {% endfor %}
+{#                                {% endfor %}#}
                             {% endif %}
                         {% endif %}
 
-                        <hr>
+                        {% if is_granted('ROLE_STORE_ADMIN') %}
+                        <a href="{{ path('store_subuser_list') }}">
+                            <div style="padding: 0.5em 0;">
+                                Subuser list
+                            </div>
+                        </a>
+                        {% endif %}
 
+{#                        <hr>#}
+
+                        {% if is_granted('ROLE_USER') %}
                         <a href="{{ path('order_list') }}">
                             <div style="padding: 0.5em 0;">
                                 <i class="fas fa-list"></i> Orders
@@ -262,6 +276,7 @@
                                 <i class="fas fa-cog"></i> Settings
                             </div>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -302,12 +317,17 @@
                 <span class="copyright">
                     &#9400;
                 </span>
-                    2017-{{ "now"|date("Y") }} Hanna Agency
+                    2017-{{ "now"|date("Y") }} EJAS
                 </li>
 
                 <li>
                     <a href="{{ path('homepage_contact') }}">
                         Contact
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('store_apply') }}">
+                        Apply for store
                     </a>
                 </li>
                 <li>
@@ -332,6 +352,7 @@
             {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('flash_message') }}
 {#            {{ encore_entry_script_tags('main_menu') }}#}
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         {% endblock %}
         {% if block('javascripts') is defined %}
             {{ block('javascripts') }}

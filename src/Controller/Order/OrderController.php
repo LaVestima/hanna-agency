@@ -23,6 +23,8 @@ class OrderController extends BaseController
      */
     public function list()
     {
+        $this->denyAccessUnlessGranted('order_list_view');
+
         $orders = $this->orderRepository->readEntitiesBy([
             'user' => $this->getUser()
         ])
@@ -37,12 +39,9 @@ class OrderController extends BaseController
     /**
      * @Route("/order/{code}", name="order_show")
      */
-//    public function show(string $code)
     public function show(Order $order)
     {
-        // TODO: fix access control
-        // TODO: either user who placed or store subuser
-        if ($order->getUser() != $this->getUser()) { throw new HttpException(401); }
+        $this->denyAccessUnlessGranted('order_view', $order);
 
         return $this->render('Order/show.html.twig', [
             'order' => $order

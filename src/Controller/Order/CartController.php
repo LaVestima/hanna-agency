@@ -131,30 +131,29 @@ class CartController extends BaseController
                 ]);
 
                 if ($productVariant->getAvailability() < $addToCartData['quantity']) {
-                    // TODO: return error
-                    echo 'Not enough products available!';
-                } else {
-                    $session = $request->getSession();
-
-                    $cart = $session->get('cart');
-
-                    if (array_key_exists($productVariantIdentifier, $cart ?? [])) {
-                        $cart[$productVariantIdentifier]['quantity'] += $addToCartData['quantity'];
-                    } else {
-                        $cart[$productVariantIdentifier] = [
-                            'quantity' => (int)$addToCartData['quantity']
-                        ];
-                    }
-
-                    $session->set('cart', $cart);
-
-                    // TODO: add session data to DB, for further retrieval
+                    return new Response('Not enough products available!', 409);
                 }
+
+                $session = $request->getSession();
+
+                $cart = $session->get('cart');
+
+                if (array_key_exists($productVariantIdentifier, $cart ?? [])) {
+                    $cart[$productVariantIdentifier]['quantity'] += $addToCartData['quantity'];
+                } else {
+                    $cart[$productVariantIdentifier] = [
+                        'quantity' => (int)$addToCartData['quantity']
+                    ];
+                }
+
+                $session->set('cart', $cart);
+
+                // TODO: add session data to DB, for further retrieval
             }
         } else {
             // TODO: return error
         }
 
-        return new Response('ok');
+        return new Response(array_sum(array_column($cart, 'quantity')), 200);
     }
 }

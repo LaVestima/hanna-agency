@@ -32,7 +32,7 @@ class ProductVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if ($attribute !== self::VIEW && !$user instanceof User) {
             return false;
         }
 
@@ -52,11 +52,15 @@ class ProductVoter extends Voter
         throw new LogicException('This code should not be reached!');
     }
 
-    private function canView(Product $product, User $user): bool
+    private function canView(Product $product, $user): bool
     {
-        if ($this->canEdit($product, $user)) { return true; }
+        if ($user instanceof User) {
+            if ($this->canEdit($product, $user)) { return true; }
 
-        if (!$product->getActive() && !$user->getStores()->contains($product->getStore())) {
+            if (!$user->getStores()->contains($product->getStore())) { return true; }
+        }
+
+        if (!$product->getActive()) {
             return false;
         }
 

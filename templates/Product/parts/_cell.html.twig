@@ -1,4 +1,11 @@
 <style>
+    .product-cell {
+        display: inline-block;
+        width: calc(100% / 5);
+        box-sizing: border-box;
+        padding: 0.25em;
+        position: relative;
+    }
     .product-cell:hover {
         background: #ddd;
     }
@@ -6,19 +13,64 @@
         float: left;
         margin: 0 0.05em;
     }
+    .quick-view-icon, .quick-view-close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        opacity: 0.5;
+        cursor: pointer;
+    }
+    .quick-view-icon:hover {
+        opacity: 1;
+    }
+    .quick-view .first-image-wrapper {
+        width: calc(100% / 3);
+    }
+    .product-cell.quick-view {
+        width: 80%;
+        order: -1;
+        /*background: #fff;*/
+    }
+    .product-cell-inner {
+        width: 100%;
+    }
+    .product-cell.quick-view .product-cell-inner {
+        display: flex;
+        justify-content: space-between;
+        background: #fff;
+        border-radius: 0.5em;
+    }
+    .quick-view-show,
+    .product-cell.quick-view .quick-view-hide {
+        display: none;
+    }
+    .product-cell.quick-view .quick-view-show,
+    .quick-view-hide {
+        display: initial;
+    }
 </style>
 
-<div class="product-cell" style="display: inline-block; width: calc(100% / 6); box-sizing: border-box; padding: 0.25em;">
+<div class="product-cell">
+    <i class="fas fa-search quick-view-icon quick-view-hide"></i>
+    <i class="fas fa-times quick-view-close quick-view-show"></i>
     <a href="{{ path('product_show', {'pathSlug': product.pathSlug}) }}">
-        <div style="width: 100%;">
-            <div style="margin-bottom: 0.5em; text-align: center; border-radius: 1em;">
+        <div class="product-cell-inner">
+            <div class="first-image-wrapper" style="margin-bottom: 0.5em; border-radius: 1em;">
                 {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
             </div>
 
             <div style="margin: 0em; padding: 0.25em; display: flex; flex-direction: column;">
-                <span style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
+                <span class="quick-view-hide" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
+                <span class="quick-view-show" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name }}</b></span>
                 <span style="font-size: 16px; color: #555">{{ product.store.shortName }}</span>
-                <span style="font-size: 14px;">{{ product.description | slice(0, 100) }}</span>
+                <span class="quick-view-show" style="font-size: 14px;">{{ product.description }}</span>
+
+                <div class="quick-view-show">
+                    {% for productParameter in product.productParameters %}
+                        <span style="color: #aaa;">{{ productParameter.parameter.name }}</span> {{ productParameter.value }} {{ productParameter.parameter.unit }}<br>
+                    {% endfor %}
+                </div>
+
                 <div>
                     {% if product.productReviews|length > 0 %}
                         {% set ratingAvg = 0 %}
@@ -29,7 +81,6 @@
 
                         {% set ratingAvgRounded = ratingAvg|round(0, 'ceil') %}
 
-{#                        ({{ product.productReviews|length }})#}
                         {% for rating in 1..(ratingAvgRounded-1) if (ratingAvgRounded-1) != 0 %}
                             <img src="{{ asset('uploads/images/_star_4.png') }}" alt="" width="15" class="rating-star">
                         {% endfor %}
@@ -37,11 +88,12 @@
                         {% for rating in (ratingAvgRounded+1)..5 if ratingAvgRounded != 5 %}
                             <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15" class="rating-star">
                         {% endfor %}
+                        <span class="quick-view-show">/{{ product.productReviews|length }} reviews</span>
                     {% else %}
-{#                        (0)#}
                         {% for rating in 1..5 %}
                             <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15" class="rating-star">
                         {% endfor %}
+                        <span class="quick-view-show">/0 reviews</span>
                     {% endif %}
                 </div>
                 <span><b>€ {{ product.price }}</b></span>

@@ -62,7 +62,10 @@
 
                 <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start;">
                     {% for product in pagination %}
-                        {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
+{#                        <div>#}
+{#                            <i class="fas fa-search" style="position: absolute"></i>#}
+                            {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
+{#                        </div>#}
                     {% endfor %}
                 </div>
 
@@ -73,4 +76,8 @@
         </div>
     </div>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('search_home') }}
 {% endblock %}

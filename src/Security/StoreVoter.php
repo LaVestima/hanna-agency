@@ -10,13 +10,17 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class StoreVoter extends Voter
 {
+    private const APPLY = 'store_apply';
     private const VIEW_DASHBOARD = 'view_dashboard';
 
     protected function supports($attribute, $subject)
     {
         // TODO: Implement supports() method.
 
-        if (!in_array($attribute, [self::VIEW_DASHBOARD], true)) {
+        if (!in_array($attribute, [
+            self::APPLY,
+            self::VIEW_DASHBOARD
+        ], true)) {
             return false;
         }
 
@@ -38,11 +42,18 @@ class StoreVoter extends Voter
         $store = $subject;
 
         switch ($attribute) {
+            case self::APPLY:
+                return $this->canApply($user);
             case self::VIEW_DASHBOARD:
                 return $this->canViewDashboard($user);
         }
 
         throw new LogicException('This code should not be reached!');
+    }
+
+    private function canApply(User $user)
+    {
+        return $user->getStores()->isEmpty();
     }
 
     private function canViewDashboard(User $user)
