@@ -4,7 +4,7 @@ namespace App\Controller\Product;
 
 use App\Repository\ProductRepository;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Rest\RouteResource("Product", pluralize=false)
  */
-class ProductApiController extends FOSRestController implements ClassResourceInterface
+class ProductApiController extends AbstractFOSRestController implements ClassResourceInterface
 {
     private $productRepository;
 

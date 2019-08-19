@@ -1,55 +1,3 @@
-<style>
-    .product-cell {
-        display: inline-block;
-        width: calc(100% / 5);
-        box-sizing: border-box;
-        padding: 0.25em;
-        position: relative;
-    }
-    .product-cell:hover {
-        background: #ddd;
-    }
-    .rating-star {
-        float: left;
-        margin: 0 0.05em;
-    }
-    .quick-view-icon, .quick-view-close {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-        opacity: 0.5;
-        cursor: pointer;
-    }
-    .quick-view-icon:hover {
-        opacity: 1;
-    }
-    .quick-view .first-image-wrapper {
-        width: calc(100% / 3);
-    }
-    .product-cell.quick-view {
-        width: 80%;
-        order: -1;
-        /*background: #fff;*/
-    }
-    .product-cell-inner {
-        width: 100%;
-    }
-    .product-cell.quick-view .product-cell-inner {
-        display: flex;
-        justify-content: space-between;
-        background: #fff;
-        border-radius: 0.5em;
-    }
-    .quick-view-show,
-    .product-cell.quick-view .quick-view-hide {
-        display: none;
-    }
-    .product-cell.quick-view .quick-view-show,
-    .quick-view-hide {
-        display: initial;
-    }
-</style>
-
 <div class="product-cell">
     <i class="fas fa-search quick-view-icon quick-view-hide"></i>
     <i class="fas fa-times quick-view-close quick-view-show"></i>
@@ -59,7 +7,7 @@
                 {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
             </div>
 
-            <div style="margin: 0em; padding: 0.25em; display: flex; flex-direction: column;">
+            <div class="details-wrapper" style="margin: 0em; padding: 0.25em; display: flex; flex-direction: column;">
                 <span class="quick-view-hide" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
                 <span class="quick-view-show" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name }}</b></span>
                 <span style="font-size: 16px; color: #555">{{ product.store.shortName }}</span>

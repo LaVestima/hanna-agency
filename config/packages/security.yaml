@@ -42,8 +42,7 @@ security:
         ROLE_STORE_SUBUSER: ROLE_USER
         ROLE_STORE_ADMIN: ROLE_STORE_SUBUSER
         ROLE_PRODUCER: ROLE_USER # TODO: remove
-#        ROLE_ADMIN: ROLE_PRODUCER
-        ROLE_SUPER_ADMIN: ROLE_STORE_ADMIN
+        ROLE_SUPER_ADMIN: ROLE_USER
 
 
     # Easy way to control access for large sections of your site

@@ -324,4 +324,121 @@ footer {
     opacity: 0.5;
 }
 
+#top-bar-wrapper {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    border-bottom: 3px solid black;
+    z-index: 999;
+}
+#config-bar {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 16px;
+    height: 55px;
+    background: rgb(172,167,255);
+    background: linear-gradient(90deg, rgba(172,167,255,1) 0%, rgba(52,144,255,1) 0%, rgba(0,0,0,1) 100%);
+}
+#config-bar .config-bar-item {
+    /*list-style: none;*/
+    /*display: flex;*/
+    flex-direction: column;
+    /*justify-content: center;*/
+    text-align: center;
+    color: #fff;
+    padding: 0.5em 1em;
+}
+#config-bar .config-bar-item:hover {
+    background: #add8e6;
+}
+#top-bar {
+    max-width: 1200px;
+    margin: 0.5em auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*background: #aaa;*/
+}
+.top-bar-item {
+    padding: 0.5em;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+    /*cursor: pointer;*/
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 44px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    /*padding: 1em;*/
+    z-index: 1;
+}
+.dropdown-content div {
+    padding: 0.5em;
+}
+.dropdown-content div:hover {
+    background: #aaa;
+}
+.dropdown-content-left {
+    right: 0;
+}
+.dropdown-content-right {
+    left: 0;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.dropright {
+    position: relative;
+}
+.dropright-content {
+    display: none;
+    position: absolute;
+    /*right: 0;*/
+    left: 160px;
+    top: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    /*padding: 12px 16px;*/
+    z-index: 2;
+}
+.dropright:hover .dropright-content {
+    display: block;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
 @import 'Parts/pagination';

@@ -7,8 +7,26 @@ use PHPUnit\Framework\TestCase;
 
 class CrudHelperTest extends TestCase
 {
-    public function testGeneratePathSlug()
+    /**
+     * @dataProvider provideNamesAndPathSlugs
+     * @param $inputName
+     * @param $outputPathSLug
+     */
+    public function testGeneratePathSlug($inputName, $outputPathSLug)
     {
-        $this->assertRegExp('/[A-Za-z0-9]{50}/', CrudHelper::generatePathSlug());
+        $this->assertEquals($outputPathSLug, CrudHelper::generatePathSlug($inputName));
+    }
+
+    public function provideNamesAndPathSlugs()
+    {
+        return [
+            [' ', '-'],
+            ['a b', 'a-b'],
+            ['a-b', 'a-b'],
+            ['≠²³¢€½§·«»πœę©ß←↓→óþąśðæŋ’ə…łżźć„”ńµ≤≥', ''],
+            ['QWERTYUIOPASDFGHJKLZXCVBNM', 'qwertyuiopasdfghjklzxcvbnm'],
+            ['1234567890', '1234567890'],
+            ['y!#$%&\'*+-=?^_`{|}~.[]"', 'y!#$%&\'*+-=?^_`{|}~.[]"'],
+        ];
     }
 }

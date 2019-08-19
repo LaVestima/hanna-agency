@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\Annotations;
@@ -10,7 +10,7 @@ use FOS\RestBundle\Controller\Annotations;
 /**
  * @Route("/api")
  */
-class PingApiController extends FOSRestController
+class PingApiController extends AbstractFOSRestController
 {
     /**
      * @Annotations\Get(path="/ping", name="api_ping")

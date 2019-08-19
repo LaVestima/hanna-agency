@@ -13,13 +13,14 @@ use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use RandomLib\Factory;
+use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class RegisterController extends BaseController
+class RegistrationController extends BaseController
 {
     private $swiftMailer;
     private $userPasswordEncoder;
@@ -51,7 +52,7 @@ class RegisterController extends BaseController
     /**
      * @Route("/register", name="access_control_register")
      */
-    public function index(Request $request)
+    public function index(Request $request, ReCaptcha $reCaptcha)
     {
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
@@ -59,6 +60,15 @@ class RegisterController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $resp = $reCaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                ->verify($request->request->get('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
+
+            if (!$resp->isSuccess()) {
+                $this->addFlash('error', 'reCAPTCHA error!');
+
+                return $this->redirectToRoute('access_control_register');
+            }
+
             $user = $form->getData();
 
             $passwordHash = $this->userPasswordEncoder
@@ -107,8 +117,9 @@ class RegisterController extends BaseController
             ]);
         }
 
-        return $this->render('AccessControl/register.html.twig', [
-            'form' => $form->createView()
+        return $this->render('AccessControl/registration.html.twig', [
+            'form' => $form->createView(),
+            'google_recaptcha_site_key' => $_ENV['GOOGLE_RECAPTCHA_SITE_KEY']
         ]);
     }
 

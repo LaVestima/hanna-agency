@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>{% spaceless %}
@@ -15,126 +15,7 @@
         {% spaceless %}
         {% block base_stylesheets %}
             {{ encore_entry_link_tags('app') }}
-{#            {{ encore_entry_link_tags('main_menu') }}#}
-            <style>
-                /* !!! MOVE TO SEPARATE FILE !!! */
-                #top-bar-wrapper {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    background: #fff;
-                    border-bottom: 3px solid black;
-                    z-index: 999;
-                }
-                #config-bar {
-                    display: flex;
-                    justify-content: flex-end;
-                    font-size: 16px;
-                    height: 55px;
-                    background: rgb(172,167,255);
-                    background: linear-gradient(90deg, rgba(172,167,255,1) 0%, rgba(52,144,255,1) 0%, rgba(0,0,0,1) 100%);
-                }
-                #config-bar .config-bar-item {
-                    /*list-style: none;*/
-                    /*display: flex;*/
-                    flex-direction: column;
-                    /*justify-content: center;*/
-                    text-align: center;
-                    color: #fff;
-                    padding: 0.5em 1em;
-                }
-                #config-bar .config-bar-item:hover {
-                    background: #add8e6;
-                }
-                #top-bar {
-                    max-width: 1200px;
-                    margin: 0.5em auto;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    /*background: #aaa;*/
-                }
-                .top-bar-item {
-                    padding: 0.5em;
-                }
-                .dropdown {
-                    position: relative;
-                    display: inline-block;
-                    /*cursor: pointer;*/
-                }
-                .dropdown-content {
-                    display: none;
-                    position: absolute;
-                    top: 44px;
-                    background-color: #f9f9f9;
-                    min-width: 160px;
-                    /*padding: 1em;*/
-                    z-index: 1;
-                }
-                .dropdown-content div {
-                    padding: 0.5em;
-                }
-                .dropdown-content div:hover {
-                    background: #aaa;
-                }
-                .dropdown-content-left {
-                    right: 0;
-                }
-                .dropdown-content-right {
-                    left: 0;
-                }
-                .dropdown:hover .dropdown-content {
-                    display: block;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                }
-                .dropright {
-                    position: relative;
-                }
-                .dropright-content {
-                    display: none;
-                    position: absolute;
-                    /*right: 0;*/
-                    left: 160px;
-                    top: 0;
-                    background-color: #f9f9f9;
-                    min-width: 160px;
-                    /*padding: 12px 16px;*/
-                    z-index: 2;
-                }
-                .dropright:hover .dropright-content {
-                    display: block;
-                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                }
-
-
-
-
-                .tooltip {
-                    position: relative;
-                    display: inline-block;
-                }
-
-                .tooltip .tooltiptext {
-                    visibility: hidden;
-                    width: 120px;
-                    background-color: black;
-                    color: #fff;
-                    text-align: center;
-                    border-radius: 6px;
-                    padding: 5px 0;
-
-                    /* Position the tooltip */
-                    position: absolute;
-                    z-index: 1;
-                    top: 100%;
-                    left: 50%;
-                    margin-left: -60px;
-                }
-
-                .tooltip:hover .tooltiptext {
-                    visibility: visible;
-                }
-            </style>
+            {{ encore_entry_link_tags('product_cell') }}
         {% endblock %}
         {% if block('stylesheets') is defined %}
             {{ block('stylesheets') }}
@@ -143,12 +24,7 @@
     </head>
     <body>
         <div id="top-bar-wrapper">
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <div style="width: 100%; background: red;">
-                    ADMIN
-                </div>
-            {% endif %}
-            <div id="top-bar" style="">
+            <div id="top-bar">
                 <a href="{{ path('homepage_homepage') }}">
                     <div class="top-bar-item">
 {#                        <i class="fas fa-globe"></i>#}
@@ -157,6 +33,7 @@
                         <span>EuEuEuEuBuy</span>
                     </div>
                 </a>
+
                 {{ render(controller(
                     'App\\Controller\\Search\\SearchController::searchBar',
                     {
@@ -164,71 +41,26 @@
                         'searchCategory': searchCategory | default('')
                     }
                 )) }}
-{#                <a href="{{ path('cart_home') }}">#}
-                    <div class="top-bar-item tooltip">
-                        <i class="fas fa-globe"></i>
-                        <span class="tooltiptext">???</span>
-                    </div>
-{#                </a>#}
-                <a href="{{ path('cart_home') }}">
-                    <div class="top-bar-item tooltip">
-                        <i class="fas fa-shopping-cart"></i>
-{#                        ({{ cartTotal }})#}
-                        <span class="tooltiptext">Cart</span>
-                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;" id="top-bar-icon-cart-total">{{ cartTotal }}</span>
-                    </div>
-                </a>
-{#                <a href="{{ path('conversation_list') }}">#}
-                    <div class="top-bar-item tooltip">
-                        <i class="fas fa-heart"></i>
-                        <span class="tooltiptext">Wishlist</span>
-                    </div>
-{#                </a>#}
-                <a href="{{ path('conversation_list') }}">
-                    <div class="top-bar-item tooltip">
-                        <i class="fas fa-envelope"></i>
-                        <span class="tooltiptext">Messages</span>
-                    </div>
-                </a>
-{#                <a href="{{ path('conversation_list') }}">#}
-                <div class="top-bar-item tooltip">
-                    <i class="fas fa-question"></i>
-                    <span class="tooltiptext">Help</span>
-                </div>
-{#                </a>#}
-
-
-
 
                 <div class="dropdown">
-                    <div class="top-bar-item" style="background: #985f0d;">
+                    <div class="top-bar-item">
                         <i class="fas fa-user"></i>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="dropdown-content dropdown-content-left">
-                        <div style="padding: 0 0 1em 0; background: #bbb;">
-                            {% if not app.user %}
-                                <a href="{{ path('access_control_login') }}">
-                                    <div>
-                                        <span>Log in</span>
-                                        <i class="fas fa-sign-in-alt"></i>
-                                    </div>
-                                </a>
-                            {% elseif app.user %}
+                        <div style="background: #bbb;">
+                            {% if app.user %}
                                 <i class="fas fa-user-circle"></i> {{ app.user.login }}
-                                <a href="{{ path('logout') }}">
-                                    <div class="button">
-                                        <span>Log out</span>
-                                        <i class="fas fa-sign-out-alt"></i>
-                                    </div>
-                                </a>
                             {% endif %}
                         </div>
 
-{#                        <hr>#}
-
                         {% if is_granted('ROLE_PRODUCER') %}
-                            <b>{{ app.user.stores[0].shortName }}</b>
+                            <a href="{{ path('store_show', {identifier: app.user.stores[0].identifier}) }}">
+                                <div>
+                                    <b>{{ app.user.stores[0].shortName }}</b>
+                                </div>
+                            </a>
+
                             <a href="{{ path('store_dashboard') }}">
                                 <div>
                                     <i class="fas fa-tachometer-alt"></i>
@@ -247,11 +79,9 @@
                             {% if is_granted('ROLE_STORE_SUBUSER') %}
                                 <a class="button" href="{{ path('store_logout') }}">Store Logout</a>
                             {% elseif app.user.stores is not empty %}
-{#                                {% for store in app.user.stores %}#}
-                                    <a class="button" href="{{ path('store_login', {'identifier': app.user.stores[0].identifier}) }}">
-                                        {{ app.user.stores[0].shortName }} login <i class="fas fa-chevron-right"></i>
-                                    </a>
-{#                                {% endfor %}#}
+                                <a class="button" href="{{ path('store_login', {'identifier': app.user.stores[0].identifier}) }}">
+                                    {{ app.user.stores[0].shortName }} login <i class="fas fa-chevron-right"></i>
+                                </a>
                             {% endif %}
                         {% endif %}
 
@@ -267,7 +97,7 @@
 
                         {% if is_granted('ROLE_USER') %}
                         <a href="{{ path('order_list') }}">
-                            <div style="padding: 0.5em 0;">
+                            <div>
                                 <i class="fas fa-list"></i> Orders
                             </div>
                         </a>
@@ -277,8 +107,59 @@
                             </div>
                         </a>
                         {% endif %}
+{#                        <div>#}
+                            {% if not app.user %}
+                                <a href="{{ path('access_control_login') }}">
+                                    <div>
+                                        <span>Log in</span>
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </div>
+                                </a>
+                            {% elseif app.user %}
+                                <a href="{{ path('logout') }}">
+                                    <div>
+                                        <span>Log out</span>
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </div>
+                                </a>
+                            {% endif %}
+{#                        </div>#}
+
                     </div>
                 </div>
+
+{#                <a href="{{ path('cart_home') }}">#}
+                <div class="top-bar-item tooltip">
+                    <i class="fas fa-globe"></i>
+                    <span class="tooltiptext">???</span>
+                </div>
+{#                </a>#}
+                <a href="{{ path('cart_home') }}">
+                    <div class="top-bar-item tooltip">
+                        <i class="fas fa-shopping-cart"></i>
+                        {#                        ({{ cartTotal }})#}
+                        <span class="tooltiptext">Cart</span>
+                        <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;" id="top-bar-icon-cart-total">{{ cartTotal }}</span>
+                    </div>
+                </a>
+{#                <a href="{{ path('conversation_list') }}">#}
+                <div class="top-bar-item tooltip">
+                    <i class="fas fa-heart"></i>
+                    <span class="tooltiptext">Wishlist</span>
+                </div>
+{#                </a>#}
+                <a href="{{ path('conversation_list') }}">
+                    <div class="top-bar-item tooltip">
+                        <i class="fas fa-envelope"></i>
+                        <span class="tooltiptext">Messages</span>
+                    </div>
+                </a>
+{#                <a href="{{ path('conversation_list') }}">#}
+                <div class="top-bar-item tooltip">
+                    <i class="fas fa-question"></i>
+                    <span class="tooltiptext">Help</span>
+                </div>
+{#                </a>#}
             </div>
         </div>
 
@@ -333,6 +214,11 @@
                 <li>
                     MORE...
                 </li>
+                <li>
+                    <a href="{{ path('test_test') }}">
+                        DEV TEST
+                    </a>
+                </li>
             </ul>
             <a href="https://stripe.com/">
                 <i class="fab fa-cc-stripe fa-2x"></i>
@@ -351,7 +237,6 @@
         {% block base_javascripts %}
             {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('flash_message') }}
-{#            {{ encore_entry_script_tags('main_menu') }}#}
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         {% endblock %}
         {% if block('javascripts') is defined %}
@@ -359,16 +244,6 @@
         {% endif %}
     </body>
     {# ----------------------- JS ----------------------- #}
-    {#{% if ((block('actionBar') is not defined or block('actionBar') is null) and#}
-        {#(actionBar is not defined or actionBar is null)) or#}
-        {#(renderActionBar is defined and not renderActionBar)#}
-    {#%}#}
-        {#{% stylesheets filter='scssphp' output='css/no_action_bar.css'#}
-            {#'@InfrastructureBundle/Resources/public/css/no_action_bar.scss'#}
-        {#%}#}
-            {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-        {#{% endstylesheets %}#}
-    {#{% endif %}#}
 
     {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
     {#<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>#}
@@ -379,5 +254,4 @@
     {#%}#}
         {#<script src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
-    {#{% if block('javascripts') is defined %}{{ block('javascripts') }}{% endif %}#}
 </html>

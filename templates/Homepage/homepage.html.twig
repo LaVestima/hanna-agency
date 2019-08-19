@@ -22,7 +22,11 @@
                 grid-template-columns: 1fr 1fr;
                 grid-template-areas:
                     'banner banner'
-                    'categories deals-week'
+                    'deals-week deals-week'
+                    'categories categories'
+                    'top-companies top-companies'
+                    'account account'
+                    'item1 item2'
                     /*'categories banner banner item1 item2'*/
                     /*'top-companies deals-week deals-week deals-week deals-week'*/
                 ;
@@ -94,20 +98,19 @@
         <div class="grid-top-companies">
             Top rated companies <i class="fas fa-chevron-right"></i>
             <div style="display: flex; flex-direction: column;">
-{#                <div style="background: #444; width: 100%; margin: 0.5em;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur atque cum delectus eius eveniet facilis maxime minima sed sint voluptatem.</div>#}
-{#                <div style="background: #444; margin: 0.5em;"></div>#}
-                {% for company in stores %}
-                    <div style="background: #444; padding: 1em; height: 2em; margin: 0.5em; color: #fff; border-radius: 5px;">
-                        {{ company.shortName }}
-                    </div>
+                {% for store in stores %}
+                    <a href="{{ path('store_show', {identifier: store.identifier}) }}">
+                        <div style="background: #444; padding: 1em; height: 2em; margin: 0.5em; color: #fff; border-radius: 5px;">
+                            {{ store.shortName }}
+                        </div>
+                    </a>
                 {% endfor %}
             </div>
         </div>
         <div class="grid-deals-week">
             Best deals this week <i class="fas fa-chevron-right"></i>
-            <div>
+            <div style="display: flex; overflow: auto;">
             {% for product in products %}
-{#                {{ dump(product) }}#}
                 {% include 'Product/parts/_cell.html.twig' with {'product': product} %}
             {% endfor %}
             </div>
