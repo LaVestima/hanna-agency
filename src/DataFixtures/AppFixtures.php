@@ -161,17 +161,20 @@ class AppFixtures extends Fixture
     {
         $roleData = [
             ['Super Administrator', 'ROLE_SUPER_ADMIN'],
-            ['Administrator', 'ROLE_ADMIN'],
-            ['Store', 'ROLE_PRODUCER'],
-            ['Customer', 'ROLE_CUSTOMER'],
+            ['Store Admin', 'ROLE_STORE_ADMIN'],
             ['User', 'ROLE_USER'],
-            ['Guest', 'ROLE_GUEST']
+            ['a', 'ROLE_READ_MESSAGE', true],
+            ['s', 'ROLE_WRITE_MESSAGE', true],
+            ['d', 'ROLE_ADD_PRODUCT', true],
+            ['f', 'ROLE_EDIT_PRODUCT', true],
+            ['g', 'ROLE_DELETE_PRODUCT', true],
         ];
 
         foreach ($roleData as $rd) {
             $role = new Role();
             $role->setName($rd[0]);
             $role->setCode($rd[1]);
+            $role->setSubrole($rd[2] ?? false);
             $this->roleRepository->createEntity($role);
         }
     }
@@ -180,11 +183,9 @@ class AppFixtures extends Fixture
     {
         $userData = [
             ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1, ['ROLE_SUPER_ADMIN']],
-            ['admin123', 'admin@ad.min', '$2y$13$q43l5g4fan65xCr0dkTxpe71Z7PQqqYatz8zYGWPbRGOCiyh2mQIC', 2],
-            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, ['ROLE_PRODUCER']],
-            ['customer', 'customer@customer.customer', '$2y$13$t5mD8ZZYbb0Zje9DgyKtV.vthmphXjMw5N//1IT/lfuzzB69ifFBK', 4],
+            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, ['ROLE_STORE_ADMIN']],
+            ['subuser', 'sub@sub.subuser', '$argon2i$v=19$m=1024,t=16,p=2$RzdhVzBVQnZITWxYbHpSWg$8af8WAAmVzRpaywpBfGJWnkSuu3wj9UrSQZjUHoLmgQ', 6],
             ['user', 'user@used.user', '$argon2i$v=19$m=1024,t=16,p=2$d2lGTmgxWTg3QVlJSTY4Zw$qGqrYwn8FexTo3Hu7prerL5Q1GgNUByXBADUBHpSQ0M', 5],
-            ['guest', 'guest@guest.guest', '$2y$13$gd0WItzUO2MGRzz0posdVeZz.K.518ecBdWwg5US24GvITcAz6Xm6', 6],
         ];
 
         foreach ($userData as $ud) {
@@ -205,7 +206,6 @@ class AppFixtures extends Fixture
             [2, 'pl', 0],
             [3, 'fr', 0],
             [4, 'en', 1],
-            [5, 'ca', 1],
         ];
 
         foreach ($userSettingData as $usd) {
@@ -279,12 +279,12 @@ class AppFixtures extends Fixture
             [
                 'Omni', 'Omni Architectural Designs', 'Christopher', 'Harris',
                 'GB028338520', 9, 13, 'PH33 3AF', '50 Old Chapel Road', 'RileyCraig@teleworm.us',
-                '078 2966 5839', 3, true
+                '078 2966 5839', 2, true
             ],
             [
                 'Asiatic', 'Asiatic Solutions', null, null,
                 'FR69210542996', 3, 14, '74100', '65, Avenue De Marlioz', 'BrigittePatry@teleworm.us',
-                '04.29.54.23.82', 2, true
+                '04.29.54.23.82', 3, true
             ]
         ];
 
@@ -310,7 +310,7 @@ class AppFixtures extends Fixture
     private function loadOrders(): void
     {
         $orderData = [
-            [5, 5, '441209205474295847260340']
+            [4, 4, '441209205474295847260340']
         ];
 
         foreach ($orderData as $od) {
@@ -492,7 +492,7 @@ class AppFixtures extends Fixture
     private function loadConversations(): void
     {
         $conversationData = [
-            [5, 3]
+            [2, 4]
         ];
 
         foreach ($conversationData as $cd) {

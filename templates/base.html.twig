@@ -54,7 +54,7 @@
                             {% endif %}
                         </div>
 
-                        {% if is_granted('ROLE_PRODUCER') %}
+                        {% if is_granted('ROLE_STORE_ADMIN') %}
                             <a href="{{ path('store_show', {identifier: app.user.stores[0].identifier}) }}">
                                 <div>
                                     <b>{{ app.user.stores[0].shortName }}</b>

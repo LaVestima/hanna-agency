@@ -3,9 +3,9 @@
 namespace App\Command;
 
 use Faker\Factory;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 
-class BaseCreateCommand extends ContainerAwareCommand
+class BaseCreateCommand extends Command
 {
     protected $faker;
 

@@ -3,7 +3,12 @@
 {% block content %}
     {{ subuser.user.email }}<br>
 
-    {% for role in subuser.roles %}
-        {{ role }}<br>
+
+    {{ form_start(form) }}
+
+    {% for role in form.roles %}
+        {{ form_row(role) }}
     {% endfor %}
+
+    {{ form_end(form) }}
 {% endblock %}

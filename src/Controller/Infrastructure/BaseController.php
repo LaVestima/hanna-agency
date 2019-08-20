@@ -116,7 +116,7 @@ class BaseController extends AbstractController
      */
     protected function getStore()
     {
-        return $this->getUser()->getStores()[0];
+        return $this->getUser() ? $this->getUser()->getStores()[0] : null;
     }
 
     /**

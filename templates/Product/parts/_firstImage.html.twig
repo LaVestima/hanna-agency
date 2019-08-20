@@ -1,12 +1,3 @@
-{# TODO: movve css to separate file #}
-<style>
-    .product-first-image {
-        width: 100%;
-        object-fit: cover;
-        border-radius: 0.5em;
-    }
-</style>
-
 {% if product.productImages.get(0).filePath is defined %}
     <img src="{{ asset(product.productImages.get(0).filePath) }}" alt="" class="product-first-image">
 {% else %}

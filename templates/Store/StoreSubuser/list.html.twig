@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {{ store.fullName }}
+    {% for subuser in store.storeSubusers %}
+        <div>
+            {{ subuser.user.login }}
+            <a href="{{ path('store_subuser_edit', {identifier: subuser.identifier}) }}" class="button">Edit</a>
+        </div>
+    {% endfor %}
+{% endblock %}

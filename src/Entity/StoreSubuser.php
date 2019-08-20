@@ -39,6 +39,11 @@ class StoreSubuser implements EntityInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $identifier;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +97,18 @@ class StoreSubuser implements EntityInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

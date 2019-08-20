@@ -8,6 +8,7 @@ use App\Entity\Store;
 use App\Entity\StoreSubuser;
 use App\Entity\User;
 use App\Form\StoreApplyType;
+use App\Form\StoreEditType;
 use App\Form\StoreLoginType;
 use App\Repository\OrderProductVariantRepository;
 use App\Repository\OrderStatusRepository;
@@ -60,6 +61,28 @@ class StoreController extends BaseController
     }
 
     /**
+     * @Route("/edit/{identifier}", name="store_edit")
+     */
+    public function edit(Store $store, Request $request)
+    {
+        // TODO: access: store admin or subuser with permissions
+
+
+        $form = $this->createForm(StoreEditType::class, $store);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($store);
+            $em->flush();
+        }
+
+        return $this->render('Store/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * @Route("/login/{identifier}", name="store_login")
      */
     public function login(Store $store, Request $request)
@@ -71,14 +94,14 @@ class StoreController extends BaseController
             'store' => $store
         ]);
 
-        if (!$storeSubuser) {
-            var_dump('error!!!!!!!!!!!!');
+        // TODO: check access (only user with this store assigned to?)
+        // TODO: and not store admin
+        // TODO: otherwise, error message and no login form
+        if (!$storeSubuser || $this->isGranted('ROLE_STORE_ADMIN')) {
+            var_dump('You cannot login to this store!');
             die();
             // TODO: show error page
         }
-
-
-        // TODO: check access (only user with this store assigned to? otherwise, error message and no login form)
 
         $form = $this->createForm(StoreLoginType::class);
         $form->handleRequest($request);

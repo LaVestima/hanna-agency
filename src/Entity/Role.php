@@ -44,6 +44,11 @@ class Role implements EntityInterface
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $subrole = false;
+
 
     public function __construct()
     {
@@ -135,6 +140,18 @@ class Role implements EntityInterface
                 $user->setRole(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSubrole(): ?bool
+    {
+        return $this->subrole;
+    }
+
+    public function setSubrole(bool $subrole): self
+    {
+        $this->subrole = $subrole;
 
         return $this;
     }

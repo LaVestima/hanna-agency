@@ -441,4 +441,11 @@ footer {
     visibility: visible;
 }
 
+
+.product-first-image {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.5em;
+}
+
 @import 'Parts/pagination';

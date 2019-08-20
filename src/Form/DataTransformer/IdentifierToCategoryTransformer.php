@@ -15,15 +15,6 @@ class IdentifierToCategoryTransformer implements DataTransformerInterface
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function reverseTransform($category)
-    {
-        if (null === $category) {
-            return '';
-        }
-
-        return $category->getIdentifier();
-    }
-
     public function transform($categoryIdentifier)
     {
         if (!$categoryIdentifier) {
@@ -41,4 +32,15 @@ class IdentifierToCategoryTransformer implements DataTransformerInterface
 
         return $category;
     }
+
+    public function reverseTransform($category)
+    {
+        if (null === $category) {
+            return '';
+        }
+
+        return $category->getIdentifier();
+    }
+
+
 }
