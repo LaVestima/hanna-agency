@@ -44,7 +44,15 @@
                         <span class="quick-view-show">/0 reviews</span>
                     {% endif %}
                 </div>
+                <div>
+                {% if product.oldPrice is defined and product.oldPrice is not null %}
+                    <span style="color: red; text-decoration: line-through;">
+                        € {{ product.oldPrice }}
+                    </span>
+                    &nbsp;
+                {% endif %}
                 <span><b>€ {{ product.price }}</b></span>
+                </div>
             </div>
         </div>
     </a>

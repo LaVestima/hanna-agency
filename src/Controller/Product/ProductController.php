@@ -30,11 +30,11 @@ class ProductController extends BaseController
     {
         $this->denyAccessUnlessGranted('view', $product);
 
-        $form = $this->createForm(AddToCartType::class, $product);
+        $addToCartForm = $this->createForm(AddToCartType::class, $product);
 
         return $this->render('Product/show.html.twig', [
             'product' => $product,
-            'form' => $form->createView()
+            'addToCartForm' => $addToCartForm->createView()
         ]);
     }
 

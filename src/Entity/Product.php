@@ -6,6 +6,8 @@ use App\Model\Infrastructure\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\PostLoad;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -16,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     @ORM\Index(name="Product_Store_FK", columns={"store_id"}),
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @HasLifecycleCallbacks
  */
 class Product implements EntityInterface
 {
@@ -75,6 +78,8 @@ class Product implements EntityInterface
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
      */
     private $price;
+
+    private $oldPrice;
 
     /**
      * @var string
@@ -141,6 +146,11 @@ class Product implements EntityInterface
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductPromotion", mappedBy="product", orphanRemoval=true)
+     */
+    private $productPromotions;
+
     public function __construct()
     {
         $this->productParameters = new ArrayCollection();
@@ -148,6 +158,25 @@ class Product implements EntityInterface
         $this->productVariants = new ArrayCollection();
         $this->productShipmentOptions = new ArrayCollection();
         $this->productReviews = new ArrayCollection();
+        $this->productPromotions = new ArrayCollection();
+
+
+    }
+
+    /** @PostLoad */
+    public function postLoad()
+    {
+        foreach ($this->getProductPromotions() as $productPromotion) {
+            if (
+                $productPromotion->getStartDate() < (new \Datetime()) &&
+                $productPromotion->getEndDate() > (new \Datetime())
+            ) {
+                $this->oldPrice = $this->price;
+                $this->price = $productPromotion->getDiscountedPrice();
+
+                break;
+            }
+        }
     }
 
     public function addProductParameter(ProductParameter $productParameter)
@@ -556,5 +585,52 @@ class Product implements EntityInterface
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|ProductPromotion[]
+     */
+    public function getProductPromotions(): Collection
+    {
+        return $this->productPromotions;
+    }
+
+    public function addProductPromotion(ProductPromotion $productPromotion): self
+    {
+        if (!$this->productPromotions->contains($productPromotion)) {
+            $this->productPromotions[] = $productPromotion;
+            $productPromotion->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductPromotion(ProductPromotion $productPromotion): self
+    {
+        if ($this->productPromotions->contains($productPromotion)) {
+            $this->productPromotions->removeElement($productPromotion);
+            // set the owning side to null (unless already changed)
+            if ($productPromotion->getProduct() === $this) {
+                $productPromotion->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOldPrice()
+    {
+        return $this->oldPrice;
+    }
+
+    /**
+     * @param mixed $oldPrice
+     */
+    public function setOldPrice($oldPrice): void
+    {
+        $this->oldPrice = $oldPrice;
     }
 }

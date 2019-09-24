@@ -284,7 +284,7 @@ class AppFixtures extends Fixture
             [
                 'Asiatic', 'Asiatic Solutions', null, null,
                 'FR69210542996', 3, 14, '74100', '65, Avenue De Marlioz', 'BrigittePatry@teleworm.us',
-                '04.29.54.23.82', 3, true
+                '04.29.54.23.82', 1, true
             ]
         ];
 

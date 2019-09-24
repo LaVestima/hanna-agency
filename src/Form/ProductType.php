@@ -36,14 +36,21 @@ class ProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $product = $builder->getData();
+
         // TODO: maybe only undeleted
         $categories = $this->categoryRepository->readAllEntities()->getResultAsArray();
 
         $builder
             ->add('name', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, [
+                'required' => false
+            ])
             ->add('price', MoneyType::class, [
                 'label' => 'Customer Price',
+                'data' => $product->getProductPromotions()->isEmpty()
+                    ? $product->getPrice()
+                    : $product->getOldPrice(),
                 'currency' => false
             ])
             ->add('category', ChoiceType::class, [
@@ -77,6 +84,16 @@ class ProductType extends AbstractType
                 'label' => 'Images',
                 'entry_type' => ProductImageType::class,
                 'property_path' => 'productImages',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false,
+                'required' => false,
+            ])
+            ->add('promotions', CollectionType::class, [
+                'label' => 'Promotions',
+                'entry_type' => ProductPromotionType::class,
+                'property_path' => 'productPromotions',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,

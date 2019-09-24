@@ -78,10 +78,12 @@
                         {% if app.user %}
                             {% if is_granted('ROLE_STORE_SUBUSER') %}
                                 <a class="button" href="{{ path('store_logout') }}">Store Logout</a>
-                            {% elseif app.user.stores is not empty %}
-                                <a class="button" href="{{ path('store_login', {'identifier': app.user.stores[0].identifier}) }}">
-                                    {{ app.user.stores[0].shortName }} login <i class="fas fa-chevron-right"></i>
-                                </a>
+                            {% elseif app.user.storeSubusers is not empty %}
+                                {% for storeSubuser in app.user.storeSubusers %}
+                                    <a class="button" href="{{ path('store_login', {'identifier': storeSubuser.store.identifier}) }}">
+                                        {{ storeSubuser.store.shortName }} login <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                {% endfor %}
                             {% endif %}
                         {% endif %}
 

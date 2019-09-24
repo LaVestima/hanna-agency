@@ -73,6 +73,8 @@ class CreateProductCommand extends BaseCreateCommand
                     $this->createProductReview($product);
                 }
 
+                unset($product);
+
                 $output->writeln('Product ' . ($i+1));
             }
 
@@ -116,6 +118,8 @@ class CreateProductCommand extends BaseCreateCommand
             ->setAvailability($this->faker->numberBetween(0, 2000));
 
         $this->productVariantRepository->createEntity($productVariant);
+
+        unset($productVariant);
     }
 
     private function createProductReview(Product $product): void
@@ -127,5 +131,7 @@ class CreateProductCommand extends BaseCreateCommand
             ->setContent($this->faker->text);
 
         $this->productReviewRepository->createEntity($productReview);
+
+        unset($productReview);
     }
 }

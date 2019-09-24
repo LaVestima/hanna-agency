@@ -18,98 +18,117 @@
 
 
 
-{{ form_start(form) }}
+    {{ form_start(form) }}
 
-<div style="border: 1px solid black;">
-    <h2>Images</h2>
-    {#<div class="form-group">#}
-        {#<div class="col-sm-10">#}
-            {#<div class="dropzone" data-upload-url="{{ path('upload_image') }}"></div>#}
+    <div style="border: 1px solid black;">
+        <h2>Images</h2>
+        {#<div class="form-group">#}
+            {#<div class="col-sm-10">#}
+                {#<div class="dropzone" data-upload-url="{{ path('upload_image') }}"></div>#}
+            {#</div>#}
         {#</div>#}
-    {#</div>#}
-    {#<div class="col-xs-4 pull-right">#}
-        {#<input type="submit" class="btn btn-block btn-primary" value="Add" />#}
-    {#</div>#}
-
-
-    {#<form action="">#}
-        {#<input id="fileUpload" type="file" accept="image/*" multiple>#}
-    {#</form>#}
-
-    <div id="image-holder"></div>
-
-
-    {#<div style="display: flex;">#}
-    {#{% for image in form.images %}#}
-        {#<div style="display: flex; flex-direction: column;">#}
-            {#<img src="{{ asset(image.vars.data.filePath) }}" style="margin: 0 auto; width: 200px; height: 200px; object-fit: cover;">#}
-            {#{{ form_widget(image) }}#}
+        {#<div class="col-xs-4 pull-right">#}
+            {#<input type="submit" class="btn btn-block btn-primary" value="Add" />#}
         {#</div>#}
-    {#{% endfor %}#}
-    {#</div>#}
 
-    <ul id="image-fields-list" style="display: flex;"
-        data-prototype="{{ form_widget(form.images.vars.prototype)|e }} <div class=&quot;button remove-image&quot;>-</div>"
-        data-widget-tags="{{ '<li></li>'|e }}"
-        data-widget-counter="{{ form.images|length }}">
-        {% for image in form.images %}
+
+        {#<form action="">#}
+            {#<input id="fileUpload" type="file" accept="image/*" multiple>#}
+        {#</form>#}
+
+        <div id="image-holder"></div>
+
+
+        {#<div style="display: flex;">#}
+        {#{% for image in form.images %}#}
+            {#<div style="display: flex; flex-direction: column;">#}
+                {#<img src="{{ asset(image.vars.data.filePath) }}" style="margin: 0 auto; width: 200px; height: 200px; object-fit: cover;">#}
+                {#{{ form_widget(image) }}#}
+            {#</div>#}
+        {#{% endfor %}#}
+        {#</div>#}
+
+        <ul id="image-fields-list" style="display: flex;"
+            data-prototype="{{ form_widget(form.images.vars.prototype)|e }} <div class=&quot;button remove-image&quot;>-</div>"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.images|length }}">
+            {% for image in form.images %}
+                <li>
+                    <img src="{{ asset(image.vars.data.filePath) }}" style="margin: 0 auto; width: 200px; height: 200px; object-fit: cover;">
+                    {{ form_widget(image) }}
+                    {{ form_errors(image) }}
+                    <div class="button remove-image">-</div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="button" id="add-image" data-list-selector="#image-fields-list">+</div>
+    </div>
+
+    <style>
+        .thumb-image {
+            max-width: 200px;
+        }
+    </style>
+
+    <div style="border: 1px solid black;">
+        <h2>{{ form_label(form.variants) }}</h2>
+        <ul id="variant-fields-list"
+            data-prototype="{{ form_widget(form.variants.vars.prototype.name)|e }}
+                {{ form_widget(form.variants.vars.prototype.availability)|e }} <div class=&quot;button remove-variant&quot;>-</div>"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.variants|length }}">
+        {% for variant in form.variants %}
             <li>
-                <img src="{{ asset(image.vars.data.filePath) }}" style="margin: 0 auto; width: 200px; height: 200px; object-fit: cover;">
-                {{ form_widget(image) }}
-                {{ form_errors(image) }}
-                <div class="button remove-image">-</div>
+                {{ form_widget(variant.name) }}
+                {{ form_widget(variant.availability) }}
+                {{ form_errors(variant) }}
+                <div class="button remove-variant">-</div>
             </li>
         {% endfor %}
-    </ul>
+        </ul>
+        <div class="button" id="add-variant" data-list-selector="#variant-fields-list">+</div>
+    </div>
 
-    <div class="button" id="add-image" data-list-selector="#image-fields-list">+</div>
-</div>
+    <div style="border: 1px solid black;">
+        <h2>{{ form_label(form.parameters) }}</h2>
+        <ul id="parameter-fields-list"
+            data-prototype="{{ form_widget(form.parameters.vars.prototype.name)|e }}
+                {{ form_widget(form.parameters.vars.prototype.value)|e }} <div class=&quot;button remove-parameter&quot;>-</div>"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.parameters|length }}">
+        {% for parameter in form.parameters %}
+            <li>
+                {{ form_widget(parameter.name) }}
+                {{ form_widget(parameter.value) }}
+                {#{{ form_widget(parameter.unit) }}#}
+                <div class="button remove-parameter">-</div>
+            </li>
+        {% endfor %}
+        </ul>
+        <div class="button" id="add-parameter" data-list-selector="#parameter-fields-list">+</div>
+    </div>
 
-<style>
-    .thumb-image {
-        max-width: 200px;
-    }
-</style>
+    <div style="border: 1px solid black;">
+        <h2>{{ form_label(form.promotions) }}</h2>
+        <ul id="promotion-fields-list"
+            data-prototype="{{ form_widget(form.promotions.vars.prototype.discountedPrice)|e }}
+            {{ form_widget(form.promotions.vars.prototype.startDate)|e }} {{ form_widget(form.promotions.vars.prototype.endDate)|e }} <div class=&quot;button remove-promotion&quot;>-</div>"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.promotions|length }}">
+            {% for promotion in form.promotions %}
+                <li>
+                    {{ form_widget(promotion.discountedPrice) }}
+                    {{ form_widget(promotion.startDate) }}
+                    {{ form_widget(promotion.endDate) }}
+                    <div class="button remove-promotion">-</div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="button" id="add-promotion" data-list-selector="#promotion-fields-list">+</div>
+    </div>
 
-<div style="border: 1px solid black;">
-    <h2>{{ form_label(form.variants) }}</h2>
-    <ul id="variant-fields-list"
-        data-prototype="{{ form_widget(form.variants.vars.prototype.name)|e }}
-            {{ form_widget(form.variants.vars.prototype.availability)|e }} <div class=&quot;button remove-variant&quot;>-</div>"
-        data-widget-tags="{{ '<li></li>'|e }}"
-        data-widget-counter="{{ form.variants|length }}">
-    {% for variant in form.variants %}
-        <li>
-            {{ form_widget(variant.name) }}
-            {{ form_widget(variant.availability) }}
-            {{ form_errors(variant) }}
-            <div class="button remove-variant">-</div>
-        </li>
-    {% endfor %}
-    </ul>
-    <div class="button" id="add-variant" data-list-selector="#variant-fields-list">+</div>
-</div>
-
-<div style="border: 1px solid black;">
-    <h2>{{ form_label(form.parameters) }}</h2>
-    <ul id="parameter-fields-list"
-        data-prototype="{{ form_widget(form.parameters.vars.prototype.name)|e }}
-            {{ form_widget(form.parameters.vars.prototype.value)|e }} <div class=&quot;button remove-parameter&quot;>-</div>"
-        data-widget-tags="{{ '<li></li>'|e }}"
-        data-widget-counter="{{ form.parameters|length }}">
-    {% for parameter in form.parameters %}
-        <li>
-            {{ form_widget(parameter.name) }}
-            {{ form_widget(parameter.value) }}
-            {#{{ form_widget(parameter.unit) }}#}
-            <div class="button remove-parameter">-</div>
-        </li>
-    {% endfor %}
-    </ul>
-    <div class="button" id="add-parameter" data-list-selector="#parameter-fields-list">+</div>
-</div>
-
-{{ form_end(form) }}
+    {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}

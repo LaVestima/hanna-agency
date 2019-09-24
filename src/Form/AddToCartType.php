@@ -35,6 +35,11 @@ class AddToCartType extends AbstractType
                 'required' => true,
             ])
             ->add('quantity', NumberType::class, [
+                'html5' => true,
+                'attr' => [
+                    'placeholder' => 'Quantity',
+                    'min' => 1,
+                ],
                 'mapped' => false
             ])
             ->add('submit', SubmitType::class, [

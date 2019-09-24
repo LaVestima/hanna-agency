@@ -6,6 +6,7 @@ use App\Controller\Infrastructure\BaseController;
 use App\Entity\Role;
 use App\Entity\StoreSubuser;
 use App\Form\StoreSubuserSettingsType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,11 +17,11 @@ class StoreSubuserController extends BaseController
 {
     /**
      * @Route("s", name="store_subuser_list")
+     *
+     * @IsGranted("ROLE_STORE_ADMIN")
      */
     public function list()
     {
-        $this->denyAccessUnlessGranted('ROLE_STORE_ADMIN');
-
         $store = $this->getStore();
 
         return $this->render('Store/StoreSubuser/list.html.twig', [
@@ -30,11 +31,11 @@ class StoreSubuserController extends BaseController
 
     /**
      * @Route("/edit/{identifier}", name="store_subuser_edit")
+     *
+     * @IsGranted("ROLE_STORE_ADMIN")
      */
     public function subuserSettings(StoreSubuser $storeSubuser, Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_STORE_ADMIN');
-
         $form = $this->createForm(StoreSubuserSettingsType::class, $storeSubuser);
         $form->handleRequest($request);
 

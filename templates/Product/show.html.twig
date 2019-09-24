@@ -2,41 +2,20 @@
 
 {% block title %}{{ product.name }}{% endblock %}
 
-{% block content %}
+{% block stylesheets %}
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
-    <style>
-        .grid-container {
-            display: grid;
-            grid-template-columns: 2fr 3fr 1fr;
-            grid-template-areas:
-                    'images description price'
-        ;
+    {{ encore_entry_link_tags('product_show') }}
+{% endblock %}
 
-            grid-gap: 10px;
-            padding: 10px;
-        }
-        .grid-container > div {
-            background-color: #ffffff;
-            padding: 20px 20px;
-            border-radius: 5px;
-        }
-        .grid-images {
-            grid-area: images;
-        }
-        .grid-description {
-            grid-area: description;
-        }
-        .grid-price {
-            grid-area: price;
-        }
-    </style>
-
+{% block content %}
     <div class="grid-container">
         <div class="grid-images">
-            <div class="fotorama"
+            {% if product.productImages is not empty %}
+            <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <div class="fotorama" style="display: none;"
                  data-width="100%"
 {#                 data-height="600"#}
-                 data-allowfullscreen="true"
+{#                 data-allowfullscreen="true"#}
                  data-loop="true"
                  data-arrows="true"
                  data-click="true"
@@ -47,45 +26,89 @@
                     <img src="{{ asset(image.filePath) }}" width="200" hidden>
                 {% endfor %}
             </div>
+            {% else %}
+                <img src="{{ asset('/uploads/images/no-image.png') }}" alt="" class="product-first-image" style="width: 100%;">
+            {% endif %}
         </div>
         <div class="grid-description">
-            <h3 style="margin: 0.5em 0;">{{ product.name }}</h3>
-            <span style="color: #777;"><b>{{ product.store.shortName }}</b></span><br>
+            <h3 style="margin: 0 0 0.5em 0;">{{ product.name }}</h3>
+            <span style="color: #777;"><b>
+                <a href="{{ path('store_show', {'identifier': product.store.identifier}) }}">
+                    {{ product.store.fullName }}
+                </a>
+            </b></span><br>
+            <div>
+                <span style="color: #aaa; font-size: 0.8em;">Model: ???</span><br>
+            </div>
             <span>{{ product.description }}</span><br>
-            <span>Full Product Specification</span><br>
-            {% for productParameter in product.productParameters %}
-                <span style="color: #aaa;">{{ productParameter.parameter.name }}</span> {{ productParameter.value }} {{ productParameter.parameter.unit }}<br>
-            {% endfor %}
+            <div style="margin: 1em 0;">
+                <span><b>Full Product Specification</b></span><br>
+                {% for productParameter in product.productParameters %}
+                    <span style="color: #aaa;">{{ productParameter.parameter.name }}</span> {{ productParameter.value }} {{ productParameter.parameter.unit }}<br>
+                {% endfor %}
+            </div>
         </div>
-        <div class="grid-price">€ {{ product.price }}</div>
+        <div class="grid-price">
+            {% if product.oldPrice is defined and product.oldPrice is not null %}
+                <span style="font-size: 1.3em; color: red; text-decoration: line-through;">
+                    € {{ product.oldPrice }}
+                </span>
+                &nbsp;
+            {% endif %}
+
+            <span style="font-size: 1.3em;">
+                € {{ product.price }}
+            </span>
+
+            <br>
+
+            {% if app.user.stores is not empty and product.store == app.user.stores[0] %}
+                Your product !!!
+            {% endif %}
+
+            <div>
+            {% if product.productVariants is defined and product.productVariants is not empty %}
+                {{ form_start(addToCartForm) }}
+                    {% for productVariant in addToCartForm.productVariant %}
+                        <div>{{ form_row(productVariant) }}</div>
+                    {% endfor %}
+                    {{ form_widget(addToCartForm.quantity) }}
+                    {{ form_widget(addToCartForm.submit) }}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('add_to_cart') }}">
+                {{ form_end(addToCartForm) }}
+
+                <div class="module-box-title">Availability</div>
+                <div class="module-box-content">
+                    <table class="entity-show-table product-sizes-table">
+                        <tr>
+                            <th>Variant</th>
+                            <th>Quantity</th>
+                        </tr>
+                        {% for productVariant in product.productVariants %}
+                            <tr>
+                                <td>{{ productVariant.variant.name }}</td>
+                                <td>{{ productVariant.availability }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                No variants available
+            {% endif %}
+            </div>
+        </div>
+        <div class="grid-reviews">
+
+        </div>
     </div>
-
-
-
 {#    <div class="module-box">#}
-{#        <div class="fotorama"#}
-{#             data-width="800"#}
-{#             data-height="600"#}
-{#             data-allowfullscreen="true"#}
-{#             data-loop="true"#}
-{#             data-arrows="true"#}
-{#             data-click="true"#}
-{#             data-swipe="true"#}
-{#             data-trackpad="true"#}
-{#        >#}
-{#        {% for image in product.productImages %}#}
-{#            <img src="{{ asset(image.filePath) }}" width="200">#}
-{#        {% endfor %}#}
+{#        <div class="module-box-title">Variants</div>#}
+{#        <div class="module-box-content">#}
+{#            {{ form_start(form) }}#}
+{#            <input type="hidden" name="_csrf_token" value="{{ csrf_token('add_to_cart') }}">#}
+{#            {{ form_end(form) }}#}
 {#        </div>#}
 {#    </div>#}
-    <div class="module-box">
-        <div class="module-box-title">Variants</div>
-        <div class="module-box-content">
-            {{ form_start(form) }}
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('add_to_cart') }}">
-            {{ form_end(form) }}
-        </div>
-    </div>
     <div class="module-box">
         <div class="module-box-title">General</div>
         <div class="module-box-content">
@@ -111,37 +134,37 @@
         </div>
     </div>
 
-    {% if product.productVariants is defined and product.productVariants is not null %}
-        <div class="module-box">
-            <div class="module-box-title">Availability</div>
-            <div class="module-box-content">
-                <table class="entity-show-table product-sizes-table">
-                    <tr>
-                        <th>Variant</th>
-                        <th>Quantity</th>
-                    </tr>
-                    {% for productVariant in product.productVariants %}
-                        <tr>
-                            <td>{{ productVariant.variant.name }}</td>
-                            <td>{{ productVariant.availability }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    {% endif %}
+{#    {% if product.productVariants is defined and product.productVariants is not null %}#}
+{#        <div class="module-box">#}
+{#            <div class="module-box-title">Availability</div>#}
+{#            <div class="module-box-content">#}
+{#                <table class="entity-show-table product-sizes-table">#}
+{#                    <tr>#}
+{#                        <th>Variant</th>#}
+{#                        <th>Quantity</th>#}
+{#                    </tr>#}
+{#                    {% for productVariant in product.productVariants %}#}
+{#                        <tr>#}
+{#                            <td>{{ productVariant.variant.name }}</td>#}
+{#                            <td>{{ productVariant.availability }}</td>#}
+{#                        </tr>#}
+{#                    {% endfor %}#}
+{#                </table>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
 
-    <div class="module-box">
-        <div class="module-box-title">Parameters</div>
-        <div class="module-box-content">
-            {% for productParameter in product.productParameters %}
-                {{ productParameter.parameter.name }}
-                {{ productParameter.value }}
-                {{ productParameter.parameter.unit }}
-                <br>
-            {% endfor %}
-        </div>
-    </div>
+{#    <div class="module-box">#}
+{#        <div class="module-box-title">Parameters</div>#}
+{#        <div class="module-box-content">#}
+{#            {% for productParameter in product.productParameters %}#}
+{#                {{ productParameter.parameter.name }}#}
+{#                {{ productParameter.value }}#}
+{#                {{ productParameter.parameter.unit }}#}
+{#                <br>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 
     <div class="module-box">
         <div class="module-box-title">Reviews</div>
@@ -159,19 +182,19 @@
         </div>
     </div>
 
-    <div class="module-box">
-        <div class="module-box-title">Orders</div>
-        <div class="module-box-content">
-            {% for productVariant in product.productVariants %}
-                {% for orderProductVariant in productVariant.orderProductVariants %}
-                    {{ orderProductVariant.order.user.login }} -
-                    {{ orderProductVariant.quantity }} x {{ orderProductVariant.productVariant.variant.name }}
-                    ({{ orderProductVariant.order.dateCreated | date('d.m.Y') }})
-                    <br>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    </div>
+{#    <div class="module-box">#}
+{#        <div class="module-box-title">Orders</div>#}
+{#        <div class="module-box-content">#}
+{#            {% for productVariant in product.productVariants %}#}
+{#                {% for orderProductVariant in productVariant.orderProductVariants %}#}
+{#                    {{ orderProductVariant.order.user.login }} -#}
+{#                    {{ orderProductVariant.quantity }} x {{ orderProductVariant.productVariant.variant.name }}#}
+{#                    ({{ orderProductVariant.order.dateCreated | date('d.m.Y') }})#}
+{#                    <br>#}
+{#                {% endfor %}#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 {% endblock %}
 
 {% block javascripts %}

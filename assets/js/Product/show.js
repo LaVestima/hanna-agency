@@ -1,3 +1,5 @@
+require('../../css/Product/show.scss');
+
 $(function() {
     $('#add_to_cart_form').on('submit', function(e) {
         e.preventDefault();
@@ -20,4 +22,7 @@ $(function() {
 
         return false;
     });
+
+    $('.lds-spinner').fadeOut(0);
+    $('.fotorama').fadeIn();
 });
