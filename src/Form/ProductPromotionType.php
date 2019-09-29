@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\ProductPromotion;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,8 +15,12 @@ class ProductPromotionType extends AbstractType
     {
         $builder
             ->add('discountedPrice', MoneyType::class)
-            ->add('startDate', DateType::class)
-            ->add('endDate', DateType::class)
+            ->add('startDate', DateTimeType::class, [
+                'label' => 'Start'
+            ])
+            ->add('endDate', DateTimeType::class, [
+                'label' => 'End'
+            ])
         ;
     }
 

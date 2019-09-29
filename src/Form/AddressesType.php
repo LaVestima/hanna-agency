@@ -2,22 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\UserSetting;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\LocaleType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SettingsType extends AbstractType
+class AddressesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('locale', LocaleType::class)
-            ->add('newsletter', CheckboxType::class, [
-                'required' => false
+            ->add('addresses', CollectionType::class, [
+                'entry_type' => AddressType::class,
+                'property_path' => 'addresses',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false,
+                'required' => false,
             ])
             ->add('submit', SubmitType::class)
         ;
@@ -26,7 +30,7 @@ class SettingsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => UserSetting::class
+            'data_class' => User::class
         ]);
     }
 }

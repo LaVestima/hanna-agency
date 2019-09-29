@@ -34,6 +34,16 @@ class Address implements EntityInterface
      */
     private $country;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $street;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $zipCode;
+
 
     public function getId(): ?int
     {
@@ -72,6 +82,30 @@ class Address implements EntityInterface
     public function setCountry(?Country $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getStreet(): ?string
+    {
+        return $this->street;
+    }
+
+    public function setStreet(?string $street): self
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    public function getZipCode(): ?string
+    {
+        return $this->zipCode;
+    }
+
+    public function setZipCode(string $zipCode): self
+    {
+        $this->zipCode = $zipCode;
 
         return $this;
     }

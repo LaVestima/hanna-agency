@@ -18,6 +18,7 @@ Encore
     .addEntry('product_cell', './assets/js/Product/cell.js')
     .addEntry('order_cart', './assets/js/Order/cart.js')
     .addEntry('search_home', './assets/js/Search/home.js')
+    .addEntry('account_settings', './assets/js/Account/settings.js')
 
 
     // will require an extra script tag for runtime.js

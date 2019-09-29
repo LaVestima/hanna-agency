@@ -4,6 +4,47 @@
     ### TODO: password change, account delete, 2FA
 
     <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                'user-information preferences'
+                '. password-change'
+        ;
+
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+        @media screen and (max-width: 800px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    'user-information'
+                    'preferences'
+                    'password-change'
+            ;
+            }
+        }
+
+        .grid-item {
+            background-color: #aaa;
+            padding: 20px 20px;
+            border-radius: 5px;
+        }
+        .grid-item input {
+            /*width: 100%;*/
+        }
+        .grid-user-information {
+            grid-area: user-information;
+        }
+        .grid-preferences {
+            grid-area: preferences;
+        }
+        .grid-password-change {
+            grid-area: password-change;
+        }
+
         .settings-section {
             background: #DDDDDD;
             border: 1px solid black;
@@ -12,29 +53,85 @@
         }
     </style>
 
-    {{ form_start(userInformationForm) }}
+    <div class="grid-container">
+        <div class="grid-item grid-user-information">
+            <b>User Information</b>
 
-    {{ form_end(userInformationForm) }}
+            {{ form_start(userInformationForm) }}
+                <div style="display: flex">
+                    <div style="width: 30%">
+                        {{ form_label(userInformationForm.firstName) }}
+                    </div>
+                    <div style="width: 70%">
+                        {{ form_widget(userInformationForm.firstName) }}
+                    </div>
+                </div>
+            {{ form_end(userInformationForm) }}
+        </div>
 
-    {{ form_start(form) }}
+        <div class="grid-item grid-preferences">
+            <b>Preferences</b>
 
-    <div class="settings-section">
-        {{ form_row(form.newsletter) }}
+            {{ form_start(form) }}
+                <div style="display: flex">
+                    {{ form_row(form.newsletter) }}
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+        <div class="grid-item grid-addresses">
+            <b>{{ form_label(addressesForm) }}</b>
+
+            {{ form_start(addressesForm) }}
+            <ul id="address-fields-list"
+                data-prototype="
+                    {{ form_widget(addressesForm.addresses.vars.prototype.name)|e }}
+                    {{ form_widget(addressesForm.addresses.vars.prototype.country)|e }}
+                    {{ form_widget(addressesForm.addresses.vars.prototype.street)|e }}
+                    {{ form_widget(addressesForm.addresses.vars.prototype.zipCode)|e }}
+                    <div class=&quot;button remove-address&quot;>-</div>
+                "
+                data-widget-tags="{{ '<li></li>'|e }}"
+                data-widget-counter="{{ addressesForm.addresses|length }}"
+                style="display: flex; flex-wrap: wrap; padding: 0;"
+            >
+            {% for address in addressesForm.addresses %}
+                <li style="display: flex; flex-direction: column; width: 50%; padding: 10px;">
+                    {{ form_widget(address.name) }}
+                    {{ form_widget(address.country) }}
+                    {{ form_widget(address.street) }}
+                    {{ form_widget(address.zipCode) }}
+                    <div class="button remove-address">-</div>
+                </li>
+            {% endfor %}
+            </ul>
+            <div class="button" id="add-address" data-list-selector="#address-fields-list">+</div>
+            {{ form_end(addressesForm) }}
+        </div>
+
+        <div class="grid-item grid-password-change">
+            <b>Password Change</b>
+
+            {{ form_start(changePasswordForm) }}
+                <div style="display: flex">
+                    <div style="width: 30%">{{ form_label(changePasswordForm.oldPassword) }}</div>
+                    <div style="width: 70%">{{ form_widget(changePasswordForm.oldPassword) }}</div>
+                </div>
+                    {{ form_row(changePasswordForm.newPassword) }}
+                <div style="display: flex">
+                    {{ form_row(changePasswordForm.submit) }}
+                </div>
+            {{ form_end(changePasswordForm) }}
+        </div>
     </div>
 
-
-
     <div class="settings-section">
-        <a class="button" href="">Delete account</a>
+        <a class="button" href="" style="background: maroon" onclick="return confirm('Are you sure?')">
+            Delete account
+        </a>
     </div>
+{% endblock %}
 
-    {{ form_end(form) }}
-
-    {{ form_start(changePasswordForm) }}
-    <div class="settings-section">
-        {{ form_row(changePasswordForm.oldPassword) }}
-        {{ form_row(changePasswordForm.newPassword) }}
-        {{ form_row(changePasswordForm.submit) }}
-    </div>
-    {{ form_end(changePasswordForm) }}
+{% block javascripts %}
+    {{ encore_entry_script_tags('account_settings') }}
 {% endblock %}

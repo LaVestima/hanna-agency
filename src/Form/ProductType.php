@@ -48,11 +48,14 @@ class ProductType extends AbstractType
             ])
             ->add('price', MoneyType::class, [
                 'label' => 'Customer Price',
+                'currency' => false
+            ] +
+            ($product ? [
                 'data' => $product->getProductPromotions()->isEmpty()
                     ? $product->getPrice()
-                    : $product->getOldPrice(),
-                'currency' => false
-            ])
+                    : $product->getOldPrice()
+            ] : [])
+            )
             ->add('category', ChoiceType::class, [
                 'label' => 'Category',
                 'choices' => $categories,

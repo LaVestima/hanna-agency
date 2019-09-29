@@ -147,7 +147,7 @@ class Product implements EntityInterface
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductPromotion", mappedBy="product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ProductPromotion", mappedBy="product", orphanRemoval=true, cascade={"persist"})
      */
     private $productPromotions;
 
