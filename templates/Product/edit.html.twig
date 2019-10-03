@@ -112,15 +112,19 @@
     <div style="border: 1px solid black;">
         <h2>{{ form_label(form.promotions) }}</h2>
         <ul id="promotion-fields-list"
-            data-prototype="{{ form_widget(form.promotions.vars.prototype.discountedPrice)|e }}
-            {{ form_widget(form.promotions.vars.prototype.startDate)|e }} {{ form_widget(form.promotions.vars.prototype.endDate)|e }} <div class=&quot;button remove-promotion&quot;>-</div>"
+            data-prototype="
+                {{ form_widget(form.promotions.vars.prototype.discountedPrice)|e }}
+                {{ form_widget(form.promotions.vars.prototype.startDate)|e }}
+                {{ form_widget(form.promotions.vars.prototype.endDate)|e }}
+                <div class=&quot;button remove-promotion&quot;>-</div>
+            "
             data-widget-tags="{{ '<li></li>'|e }}"
             data-widget-counter="{{ form.promotions|length }}">
             {% for promotion in form.promotions %}
                 <li>
                     {{ form_widget(promotion.discountedPrice) }}
-                    {{ form_widget(promotion.startDate) }}
-                    {{ form_widget(promotion.endDate) }}
+                    {{ form_label(promotion.startDate) }} {{ form_widget(promotion.startDate) }}
+                    {{ form_label(promotion.endDate) }} {{ form_widget(promotion.endDate) }}
                     <div class="button remove-promotion">-</div>
                 </li>
             {% endfor %}

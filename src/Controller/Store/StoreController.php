@@ -150,7 +150,6 @@ class StoreController extends BaseController
      */
     public function apply(Request $request)
     {
-        // TODO: access control: logged in
         $this->denyAccessUnlessGranted('store_apply', $this->getUser());
 
         $store = new Store();

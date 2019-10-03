@@ -9,9 +9,11 @@
         {% set product = orderProductVariant.productVariant.product %}
 
         <div>
-            {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+            <div style="width: 200px;">
+                {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+            </div>
             {{ product.name }} ({{ orderProductVariant.productVariant.variant.name }})
-            {{ orderProductVariant.quantity }}
+            x {{ orderProductVariant.quantity }}
         </div>
     {% endfor %}
 {% endblock %}

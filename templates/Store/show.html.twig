@@ -7,7 +7,15 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ store.fullName }}</h1>
+    <h1>
+        {{ store.fullName }}
+        {% if store.verifiedAt.timestamp is defined %}
+            <div class="tooltip">
+                <i class="fas fa-check-circle"></i>
+                <span class="tooltiptext">{{ store.verifiedAt|date('Y-m-d') }}</span>
+            </div>
+        {% endif %}
+    </h1>
 
     <div class="producer-top-bar">
         <div class="producer-top-bar-item active" id="top-bar-homepage" href="#homepage">
@@ -23,7 +31,7 @@
             Contact
         </div>
         {% if editable %}
-        <a href="">
+        <a href="{{ path('store_edit', {identifier: store.identifier}) }}">
             <div class="producer-top-bar-item" id="top-bar-contact" style="color: #cccccc;">
                 Edit <i class="fas fa-edit"></i>
             </div>
@@ -46,17 +54,53 @@
     </div>
 
     <div class="producer-subpage hidden" id="subpage-opinions">
-        {% if store.opinions is empty %}
+        {% if store.storeOpinions is empty %}
             No ratings
+        {% else %}
+
         {% endif %}
 
-        {% for opinion in store.opinions %}
+        {% for opinion in store.storeOpinions %}
             {% for rating in 1..opinion.rating if opinion.rating != 0 %}
                 <img src="{{ asset('uploads/images/_star_4.png') }}" alt="">
             {% endfor %}
             {% for rating in (opinion.rating+1)..5 if opinion.rating != 5 %}
                 <img src="{{ asset('uploads/images/_star_0.png') }}" alt="">
             {% endfor %}
+            [{{ opinion.user.login }}]
+
+            {% set positiveVoteCount = 0 %}
+            {% set votedFor = 0 %}
+
+            {% for vote in opinion.storeOpinionVotes %}
+                {% if vote.isPositive %}
+                    {% set positiveVoteCount = positiveVoteCount + 1 %}
+
+                    {% if vote.user == app.user %}
+                        {% set votedFor = 1 %}
+                    {% endif %}
+                {% else %}
+                    {% if vote.user == app.user %}
+                        {% set votedFor = -1 %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            <div class="store-opinion-votes-wrapper">
+                <span class="store-opinion-vote-up-wrapper" {% if votedFor == 1 %}style="color: rgb(0, 128, 0);"{% endif %}>
+                    <span>{{ positiveVoteCount }}</span>
+                    <div class="store-opinion-vote store-opinion-vote-up" style="display: inline-block;" data-id="{{ opinion.identifier }}">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                </span>
+                <span class="store-opinion-vote-down-wrapper" {% if votedFor == -1 %}style="color: rgb(128, 0, 0);"{% endif %}>
+                    <span>{{ opinion.storeOpinionVotes|length - positiveVoteCount }}</span>
+                    <div class="store-opinion-vote store-opinion-vote-down" style="display: inline-block;" data-id="{{ opinion.identifier }}">
+                        <i class="fas fa-thumbs-down"></i>
+                    </div>
+                </span>
+            </div>
+            <br>
             {{ opinion.content }}
             <br>
         {% endfor %}
@@ -73,6 +117,19 @@
         {{ store.phone }}<br>
         VAT: {{ store.vat }}<br>
         + MAP?
+    </div>
+
+    <div style="text-align: right;">
+        <div>
+            <div>Follow us</div>
+            <div>
+                <a href="">
+                    <i class="fab fa-facebook-square fa-3x"></i>
+                </a>
+                <i class="fab fa-instagram fa-3x"></i>
+                <i class="fab fa-twitter fa-3x"></i>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

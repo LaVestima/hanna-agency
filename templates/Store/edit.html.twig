@@ -3,5 +3,44 @@
 {% block content %}
     {{ form_start(form) }}
 
+    <div id="form-front-page-html" style="display: none;">
+        {{ form_row(form.frontPageHtml) }}
+    </div>
+
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '.ckeditor' ), {
+                extraPlugins: [
+                    'Autoformat',
+                    // 'Alignment'
+                ],
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|',
+                        // 'alignment',                                                 // <--- ADDED
+                        'bold',
+                        'italic',
+                        'link',
+                        'bulletedList',
+                        'numberedList',
+                        'imageUpload',
+                        'blockQuote',
+                        'undo',
+                        'redo'
+                    ]
+                },
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+        $(function() {
+            $('#form-front-page-html').fadeIn(0);
+        });
+    </script>
 {% endblock %}

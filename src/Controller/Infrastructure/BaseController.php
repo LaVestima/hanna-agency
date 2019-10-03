@@ -6,6 +6,7 @@ use App\Controller\Infrastructure\Action\ActionControllerTrait;
 use App\Controller\Infrastructure\Action\ListActionControllerTrait;
 use App\Controller\Infrastructure\Action\NewActionControllerTrait;
 use App\Repository\StoreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,12 @@ class BaseController extends AbstractController
      * @var Request
      */
     protected $request;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
     protected $isAsync;
     protected $session;
 
@@ -38,6 +45,15 @@ class BaseController extends AbstractController
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
+
+    /**
+     * @required
+     * @param EntityManagerInterface $entityManager
+     */
+    public function setEntityManager(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * @required
@@ -124,9 +140,9 @@ class BaseController extends AbstractController
      *
      * @throws AccessDeniedHttpException
      */
-    protected function denyNonXhrs(): void
+    protected function denyNonXhrs(Request $request): void
     {
-        if (!$this->request->isXmlHttpRequest()) {
+        if (!$request->isXmlHttpRequest()) {
             throw new AccessDeniedHttpException();
         }
     }

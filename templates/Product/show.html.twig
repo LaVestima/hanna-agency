@@ -62,8 +62,10 @@
 
             <br>
 
-            {% if app.user.stores is not empty and product.store == app.user.stores[0] %}
-                Your product !!!
+            {% if app.user is not null %}
+                {% if app.user.stores is not empty and product.store == app.user.stores[0] %}
+                    Your product !!!
+                {% endif %}
             {% endif %}
 
             <div>

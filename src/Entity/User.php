@@ -72,7 +72,7 @@ class User implements UserInterface, \Serializable, EntityInterface
     private $pathSlug = '';
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
     private $addresses;
 
@@ -156,6 +156,16 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $lastName;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StoreOpinion", mappedBy="user", orphanRemoval=true)
+     */
+    private $storeOpinions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StoreOpinionVote", mappedBy="user")
+     */
+    private $storeOpinionVotes;
+
 
 
     public function __construct()
@@ -171,6 +181,8 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->conversationsReceived = new ArrayCollection();
         $this->productReviews = new ArrayCollection();
         $this->storeSubusers = new ArrayCollection();
+        $this->storeOpinions = new ArrayCollection();
+        $this->storeOpinionVotes = new ArrayCollection();
     }
 
     public function __toString() {
@@ -777,6 +789,68 @@ class User implements UserInterface, \Serializable, EntityInterface
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StoreOpinion[]
+     */
+    public function getStoreOpinions(): Collection
+    {
+        return $this->storeOpinions;
+    }
+
+    public function addStoreOpinion(StoreOpinion $storeOpinion): self
+    {
+        if (!$this->storeOpinions->contains($storeOpinion)) {
+            $this->storeOpinions[] = $storeOpinion;
+            $storeOpinion->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoreOpinion(StoreOpinion $storeOpinion): self
+    {
+        if ($this->storeOpinions->contains($storeOpinion)) {
+            $this->storeOpinions->removeElement($storeOpinion);
+            // set the owning side to null (unless already changed)
+            if ($storeOpinion->getUser() === $this) {
+                $storeOpinion->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StoreOpinionVote[]
+     */
+    public function getStoreOpinionVotes(): Collection
+    {
+        return $this->storeOpinionVotes;
+    }
+
+    public function addStoreOpinionVote(StoreOpinionVote $storeOpinionVote): self
+    {
+        if (!$this->storeOpinionVotes->contains($storeOpinionVote)) {
+            $this->storeOpinionVotes[] = $storeOpinionVote;
+            $storeOpinionVote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoreOpinionVote(StoreOpinionVote $storeOpinionVote): self
+    {
+        if ($this->storeOpinionVotes->contains($storeOpinionVote)) {
+            $this->storeOpinionVotes->removeElement($storeOpinionVote);
+            // set the owning side to null (unless already changed)
+            if ($storeOpinionVote->getUser() === $this) {
+                $storeOpinionVote->setUser(null);
+            }
+        }
 
         return $this;
     }

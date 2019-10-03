@@ -166,9 +166,9 @@ class Store implements EntityInterface
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Opinion", mappedBy="producer", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="StoreOpinion", mappedBy="store", orphanRemoval=true)
      */
-    private $opinions;
+    private $storeOpinions;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -191,12 +191,17 @@ class Store implements EntityInterface
      */
     private $active = false;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $verifiedAt;
+
 
     public function __construct()
     {
         $this->dateCreated = new \DateTime();
         $this->products = new ArrayCollection();
-        $this->opinions = new ArrayCollection();
+        $this->storeOpinions = new ArrayCollection();
         $this->storeSubusers = new ArrayCollection();
     }
 
@@ -610,30 +615,30 @@ class Store implements EntityInterface
     }
 
     /**
-     * @return Collection|Opinion[]
+     * @return Collection|StoreOpinion[]
      */
-    public function getOpinions(): Collection
+    public function getStoreOpinions(): Collection
     {
-        return $this->opinions;
+        return $this->storeOpinions;
     }
 
-    public function addOpinion(Opinion $opinion): self
+    public function addOpinion(StoreOpinion $opinion): self
     {
-        if (!$this->opinions->contains($opinion)) {
-            $this->opinions[] = $opinion;
-            $opinion->setProducer($this);
+        if (!$this->storeOpinions->contains($opinion)) {
+            $this->storeOpinions[] = $opinion;
+            $opinion->setStore($this);
         }
 
         return $this;
     }
 
-    public function removeOpinion(Opinion $opinion): self
+    public function removeOpinion(StoreOpinion $opinion): self
     {
-        if ($this->opinions->contains($opinion)) {
-            $this->opinions->removeElement($opinion);
+        if ($this->storeOpinions->contains($opinion)) {
+            $this->storeOpinions->removeElement($opinion);
             // set the owning side to null (unless already changed)
-            if ($opinion->getProducer() === $this) {
-                $opinion->setProducer(null);
+            if ($opinion->getStore() === $this) {
+                $opinion->setStore(null);
             }
         }
 
@@ -703,6 +708,18 @@ class Store implements EntityInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getVerifiedAt(): ?\DateTimeInterface
+    {
+        return $this->verifiedAt;
+    }
+
+    public function setVerifiedAt(?\DateTimeInterface $verifiedAt): self
+    {
+        $this->verifiedAt = $verifiedAt;
 
         return $this;
     }
