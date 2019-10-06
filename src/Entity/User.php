@@ -166,6 +166,11 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $storeOpinionVotes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Cart", mappedBy="user")
+     */
+    private $carts;
+
 
 
     public function __construct()
@@ -183,6 +188,7 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->storeSubusers = new ArrayCollection();
         $this->storeOpinions = new ArrayCollection();
         $this->storeOpinionVotes = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     public function __toString() {
@@ -849,6 +855,37 @@ class User implements UserInterface, \Serializable, EntityInterface
             // set the owning side to null (unless already changed)
             if ($storeOpinionVote->getUser() === $this) {
                 $storeOpinionVote->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cart[]
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): self
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): self
+    {
+        if ($this->carts->contains($cart)) {
+            $this->carts->removeElement($cart);
+            // set the owning side to null (unless already changed)
+            if ($cart->getUser() === $this) {
+                $cart->setUser(null);
             }
         }
 

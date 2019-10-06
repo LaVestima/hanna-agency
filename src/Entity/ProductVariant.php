@@ -50,10 +50,16 @@ class ProductVariant implements EntityInterface
      */
     private $availability;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CartProductVariant", mappedBy="productVariant", orphanRemoval=true)
+     */
+    private $cartProductVariants;
+
 
     public function __construct()
     {
         $this->orderProductVariants = new ArrayCollection();
+        $this->cartProductVariants = new ArrayCollection();
     }
 
 
@@ -159,5 +165,36 @@ class ProductVariant implements EntityInterface
     public function setNewIdentifier()
     {
         $this->setIdentifier(RandomHelper::generateString(50));
+    }
+
+    /**
+     * @return Collection|CartProductVariant[]
+     */
+    public function getCartProductVariants(): Collection
+    {
+        return $this->cartProductVariants;
+    }
+
+    public function addCartProductVariant(CartProductVariant $cartProductVariant): self
+    {
+        if (!$this->cartProductVariants->contains($cartProductVariant)) {
+            $this->cartProductVariants[] = $cartProductVariant;
+            $cartProductVariant->setProductVariant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartProductVariant(CartProductVariant $cartProductVariant): self
+    {
+        if ($this->cartProductVariants->contains($cartProductVariant)) {
+            $this->cartProductVariants->removeElement($cartProductVariant);
+            // set the owning side to null (unless already changed)
+            if ($cartProductVariant->getProductVariant() === $this) {
+                $cartProductVariant->setProductVariant(null);
+            }
+        }
+
+        return $this;
     }
 }

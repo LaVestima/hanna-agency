@@ -7,7 +7,7 @@ $(function() {
         var form = $('#add_to_cart_form');
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: Routing.generate('add_product_to_cart'),
             data: form.serialize(),
         }).done(function(data) {

@@ -75,10 +75,9 @@
             BANNER
         </div>
         <div class="grid-account">
-            ACCOUNT
             {% if not app.user %}
                 <a href="{{ path('access_control_login') }}">
-                    <div>
+                    <div style="text-align: center;">
                         <i class="fas fa-user fa-2x" style="margin: 0 0 0.5em 0;"></i><br>
                         <span>Log in / Sign up</span>
                     </div>

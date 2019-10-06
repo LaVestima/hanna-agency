@@ -5,11 +5,13 @@ namespace App\Controller\Infrastructure;
 use App\Controller\Infrastructure\Action\ActionControllerTrait;
 use App\Controller\Infrastructure\Action\ListActionControllerTrait;
 use App\Controller\Infrastructure\Action\NewActionControllerTrait;
+use App\Entity\Cart;
 use App\Repository\StoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -45,6 +47,15 @@ class BaseController extends AbstractController
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
+
+    /**
+     * @required
+     * @param RequestStack $requestStack
+     */
+    public function setRequest(RequestStack $requestStack)
+    {
+        $this->request = $requestStack->getCurrentRequest();
+    }
 
     /**
      * @required
@@ -94,9 +105,9 @@ class BaseController extends AbstractController
 
     public function render(string $view, array $parameters = array(), Response $response = null): Response
     {
-        $cart = $this->session->get('cart') ?? [];
-        $parameters['cartTotal'] = array_sum(array_column($cart, 'quantity'));
-
+        $parameters['cartTotal'] = $this->entityManager->getRepository(Cart::class)
+            ->getTotalSessionQuantity($this->request->getSession()->getId());
+        
         return parent::render($view, $parameters, $response);
     }
 

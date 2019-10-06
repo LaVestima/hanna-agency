@@ -11,34 +11,66 @@
 {% endblock %}
 
 {% block content %}
-    ### somehow lock the session when summary is viewed, so you can't add more products in other tabs
-    <br>
-
     {{ form_start(cartSummaryForm) }}
 
     <div style="border: 1px solid black">
-        ### products from the cart
+        <b>{{ form_label(cartSummaryForm.products) }}</b>
+        <input type="checkbox" id="select-all">Select all
+        {% for product in cartSummaryForm.products %}
+            <div>
+                {{ form_widget(product) }}{{ form_label(product) }}
+            </div>
+        {% endfor %}
     </div>
     <div style="border: 1px solid black; display: flex; justify-content: space-around;">
         <div style="border: 1px solid black; display: inline-block; width: 50%;">
             <b>Shipment option</b>
-            {{ form_widget(cartSummaryForm.shipmentOption) }}
+            <div>
+            {% for so in cartSummaryForm.shipmentOption %}
+                <div class="cart_summary_shipmentOption">
+                    {{ form_widget(so) }}
+                    {{ form_label(so) }}
+                </div>
+            {% endfor %}
+            </div>
 
             <style>
-                #cart_summary_shipmentOption input {
-                    position: absolute;
-                    /*width: 30px;*/
-                }
-                #cart_summary_shipmentOption label {
+                .cart_summary_shipmentOption {
                     background: #0f0;
-                    padding: 1em;
+                    width: 100px;
+                    display: inline-block;
+                    /*padding: 1em;*/
+                    text-align: center;
                     margin: 0.5em;
                     cursor: pointer;
                     border: 1px solid black;
                 }
-                #cart_summary_shipmentOption label:hover {
+                .cart_summary_shipmentOption:hover {
                     background: #ff0;
                 }
+                .cart_summary_shipmentOption input {
+                    /*opacity: 0;*/
+                }
+                .cart_summary_shipmentOption input:checked {
+                    /*opacity: 1;*/
+                }
+
+                /*#cart_summary_shipmentOption input {*/
+                /*[id^="cart_summary_shipmentOption_"] {*/
+                /*    position: absolute;*/
+                /*    left: 10px;*/
+                /*    !*width: 30px;*!*/
+                /*}*/
+                /*#cart_summary_shipmentOption label {*/
+                /*    background: #0f0;*/
+                /*    padding: 1em;*/
+                /*    margin: 0.5em;*/
+                /*    cursor: pointer;*/
+                /*    border: 1px solid black;*/
+                /*}*/
+                /*#cart_summary_shipmentOption label:hover {*/
+                /*    background: #ff0;*/
+                /*}*/
             </style>
         </div>
         <div style="border: 1px solid black; display: inline-block; width: 50%;">
@@ -58,6 +90,7 @@
     <div style="border: 1px solid black">
         <div style="border: 1px solid black; display: inline-block;">
             ### Accept some things...
+            {{ form_row(cartSummaryForm.privacyPolicy) }}
         </div>
         <div style="border: 1px solid black; display: inline-block;">
             ### continue to payment
@@ -83,6 +116,24 @@
 {% block javascripts %}
     // TODO: include on every page?
     <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        $(function() {
+            $('#select-all').click(function(event) {
+                if(this.checked) {
+                    // Iterate each checkbox
+                    $(':checkbox[name="cart_summary[products][]"]').each(function() {
+                        this.checked = true;
+                    });
+                } else {
+                    $(':checkbox[name="cart_summary[products][]"]').each(function() {
+                        this.checked = false;
+                    });
+                }
+            });
+        });
+    </script>
+
 
     <script type="text/javascript">
         var form = document.getElementById('{{ form.vars.id }}');

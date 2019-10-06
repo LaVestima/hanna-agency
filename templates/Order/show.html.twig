@@ -8,12 +8,14 @@
     {% for orderProductVariant in order.orderProductVariants %}
         {% set product = orderProductVariant.productVariant.product %}
 
-        <div>
-            <div style="width: 200px;">
-                {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+        <a href="{{ path('product_show', {pathSlug: product.pathSlug}) }}">
+            <div>
+                <div style="width: 200px; display: inline-block">
+                    {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+                </div>
+                {{ product.name }} ({{ orderProductVariant.productVariant.variant.name }})
+                x {{ orderProductVariant.quantity }}
             </div>
-            {{ product.name }} ({{ orderProductVariant.productVariant.variant.name }})
-            x {{ orderProductVariant.quantity }}
-        </div>
+        </a>
     {% endfor %}
 {% endblock %}

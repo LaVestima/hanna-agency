@@ -9,9 +9,10 @@
     quantity is sent back and set to quantity-value and total product price
 
 
-    {% for productVariant in productVariants %}
+    {% for cartProductVariant in cartProductVariants %}
 {#        {{ dump(productVariant) }}#}
-        {% set product = productVariant.product %}
+        {% set productVariant = cartProductVariant.productVariant %}
+        {% set product = cartProductVariant.productVariant.product %}
         <div class="product-item" style="display: flex; background: #b2dba1; margin: 1em 0; padding: 1em; justify-content: space-between;">
             <div style="max-width: 150px;">
                 {% include 'Product/parts/_firstImage.html.twig' with {'product': productVariant.product} %}
@@ -26,25 +27,25 @@
             <div class="pricing" style="display: inline-block; width: 35%;">
                 {#<ua class="button quantity-decrease">-</ua>#}
                 {#<span class="quantity-value">{{ cart[product.pathSlug].quantity }}</span>#}
-                <input type="number" class="quantity-value" min="1" value="{{ cart[productVariant.identifier].quantity }}" data-product-price="{{ product.price }}" style="width: 3em; font-size: 20px;">
+                <input type="number" class="quantity-value" min="1" value="{{ cartProductVariant.quantity }}" data-product-price="{{ product.price }}" style="width: 3em; font-size: 20px;">
                 {#<ua class="button quantity-increase" data-product="{{ product.pathSlug }}">+</ua>#}
                 x {{ product.price }} =
                 <span class="total-product-price">
-                    {{ (product.price * cart[productVariant.identifier].quantity) | number_format(2, '.', '') }}
+                    {{ (product.price * cartProductVariant.quantity) | number_format(2, '.', '') }}
                 </span>
 
-                {% set totalPrice = totalPrice + product.price * cart[productVariant.identifier].quantity %}
+                {% set totalPrice = totalPrice + product.price * cartProductVariant.quantity %}
             </div>
 
             <div>
-                <a href="{{ path('remove_product_from_cart', {'identifier': productVariant.identifier}) }}">
+                <a href="{{ path('remove_from_cart', {'identifier': productVariant.identifier}) }}" onclick="return confirm('Are you sure?')">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </div>
         </div>
     {% endfor %}
 
-    {% if productVariants is empty %}
+    {% if cartProductVariants is empty %}
         <div style="text-align: center; font-size: 1.5em;">No products :(</div>
     {% else %}
         <div class="total-order-price" style="text-align: right">
