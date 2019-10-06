@@ -37,10 +37,10 @@ class CartController extends BaseController
     {
         $cartProductVariants = $this->cartRepository->findOneBy([
             'sessionId' => $request->getSession()->getId()
-        ])->getCartProductVariants();
+        ]);
 
         return $this->render('Order/cart.html.twig', [
-            'cartProductVariants' => $cartProductVariants,
+            'cartProductVariants' => $cartProductVariants ? $cartProductVariants->getCartProductVariants() : [],
         ]);
     }
 

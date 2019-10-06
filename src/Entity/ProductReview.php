@@ -18,7 +18,7 @@ class ProductReview implements EntityInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productReviews")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productReviews", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;
@@ -35,6 +35,7 @@ class ProductReview implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="productReviews")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
@@ -79,12 +80,12 @@ class ProductReview implements EntityInterface
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 

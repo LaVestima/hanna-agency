@@ -326,7 +326,7 @@ class AppFixtures extends Fixture
     private function loadAddresses(): void
     {
         $addressData = [
-            ['Home', 'producer', 9]
+            ['Home', 'producer', 9, 'Examplary street 69', '99-999']
         ];
 
         foreach ($addressData as $ad) {
@@ -334,6 +334,8 @@ class AppFixtures extends Fixture
             $address->setName($ad[0]);
             $address->setUser($this->userRepository->findOneBy(['login' => $ad[1]]));
             $address->setCountry($this->countryRepository->findOneBy(['id' => $ad[2]]));
+            $address->setStreet($ad[3]);
+            $address->setZipCode($ad[4]);
             $this->addressRepository->createEntity($address);
         }
     }

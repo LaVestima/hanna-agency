@@ -10,6 +10,7 @@ use App\Repository\ProductRepository;
 use App\Repository\ProductReviewRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\StoreRepository;
+use App\Repository\UserRepository;
 use App\Repository\VariantRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +23,7 @@ class CreateProductCommand extends BaseCreateCommand
     private $productRepository;
     private $productReviewRepository;
     private $productVariantRepository;
+    private $userRepository;
     private $variantRepository;
 
     public function __construct(
@@ -30,6 +32,7 @@ class CreateProductCommand extends BaseCreateCommand
         ProductRepository $productRepository,
         ProductReviewRepository $productReviewRepository,
         ProductVariantRepository $productVariantRepository,
+        UserRepository $userRepository,
         VariantRepository $variantRepository,
         $name = null
     ) {
@@ -38,6 +41,7 @@ class CreateProductCommand extends BaseCreateCommand
         $this->productRepository = $productRepository;
         $this->productReviewRepository = $productReviewRepository;
         $this->productVariantRepository = $productVariantRepository;
+        $this->userRepository = $userRepository;
         $this->variantRepository = $variantRepository;
 
         parent::__construct($name);
@@ -127,6 +131,7 @@ class CreateProductCommand extends BaseCreateCommand
         $productReview = new ProductReview();
         $productReview
             ->setProduct($product)
+            ->setUser($this->userRepository->readRandomEntities(1)[0])
             ->setRating(random_int(1, 5))
             ->setContent($this->faker->text);
 

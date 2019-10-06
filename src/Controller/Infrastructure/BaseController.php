@@ -106,8 +106,8 @@ class BaseController extends AbstractController
     public function render(string $view, array $parameters = array(), Response $response = null): Response
     {
         $parameters['cartTotal'] = $this->entityManager->getRepository(Cart::class)
-            ->getTotalSessionQuantity($this->request->getSession()->getId());
-        
+            ->getTotalSessionQuantity($this->request->getSession()->getId()) ?? 0;
+
         return parent::render($view, $parameters, $response);
     }
 
