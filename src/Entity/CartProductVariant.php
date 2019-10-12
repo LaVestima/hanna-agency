@@ -38,31 +38,31 @@ class CartProductVariant
         return $this->id;
     }
 
-    public function getCart(): ?Cart
+    public function getCart(): Cart
     {
         return $this->cart;
     }
 
-    public function setCart(?Cart $cart): self
+    public function setCart(Cart $cart): self
     {
         $this->cart = $cart;
 
         return $this;
     }
 
-    public function getProductVariant(): ?ProductVariant
+    public function getProductVariant(): ProductVariant
     {
         return $this->productVariant;
     }
 
-    public function setProductVariant(?ProductVariant $productVariant): self
+    public function setProductVariant(ProductVariant $productVariant): self
     {
         $this->productVariant = $productVariant;
 
         return $this;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }

@@ -4,11 +4,14 @@ namespace App\Controller\Payment;
 
 use App\Client\StripeClient;
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Cart;
+use App\Entity\CartProductVariant;
 use App\Entity\Order;
 use App\Entity\OrderProductVariant;
 use App\Entity\OrderStatus;
-use App\Form\PaymentType;
+use App\Form\CartSummaryType;
 use App\Helper\RandomHelper;
+use App\Repository\CartRepository;
 use App\Repository\OrderRepository;
 use App\Repository\OrderStatusRepository;
 use App\Repository\ProductVariantRepository;
@@ -24,20 +27,30 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PaymentController extends BaseController
 {
+    private $cartRepository;
     private $orderRepository;
     private $orderStatusRepository;
     private $productVariantRepository;
     private $stripeClient;
 
+    /**
+     * @var Cart
+     */
     private $cart;
-    private $productVariants;
+
+    /**
+     * @var CartProductVariant[]
+     */
+    private $cartProductVariants;
 
     public function __construct(
+        CartRepository $cartRepository,
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         ProductVariantRepository $productVariantRepository,
         StripeClient $stripeClient
     ) {
+        $this->cartRepository = $cartRepository;
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->productVariantRepository = $productVariantRepository;
@@ -49,23 +62,26 @@ class PaymentController extends BaseController
      */
     public function charge(Request $request)
     {
-        $form = $this->createForm(PaymentType::class);
+        $form = $this->createForm(CartSummaryType::class, null, [
+            'user' => $this->getUser()
+        ]);
+
         $form->handleRequest($request);
 
         $redirectUrl = null;
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->cart = $request->getSession()->get('cart');
+            $this->cartProductVariants = $form->get('products')->getData();
 
-                if (empty($this->cart)) {
-                    throw new Exception('Cart is empty');
+            try {
+                $this->cart = $this->cartRepository->findOneBy([
+                    'sessionId' => $request->getSession()->getId()
+                ]);
+
+                if (empty($this->cartProductVariants)) {
+                    throw new Exception('No products selected');
                     // TODO; redirect to error page
                 }
-
-                $this->productVariants = $this->productVariantRepository
-                    ->readCartProductVariants($this->cart ?? [])
-                    ->getResultAsArray();
 
                 $order = $this->createNewOrder();
 
@@ -76,18 +92,25 @@ class PaymentController extends BaseController
                     $form->get('token')->getData()
                 );
 
-                foreach ($this->productVariants as $productVariant) {
-                    $this->productVariantRepository->updateEntity($productVariant, [
-                        'availability' =>
-                            $productVariant->getAvailability() - $this->cart[$productVariant->getIdentifier()]['quantity']
-                    ]);
+                foreach ($this->cartProductVariants as $cartProductVariant) {
+                    $productVariant = $cartProductVariant->getProductVariant();
+
+                    $productVariant->setAvailability(
+                        $productVariant->getAvailability() -
+                        $cartProductVariant->getQuantity()
+                    );
+
+                    $this->entityManager->persist($productVariant);
+
+                    $this->entityManager->remove($cartProductVariant);
                 }
 
+                $this->entityManager->persist($this->cart);
+
+                $this->entityManager->flush();
+
                 // TODO: update order status to PAID
-
                 // TODO: if user wants it, store the charge id
-
-                $request->getSession()->remove('cart');
 
                 $redirectUrl = $this->generateUrl('payment_success');
             } catch (Base $e) {
@@ -123,10 +146,10 @@ class PaymentController extends BaseController
     {
         $amount = 0;
 
-        foreach ($this->productVariants as $productVariant) {
+        foreach ($this->cartProductVariants as $cartProductVariant) {
             $amount +=
-                $this->cart[$productVariant->getIdentifier()]['quantity']
-                * $productVariant->getProduct()->getPrice();
+                $cartProductVariant->getQuantity()
+                * $cartProductVariant->getProductVariant()->getProduct()->getPrice();
         }
 
         return $amount;
@@ -141,15 +164,22 @@ class PaymentController extends BaseController
         $order->setUser($this->getUser());
 //        $order->setStatus(OrderStatus::QUEUED); // TODO: other way?
 
+        // TODO: shipment option
+        // TODO: address
+
         $orderProductVariants = [];
 
-        foreach ($this->productVariants as $productVariant) {
+        foreach ($this->cartProductVariants as $cartProductVariant) {
             $orderProductVariant = new OrderProductVariant();
 
             $orderProductVariant->setOrder($order);
-            $orderProductVariant->setProductVariant($productVariant);
-            $orderProductVariant->setQuantity($this->cart[$productVariant->getIdentifier()]['quantity']);
-            $orderProductVariant->setStatus($this->orderStatusRepository->findOneBy(['name' => OrderStatus::PLACED]));
+            $orderProductVariant->setProductVariant($cartProductVariant->getProductVariant());
+            $orderProductVariant->setQuantity($cartProductVariant->getQuantity());
+            $orderProductVariant->setStatus(
+                $this->orderStatusRepository->findOneBy([
+                    'name' => OrderStatus::PLACED
+                ])
+            );
 
             $orderProductVariants[] = $orderProductVariant;
         }

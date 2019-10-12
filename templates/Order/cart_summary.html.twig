@@ -11,14 +11,26 @@
 {% endblock %}
 
 {% block content %}
-    {{ form_start(cartSummaryForm) }}
+    {{ form_start(cartSummaryForm, {attr: {id: cartSummaryForm.vars.id}}) }}
 
     <div style="border: 1px solid black">
         <b>{{ form_label(cartSummaryForm.products) }}</b>
-        <input type="checkbox" id="select-all">Select all
-        {% for product in cartSummaryForm.products %}
-            <div>
-                {{ form_widget(product) }}{{ form_label(product) }}
+        <input type="checkbox" id="select-all">
+        <label for="select-all">Select all</label>
+
+        {% for store in cartSummaryForm.products.vars.choices %}
+            <div style="border: 1px solid black;">
+                <h3>{{ store.label }}</h3>
+
+                {% for productVariant in store %}
+                    <div style="display: flex; align-items: center;">
+                        {% set product = cartSummaryForm.products[productVariant.value] %}
+
+                        {{ form_widget(product) }}
+                        {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+                        {{ form_label(product) }}
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
@@ -54,23 +66,6 @@
                 .cart_summary_shipmentOption input:checked {
                     /*opacity: 1;*/
                 }
-
-                /*#cart_summary_shipmentOption input {*/
-                /*[id^="cart_summary_shipmentOption_"] {*/
-                /*    position: absolute;*/
-                /*    left: 10px;*/
-                /*    !*width: 30px;*!*/
-                /*}*/
-                /*#cart_summary_shipmentOption label {*/
-                /*    background: #0f0;*/
-                /*    padding: 1em;*/
-                /*    margin: 0.5em;*/
-                /*    cursor: pointer;*/
-                /*    border: 1px solid black;*/
-                /*}*/
-                /*#cart_summary_shipmentOption label:hover {*/
-                /*    background: #ff0;*/
-                /*}*/
             </style>
         </div>
         <div style="border: 1px solid black; display: inline-block; width: 50%;">
@@ -92,14 +87,11 @@
             ### Accept some things...
             {{ form_row(cartSummaryForm.privacyPolicy) }}
         </div>
-        <div style="border: 1px solid black; display: inline-block;">
-            ### continue to payment
-        </div>
     </div>
 
-    {{ form_end(cartSummaryForm) }}
+{#    {{ form_end(cartSummaryForm) }}#}
 
-    {{ form_start(form, {attr: {id: form.vars.id}}) }}
+{#    {{ form_start(form, {attr: {id: form.vars.id}}) }}#}
     <div class="form-group">
         <label for="card-element">
             Credit or Debit Card
@@ -107,9 +99,10 @@
         <div id="card-element" class="form-control" style="background: orange; padding: 10px; width: 500px; box-shadow: 0 0 15px black; margin: 15px;"></div>
         <div id="card-errors" class="help-block" role="alert"></div>
     </div>
-    {{ form_widget(form.token) }}
-    <button type="submit" class="button">PAY <i class="fas fa-hand-holding-usd"></i></button>
-    {{ form_end(form) }}
+    {{ form_widget(cartSummaryForm.token) }}
+{#    <button type="submit" class="button">PAY <i class="fas fa-hand-holding-usd"></i></button>#}
+{#    {{ form_end(form) }}#}
+    {{ form_end(cartSummaryForm) }}
 
 {% endblock %}
 
@@ -122,11 +115,11 @@
             $('#select-all').click(function(event) {
                 if(this.checked) {
                     // Iterate each checkbox
-                    $(':checkbox[name="cart_summary[products][]"]').each(function() {
+                    $(':checkbox[name="payment-form[products][]"]').each(function() {
                         this.checked = true;
                     });
                 } else {
-                    $(':checkbox[name="cart_summary[products][]"]').each(function() {
+                    $(':checkbox[name="payment-form[products][]"]').each(function() {
                         this.checked = false;
                     });
                 }
@@ -136,7 +129,7 @@
 
 
     <script type="text/javascript">
-        var form = document.getElementById('{{ form.vars.id }}');
+        var form = document.getElementById('{{ cartSummaryForm.vars.id }}');
         var errors = document.getElementById('card-errors');
         var stripe = Stripe('{{ stripe_public_key }}');
         var elements = stripe.elements({locale: 'en'});
@@ -169,7 +162,7 @@
                     errors.textContent = result.error.message;
                     form.classList.add('has-error');
                 } else {
-                    document.getElementById('{{ form.children.token.vars.id }}').setAttribute('value', result.token.id);
+                    document.getElementById('{{ cartSummaryForm.children.token.vars.id }}').setAttribute('value', result.token.id);
                     form.submit();
                 }
             });

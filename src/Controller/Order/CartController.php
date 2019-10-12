@@ -49,22 +49,14 @@ class CartController extends BaseController
      */
     public function summary(Request $request)
     {
-        $form = $this->createForm(PaymentType::class, null, [
-            'paymentChargeRoute' => $this->generateUrl('payment_charge')
-        ]);
-
         $cartSummaryForm = $this->createForm(CartSummaryType::class, null, [
             'user' => $this->getUser(),
-            'cartProductVariants' => $this->cartRepository->findOneBy([
-                'sessionId' => $request->getSession()->getId()
-            ])->getCartProductVariants()
+            'paymentChargeRoute' => $this->generateUrl('payment_charge'),
         ]);
 
         return $this->render('Order/cart_summary.html.twig', [
-            'form' => $form->createView(),
             'cartSummaryForm' => $cartSummaryForm->createView(),
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
-            'addresses' => $this->getUser()->getAddresses()
         ]);
     }
 

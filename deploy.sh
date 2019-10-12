@@ -22,6 +22,8 @@ git pull origin master
 
 docker exec -it $CONTAINER_NAME composer update
 
+docker exec -it ejas_mysql mysql -u root -ptoor -h localhost -e "DROP DATABASE IF EXISTS ejas; CREATE DATABASE ejas CHARACTER SET utf8 COLLATE utf8_general_ci;"
+
 docker exec -it $CONTAINER_NAME bin/console doctrine:migrations:migrate --no-interaction
 
 yarn encore prod
