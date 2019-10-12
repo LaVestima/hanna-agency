@@ -33,6 +33,7 @@ class ConversationController extends BaseController
     public function list()
     {
         // TODO: check access
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         // TODO: add condition for userTo
 //        $conversations = $this->conversationRepository->findBy(['userFrom' => $this->getUser()]);

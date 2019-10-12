@@ -531,7 +531,7 @@ class AppFixtures extends Fixture
             $storeSubuser->setUser($this->userRepository->findOneBy(['id' => $ssd[0]]))
                 ->setStore($this->storeRepository->findOneBy(['id' => $ssd[1]]))
                 ->setPasswordHash($ssd[2])
-                ->setRoles($ssd[3]);
+                ->setRoles($ssd[3] ?? []);
 
             $this->storeSubuserRepository->createEntity($storeSubuser);
         }

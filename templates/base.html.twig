@@ -21,6 +21,7 @@
             {{ block('stylesheets') }}
         {% endif %}
         {% endspaceless %}
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
     </head>
     <body>
         <div id="top-bar-wrapper">
@@ -97,6 +98,14 @@
 
 {#                        <hr>#}
 
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a href="{{ path('admin_panel_index') }}">
+                                <div>
+                                    <i class="fas fa-user-shield"></i> Admin panel
+                                </div>
+                            </a>
+                        {% endif %}
+
                         {% if is_granted('ROLE_USER') %}
                         <a href="{{ path('order_list') }}">
                             <div>
@@ -169,6 +178,7 @@
             {{ block('content') }}
         </div>
 
+        {% if app.request.hasPreviousSession %}
         <div class="flash-message-list">
             {% for message in app.flashes('success') %}
                 <div class="flash-message flash-success">
@@ -191,6 +201,7 @@
                 </div>
             {% endfor %}
         </div>
+        {% endif %}
 
         <div class="body-overlay"></div>
 
@@ -244,6 +255,23 @@
         {% if block('javascripts') is defined %}
             {{ block('javascripts') }}
         {% endif %}
+        <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+        <script>
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#000",
+                        "text": "#ffffff"
+                    },
+                    "button": {
+                        "background": "transparent",
+                        "text": "#ff0000",
+                        "border": "#ff0000"
+                    }
+                },
+                "position": "bottom-right"
+            });
+        </script>
     </body>
     {# ----------------------- JS ----------------------- #}
 
