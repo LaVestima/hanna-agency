@@ -29,13 +29,13 @@
 
     {% for order in orders %}
         <div style="border: 1px solid black; margin: 0.5em 0; padding: 10px; ">
-            [{{ order.status }}]
+            [{{ order.status|trans }}]
             ID: {{ order.code }}<br>
             Placed: {{ order.dateCreated | date('Y.m.d H:i:s') }}
             <a href="{{ path('order_show', {code: order.code}) }}"><i class="far fa-arrow-alt-circle-right"></i></a>
             <div style="background: #ccc;">
             {% for orderProductVariant in order.orderProductVariants %}
-                [{{ orderProductVariant.status.name }}]
+                [{{ orderProductVariant.status|trans }}]
                 {{ orderProductVariant.productVariant.product.name }} - {{ orderProductVariant.productVariant.variant.name }}
                 <br>
             {% endfor %}

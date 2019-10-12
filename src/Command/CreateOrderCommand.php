@@ -4,10 +4,10 @@ namespace App\Command;
 
 use App\Entity\Order;
 use App\Entity\OrderProductVariant;
+use App\Enum\OrderStatus;
 use App\Helper\RandomHelper;
 use App\Repository\OrderProductRepository;
 use App\Repository\OrderRepository;
-use App\Repository\OrderStatusRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
 use App\Repository\UserRepository;
@@ -19,7 +19,6 @@ class CreateOrderCommand extends BaseCreateCommand
 {
     private $orderProductRepository;
     private $orderRepository;
-    private $orderStatusRepository;
     private $productRepository;
     private $productVariantRepository;
     private $userRepository;
@@ -27,7 +26,6 @@ class CreateOrderCommand extends BaseCreateCommand
     public function __construct(
         OrderProductRepository $orderProductRepository,
         OrderRepository $orderRepository,
-        OrderStatusRepository $orderStatusRepository,
         ProductRepository $productRepository,
         ProductVariantRepository $productVariantRepository,
         UserRepository $userRepository,
@@ -35,7 +33,6 @@ class CreateOrderCommand extends BaseCreateCommand
     ) {
         $this->orderProductRepository = $orderProductRepository;
         $this->orderRepository = $orderRepository;
-        $this->orderStatusRepository = $orderStatusRepository;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->userRepository = $userRepository;
@@ -102,8 +99,7 @@ class CreateOrderCommand extends BaseCreateCommand
         $randomProductVariant = $this->productVariantRepository
             ->readRandomEntities(1)[0];
 
-        $randomStatus = $this->orderStatusRepository
-            ->readRandomEntities(1)[0];
+        $randomStatus = OrderStatus::getConstants()[array_rand(OrderStatus::getConstants())];
 
         $orderProductVariant->setOrder($order);
         $orderProductVariant->setProductVariant($randomProductVariant);

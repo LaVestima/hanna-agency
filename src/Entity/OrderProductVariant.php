@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(indexes={
  *     @ORM\Index(name="Orders_Products_ID_ORDERS_FK", columns={"order_id"}),
  *     @ORM\Index(name="Orders_Products_ID_PRODUCTS_SIZES_FK", columns={"product_variant_id"}),
- *     @ORM\Index(name="Orders_Products_ID_STATUSES_FK", columns={"status_id"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\OrderProductRepository")
  */
@@ -60,8 +59,7 @@ class OrderProductVariant implements EntityInterface
     private $productVariant;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\OrderStatus", inversedBy="orderProductVariants")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=64)
      */
     private $status;
 
@@ -171,12 +169,12 @@ class OrderProductVariant implements EntityInterface
         return $this;
     }
 
-    public function getStatus(): ?OrderStatus
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(?OrderStatus $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 

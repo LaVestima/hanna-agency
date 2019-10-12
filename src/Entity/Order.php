@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\OrderStatus;
 use App\Model\Infrastructure\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -221,18 +222,20 @@ class Order implements EntityInterface
         // TODO: finish status determination
 
         foreach ($this->orderProductVariants as $orderProductVariant) {
-            if ($orderProductVariant->getStatus()->getName() == OrderStatus::CANCELLED) {
+            if ($orderProductVariant->getStatus() === OrderStatus::CANCELLED) {
                 $this->status = OrderStatus::CANCELLED;
 
                 break;
             }
-
-
         }
 
+        // TODO: if all completed, then COMPLETED
+        // TODO: if all shipped, then SHIPPED
+        // TODO: if all paid, then PAID
 
-        // TODO: wrong, correct
-        $this->status = OrderStatus::PAID;
+
+        // TODO: else:
+        $this->status = OrderStatus::PLACED;
 
 
         return $this->status;

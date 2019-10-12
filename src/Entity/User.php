@@ -112,7 +112,7 @@ class User implements UserInterface, \Serializable, EntityInterface
     private $pageVisits;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Store", mappedBy="owner")
+     * @ORM\OneToMany(targetEntity="App\Entity\Store", mappedBy="admin")
      */
     private $stores;
 
@@ -620,7 +620,7 @@ class User implements UserInterface, \Serializable, EntityInterface
     {
         if (!$this->stores->contains($store)) {
             $this->stores[] = $store;
-            $store->setOwner($this);
+            $store->setAdmin($this);
         }
 
         return $this;
@@ -631,8 +631,8 @@ class User implements UserInterface, \Serializable, EntityInterface
         if ($this->stores->contains($store)) {
             $this->stores->removeElement($store);
             // set the owning side to null (unless already changed)
-            if ($store->getOwner() === $this) {
-                $store->setOwner(null);
+            if ($store->getAdmin() === $this) {
+                $store->setAdmin(null);
             }
         }
 

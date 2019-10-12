@@ -8,12 +8,11 @@ use App\Entity\Cart;
 use App\Entity\CartProductVariant;
 use App\Entity\Order;
 use App\Entity\OrderProductVariant;
-use App\Entity\OrderStatus;
+use App\Enum\OrderStatus;
 use App\Form\CartSummaryType;
 use App\Helper\RandomHelper;
 use App\Repository\CartRepository;
 use App\Repository\OrderRepository;
-use App\Repository\OrderStatusRepository;
 use App\Repository\ProductVariantRepository;
 use Exception;
 use Stripe\Error\Base;
@@ -29,7 +28,6 @@ class PaymentController extends BaseController
 {
     private $cartRepository;
     private $orderRepository;
-    private $orderStatusRepository;
     private $productVariantRepository;
     private $stripeClient;
 
@@ -46,13 +44,11 @@ class PaymentController extends BaseController
     public function __construct(
         CartRepository $cartRepository,
         OrderRepository $orderRepository,
-        OrderStatusRepository $orderStatusRepository,
         ProductVariantRepository $productVariantRepository,
         StripeClient $stripeClient
     ) {
         $this->cartRepository = $cartRepository;
         $this->orderRepository = $orderRepository;
-        $this->orderStatusRepository = $orderStatusRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->stripeClient = $stripeClient;
     }
@@ -175,11 +171,7 @@ class PaymentController extends BaseController
             $orderProductVariant->setOrder($order);
             $orderProductVariant->setProductVariant($cartProductVariant->getProductVariant());
             $orderProductVariant->setQuantity($cartProductVariant->getQuantity());
-            $orderProductVariant->setStatus(
-                $this->orderStatusRepository->findOneBy([
-                    'name' => OrderStatus::PLACED
-                ])
-            );
+            $orderProductVariant->setStatus(OrderStatus::PLACED);
 
             $orderProductVariants[] = $orderProductVariant;
         }

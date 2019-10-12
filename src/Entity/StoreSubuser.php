@@ -84,9 +84,11 @@ class StoreSubuser implements EntityInterface
     /**
      * @param mixed $passwordHash
      */
-    public function setPasswordHash($passwordHash): void
+    public function setPasswordHash($passwordHash): self
     {
         $this->passwordHash = $passwordHash;
+
+        return $this;
     }
 
     public function getRoles(): ?array

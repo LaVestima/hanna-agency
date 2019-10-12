@@ -70,7 +70,7 @@ class ProductVoter extends Voter
     private function canEdit(Product $product, User $user): bool
     {
         // TODO: other condition, including store moderator
-        return $user === $product->getStore()->getOwner();
+        return $user === $product->getStore()->getAdmin();
     }
 
     private function canCreate(User $user): bool

@@ -9,7 +9,6 @@ use App\Entity\Conversation;
 use App\Entity\Country;
 use App\Entity\Message;
 use App\Entity\Order;
-use App\Entity\OrderStatus;
 use App\Entity\Parameter;
 use App\Entity\ShipmentOption;
 use App\Entity\Store;
@@ -29,7 +28,6 @@ use App\Repository\ConversationRepository;
 use App\Repository\CountryRepository;
 use App\Repository\MessageRepository;
 use App\Repository\OrderRepository;
-use App\Repository\OrderStatusRepository;
 use App\Repository\ParameterRepository;
 use App\Repository\ProductImageRepository;
 use App\Repository\ProductParameterRepository;
@@ -56,7 +54,6 @@ class AppFixtures extends Fixture
     private $countryRepository;
     private $messageRepository;
     private $orderRepository;
-    private $orderStatusRepository;
     private $parameterRepository;
     private $productImageRepository;
     private $productParameterRepository;
@@ -78,7 +75,6 @@ class AppFixtures extends Fixture
         CountryRepository $countryRepository,
         MessageRepository $messageRepository,
         OrderRepository $orderRepository,
-        OrderStatusRepository $orderStatusRepository,
         ParameterRepository $parameterRepository,
         ProductImageRepository $productImageRepository,
         ProductParameterRepository $productParameterRepository,
@@ -99,7 +95,6 @@ class AppFixtures extends Fixture
         $this->countryRepository = $countryRepository;
         $this->messageRepository = $messageRepository;
         $this->orderRepository = $orderRepository;
-        $this->orderStatusRepository = $orderStatusRepository;
         $this->parameterRepository = $parameterRepository;
         $this->productImageRepository = $productImageRepository;
         $this->productParameterRepository = $productParameterRepository;
@@ -146,8 +141,6 @@ class AppFixtures extends Fixture
 
         $this->loadProductVariants();
 
-        $this->loadOrderStatuses();
-
         $this->loadConversations();
 
         $this->loadMessages();
@@ -163,11 +156,13 @@ class AppFixtures extends Fixture
             ['Super Administrator', 'ROLE_SUPER_ADMIN'],
             ['Store Admin', 'ROLE_STORE_ADMIN'],
             ['User', 'ROLE_USER'],
-            ['a', 'ROLE_READ_MESSAGE', true],
-            ['s', 'ROLE_WRITE_MESSAGE', true],
-            ['d', 'ROLE_ADD_PRODUCT', true],
-            ['f', 'ROLE_EDIT_PRODUCT', true],
-            ['g', 'ROLE_DELETE_PRODUCT', true],
+            ['View dashboard', 'ROLE_VIEW_DASHBOARD', true],
+            ['Read messages', 'ROLE_READ_MESSAGES', true],
+            ['Write messages', 'ROLE_WRITE_MESSAGES', true],
+            ['Add products', 'ROLE_ADD_PRODUCTS', true],
+            ['Edit products', 'ROLE_EDIT_PRODUCTS', true],
+            ['Delete products', 'ROLE_DELETE_PRODUCTS', true],
+            ['View statistics', 'ROLE_VIEW_STATISTICS', true],
         ];
 
         foreach ($roleData as $rd) {
@@ -183,8 +178,9 @@ class AppFixtures extends Fixture
     {
         $userData = [
             ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1, ['ROLE_SUPER_ADMIN']],
-            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, ['ROLE_STORE_ADMIN']],
+            ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, []],
             ['subuser', 'sub@sub.subuser', '$argon2i$v=19$m=1024,t=16,p=2$RzdhVzBVQnZITWxYbHpSWg$8af8WAAmVzRpaywpBfGJWnkSuu3wj9UrSQZjUHoLmgQ', 6],
+            ['subuser2', 'sub2', '', 6],
             ['user', 'user@used.user', '$argon2i$v=19$m=1024,t=16,p=2$d2lGTmgxWTg3QVlJSTY4Zw$qGqrYwn8FexTo3Hu7prerL5Q1GgNUByXBADUBHpSQ0M', 5],
         ];
 
@@ -301,7 +297,7 @@ class AppFixtures extends Fixture
             $store->setStreet($sd[8]);
             $store->setEmail($sd[9]);
             $store->setPhone($sd[10]);
-            $store->setOwner($this->userRepository->findOneBy(['id' => $sd[11]]));
+            $store->setAdmin($this->userRepository->findOneBy(['id' => $sd[11]]));
             $store->setActive($sd[12]);
             $this->storeRepository->createEntity($store);
         }
@@ -472,25 +468,6 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadOrderStatuses(): void
-    {
-        $orderStatusData = [
-            ['Placed'],
-            ['Paid'],
-            ['Shipped'],
-            ['Completed'],
-            ['Cancelled'],
-        ];
-
-        foreach ($orderStatusData as $osd) {
-            $orderStatus = new OrderStatus();
-
-            $orderStatus->setName($osd[0]);
-
-            $this->orderStatusRepository->createEntity($orderStatus);
-        }
-    }
-
     private function loadConversations(): void
     {
         $conversationData = [
@@ -546,13 +523,15 @@ class AppFixtures extends Fixture
     {
         $storeSubuserData = [
             [3, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ'], // pass: store
+            [2, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ', ['ROLE_STORE_ADMIN']], // pass: store
         ];
 
         foreach ($storeSubuserData as $ssd) {
             $storeSubuser = new StoreSubuser();
             $storeSubuser->setUser($this->userRepository->findOneBy(['id' => $ssd[0]]))
                 ->setStore($this->storeRepository->findOneBy(['id' => $ssd[1]]))
-                ->setPasswordHash($ssd[2]);
+                ->setPasswordHash($ssd[2])
+                ->setRoles($ssd[3]);
 
             $this->storeSubuserRepository->createEntity($storeSubuser);
         }

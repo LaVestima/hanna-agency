@@ -3,21 +3,21 @@
 namespace App\Controller\Store;
 
 use App\Controller\Infrastructure\BaseController;
-use App\Entity\OrderStatus;
 use App\Entity\Store;
 use App\Entity\StoreSubuser;
 use App\Entity\User;
+use App\Enum\OrderStatus;
 use App\Form\StoreApplyType;
 use App\Form\StoreEditType;
 use App\Form\StoreLoginType;
 use App\Repository\OrderProductVariantRepository;
-use App\Repository\OrderStatusRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StoreRepository;
 use App\Repository\StoreSubuserRepository;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -28,20 +28,17 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class StoreController extends BaseController
 {
     private $orderProductVariantRepository;
-    private $orderStatusRepository;
     private $storeRepository;
     private $storeSubuserRepository;
     private $productRepository;
 
     public function __construct(
         OrderProductVariantRepository $orderProductVariantRepository,
-        OrderStatusRepository $orderStatusRepository,
         StoreRepository $storeRepository,
         StoreSubuserRepository $storeSubuserRepository,
         ProductRepository $productRepository
     ) {
         $this->orderProductVariantRepository = $orderProductVariantRepository;
-        $this->orderStatusRepository = $orderStatusRepository;
         $this->storeRepository = $storeRepository;
         $this->storeSubuserRepository = $storeSubuserRepository;
         $this->productRepository = $productRepository;
@@ -97,7 +94,7 @@ class StoreController extends BaseController
         // TODO: check access (only user with this store assigned to?)
         // TODO: and not store admin
         // TODO: otherwise, error message and no login form
-        if (!$storeSubuser || $this->isGranted('ROLE_STORE_ADMIN')) {
+        if (!$storeSubuser) {
             var_dump('You cannot login to this store!');
             die();
             // TODO: show error page
@@ -160,7 +157,7 @@ class StoreController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $store = $form->getData();
             $store->setActive(false);
-            $store->setOwner($this->getUser());
+            $store->setAdmin($this->getUser());
 
             $this->getDoctrine()->getRepository(Store::class)
                 ->createEntity($store);
@@ -175,6 +172,7 @@ class StoreController extends BaseController
 
     /**
      * @Route("/dashboard", name="store_dashboard")
+     *
      */
     public function dashboard()
     {
@@ -188,7 +186,7 @@ class StoreController extends BaseController
         $chartOrderProductVariants = $this->generateOrderProductVariantsChartData($orderProductVariants);
 
         $ordersPending = $this->storeRepository->findOrdersByStatus(
-            $this->orderStatusRepository->findOneBy(['name' => OrderStatus::PAID]),
+            OrderStatus::PAID,
             $store
         );
 //        var_dump($ordersPending);

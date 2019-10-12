@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * }, indexes={
  *     @ORM\Index(name="Store_Country_FK", columns={"country_id"}),
  *     @ORM\Index(name="Store_City_FK", columns={"city_id"}),
- *     @ORM\Index(name="Store_Owner_FK", columns={"owner_id"})
+ *     @ORM\Index(name="Store_Admin_FK", columns={"admin_id"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\StoreRepository")
  */
@@ -179,7 +179,7 @@ class Store implements EntityInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="stores")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $owner;
+    private $admin;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\StoreSubuser", mappedBy="store", orphanRemoval=true)
@@ -657,14 +657,14 @@ class Store implements EntityInterface
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getAdmin(): ?User
     {
-        return $this->owner;
+        return $this->admin;
     }
 
-    public function setOwner(?User $owner): self
+    public function setAdmin(?User $admin): self
     {
-        $this->owner = $owner;
+        $this->admin = $admin;
 
         return $this;
     }

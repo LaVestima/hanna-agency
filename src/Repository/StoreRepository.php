@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Controller\Infrastructure\Crud\CrudRepository;
-use App\Entity\OrderStatus;
 use App\Entity\Store;
 use App\Helper\CrudHelper;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -23,7 +22,7 @@ class StoreRepository extends CrudRepository
         parent::createEntity($entity);
     }
 
-    public function findOrdersByStatus(OrderStatus $orderStatus, Store $store)
+    public function findOrdersByStatus(string $orderStatus, Store $store)
     {
         $qb = $this->createQueryBuilder('s')
             ->select('o')
