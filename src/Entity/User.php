@@ -65,13 +65,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     private $passwordHash;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=50, nullable=false)
-     */
-    private $pathSlug = '';
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
     private $addresses;
@@ -324,31 +317,6 @@ class User implements UserInterface, \Serializable, EntityInterface
     {
         return $this->passwordHash;
     }
-
-    /**
-     * Set pathSlug
-     *
-     * @param string $pathSlug
-     *
-     * @return User
-     */
-    public function setPathSlug($pathSlug)
-    {
-        $this->pathSlug = $pathSlug;
-
-        return $this;
-    }
-
-    /**
-     * Get pathSlug
-     *
-     * @return string
-     */
-    public function getPathSlug()
-    {
-        return $this->pathSlug;
-    }
-
 
     public function getUsername() {
         return $this->login;

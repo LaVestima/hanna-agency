@@ -90,7 +90,7 @@
         "version": "2.1.6"
     },
     "elasticsearch/elasticsearch": {
-        "version": "v6.7.1"
+        "version": "v6.7.2"
     },
     "fig/link-util": {
         "version": "1.0.0"
@@ -101,8 +101,11 @@
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
             "version": "5.0",
-            "ref": "3f73f240ee0c3719e89f1c994ce66904e2ef84f6"
-        }
+            "ref": "a5638a07d11c8eef6f0280a20d6d1ddd91ad62ec"
+        },
+        "files": [
+            "config/packages/fos_elastica.yaml"
+        ]
     },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.0",
@@ -168,7 +171,7 @@
         "version": "2.1.1"
     },
     "pagerfanta/pagerfanta": {
-        "version": "v2.1.2"
+        "version": "v2.1.3"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"

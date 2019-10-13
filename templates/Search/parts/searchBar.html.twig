@@ -1,22 +1,28 @@
-<div>
+<div style="position: relative; width: 50%;">
     {# TODO: SEPARATE FILE #}
     <style>
-        #search_bar #query {
+        #search-bar #query {
+            width: calc(70% - 50px);
             border-radius: 2em 0 0 2em;
             padding-left: 1em;
             border: 2px solid black;
             border-right: none;
         }
-        #search_bar #category {
+        #search-bar #category {
+            width: 30%;
             border: 2px solid black;
             border-left: 1px solid black;
             border-right: 1px solid black;
             padding: 0.5em;
         }
+        #search-bar #submit {
+            width: 50px;
+        }
     </style>
-    {{ form_start(form, {'attr': {'id': 'search_bar', 'style': 'display: flex'}}) }}
+    {{ form_start(form, {'attr': {'id': 'search-bar', 'style': 'display: flex'}}) }}
         {{ form_widget(form['query']) }}
         {{ form_widget(form['category']) }}
-        <button type="submit" style="border-radius: 0 2em 2em 0; padding-right: 1em; border: 2px solid black; border-left: none;"><i class="fas fa-search"></i></button>
+        <button type="submit" id="submit" style="border-radius: 0 2em 2em 0; padding-right: 1em; border: 2px solid black; border-left: none;"><i class="fas fa-search"></i></button>
     {{ form_end(form) }}
+    <ul id="search-bar-suggestions" style="position: absolute; left: -15px; margin: 0; width: calc(100% + 30px); background: #00FF26;"></ul>
 </div>

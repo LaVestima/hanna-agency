@@ -3,9 +3,11 @@
 namespace App\Controller\Search;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Product;
 use App\Form\AdvancedSearchType;
 use App\Form\SearchBarType;
 use App\Repository\ProductRepository;
+use FOS\ElasticaBundle\Manager\RepositoryManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,8 +16,9 @@ class SearchController extends BaseController
 {
     private $productRepository;
 
-    public function __construct(ProductRepository $productRepository)
-    {
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
         $this->productRepository = $productRepository;
     }
 
@@ -72,5 +75,37 @@ class SearchController extends BaseController
         return $this->render('Search/parts/searchBar.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/search/suggestions", name="search_bar_suggestions",
+     *     methods={"GET"},
+     *     options={"expose"=true},
+     *     condition="request.isXmlHttpRequest()"
+     * )
+     */
+    public function searchBarSuggestions(RepositoryManagerInterface $manager, Request $request)
+    {
+        $query = $request->query->all();
+        $search = isset($query['q']) && !empty($query['q']) ? $query['q'] : null;
+
+        /** @var \App\Repository\Elastica\ProductRepository $repository */
+        $repository = $manager->getRepository(Product::class);
+
+        $products = $repository->search($search);
+
+        $data = [];
+
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $data[] = [
+                'name' => $product->getName(),
+                'url' => $this->generateUrl('product_show', [
+                    'pathSlug' => $product->getPathSlug()
+                ])
+            ];
+        }
+
+        return $this->json($data);
     }
 }

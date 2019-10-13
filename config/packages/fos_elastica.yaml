@@ -1,0 +1,27 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
+fos_elastica:
+    clients:
+        default: { host: elasticsearch, port: 9200 }
+    indexes:
+        products: # the name of our index
+            settings:
+                index:
+                    analysis:
+                        analyzer:
+                            keyword_analyzer: # this is a custom analyzer, see the explanations below
+                                type: custom
+                                tokenizer: standard
+                                filter: [standard, lowercase, asciifolding, trim]
+            types:
+                product: # the name of our type
+                    properties:
+                        name:
+                            analyzer: keyword_analyzer
+                            search_analyzer: keyword_analyzer
+                            type: text
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Product
+                        provider: ~
+                        finder: ~
+                        repository: App\Repository\Elastica\ProductRepository
