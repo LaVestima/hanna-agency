@@ -14,6 +14,11 @@ fi
 
 # TODO: copy .env, set parameters
 
+if [ ! -f ".env" ]; then
+    echo "$0: Copying .env."
+    cp .env.dist .env
+fi
+
 if [ ! "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
   docker-compose up -d
 fi
