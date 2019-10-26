@@ -30,6 +30,8 @@ docker exec -it $CONTAINER_NAME bin/console doctrine:migrations:migrate --no-int
 docker exec -it ejas yarn install
 yarn encore prod
 
+docker exec -it $CONTAINER_NAME bin/console fos:elastica:populate
+
 docker exec -it $CONTAINER_NAME bin/console cache:clear --no-warmup
 docker exec -it $CONTAINER_NAME bin/console cache:warmup
 
