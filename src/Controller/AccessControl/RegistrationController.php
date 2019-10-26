@@ -7,25 +7,25 @@ use App\Entity\Token;
 use App\Entity\User;
 use App\Entity\UserSetting;
 use App\Form\RegisterType;
-use App\Repository\RoleRepository;
 use App\Repository\TokenRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserSettingRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use RandomLib\Factory;
 use ReCaptcha\ReCaptcha;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistrationController extends BaseController
 {
-    private $swiftMailer;
+    /** @var MailerInterface */
+    private $mailer;
     private $userPasswordEncoder;
 
-    private $roleRepository;
     private $tokenRepository;
     private $userRepository;
     private $userSettingRepository;
@@ -34,16 +34,14 @@ class RegistrationController extends BaseController
     private $activationToken;
 
     public function __construct(
-        Swift_Mailer $swiftMailer,
+        MailerInterface $mailer,
         UserPasswordEncoderInterface $userPasswordEncoder,
-        RoleRepository $roleRepository,
         TokenRepository $tokenRepository,
         UserRepository $userRepository,
         UserSettingRepository $userSettingRepository
     ) {
-        $this->swiftMailer = $swiftMailer;
+        $this->mailer = $mailer;
         $this->userPasswordEncoder = $userPasswordEncoder;
-        $this->roleRepository = $roleRepository;
         $this->tokenRepository = $tokenRepository;
         $this->userRepository = $userRepository;
         $this->userSettingRepository = $userSettingRepository;
@@ -64,23 +62,20 @@ class RegistrationController extends BaseController
                 ->verify($request->request->get('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
 
             if (!$resp->isSuccess()) {
-                $this->addFlash('error', 'reCAPTCHA error!');
+                $this->addFlash('error', 'ReCAPTCHA error! Try again.');
 
                 return $this->redirectToRoute('access_control_register');
             }
 
             $user = $form->getData();
 
-            $passwordHash = $this->userPasswordEncoder
-                ->encodePassword($user, $form->get('password')->getData());
-
-            $user->setPasswordHash($passwordHash);
-
-            $defaultRole = $this->roleRepository
-                ->readOneEntityBy(['code' => 'ROLE_GUEST'])
-                ->getResult();
-
-            $user->setRole($defaultRole);
+            $user->setPasswordHash(
+                $this->userPasswordEncoder
+                    ->encodePassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+            );
 
             try {
                 $this->userRepository
@@ -98,7 +93,7 @@ class RegistrationController extends BaseController
                 return $this->redirectToRoute('access_control_register');
             }
 
-            $this->setActivationToken($this->generateActivationToken());
+            $this->activationToken = $this->generateActivationToken();
 
             $token = new Token();
             $token->setUser($user);
@@ -123,13 +118,6 @@ class RegistrationController extends BaseController
         ]);
     }
 
-    private function setActivationToken(string $activationToken)
-    {
-        $this->activationToken = $activationToken;
-
-        return $this;
-    }
-
     private function generateActivationToken()
     {
         $factory = new Factory();
@@ -139,22 +127,29 @@ class RegistrationController extends BaseController
         return $activationToken;
     }
 
-    protected function sendActivationEmail($email)
+    protected function sendActivationEmail($emailAddress)
     {
-        $message = (new Swift_Message('Registration confirmation'))
-            ->setFrom('lavestima@lavestima.com')
-            ->setTo($email)
-            ->setBcc('test@lavestima.com')
-            ->setBody($this->getActivationMessageBody(), 'text/html');
-        
-        $this->swiftMailer->send($message);
+        $email = new Email();
+        $email->from('lavestima@lavestima.com')
+            ->to($emailAddress)
+            ->bcc('lavestima@lavestima.com')
+//            ->priority(Email::PRIORITY_HIGH)
+            ->subject('EuBuy - Registration confirmation')
+//            ->text($this->getActivationMessageBody())
+            ->html($this->getActivationMessageBody());
+
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface $e) {
+            // TODO: show error and log
+        }
     }
 
     // TODO: correct message
     private function getActivationMessageBody()
     {
         $body  = 'User has just been registered with this email.' . '<br>';
-        $body .= 'To confirm it click the following link:' . '<br>';
+        $body .= 'To confirm it click the following button (active for 24h):' . '<br>';
         $body .= '<a href="' . $this->baseUrl . '/account_activation/';
         $body .= $this->activationToken;
         $body .= '">Confirm</a>';
