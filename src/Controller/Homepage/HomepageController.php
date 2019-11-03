@@ -28,7 +28,8 @@ class HomepageController extends BaseController
         // TODO: select the products recommended for the user
 
         $products = $this->productRepository->readRandomEntities(5);
-        $stores = $this->storeRepository->readRandomEntities(3);
+
+        $stores = $this->storeRepository->findTop(3);
 
         return $this->render('Homepage/homepage.html.twig', [
             'products' => $products,
