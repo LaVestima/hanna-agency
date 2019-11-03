@@ -13,6 +13,10 @@
         <env name="KERNEL_CLASS" value="App\Kernel" />
         <env name="SHELL_VERBOSITY" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+
+        <!-- ###+ symfony/mailer ### -->
+        <!-- MAILER_DSN=smtp://localhost -->
+        <!-- ###- symfony/mailer ### -->
     </php>
 
     <testsuites>
