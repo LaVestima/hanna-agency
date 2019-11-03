@@ -6,6 +6,7 @@ use App\Controller\Infrastructure\BaseController;
 use App\Entity\Role;
 use App\Entity\StoreSubuser;
 use App\Form\StoreSubuserSettingsType;
+use App\Repository\RoleRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StoreSubuserController extends BaseController
 {
+    private $roleRepository;
+
+    public function __construct(RoleRepository $roleRepository)
+    {
+        $this->roleRepository = $roleRepository;
+    }
+
     /**
      * @Route("s", name="store_subuser_list")
      *
@@ -25,7 +33,8 @@ class StoreSubuserController extends BaseController
         $store = $this->getStore();
 
         return $this->render('Store/StoreSubuser/list.html.twig', [
-            'store' => $store
+            'store' => $store,
+            'storeRoles' => $this->roleRepository->findBy(['subrole' => true])
         ]);
     }
 
@@ -43,6 +52,8 @@ class StoreSubuserController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->persist($storeSubuser);
             $em->flush();
+
+            return $this->redirectToRoute('store_subuser_list');
         }
 
         return $this->render('Store/StoreSubuser/settings.html.twig', [
