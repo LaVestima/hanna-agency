@@ -123,9 +123,11 @@ class AppFixtures extends Fixture
 
         $this->loadStores();
 
-        $this->loadOrders();
+        $this->loadShipmentOptions();
 
         $this->loadAddresses();
+
+        $this->loadOrders();
 
         $this->loadCategories();
 
@@ -144,8 +146,6 @@ class AppFixtures extends Fixture
         $this->loadConversations();
 
         $this->loadMessages();
-
-        $this->loadShipmentOptions();
 
         $this->loadStoreSubusers();
     }
@@ -180,8 +180,8 @@ class AppFixtures extends Fixture
             ['admin', 'admin@admin.admin', '$argon2i$v=19$m=1024,t=16,p=2$WkRnMTAwU25vWGRUaWJ3Yw$Wws1yFIRpI1UP3sAUnTiKWSWnO6GWwEktswJO0BeuQA', 1, ['ROLE_SUPER_ADMIN']],
             ['producer', 'prod@prod.prod', '$argon2i$v=19$m=1024,t=16,p=2$ZW5wem5oMFd1a2tYVlVxUg$NYvqhwv5s787f3yzAJ0BA7M+rHcQF+FrOFHloFTCG2U', 3, []],
             ['subuser', 'sub@sub.subuser', '$argon2i$v=19$m=1024,t=16,p=2$RzdhVzBVQnZITWxYbHpSWg$8af8WAAmVzRpaywpBfGJWnkSuu3wj9UrSQZjUHoLmgQ', 6],
-            ['subuser2', 'sub2', '', 6],
             ['user', 'user@used.user', '$argon2i$v=19$m=1024,t=16,p=2$d2lGTmgxWTg3QVlJSTY4Zw$qGqrYwn8FexTo3Hu7prerL5Q1GgNUByXBADUBHpSQ0M', 5],
+            ['subuser2', 'sub2', '', 6],
         ];
 
         foreach ($userData as $ud) {
@@ -303,19 +303,20 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadOrders(): void
+    private function loadShipmentOptions()
     {
-        $orderData = [
-            [4, 4, '441209205474295847260340']
+        $shipmentOptionsData = [
+            ['DHL', 11.50],
+            ['ADC', 7.90],
+            ['Fedex', 5.00]
         ];
 
-        foreach ($orderData as $od) {
-            $order = new Order();
-            $order
-                ->setUser($this->userRepository->findOneBy(['id' => $od[0]]))
-                ->setUserCreated($this->userRepository->findOneBy(['id' => $od[1]]))
-                ->setCode($od[2]);
-            $this->orderRepository->createEntity($order);
+        foreach ($shipmentOptionsData as $sod) {
+            $shipmentOption = new ShipmentOption();
+            $shipmentOption->setName($sod[0])
+                ->setCost($sod[1]);
+
+            $this->shipmentOptionRepository->createEntity($shipmentOption);
         }
     }
 
@@ -333,6 +334,24 @@ class AppFixtures extends Fixture
             $address->setStreet($ad[3]);
             $address->setZipCode($ad[4]);
             $this->addressRepository->createEntity($address);
+        }
+    }
+
+    private function loadOrders(): void
+    {
+        $orderData = [
+            [4, 4, '441209205474295847260340', 1, 1]
+        ];
+
+        foreach ($orderData as $od) {
+            $order = new Order();
+            $order
+                ->setUser($this->userRepository->findOneBy(['id' => $od[0]]))
+                ->setUserCreated($this->userRepository->findOneBy(['id' => $od[1]]))
+                ->setCode($od[2])
+                ->setShipmentOption($this->shipmentOptionRepository->findOneBy(['id' => $od[3]]))
+                ->setAddress($this->addressRepository->findOneBy(['id' => $od[4]]));
+            $this->orderRepository->createEntity($order);
         }
     }
 
@@ -502,27 +521,10 @@ class AppFixtures extends Fixture
         }
     }
 
-    private function loadShipmentOptions()
-    {
-        $shipmentOptionsData = [
-            ['DHL', 11.50],
-            ['ADC', 7.90],
-            ['Fedex', 5.00]
-        ];
-
-        foreach ($shipmentOptionsData as $sod) {
-            $shipmentOption = new ShipmentOption();
-            $shipmentOption->setName($sod[0])
-                ->setCost($sod[1]);
-
-            $this->shipmentOptionRepository->createEntity($shipmentOption);
-        }
-    }
-
     private function loadStoreSubusers()
     {
         $storeSubuserData = [
-            [3, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ'], // pass: store
+            [3, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ', []], // pass: store
             [2, 2, '$argon2i$v=19$m=1024,t=2,p=2$LmlYYlc0VmdVRVNzU0E1UQ$AsZ1tkDPa/FOIbYZ8H2PEW4Naibeh9rEabUwGQQkseQ', ['ROLE_STORE_ADMIN']], // pass: store
         ];
 

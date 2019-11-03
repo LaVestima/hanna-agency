@@ -17,6 +17,7 @@ use App\Repository\ProductVariantRepository;
 use Exception;
 use Stripe\Error\Base;
 use Stripe\Error\Card;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -79,7 +80,7 @@ class PaymentController extends BaseController
                     // TODO; redirect to error page
                 }
 
-                $order = $this->createNewOrder();
+                $order = $this->createNewOrder($form);
 
                 $this->stripeClient->createCharge(
                     $order->getCode(),
@@ -151,7 +152,7 @@ class PaymentController extends BaseController
         return $amount;
     }
 
-    private function createNewOrder(): Order
+    private function createNewOrder(Form $form): Order
     {
         $orderCode = RandomHelper::generateString(24, 'N');
 
@@ -160,8 +161,8 @@ class PaymentController extends BaseController
         $order->setUser($this->getUser());
 //        $order->setStatus(OrderStatus::QUEUED); // TODO: other way?
 
-        // TODO: shipment option
-        // TODO: address
+        $order->setShipmentOption($form->get('shipmentOption')->getData());
+        $order->setAddress($form->get('address')->getData());
 
         $orderProductVariants = [];
 

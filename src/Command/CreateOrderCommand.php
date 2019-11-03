@@ -6,10 +6,12 @@ use App\Entity\Order;
 use App\Entity\OrderProductVariant;
 use App\Enum\OrderStatus;
 use App\Helper\RandomHelper;
+use App\Repository\AddressRepository;
 use App\Repository\OrderProductRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
+use App\Repository\ShipmentOptionRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,24 +19,30 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateOrderCommand extends BaseCreateCommand
 {
+    private $addressRepository;
     private $orderProductRepository;
     private $orderRepository;
     private $productRepository;
     private $productVariantRepository;
+    private $shipmentOptionRepository;
     private $userRepository;
 
     public function __construct(
+        AddressRepository $addressRepository,
         OrderProductRepository $orderProductRepository,
         OrderRepository $orderRepository,
         ProductRepository $productRepository,
         ProductVariantRepository $productVariantRepository,
+        ShipmentOptionRepository $shipmentOptionRepository,
         UserRepository $userRepository,
         $name = null
     ) {
+        $this->addressRepository = $addressRepository;
         $this->orderProductRepository = $orderProductRepository;
         $this->orderRepository = $orderRepository;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
+        $this->shipmentOptionRepository = $shipmentOptionRepository;
         $this->userRepository = $userRepository;
 
         parent::__construct($name);
@@ -84,6 +92,12 @@ class CreateOrderCommand extends BaseCreateCommand
         $order->setDateCreated($this->faker->dateTimeBetween('-30 days', 'now'));
         $order->setCode(RandomHelper::generateString(24, 'N'));
         $order->setUser($randomUser);
+        $order->setShipmentOption(
+            $this->shipmentOptionRepository->readRandomEntities(1)[0]
+        );
+        $order->setAddress(
+            $this->addressRepository->readRandomEntities(1)[0]
+        );
         $order->setUserCreated($randomUser);
 
         $this->orderRepository

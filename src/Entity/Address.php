@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Model\Infrastructure\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,6 +45,16 @@ class Address implements EntityInterface
      * @ORM\Column(type="string", length=32)
      */
     private $zipCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="address")
+     */
+    private $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -106,6 +118,37 @@ class Address implements EntityInterface
     public function setZipCode(string $zipCode): self
     {
         $this->zipCode = $zipCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getAddress() === $this) {
+                $order->setAddress(null);
+            }
+        }
 
         return $this;
     }
