@@ -3,19 +3,23 @@
 namespace App\Controller\Homepage;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Repository\MLModelRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StoreRepository;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomepageController extends BaseController
 {
+    private $modelRepository;
     private $productRepository;
     private $storeRepository;
 
     public function __construct(
+        MLModelRepository $modelRepository,
         ProductRepository $productRepository,
         StoreRepository $storeRepository
     ) {
+        $this->modelRepository = $modelRepository;
         $this->productRepository = $productRepository;
         $this->storeRepository = $storeRepository;
     }
@@ -25,9 +29,16 @@ class HomepageController extends BaseController
      */
     public function homepage()
     {
-        // TODO: select the products recommended for the user
+        if ($this->getUser()) {
+            $recommendedProductsMLM = $this->modelRepository->findOneBy([
+                'user' => $this->getUser()
+            ]);
 
-        $products = $this->productRepository->readRandomEntities(5);
+            $products = $this->productRepository->readRecommendedProducts($recommendedProductsMLM);
+        } else {
+            $products = $this->productRepository->readRandomEntities(10);
+        }
+
         $stores = $this->storeRepository->readRandomEntities(3);
 
         return $this->render('Homepage/homepage.html.twig', [

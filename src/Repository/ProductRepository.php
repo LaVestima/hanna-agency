@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Controller\Infrastructure\Crud\CrudRepository;
+use App\Entity\MLModel;
 use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -22,8 +23,22 @@ class ProductRepository extends CrudRepository
         parent::__construct($registry, Product::class, $tokenStorage);
     }
 
-    public function readRecommendedProducts(User $user)
+    public function readRecommendedProducts(MLModel $model)
     {
+        $qb = $this->createQueryBuilder('p');
+
+        $parameters = [];
+
+        foreach ($model->getContent() as $i => $productId) {
+            $qb->orWhere('p.id = :productId' . $i);
+
+            $parameters[('productId' . $i)] = $productId;
+        }
+
+        $qb->setParameters($parameters);
+
+        return $qb->getQuery()->getResult();
+
         // TODO: read order history, search products similar to those in orders
         // (by some parameters, producers, etc)
         // TODO: some machine learning?

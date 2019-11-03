@@ -157,6 +157,11 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $isActive = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MLModel", mappedBy="user", orphanRemoval=true)
+     */
+    private $MLModels;
+
 
 
     public function __construct()
@@ -175,6 +180,7 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->storeOpinions = new ArrayCollection();
         $this->storeOpinionVotes = new ArrayCollection();
         $this->carts = new ArrayCollection();
+        $this->MLModels = new ArrayCollection();
     }
 
     public function __toString() {
@@ -849,6 +855,37 @@ class User implements UserInterface, \Serializable, EntityInterface
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MLModel[]
+     */
+    public function getMLModels(): Collection
+    {
+        return $this->MLModels;
+    }
+
+    public function addMLModel(MLModel $mLModel): self
+    {
+        if (!$this->MLModels->contains($mLModel)) {
+            $this->MLModels[] = $mLModel;
+            $mLModel->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMLModel(MLModel $mLModel): self
+    {
+        if ($this->MLModels->contains($mLModel)) {
+            $this->MLModels->removeElement($mLModel);
+            // set the owning side to null (unless already changed)
+            if ($mLModel->getUser() === $this) {
+                $mLModel->setUser(null);
+            }
+        }
 
         return $this;
     }
