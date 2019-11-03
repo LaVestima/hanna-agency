@@ -7,6 +7,7 @@ use App\Entity\Store;
 use App\Entity\StoreSubuser;
 use App\Entity\User;
 use App\Enum\OrderStatus;
+use App\Enum\StoreSubuserRole;
 use App\Form\StoreApplyType;
 use App\Form\StoreEditType;
 use App\Form\StoreLoginType;
@@ -59,23 +60,52 @@ class StoreController extends BaseController
 
     /**
      * @Route("/edit/{identifier}", name="store_edit")
+     *
+     * @IsGranted("ROLE_STORE_ADMIN")
      */
     public function edit(Store $store, Request $request)
     {
         // TODO: access: store admin or subuser with permissions
 
-
         $form = $this->createForm(StoreEditType::class, $store);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $store = $form->getData();
+
             $em = $this->getDoctrine()->getManager();
+
+            $logo = $form['logo']->getData();
+
+            if ($logo) {
+                dump($logo);
+
+                $newFilename = uniqid('', true) . '.' . $logo->guessExtension();
+                $logosPath = 'uploads/logos/';
+
+                try {
+                    $logo->move(
+                        $this->kernel->getProjectDir() . '/public/' . $logosPath,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $store->setLogoFilePath($logosPath . $newFilename);
+            }
+
             $em->persist($store);
             $em->flush();
+
+            return $this->redirectToRoute('store_show', [
+                'identifier' => $store->getIdentifier()
+            ]);
         }
 
         return $this->render('Store/edit.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'store' => $store
         ]);
     }
 
@@ -162,7 +192,14 @@ class StoreController extends BaseController
             $this->getDoctrine()->getRepository(Store::class)
                 ->createEntity($store);
 
+            $storeSubuser = new StoreSubuser();
+            $storeSubuser->setStore($store);
+            $storeSubuser->setUser($this->getUser());
+            $storeSubuser->setPasswordHash('NOT-SET');
+            $storeSubuser->setRoles(array_values(StoreSubuserRole::getConstants()));
 
+            $this->getDoctrine()->getRepository(StoreSubuser::class)
+                ->createEntity($storeSubuser);
         }
 
         return $this->render('Store/apply.html.twig', [

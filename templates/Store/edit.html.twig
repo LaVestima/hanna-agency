@@ -1,10 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+    <label for="short_name">Short name</label>
+    <input type="text" name="short_name" value="{{ store.shortName }}" disabled>
+
+    <label for="full_name">Full name</label>
+    <input type="text" name="full_name" value="{{ store.fullName }}" disabled>
+
+    <label for="first_name">First name</label>
+    <input type="text" name="first_name" value="{{ store.firstName }}" disabled>
+
+    <label for="last_name">Last name</label>
+    <input type="text" name="last_name" value="{{ store.lastName }}" disabled>
+
+
     {{ form_start(form) }}
 
     <div id="form-front-page-html" style="display: none;">
         {{ form_row(form.frontPageHtml) }}
+    </div>
+
+    <div style="border: 1px solid black;">
+        <h2>{{ form_label(form.logo) }}</h2>
+        <img src="{{ asset(form.logoFilePath.vars.value) }}" alt="" style="max-width: 250px;">
+        {{ form_widget(form.logo) }}
     </div>
 
     {{ form_end(form) }}

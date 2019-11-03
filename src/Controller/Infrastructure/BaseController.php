@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BaseController extends AbstractController
@@ -22,6 +23,11 @@ class BaseController extends AbstractController
     use ActionControllerTrait;
     use ListActionControllerTrait;
     use NewActionControllerTrait;
+
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
 
     /**
      * @var Request
@@ -47,6 +53,15 @@ class BaseController extends AbstractController
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
+
+    /**
+     * @required
+     * @param KernelInterface $kernel
+     */
+    public function setKernel(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     /**
      * @required
