@@ -5,3 +5,7 @@ order_status:
     completed: Completed
     cancelled: Cancelled
 
+gender:
+    other: Other
+    female: Female
+    male: Male
