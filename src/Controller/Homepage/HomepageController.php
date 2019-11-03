@@ -39,7 +39,7 @@ class HomepageController extends BaseController
             $products = $this->productRepository->readRandomEntities(10);
         }
 
-        $stores = $this->storeRepository->readRandomEntities(3);
+        $stores = $this->storeRepository->findTop(3);
 
         return $this->render('Homepage/homepage.html.twig', [
             'products' => $products,

@@ -54,7 +54,7 @@ $(function() {
             var $oppositeVoteCount = $voteButton.closest('.store-opinion-votes-wrapper').find('.store-opinion-vote-down-wrapper span');
             var $oppositeVoteWrapper = $voteButton.closest('.store-opinion-votes-wrapper').find('.store-opinion-vote-down-wrapper');
 
-            if (data) {
+            if (data == true) {
                 $voteButton.closest('.store-opinion-vote-up-wrapper').css('color', 'rgb(0, 128, 0)');
 
                 $voteCount.html(Number($voteCount.html()) + 1);
@@ -64,10 +64,13 @@ $(function() {
                 }
 
                 $oppositeVoteWrapper.css('color', '#333');
-            } else {
+            } else if (data == false) {
                 $voteButton.closest('.store-opinion-vote-up-wrapper').css('color', '#333');
 
                 $voteCount.html(Number($voteCount.html()) - 1);
+            } else {
+                // TODO: move to GUI
+                console.log('You must be logged in to vote!!!!');
             }
         }).fail(function() {
             console.log('Error!');

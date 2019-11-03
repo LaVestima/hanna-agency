@@ -33,6 +33,10 @@ class StoreOpinionController extends BaseController
      */
     public function voteUp(Request $request)
     {
+        if (!$this->getUser()) {
+            return $this->json(null);
+        }
+
         $this->preVote($request);
 
         if ($this->vote) {
@@ -65,6 +69,10 @@ class StoreOpinionController extends BaseController
      */
     public function voteDown(Request $request)
     {
+        if (!$this->getUser()) {
+            return $this->json(null);
+        }
+
         $this->preVote($request);
 
         if ($this->vote) {

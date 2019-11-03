@@ -43,10 +43,16 @@ class ShipmentOption implements EntityInterface
      */
     private $productShipmentOptions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="shipmentOption", orphanRemoval=true)
+     */
+    private $orders;
+
 
     public function __construct()
     {
         $this->productShipmentOptions = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     /**
@@ -126,6 +132,37 @@ class ShipmentOption implements EntityInterface
             // set the owning side to null (unless already changed)
             if ($productShipmentOption->getShipmentOption() === $this) {
                 $productShipmentOption->setShipmentOption(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setShipmentOption($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->contains($order)) {
+            $this->orders->removeElement($order);
+            // set the owning side to null (unless already changed)
+            if ($order->getShipmentOption() === $this) {
+                $order->setShipmentOption(null);
             }
         }
 

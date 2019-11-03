@@ -14,6 +14,9 @@
             margin: 0.5em;
             padding: 0.5em;
         }
+        .thumb-image {
+            max-width: 200px;
+        }
     </style>
 
 
@@ -48,7 +51,7 @@
         {#{% endfor %}#}
         {#</div>#}
 
-        <ul id="image-fields-list" style="display: flex;"
+        <ul id="image-fields-list" style="display: flex; overflow: auto;"
             data-prototype="{{ form_widget(form.images.vars.prototype)|e }} <div class=&quot;button remove-image&quot;>-</div>"
             data-widget-tags="{{ '<li></li>'|e }}"
             data-widget-counter="{{ form.images|length }}">
@@ -64,12 +67,6 @@
 
         <div class="button" id="add-image" data-list-selector="#image-fields-list">+</div>
     </div>
-
-    <style>
-        .thumb-image {
-            max-width: 200px;
-        }
-    </style>
 
     <div style="border: 1px solid black;">
         <h2>{{ form_label(form.variants) }}</h2>
@@ -131,6 +128,8 @@
         </ul>
         <div class="button" id="add-promotion" data-list-selector="#promotion-fields-list">+</div>
     </div>
+
+    {{ form_row(form.name) }}
 
     {{ form_end(form) }}
 {% endblock %}

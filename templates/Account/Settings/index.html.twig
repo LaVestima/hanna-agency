@@ -51,6 +51,13 @@
             margin: 1em;
             padding: 1em;
         }
+
+        .account-settings-address {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            /*padding: 10px;*/
+        }
     </style>
 
     <div class="grid-container">
@@ -91,12 +98,12 @@
                     {{ form_widget(addressesForm.addresses.vars.prototype.zipCode)|e }}
                     <div class=&quot;button remove-address&quot;>-</div>
                 "
-                data-widget-tags="{{ '<li></li>'|e }}"
+                data-widget-tags="{{ '<li class="account-settings-address"></li>'|e }}"
                 data-widget-counter="{{ addressesForm.addresses|length }}"
                 style="display: flex; flex-wrap: wrap; padding: 0;"
             >
             {% for address in addressesForm.addresses %}
-                <li style="display: flex; flex-direction: column; width: 50%; padding: 10px;">
+                <li class="account-settings-address">
                     {{ form_widget(address.name) }}
                     {{ form_widget(address.country) }}
                     {{ form_widget(address.street) }}
@@ -105,7 +112,9 @@
                 </li>
             {% endfor %}
             </ul>
-            <div class="button" id="add-address" data-list-selector="#address-fields-list">+</div>
+            <div class="button" id="add-address" data-list-selector="#address-fields-list">
+                Add another address
+            </div>
             {{ form_end(addressesForm) }}
         </div>
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -45,20 +46,6 @@ class Store implements EntityInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateDeleted;
-
-//    /**
-//     * @var integer
-//     *
-//     * @ORM\Column(type="integer", nullable=false)
-//     */
-//    private $userCreated = '0';
-//
-//    /**
-//     * @var integer
-//     *
-//     * @ORM\Column(type="integer", nullable=true)
-//     */
-//    private $userDeleted;
 
     /**
      * @var string
@@ -196,6 +183,11 @@ class Store implements EntityInterface
      */
     private $verifiedAt;
 
+    /**
+     * @ORM\Column(type="string", length=512, nullable=true)
+     */
+    private $logoFilePath;
+
 
     public function __construct()
     {
@@ -262,54 +254,6 @@ class Store implements EntityInterface
     {
         return $this->dateDeleted;
     }
-
-//    /**
-//     * Set userCreated
-//     *
-//     * @param integer $userCreated
-//     *
-//     * @return Store
-//     */
-//    public function setUserCreated($userCreated)
-//    {
-//        $this->userCreated = $userCreated;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get userCreated
-//     *
-//     * @return integer
-//     */
-//    public function getUserCreated()
-//    {
-//        return $this->userCreated;
-//    }
-//
-//    /**
-//     * Set userDeleted
-//     *
-//     * @param integer $userDeleted
-//     *
-//     * @return Store
-//     */
-//    public function setUserDeleted($userDeleted)
-//    {
-//        $this->userDeleted = $userDeleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get userDeleted
-//     *
-//     * @return integer
-//     */
-//    public function getUserDeleted()
-//    {
-//        return $this->userDeleted;
-//    }
 
     /**
      * Set shortName
@@ -720,6 +664,18 @@ class Store implements EntityInterface
     public function setVerifiedAt(?\DateTimeInterface $verifiedAt): self
     {
         $this->verifiedAt = $verifiedAt;
+
+        return $this;
+    }
+
+    public function getLogoFilePath(): ?string
+    {
+        return $this->logoFilePath;
+    }
+
+    public function setLogoFilePath(?string $logoFilePath): self
+    {
+        $this->logoFilePath = $logoFilePath;
 
         return $this;
     }

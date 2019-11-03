@@ -23,7 +23,11 @@ class AddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
+            ->add('name', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Name'
+                ]
+            ])
             ->add('country', ChoiceType::class, [
                 'choices' => $this->countryRepository->findAll(),
                 'choice_label' => 'name',

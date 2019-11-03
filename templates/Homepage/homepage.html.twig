@@ -97,10 +97,16 @@
         <div class="grid-top-companies">
             Top rated companies <i class="fas fa-chevron-right"></i>
             <div style="display: flex; flex-direction: column;">
+{#                {{ dump(stores) }}#}
                 {% for store in stores %}
-                    <a href="{{ path('store_show', {identifier: store.identifier}) }}">
-                        <div style="background: #444; padding: 1em; height: 2em; margin: 0.5em; color: #fff; border-radius: 5px;">
-                            {{ store.shortName }}
+                    <a href="{{ path('store_show', {identifier: store.store.identifier}) }}">
+                        <div style="background: #444; padding: 1em; margin: 0.5em; color: #fff; border-radius: 5px;">
+                            {{ store.store.shortName }} ({{ store.averageRating|number_format(1) }}/5)
+                            {% if store.store.logoFilePath is not null %}
+                                <img src="{{ asset(store.store.logoFilePath) }}" alt="" style="width: 100%;">
+                            {% else %}
+                                <img src="{{ asset('uploads/logos/default.png') }}" alt="" style="width: 100%;">
+                            {% endif %}
                         </div>
                     </a>
                 {% endfor %}

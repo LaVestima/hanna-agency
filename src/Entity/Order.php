@@ -87,6 +87,17 @@ class Order implements EntityInterface
      */
     private $code;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ShipmentOption", inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $shipmentOption;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Address", inversedBy="orders")
+     */
+    private $address;
+
     public function __construct()
     {
         $this->orderProductVariants = new ArrayCollection();
@@ -347,6 +358,30 @@ class Order implements EntityInterface
     public function setCode(string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getShipmentOption(): ?ShipmentOption
+    {
+        return $this->shipmentOption;
+    }
+
+    public function setShipmentOption(?ShipmentOption $shipmentOption): self
+    {
+        $this->shipmentOption = $shipmentOption;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }

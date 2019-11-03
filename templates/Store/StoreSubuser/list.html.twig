@@ -2,10 +2,31 @@
 
 {% block content %}
     {{ store.fullName }}
+
+    <table border="1">
+        <tr>
+            <th></th>
+        {% for role in storeRoles %}
+            <th>{{ role.name }}</th>
+        {% endfor %}
+        </tr>
     {% for subuser in store.storeSubusers %}
-        <div>
-            {{ subuser.user.login }}
-            <a href="{{ path('store_subuser_edit', {identifier: subuser.identifier}) }}" class="button">Edit</a>
-        </div>
+        <tr>
+            <td>
+                {{ subuser.user.login }}
+                {% if 'ROLE_STORE_ADMIN' not in subuser.roles %}
+                    <a href="{{ path('store_subuser_edit', {identifier: subuser.identifier}) }}" class="button">Edit</a>
+                {% endif %}
+            </td>
+
+        {% for role in storeRoles %}
+            <td style="text-align: center">
+                {% if role.code in subuser.roles %}
+                    <i class="fas fa-check"></i>
+                {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 {% endblock %}

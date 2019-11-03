@@ -5,6 +5,12 @@
 {% block content %}
     TODO: order tracking, status (add more: shipped, ...)<br>
 
+    Status: {{ order.status|trans }}
+    <br>
+    Shipment Option: {{ order.shipmentOption.name }} ({{ order.shipmentOption.cost }})
+    <br>
+    Address: {{ order.address.street }}, {{ order.address.zipCode }} {{ order.address.country.name }}
+
     {% for orderProductVariant in order.orderProductVariants %}
         {% set product = orderProductVariant.productVariant.product %}
 
@@ -18,4 +24,6 @@
             </div>
         </a>
     {% endfor %}
+
+    ### after order is closed: option to review products
 {% endblock %}

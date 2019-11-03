@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\ProductPromotion;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,7 +14,9 @@ class ProductPromotionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('discountedPrice', MoneyType::class)
+            ->add('discountedPrice', NumberType::class, [
+                'required' => true
+            ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Start'
             ])

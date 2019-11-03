@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(uniqueConstraints={
@@ -52,6 +53,9 @@ class User implements UserInterface, \Serializable, EntityInterface
      * @var string
      *
      * @ORM\Column(type="string", length=100, nullable=false)
+     * @Assert\Email(
+     *     mode="html5"
+     * )
      */
     private $email;
 
@@ -162,7 +166,10 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $MLModels;
 
-
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $gender;
 
     public function __construct()
     {
@@ -886,6 +893,16 @@ class User implements UserInterface, \Serializable, EntityInterface
                 $mLModel->setUser(null);
             }
         }
+    }
+
+    public function getGender(): ?int
+    {
+        return $this->gender;
+    }
+
+    public function setGender(int $gender): self
+    {
+        $this->gender = $gender;
 
         return $this;
     }

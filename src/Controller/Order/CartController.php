@@ -6,10 +6,10 @@ use App\Controller\Infrastructure\BaseController;
 use App\Entity\Cart;
 use App\Entity\CartProductVariant;
 use App\Form\CartSummaryType;
-use App\Form\PaymentType;
 use App\Repository\CartRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductVariantRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,6 +46,8 @@ class CartController extends BaseController
 
     /**
      * @Route("/cart_summary", name="cart_summary")
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function summary(Request $request)
     {
