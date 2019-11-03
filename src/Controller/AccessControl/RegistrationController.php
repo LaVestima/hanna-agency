@@ -150,7 +150,7 @@ class RegistrationController extends BaseController
     {
         $body  = 'User has just been registered with this email.' . '<br>';
         $body .= 'To confirm it click the following button (active for 24h):' . '<br>';
-        $body .= '<a href="' . $this->baseUrl . '/account_activation/';
+        $body .= '<a href="' . $this->baseUrl . '/account/activate/';
         $body .= $this->activationToken;
         $body .= '">Confirm</a>';
 

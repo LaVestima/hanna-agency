@@ -7,6 +7,7 @@ use App\Form\AddressesType;
 use App\Form\ChangePasswordType;
 use App\Form\SettingsType;
 use App\Form\UserInformationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -25,11 +26,10 @@ class SettingsController extends BaseController
 
     /**
      * @Route("", name="settings_index")
+     * @IsGranted("ROLE_USER")
      */
     public function index(Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $em = $this->getDoctrine()->getManager();
 
         $userInformationForm = $this->createForm(UserInformationType::class, $this->getUser());

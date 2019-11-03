@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     @ORM\UniqueConstraint(name="User_Login_U", columns={"login"}),
  *     @ORM\UniqueConstraint(name="User_Email_U", columns={"email"}),
  *     @ORM\UniqueConstraint(name="User_Password_Hash_U", columns={"password_hash"})
- * }, indexes={
- *     @ORM\Index(name="User_Role_FK", columns={"role_id"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
@@ -68,16 +66,6 @@ class User implements UserInterface, \Serializable, EntityInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Address", mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
     private $addresses;
-
-    /**
-     * @var Role
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     * })
-     */
-    private $role;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Token", mappedBy="user", orphanRemoval=true)
@@ -163,6 +151,11 @@ class User implements UserInterface, \Serializable, EntityInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Cart", mappedBy="user")
      */
     private $carts;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive = false;
 
 
 
@@ -405,18 +398,6 @@ class User implements UserInterface, \Serializable, EntityInterface
                 $address->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
-
-    public function setRole(?Role $role): self
-    {
-        $this->role = $role;
 
         return $this;
     }
@@ -856,6 +837,18 @@ class User implements UserInterface, \Serializable, EntityInterface
                 $cart->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

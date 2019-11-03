@@ -4,14 +4,11 @@ namespace App\Controller\Store;
 
 use App\Controller\Infrastructure\BaseController;
 use App\Entity\Store;
-use App\Entity\StoreSubuser;
-use App\Entity\User;
 use App\Enum\OrderStatus;
 use App\Form\StoreApplyType;
-use App\Form\StoreEditType;
 use App\Form\StoreLoginType;
+use App\Form\StoreType;
 use App\Repository\OrderProductVariantRepository;
-use App\Repository\ProductRepository;
 use App\Repository\StoreRepository;
 use App\Repository\StoreSubuserRepository;
 use DateInterval;
@@ -30,18 +27,15 @@ class StoreController extends BaseController
     private $orderProductVariantRepository;
     private $storeRepository;
     private $storeSubuserRepository;
-    private $productRepository;
 
     public function __construct(
         OrderProductVariantRepository $orderProductVariantRepository,
         StoreRepository $storeRepository,
-        StoreSubuserRepository $storeSubuserRepository,
-        ProductRepository $productRepository
+        StoreSubuserRepository $storeSubuserRepository
     ) {
         $this->orderProductVariantRepository = $orderProductVariantRepository;
         $this->storeRepository = $storeRepository;
         $this->storeSubuserRepository = $storeSubuserRepository;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -64,8 +58,7 @@ class StoreController extends BaseController
     {
         // TODO: access: store admin or subuser with permissions
 
-
-        $form = $this->createForm(StoreEditType::class, $store);
+        $form = $this->createForm(StoreType::class, $store);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -96,7 +89,7 @@ class StoreController extends BaseController
         // TODO: otherwise, error message and no login form
         if (!$storeSubuser) {
             var_dump('You cannot login to this store!');
-            die();
+            die;
             // TODO: show error page
         }
 

@@ -19,6 +19,7 @@ class PageVisit implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="pageVisits")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $user;
 
