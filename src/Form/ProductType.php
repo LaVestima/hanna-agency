@@ -47,7 +47,7 @@ class ProductType extends AbstractType
                 'required' => false
             ])
             ->add('price', MoneyType::class, [
-                'label' => 'Customer Price',
+                'label' => 'Price',
                 'currency' => false
             ] +
             ($product ? [

@@ -16,10 +16,8 @@ security:
                 login_path: access_control_login
                 check_path: access_control_login
                 default_target_path: homepage_homepage
-                always_use_default_target_path: false
                 success_handler: authentication_handler
                 failure_handler: authentication_handler
-                use_forward: false
                 csrf_token_generator: security.csrf.token_manager
             logout:
                 path: /logout

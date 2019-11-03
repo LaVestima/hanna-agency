@@ -94,7 +94,6 @@ class ProductImage implements EntityInterface
      */
     public function upload(): void
     {
-        var_dump('upload');
         if (null === $this->file) {
             return;
         }
