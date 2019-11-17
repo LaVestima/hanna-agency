@@ -21,7 +21,6 @@ class AddressesType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'required' => false,
             ])
             ->add('submit', SubmitType::class)
         ;

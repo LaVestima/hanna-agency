@@ -8,7 +8,7 @@ services:
           - 80:80
         volumes:
           - .docker/config/vhosts:/etc/apache2/sites-enabled
-          - .:/home/wwwroot/ejas
+          - .:/home/wwwroot
         depends_on:
           - php
 
@@ -27,13 +27,11 @@ services:
 
     php:
         build: .docker/php
-#        container_name: ejas_php
         container_name: ejas
         restart: always
         volumes:
-          - .:/home/wwwroot/ejas
+          - .:/home/wwwroot
         environment:
           - maildev_host=ejas_maildev
         depends_on:
-          - maildev
           - mysql

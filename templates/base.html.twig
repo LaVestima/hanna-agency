@@ -22,6 +22,7 @@
         {% endif %}
         {% endspaceless %}
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
     </head>
     <body>
         <div id="top-bar-wrapper">
@@ -140,9 +141,16 @@
                 </div>
 
 {#                <a href="{{ path('cart_home') }}">#}
-                <div class="top-bar-item tooltip">
+                <div class="top-bar-item tooltip dropdown">
                     <i class="fas fa-globe"></i>
                     <span class="tooltiptext">???</span>
+                    <div class="dropdown-content dropdown-content-left" style="padding: 10px;">
+                        {{ render(controller(
+                            'App\\Controller\\I18n\\I18nController::dropdown',
+                            {
+                            }
+                        )) }}
+                    </div>
                 </div>
 {#                </a>#}
                 <a href="{{ path('cart_home') }}">
@@ -271,6 +279,10 @@
                 },
                 "position": "bottom-right"
             });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+        <script>
+            $('.select2').select2();
         </script>
     </body>
     {# ----------------------- JS ----------------------- #}

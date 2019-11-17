@@ -15,7 +15,11 @@ class SettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('locale', LocaleType::class)
+            ->add('locale', LocaleType::class, [
+                'attr' => [
+                    'class' => 'select2'
+                ]
+            ])
             ->add('newsletter', CheckboxType::class, [
                 'required' => false
             ])
