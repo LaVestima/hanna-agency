@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+    .admin-panel-menu-item {
+        padding: 5px;
+    }
+    .admin-panel-menu-item:hover {
+        background: #777;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div style="display: flex; flex-direction: row;">
+        <div id="admin-panel-menu" style="width: 200px; background: #aaa;">
+            <a href="{{ path('admin_panel_index') }}">
+                <div class="admin-panel-menu-item">
+                    Home
+                </div>
+            </a>
+            <a href="{{ path('admin_panel_coupons') }}">
+                <div class="admin-panel-menu-item">
+                    Coupons
+                </div>
+            </a>
+            <a href="{{ path('admin_panel_stores') }}">
+                <div class="admin-panel-menu-item">
+                    Stores
+                </div>
+            </a>
+            <a href="{{ path('admin_panel_users') }}">
+                <div class="admin-panel-menu-item">
+                    Users
+                </div>
+            </a>
+
+        </div>
+        <div id="admin-panel-content" style="width: calc(100% - 200px); padding: 10px;">
+            {{ block('panelContent') }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block panelContent %}
+    <h2>Coupons</h2>
+
+    <a href="" class="button">Create new +</a>
+
+    <table style="width: 90%; margin: 0 auto;" border="1">
+        <tr>
+            <th>Start date</th>
+            <th>End date</th>
+            <th></th>
+        </tr>
+        {% for coupon in coupons %}
+            <tr>
+                <td>{{ coupon.startDate|date('d.m.Y') }}</td>
+                <td>{{ coupon.endDate|date('d.m.Y') }}</td>
+                <td>
+                    Edit, activate?
+                    <a href="" class="button">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

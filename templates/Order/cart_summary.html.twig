@@ -27,7 +27,7 @@
                         {% set product = cartSummaryForm.products[productVariant.value] %}
 
                         {{ form_widget(product) }}
-                        {% include 'Product/parts/_firstImage.html.twig' with {'product': product} %}
+                        {% include 'Product/parts/_firstImage.html.twig' with {product: product} %}
                         {{ form_label(product) }}
                     </div>
                 {% endfor %}
@@ -86,6 +86,9 @@
         <div style="border: 1px solid black; display: inline-block;">
             ### Accept some things...
             {{ form_row(cartSummaryForm.privacyPolicy) }}
+        </div>
+        <div style="border: 1px solid black; display: inline-block;">
+            ### INVOICE DATA
         </div>
     </div>
 
