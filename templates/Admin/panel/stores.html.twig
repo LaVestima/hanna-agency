@@ -1,0 +1,36 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block panelContent %}
+    <h2>Stores</h2>
+
+    Waiting for activation<br>
+    {% for store in stores if store.active == 0 %}
+        <div>
+            {{ store.fullName }}
+            <a href="{{ path('admin_panel_store_activate', {identifier: store.identifier}) }}" class="button">Activate</a>
+        </div>
+    {% endfor %}
+
+    <br>
+
+    Active<br>
+    <table style="width: 90%; margin: 0 auto;" border="1">
+        <tr>
+            <th>Name</th>
+{#            <th>Join date</th>#}
+            <th>Actions</th>
+        </tr>
+    {% for store in stores if store.active == 1 %}
+        <tr>
+            <td>
+                <a href="{{ path('store_show', {identifier: store.identifier}) }}">
+                    {{ store.fullName }}
+                </a>
+            </td>
+            <td>
+                <a href="{{ path('admin_panel_store_deactivate', {identifier: store.identifier}) }}" class="button">Deactivate</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

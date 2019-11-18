@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\PostLoad;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(uniqueConstraints={
@@ -66,6 +67,8 @@ class Product implements EntityInterface
      *
      * @ORM\Column(type="text", nullable=false)
      *
+     * @Assert\Length(min="5")
+     *
      * @Groups({"api"})
      */
     private $name;
@@ -73,9 +76,11 @@ class Product implements EntityInterface
     /**
      * @var string
      *
-     * @Groups({"api"})
-     *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=false)
+     *
+     * @Assert\Positive()
+     *
+     * @Groups({"api"})
      */
     private $price;
 
@@ -159,8 +164,6 @@ class Product implements EntityInterface
         $this->productShipmentOptions = new ArrayCollection();
         $this->productReviews = new ArrayCollection();
         $this->productPromotions = new ArrayCollection();
-
-
     }
 
     /** @PostLoad */
