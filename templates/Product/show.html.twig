@@ -40,7 +40,7 @@
             <div>
                 <span style="color: #aaa; font-size: 0.8em;">Model: ???</span><br>
             </div>
-            <span>{{ product.description }}</span><br>
+            <span>{{ product.description|raw }}</span><br>
             <div style="margin: 1em 0;">
                 <span><b>Full Product Specification</b></span><br>
                 {% for productParameter in product.productParameters %}
@@ -101,6 +101,17 @@
         </div>
         <div class="grid-reviews">
 
+            <div style="display: flex;">
+                {% if product.category.parent is defined and product.category.parent %}
+                    <a href="{{ path('search_home', {category: product.category.parent.identifier}) }}">
+                        {{ product.category.parent.name }}
+                    </a>
+                    &nbsp;>&nbsp;
+                {% endif %}
+                <a href="{{ path('search_home', {category: product.category.identifier}) }}">
+                    {{ product.category.name }}
+                </a>
+            </div>
         </div>
     </div>
 {#    <div class="module-box">#}

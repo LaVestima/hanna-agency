@@ -45,13 +45,16 @@
                     {% endif %}
                 </div>
                 <div>
+                <span><b>€ {{ product.price }}</b></span>
                 {% if product.oldPrice is defined and product.oldPrice is not null %}
+                    <br>
                     <span style="color: red; text-decoration: line-through;">
                         € {{ product.oldPrice }}
                     </span>
                     &nbsp;
+                    <span style="background: #AA3333; color: #fff; padding: 0 5px; float: right;">-{{ (100 - product.price / product.oldPrice * 100)|number_format(2) }}%</span>
+                    &nbsp;
                 {% endif %}
-                <span><b>€ {{ product.price }}</b></span>
                 </div>
             </div>
         </div>

@@ -21,4 +21,5 @@ return [
     FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     FOS\ElasticaBundle\FOSElasticaBundle::class => ['all' => true],
     Tetranz\Select2EntityBundle\TetranzSelect2EntityBundle::class => ['all' => true],
+    FOS\CKEditorBundle\FOSCKEditorBundle::class => ['all' => true],
 ];

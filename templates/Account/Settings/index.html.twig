@@ -87,7 +87,7 @@
             <b>User Information</b>
 
             {{ form_start(userInformationForm) }}
-                {% for fieldName in ['firstName', 'lastName', 'gender', 'submit'] %}
+                {% for fieldName in ['firstName', 'lastName', 'email', 'gender', 'submit'] %}
                     <div class="form-row">
                         <div class="form-row-label">
                             {{ form_label(userInformationForm[fieldName]) }}

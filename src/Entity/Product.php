@@ -158,6 +158,8 @@ class Product implements EntityInterface
 
     public function __construct()
     {
+        $this->dateCreated = new \DateTime();
+
         $this->productParameters = new ArrayCollection();
         $this->productImages = new ArrayCollection();
         $this->productVariants = new ArrayCollection();

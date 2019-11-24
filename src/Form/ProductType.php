@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Product;
 use App\Repository\CategoryRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,8 +44,14 @@ class ProductType extends AbstractType
 
         $builder
             ->add('name', TextType::class)
-            ->add('description', TextareaType::class, [
-                'required' => false
+            ->add('description', CKEditorType::class, [
+                'required' => false,
+                'attr' => [
+                    'rows' => 5
+                ],
+                'config' => [
+                    'width' => '100%',
+                ]
             ])
             ->add('price', MoneyType::class, [
                 'label' => 'Price',

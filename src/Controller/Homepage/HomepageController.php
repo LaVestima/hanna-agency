@@ -30,6 +30,7 @@ class HomepageController extends BaseController
     public function homepage()
     {
         if ($this->getUser()) {
+            // TODO: get the most recent one
             $recommendedProductsMLM = $this->modelRepository->findOneBy([
                 'user' => $this->getUser()
             ]);

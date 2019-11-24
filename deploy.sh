@@ -41,3 +41,4 @@ docker exec -it $CONTAINER_NAME bin/console cache:clear --no-warmup
 docker exec -it $CONTAINER_NAME bin/console cache:warmup
 
 chmod -R 777 var
+chmod -R 777 public/uploads

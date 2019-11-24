@@ -25,6 +25,7 @@ class UserInformationType extends AbstractType
                     'placeholder' => 'Last Name'
                 ]
             ])
+            ->add('email', EmailType::class)
             ->add('gender', ChoiceType::class, [
                 'choices' => Genders::getConstants(),
                 'choice_label' => function ($choice, $key, $value) {
