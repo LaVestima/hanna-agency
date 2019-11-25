@@ -81,8 +81,10 @@ class ProductImage implements EntityInterface
 
         $this->fileName = RandomHelper::generateString(64) . '.' . $this->file->guessExtension();
         $this->filePath = $this->getUploadDir() . $this->fileName;
-        // TODO: get the correct position
-        $this->sequencePosition = random_int(5, 100);
+
+        if (!$this->sequencePosition) {
+            $this->sequencePosition = $this->getProduct()->getProductImages()->indexOf($this);
+        }
 
         // And we generate the alt attribute of the <img> tag, the value of the file name on the user's PC
 //        $this->alt = $this->file->getClientOriginalName();

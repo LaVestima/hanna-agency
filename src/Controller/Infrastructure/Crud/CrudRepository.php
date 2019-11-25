@@ -71,7 +71,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateCreated(new \DateTime('now'));
         }
         if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
-            $entity->setUserCreated($this->user);
+            $entity->setUserCreated($this->user->getId()); // TODO: change to relation
         }
         if (method_exists($entity, 'setPathSlug') && !$entity->getPathSlug()) {
 	        $entity->setPathSlug(RandomHelper::generateString(50));

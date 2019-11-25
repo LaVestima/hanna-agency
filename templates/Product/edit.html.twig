@@ -17,6 +17,11 @@
         .thumb-image {
             max-width: 200px;
         }
+        .ui-state-highlight {
+            line-height: 1.2em;
+            background: #00FF26;
+        }
+
         .product-edit-section-basic input, .product-edit-section-basic textarea, .product-edit-section-basic select {
             width: 100%;
         }
@@ -37,35 +42,11 @@
 
     <div style="border: 1px solid black;">
         <h2>Images</h2>
-        {#<div class="form-group">#}
-            {#<div class="col-sm-10">#}
-                {#<div class="dropzone" data-upload-url="{{ path('upload_image') }}"></div>#}
-            {#</div>#}
-        {#</div>#}
-        {#<div class="col-xs-4 pull-right">#}
-            {#<input type="submit" class="btn btn-block btn-primary" value="Add" />#}
-        {#</div>#}
-
-
-        {#<form action="">#}
-            {#<input id="fileUpload" type="file" accept="image/*" multiple>#}
-        {#</form>#}
-
         <div id="image-holder"></div>
 
-
-        {#<div style="display: flex;">#}
-        {#{% for image in form.images %}#}
-            {#<div style="display: flex; flex-direction: column;">#}
-                {#<img src="{{ asset(image.vars.data.filePath) }}" style="margin: 0 auto; width: 200px; height: 200px; object-fit: cover;">#}
-                {#{{ form_widget(image) }}#}
-            {#</div>#}
-        {#{% endfor %}#}
-        {#</div>#}
-
-        <ul id="image-fields-list" style="display: flex; overflow: auto;"
+        <ul class="sortable" id="image-fields-list" style="display: flex; overflow: auto;"
             data-prototype="{{ form_widget(form.images.vars.prototype)|e }} <div class=&quot;button remove-image&quot;>-</div>"
-            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-tags="{{ '<li class="ui-sortable-handle"></li>'|e }}"
             data-widget-counter="{{ form.images|length }}">
             {% for image in form.images %}
                 <li>
@@ -147,4 +128,22 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('product_edit') }}
+    <script>
+        $(function() {
+            $('.sortable').sortable({
+                cursor: 'move',
+                opacity: 0.8,
+                placeholder: 'ui-state-highlight',
+                deactivate: function(event, ui) {
+                    $(this).find('li.ui-sortable-handle').each(function (index) {
+                        if ($(this).find('input').length > 0) {
+                            $(this).find('input').each(function () {
+                                this.name = this.name.replace(/\[\d+\]/, '[' + index + ']');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -254,45 +254,21 @@
             {% endif %}
         {# Twig dump #}
 
+
+        {% spaceless %}
         {% block base_javascripts %}
             {{ encore_entry_script_tags('app') }}
             {{ encore_entry_script_tags('flash_message') }}
-            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         {% endblock %}
         {% if block('javascripts') is defined %}
             {{ block('javascripts') }}
         {% endif %}
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
         <script>
-            window.cookieconsent.initialise({
-                "palette": {
-                    "popup": {
-                        "background": "#000",
-                        "text": "#ffffff"
-                    },
-                    "button": {
-                        "background": "transparent",
-                        "text": "#ff0000",
-                        "border": "#ff0000"
-                    }
-                },
-                "position": "bottom-right"
-            });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-        <script>
-            $('.select2').select2();
-        </script>
+        {% endspaceless %}
     </body>
-    {# ----------------------- JS ----------------------- #}
-
-    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
-    {#<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>#}
-    {#{% javascripts#}
-        {#'@InfrastructureBundle/Resources/public/js/base.js'#}
-        {#'@InfrastructureBundle/Resources/public/js/filters.js'#}
-        {#'@InfrastructureBundle/Resources/public/js/sorters.js'#}
-    {#%}#}
-        {#<script src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
 </html>

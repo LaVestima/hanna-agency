@@ -1,10 +1,11 @@
 // yarn encore dev
 
 require('../css/app.scss');
+require('@fortawesome/fontawesome-free/css/all.css');
 
 var $ = require('jquery');
 global.$ = global.jQuery = $;
-require('@fortawesome/fontawesome-free/css/all.css');
+
 
 // bin/console fos:js-routing:dump --format=json --target=public/js/fos_js_routes.json
 
@@ -15,6 +16,22 @@ global.Routing = Routing;
 
 
 $(function () {
+    $('.select2').select2();
+    window.cookieconsent.initialise({
+        "palette": {
+            "popup": {
+                "background": "#000",
+                "text": "#ffffff"
+            },
+            "button": {
+                "background": "transparent",
+                "text": "#ff0000",
+                "border": "#ff0000"
+            }
+        },
+        "position": "bottom-right"
+    });
+
     $('#search-bar #query').keyup(function() {
         $.ajax({
             type: "GET",
