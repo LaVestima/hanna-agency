@@ -6,6 +6,6 @@ order_status:
     cancelled: Cancelled
 
 gender:
-    other: Other
-    female: Female
-    male: Male
+    OTHER: Other
+    FEMALE: Female
+    MALE: Male

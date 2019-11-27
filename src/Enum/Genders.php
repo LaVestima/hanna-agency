@@ -6,9 +6,9 @@ use ReflectionClass;
 
 class Genders
 {
-    public const OTHER = 'gender.other';
-    public const FEMALE = 'gender.female';
-    public const MALE = 'gender.male';
+    public const OTHER = 1;
+    public const FEMALE = 2;
+    public const MALE = 3;
 
     public static function getConstants()
     {

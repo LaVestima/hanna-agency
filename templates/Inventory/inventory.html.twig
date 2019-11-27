@@ -54,47 +54,26 @@
                     {% endif %}
                     € {{ product.price }}
                 </div>
-                <div style="text-align: right; width: 25%;">
-                    <a href="{{ path('product_edit', {'pathSlug': product.pathSlug}) }}">
-                        <div class="inventory-product-action" style="background: #28a4c9;">
-                            <i class="fas fa-edit"></i><br>
-                            Edit
-                        </div>
-                    </a>
-                    {% if product.active %}
-                        <a href="{{ path('product_deactivate', {'pathSlug': product.pathSlug}) }}">
-                            <div class="inventory-product-action" style="background: #ff9900;">
-                                <i class="fas fa-times-circle"></i><br>
-                                Deactivate
-                            </div>
+                <div style="text-align: right; width: 150px;">
+                    <div style="display: flex; justify-content: space-around;">
+                        <a href="{{ path('product_edit', {'pathSlug': product.pathSlug, 'back': 'inv', 'page': pagination.currentPageNumber}) }}" title="Edit">
+                            <i class="fas fa-edit button-icon" style="background: #28a4c9;"></i><br>
                         </a>
-                    {% else %}
-                        <a href="{{ path('product_activate', {'pathSlug': product.pathSlug}) }}">
-                            <div class="inventory-product-action" style="background: #ff9900;">
-                                <i class="fas fa-check-circle"></i><br>
-                                Activate
-                            </div>
-                        </a>
-                    {% endif %}
-                    <a href="{{ path('product_delete', {'pathSlug': product.pathSlug}) }}" onclick="return confirm('Are you sure?')">
-                        <div class="inventory-product-action" style="background: #dc3545;">
-                            <i class="fas fa-trash-alt"></i><br>
-                            Delete
-                        </div>
-                    </a>
-                    <div>
-                        {% if product.productReviews|length > 0 %}
-                            {% set ratingAvg = 0 %}
-                            {% for review in product.productReviews %}
-                                {% set ratingAvg = (ratingAvg + review.rating) %}
-                            {% endfor %}
-                            {% set ratingAvg = ratingAvg / (product.productReviews|length) %}
-
-                            Rating: {{ ratingAvg|number_format(2) }}<br>
-                            {{ product.productReviews|length ~ ' ' ~ (product.productReviews|length > 1 ? 'reviews' : 'review' ) }}
+                        {% if product.active %}
+                            <a href="{{ path('product_deactivate', {'pathSlug': product.pathSlug, 'back': 'inv', 'page': pagination.currentPageNumber}) }}" title="Deactivate">
+                                <i class="fas fa-times-circle button-icon" style="background: #ff9900;"></i><br>
+                            </a>
                         {% else %}
-                            No reviews
+                            <a href="{{ path('product_activate', {'pathSlug': product.pathSlug, 'back': 'inv', 'page': pagination.currentPageNumber}) }}" title="Activate">
+                                <i class="fas fa-check-circle button-icon" style="background: #99ff00;"></i><br>
+                            </a>
                         {% endif %}
+                        <a href="{{ path('product_delete', {'pathSlug': product.pathSlug, 'back': 'inv', 'page': pagination.currentPageNumber}) }}" onclick="return confirm('Are you sure?')" title="Delete">
+                            <i class="fas fa-trash-alt button-icon" style="background: #dc3545;"></i><br>
+                        </a>
+                    </div>
+                    <div style="padding: 10px 0;">
+                        {% include 'Product/parts/_ratingStars.html.twig' with {'productReviews': product.productReviews} %}
                     </div>
                 </div>
             </div>

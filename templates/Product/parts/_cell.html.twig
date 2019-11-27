@@ -19,30 +19,8 @@
                     {% endfor %}
                 </div>
 
-                <div>
-                    {% if product.productReviews|length > 0 %}
-                        {% set ratingAvg = 0 %}
-                        {% for review in product.productReviews %}
-                            {% set ratingAvg = (ratingAvg + review.rating) %}
-                        {% endfor %}
-                        {% set ratingAvg = ratingAvg / (product.productReviews|length) %}
-
-                        {% set ratingAvgRounded = ratingAvg|round(0, 'ceil') %}
-
-                        {% for rating in 1..(ratingAvgRounded-1) if (ratingAvgRounded-1) != 0 %}
-                            <img src="{{ asset('uploads/images/_star_4.png') }}" alt="" width="15" class="rating-star">
-                        {% endfor %}
-                        <img src="{{ asset('uploads/images/_star_' ~ ((ratingAvg - (ratingAvgRounded-1)) * 4)|round ~ '.png') }}" alt="" width="15" class="rating-star">
-                        {% for rating in (ratingAvgRounded+1)..5 if ratingAvgRounded != 5 %}
-                            <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15" class="rating-star">
-                        {% endfor %}
-                        <span class="quick-view-show">/{{ product.productReviews|length }} reviews</span>
-                    {% else %}
-                        {% for rating in 1..5 %}
-                            <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="15" class="rating-star">
-                        {% endfor %}
-                        <span class="quick-view-show">/0 reviews</span>
-                    {% endif %}
+                <div style="padding: 10px 0; margin: 0 auto;">
+                    {% include 'Product/parts/_ratingStars.html.twig' with {'productReviews': product.productReviews} %}
                 </div>
                 <div>
                 <span><b>€ {{ product.price }}</b></span>

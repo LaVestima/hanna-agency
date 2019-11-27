@@ -99,11 +99,11 @@
 {#                        <hr>#}
 
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
-{#                            <a href="{{ path('admin_panel_index') }}">#}
+                            <a href="{{ path('admin_panel_index') }}">
                                 <div>
                                     <i class="fas fa-user-shield"></i> Admin panel
                                 </div>
-{#                            </a>#}
+                            </a>
                         {% endif %}
 
                         {% if is_granted('ROLE_USER') %}

@@ -30,10 +30,13 @@ class ProductController extends BaseController
     {
         $this->denyAccessUnlessGranted('view', $product);
 
+        $similarProducts = $this->productRepository->readRandomEntities(7);
+
         $addToCartForm = $this->createForm(AddToCartType::class, $product);
 
         return $this->render('Product/show.html.twig', [
             'product' => $product,
+            'similarProducts' => $similarProducts,
             'addToCartForm' => $addToCartForm->createView()
         ]);
     }
@@ -74,6 +77,8 @@ class ProductController extends BaseController
     {
         $this->denyAccessUnlessGranted('edit', $product);
 
+        $backUrl = $this->generateBackUrl($request);
+
         $form = $this->createForm(ProductType::class, $product, [
             'edit' => true,
             'isAdmin' => $this->isAdmin(),
@@ -89,45 +94,46 @@ class ProductController extends BaseController
             $em->persist($product);
             $em->flush();
 
-            return $this->redirectToRoute('inventory_home');
+            return $this->redirect($backUrl);
         }
 
         return $this->render('Product/edit.html.twig', [
             'product' => $product,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'backUrl' => $backUrl
         ]);
     }
 
     /**
      * @Route("/activate/{pathSlug}", name="product_activate")
      */
-    public function activate(Product $product)
+    public function activate(Product $product, Request $request)
     {
         $this->denyAccessUnlessGranted('edit', $product);
 
         $product->setActive(true);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('inventory_home');
+        return $this->redirect($this->generateBackUrl($request));
     }
 
     /**
      * @Route("/deactivate/{pathSlug}", name="product_deactivate")
      */
-    public function deactivate(Product $product)
+    public function deactivate(Product $product, Request $request)
     {
         $this->denyAccessUnlessGranted('edit', $product);
 
         $product->setActive(false);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('inventory_home');
+        return $this->redirect($this->generateBackUrl($request));
     }
 
     /**
      * @Route("/delete/{pathSlug}", name="product_delete")
      */
-    public function delete(Product $product)
+    public function delete(Product $product, Request $request)
     {
         $this->denyAccessUnlessGranted('delete', $product);
 
@@ -135,6 +141,28 @@ class ProductController extends BaseController
         $em->remove($product);
         $em->flush();
 
-        return $this->redirectToRoute('inventory_home');
+        return $this->redirect($this->generateBackUrl($request));
+    }
+
+    private function generateBackUrl(Request $request): string
+    {
+        $backUrlMap = [
+            'show' => [
+                'route' => 'product_show',
+                'params' => [
+                    'pathSlug' => $request->attributes->get('product')->getPathSlug()
+                ]
+            ],
+            'inv' => [
+                'route' => 'inventory_home',
+                'params' => [
+                    'page' => $request->query->get('page') ?? 1
+                ]
+            ]
+        ];
+
+        $routeInfo = $backUrlMap[$request->query->get('back')];
+
+        return $this->generateUrl($routeInfo['route'], $routeInfo['params']);
     }
 }

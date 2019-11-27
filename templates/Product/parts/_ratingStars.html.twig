@@ -1,0 +1,27 @@
+<div style="display: flex; justify-content: space-evenly; width: 150px;">
+{% if productReviews|length > 0 %}
+    {% set ratingAvg = 0 %}
+    {% for review in productReviews %}
+        {% set ratingAvg = (ratingAvg + review.rating) %}
+    {% endfor %}
+    {% set ratingAvg = ratingAvg / (productReviews|length) %}
+
+    {% set ratingAvgRounded = ratingAvg|round(0, 'ceil') %}
+
+    {% for rating in 1..(ratingAvgRounded-1) if (ratingAvgRounded-1) != 0 %}
+        <img src="{{ asset('uploads/images/_star_4.png') }}" alt="" width="25" height="25" class="rating-star">
+    {% endfor %}
+
+    <img src="{{ asset('uploads/images/_star_' ~ ((ratingAvg - (ratingAvgRounded-1)) * 4)|round ~ '.png') }}" alt="" width="25" height="25" class="rating-star">
+
+    {% for rating in (ratingAvgRounded+1)..5 if ratingAvgRounded != 5 %}
+        <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="25" height="25" class="rating-star">
+    {% endfor %}
+    <span class="quick-view-show">/{{ productReviews|length }} reviews</span>
+{% else %}
+    {% for rating in 1..5 %}
+        <img src="{{ asset('uploads/images/_star_0.png') }}" alt="" width="25" height="25" class="rating-star">
+    {% endfor %}
+    <span class="quick-view-show">/0 reviews</span>
+{% endif %}
+</div>
