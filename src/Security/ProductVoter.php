@@ -83,5 +83,7 @@ class ProductVoter extends Voter
         // TODO: finish
 
         // TODO: more restrictive than EDIT, only store owner(?)
+
+        return true;
     }
 }

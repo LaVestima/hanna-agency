@@ -14,9 +14,27 @@ var Routing = require('../../public/bundles/fosjsrouting/js/router.min.js');
 Routing.setRoutingData(routes);
 global.Routing = Routing;
 
+require('jqtree');
 
 $(function () {
     $('.select2').select2();
+    $('[title]').tipso({
+        speed: 100,
+        delay: 0,
+        useTitle: true,
+        position: 'top',
+        background: '#333333',
+        width: 'auto',
+    });
+    $('.tipso-bottom').tipso({
+        speed: 100,
+        delay: 0,
+        useTitle: true,
+        position: 'bottom',
+        background: '#333333',
+        width: 'auto',
+    });
+
     window.cookieconsent.initialise({
         "palette": {
             "popup": {
@@ -53,4 +71,33 @@ $(function () {
             console.log('Connection error!');
         });
     });
+
+    $('.dropdown').on('click', function() {
+        $(this).find('.dropdown-content').toggleClass('visible');
+    });
+
+    $(document).click(function(event) {
+        $target = $(event.target);
+        // console.log($target);
+
+        if ($target.hasClass('dropdown')) {
+            // $(this).find('.dropdown-content').toggleClass('visible');
+        }
+
+        $visibleDropdown = $('.dropdown-content:visible');
+        // console.log($visibleDropdown.closest('.dropdown'));
+        // console.log($target.closest('.dropdown'));
+
+        if (!$visibleDropdown.closest('.dropdown').is($target.closest('.dropdown'))) {
+            // console.log('CLOSE');
+            $visibleDropdown.removeClass('visible');
+        }
+
+        // if (!$target.hasClass('dropdown-content')) {
+        if(!$target.closest('.dropdown').find('.dropdown-content').length && $('.dropdown-content').is(":visible")) {
+            // $('.dropdown-content').removeClass('visible');
+        }
+    });
 });
+
+

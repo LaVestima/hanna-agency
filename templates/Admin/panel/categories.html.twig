@@ -1,0 +1,48 @@
+{% extends 'Admin/base.html.twig' %}
+
+{% block panelContent %}
+    <div class="button">Add</div>
+    <div id="tree1"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqtree/1.4.11/tree.jquery.js"></script>
+    <script>
+        $(function () {
+            var data = {{ categoryTree|json_encode|raw }};
+            console.log(data);
+
+            $tree = $('#tree1');
+
+            $('#tree1').tree({
+                data: {{ categoryTree|json_encode|raw }},
+                dragAndDrop: true,
+                autoOpen: 0,
+                autoEscape: false,
+            });
+            $('#tree1').on(
+                'tree.move',
+                function(event) {
+                    event.move_info.do_move();
+                    console.log(event.move_info);
+                    // console.log('moved_node', event.move_info.moved_node);
+                    // console.log('target_node', event.move_info.target_node);
+                    console.log('position', event.move_info.position);
+                    // console.log('previous_parent', event.move_info.previous_parent);
+                    console.log($(this).tree('toJson'));
+                }
+            );
+            $(document).on('click', '#tree1 .fa-trash-alt', function (event) {
+            // $('#tree1 .fa-trash-alt').click(function () {
+                if (confirm('Really remove?')) {
+                    console.log(event);
+                    console.log('remove');
+                    $('#tree1').tree('removeNode', $tree.tree('getNodeByHtmlElement', $(this).closest('li')));
+                    // console.log($tree.tree('getNodeByHtmlElement', $(this).closest('li')));
+                    $('#tree1').tree('reload');
+                }
+            });
+        });
+    </script>
+{% endblock %}

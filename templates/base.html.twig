@@ -11,6 +11,7 @@
             {% endspaceless %}</title>
         <link href="https://fonts.googleapis.com/css?family=Gudea" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tipso/1.0.8/tipso.min.css">
         {% spaceless %}
         {% block base_stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -21,7 +22,9 @@
         {% endif %}
         {% endspaceless %}
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+{#        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqtree/1.4.11/jqtree-circle.png" />#}
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqtree/1.4.11/jqtree.css">
     </head>
     <body>
         <div id="top-bar-wrapper">
@@ -155,7 +158,6 @@
                 <a href="{{ path('cart_home') }}">
                     <div class="top-bar-item tooltip">
                         <i class="fas fa-shopping-cart"></i>
-                        {#                        ({{ cartTotal }})#}
                         <span class="tooltiptext">Cart</span>
                         <span style="background: #ff6666; position: absolute; top: 0; right: -10px; border-radius: 5px; padding: 0.125em 0.25em; min-width: 1em; text-align: center; font-size: 16px;" id="top-bar-icon-cart-total">{{ cartTotal }}</span>
                     </div>
@@ -166,6 +168,7 @@
                     <span class="tooltiptext">Wishlist</span>
                 </div>
 {#                </a>#}
+{#                <a href="{{ path('conversation_list') }}" class="tipso-bottom" title="Messages" style="padding: 0.5em;">#}
                 <a href="{{ path('conversation_list') }}">
                     <div class="top-bar-item tooltip">
                         <i class="fas fa-envelope"></i>
@@ -173,9 +176,9 @@
                     </div>
                 </a>
 {#                <a href="{{ path('conversation_list') }}">#}
-                <div class="top-bar-item tooltip">
+                <div class="top-bar-item tipso-bottom" title="Help">
                     <i class="fas fa-question"></i>
-                    <span class="tooltiptext">Help</span>
+{#                    <span class="tooltiptext">Help</span>#}
                 </div>
 {#                </a>#}
             </div>
@@ -266,8 +269,7 @@
 
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
-        <script>
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tipso/1.0.8/tipso.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
         {% endspaceless %}
     </body>
