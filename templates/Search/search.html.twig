@@ -10,9 +10,11 @@
         }
     </style>
 
+
+
     {{ form_start(form, {'attr': {'id': 'form-filters'}}) }}
     <div style="display: flex; position: relative; width: 100%;">
-        <div id="filtering-bar" style="width: 15%; background: #ffffff; padding: 0.5em; margin: 0.5em;">
+        <div id="filtering-bar" style="width: 20%; background: #ffffff; padding: 0.5em; margin: 0.5em;">
             <h2>Filters</h2>
 {#        TODO: filtering (categories?, parameters?, ...), sorting (price, dateAdded, opinions/ratings, ...)#}
             <div style="display: flex; flex-direction: column;">
@@ -28,14 +30,70 @@
 
                 <div>
                     Price<br>
-                    {{ form_widget(form.priceMin) }} to
-                    {{ form_widget(form.priceMax) }}
+                    <div style="display: flex; text-align: center;">
+                        <div style="width: 50%;">
+                            From
+                        </div>
+                        <div style="width: 50%;">
+                            To
+                        </div>
+                    </div>
+                    <div style="display: flex; text-align: center;">
+                        <div style="width: 50%;">
+                            {{ form_widget(form.priceMin) }}
+                        </div>
+                        <div style="width: 50%;">
+                            {{ form_widget(form.priceMax) }}
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    {{ form_label(form.country) }}<br>
-                    {{ form_widget(form.country) }}
-                </div>
+{#                <div>#}
+{#                    {{ form_label(form.country) }}<br>#}
+{#                    {{ form_widget(form.country) }}#}
+{#                </div>#}
+
+                <hr>
+
+                {% if category is defined and category %}
+                    {% for parameterCategory in category.parameterCategories %}
+                        <div style="padding-top: 15px;">
+                        {{ parameterCategory.parameter.name }}
+                        {% if parameterCategory.parameter.type == constant('App\\Enum\\ParameterType::TEXTUAL') %}
+                            <input type="text">
+                        {% elseif parameterCategory.parameter.type == constant('App\\Enum\\ParameterType::CATEGORICAL_NOMINAL') %}
+                            <select name="" id="">
+                                <option value="hmm">hmm</option>
+                            </select>
+                        {% elseif parameterCategory.parameter.type == constant('App\\Enum\\ParameterType::NUMERICAL_CONTINUOUS') %}
+                            <div style="display: flex; text-align: center;">
+                                <div style="width: 50%;">
+                                    min
+                                </div>
+                                <div style="width: 50%;">
+                                    max
+                                </div>
+                            </div>
+                            <div style="display: flex; text-align: center;">
+                                <div style="width: 50%;">
+{#                                    {{ form_widget(form.priceMin) }}#}
+                                    <input type="number">
+                                </div>
+                                <div style="width: 50%;">
+{#                                    {{ form_widget(form.priceMax) }}#}
+                                    <input type="number">
+                                </div>
+                            </div>
+
+{#                            Between <input type="number">#}
+{#                            and <input type="number">#}
+                        {% endif %}
+                        </div>
+    {#                    {{ parameterCategory.parameter.type }}#}
+                    {% endfor %}
+                {% endif %}
+
+                <hr>
 
                 <div style="margin: 1em 0; text-align: right;">
                     {{ form_widget(form.submit) }}

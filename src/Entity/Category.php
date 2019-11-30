@@ -70,11 +70,17 @@ class Category implements EntityInterface
      */
     private $icon;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ParameterCategory", mappedBy="category", orphanRemoval=true)
+     */
+    private $parameterCategories;
+
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->parameterCategories = new ArrayCollection();
     }
 
     /**
@@ -237,6 +243,37 @@ class Category implements EntityInterface
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ParameterCategory[]
+     */
+    public function getParameterCategories(): Collection
+    {
+        return $this->parameterCategories;
+    }
+
+    public function addParameterCategory(ParameterCategory $parameterCategory): self
+    {
+        if (!$this->parameterCategories->contains($parameterCategory)) {
+            $this->parameterCategories[] = $parameterCategory;
+            $parameterCategory->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParameterCategory(ParameterCategory $parameterCategory): self
+    {
+        if ($this->parameterCategories->contains($parameterCategory)) {
+            $this->parameterCategories->removeElement($parameterCategory);
+            // set the owning side to null (unless already changed)
+            if ($parameterCategory->getCategory() === $this) {
+                $parameterCategory->setCategory(null);
+            }
+        }
 
         return $this;
     }

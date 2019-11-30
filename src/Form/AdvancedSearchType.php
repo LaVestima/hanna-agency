@@ -60,7 +60,7 @@ class AdvancedSearchType extends AbstractType
                 'data' => 99999, // TODO: change to the highest value in products
                 'empty_data' => 99999,
             ])
-            ->add('country', CountryType::class)
+//            ->add('country', CountryType::class)
             ->add('sorting', ChoiceType::class, [
                 'label' => 'Sort by',
                 'choices' => [

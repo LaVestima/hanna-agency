@@ -3,9 +3,11 @@
 namespace App\Controller\Search;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Form\AdvancedSearchType;
 use App\Form\SearchBarType;
+use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use FOS\ElasticaBundle\Manager\RepositoryManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -14,11 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SearchController extends BaseController
 {
+    private $categoryRepository;
     private $productRepository;
 
     public function __construct(
+        CategoryRepository $categoryRepository,
         ProductRepository $productRepository
     ) {
+        $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
     }
 
@@ -41,6 +46,9 @@ class SearchController extends BaseController
                 $form->get('priceMax')->getData(),
                 $form->get('sorting')->getData()
             );
+
+            $searchQuery = $form->get('query')->getData();
+            $searchCategory = $form->get('category')->getData();
         } else {
             $productsQuery = $this->productRepository
                 ->getProductsQueryByAdvancedSearch($searchQuery, $searchCategory);
@@ -48,6 +56,11 @@ class SearchController extends BaseController
             $form->get('query')->setData($searchQuery);
             $form->get('category')->setData($searchCategory);
         }
+
+        /** @var Category $category */
+        $category = $this->categoryRepository->findOneBy([
+            'identifier' => $searchCategory
+        ]);
 
         $pagination = $paginator->paginate(
             $productsQuery,
@@ -59,7 +72,8 @@ class SearchController extends BaseController
             'pagination' => $pagination,
             'form' => $form->createView(),
             'searchQuery' => $searchQuery,
-            'searchCategory' => $searchCategory
+            'searchCategory' => $searchCategory,
+            'category' => $category
         ]);
     }
 

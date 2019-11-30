@@ -41,10 +41,21 @@ class Parameter implements EntityInterface
      */
     private $productParameters;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ParameterCategory", mappedBy="parameter", orphanRemoval=true)
+     */
+    private $parameterCategories;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $type;
+
 
     public function __construct()
     {
         $this->productParameters = new ArrayCollection();
+        $this->parameterCategories = new ArrayCollection();
     }
 
     /**
@@ -114,6 +125,49 @@ class Parameter implements EntityInterface
                 $productParameter->setParameter(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ParameterCategory[]
+     */
+    public function getParameterCategories(): Collection
+    {
+        return $this->parameterCategories;
+    }
+
+    public function addParameterCategory(ParameterCategory $parameterCategory): self
+    {
+        if (!$this->parameterCategories->contains($parameterCategory)) {
+            $this->parameterCategories[] = $parameterCategory;
+            $parameterCategory->setParameter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParameterCategory(ParameterCategory $parameterCategory): self
+    {
+        if ($this->parameterCategories->contains($parameterCategory)) {
+            $this->parameterCategories->removeElement($parameterCategory);
+            // set the owning side to null (unless already changed)
+            if ($parameterCategory->getParameter() === $this) {
+                $parameterCategory->setParameter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+<div style="width: 300px; display: flex; flex-direction: row;">
+    <div>
+        {{ form_label(form.language) }}
+        {{ form_widget(form.language) }}
+    </div>
+    <div>
+        {{ form_label(form.currency) }}
+        {{ form_widget(form.currency) }}
+    </div>
+</div>
+{{ form_end(form) }}
