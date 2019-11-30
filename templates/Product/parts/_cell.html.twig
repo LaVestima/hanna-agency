@@ -11,7 +11,7 @@
                 <span class="quick-view-hide" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name | slice(0, 50) }}</b></span>
                 <span class="quick-view-show" style="max-height: 2.5em; overflow: hidden;"><b>{{ product.name }}</b></span>
                 <span style="font-size: 16px; color: #555">{{ product.store.shortName }}</span>
-                <span class="quick-view-show" style="font-size: 14px;">{{ product.description }}</span>
+                <span class="quick-view-show" style="font-size: 14px;">{{ product.description|raw }}</span>
 
                 <div class="quick-view-show">
                     {% for productParameter in product.productParameters %}

@@ -38,7 +38,7 @@ class SessionHelper
             ])->getResult();
 
         $this->session->set('configuration', [
-            'locale' => $userSettings->getLocale(),
+            'locale' => $userSettings ? $userSettings->getLocale() : 'en',
             // TODO: more !!!
         ]);
     }

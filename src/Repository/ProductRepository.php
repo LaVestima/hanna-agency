@@ -5,8 +5,8 @@ namespace App\Repository;
 use App\Controller\Infrastructure\Crud\CrudRepository;
 use App\Entity\MLModel;
 use App\Entity\Product;
-use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProductRepository extends CrudRepository
@@ -23,21 +23,46 @@ class ProductRepository extends CrudRepository
         parent::__construct($registry, Product::class, $tokenStorage);
     }
 
-    public function readRecommendedProducts(MLModel $model)
+    public function readRecommendedProducts(MLModel $model = null)
     {
-        $qb = $this->createQueryBuilder('p');
+        if ($model) {
+            $qb = $this->createQueryBuilder('p');
 
-        $parameters = [];
+            $parameters = [];
 
-        foreach ($model->getContent() as $i => $productId) {
-            $qb->orWhere('p.id = :productId' . $i);
+            foreach ($model->getContent() as $i => $productId) {
+                $qb->orWhere('p.id = :productId' . $i);
 
-            $parameters[('productId' . $i)] = $productId;
+                $parameters[('productId' . $i)] = $productId;
+            }
+
+            $qb->setParameters($parameters);
+
+            return $qb->getQuery()->getResult();
+        } else {
+            $dql = '
+                SELECT p.*
+                FROM product p
+                INNER JOIN product_variant pv ON pv.product_id = p.id
+                INNER JOIN order_product_variant opv ON opv.product_variant_id = pv.id
+                INNER JOIN
+                    (SELECT p.id, AVG(pr.rating) as ratingAvg
+                    FROM product p
+                    INNER JOIN product_review pr ON pr.product_id = p.id
+                    WHERE p.active = true
+                    GROUP BY p.id) r ON r.id = p.id
+                GROUP BY p.id
+                ORDER BY (SUM(opv.quantity) * r.ratingAvg) DESC
+                LIMIT 10
+            ';
+            
+            $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+            $rsm->addRootEntityFromClassMetadata(Product::class, 'p');
+
+
+            $query = $this->getEntityManager()->createNativeQuery($dql, $rsm);
+            return $query->getResult();
         }
-
-        $qb->setParameters($parameters);
-
-        return $qb->getQuery()->getResult();
 
         // TODO: read order history, search products similar to those in orders
         // (by some parameters, producers, etc)

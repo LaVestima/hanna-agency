@@ -3,6 +3,7 @@
 namespace App\Controller\Homepage;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\MLModel;
 use App\Repository\MLModelRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StoreRepository;
@@ -31,13 +32,14 @@ class HomepageController extends BaseController
     {
         if ($this->getUser()) {
             // TODO: get the most recent one
+            /** @var MLModel $recommendedProductsMLM */
             $recommendedProductsMLM = $this->modelRepository->findOneBy([
                 'user' => $this->getUser()
             ]);
 
             $products = $this->productRepository->readRecommendedProducts($recommendedProductsMLM);
         } else {
-            $products = $this->productRepository->readRandomEntities(10);
+            $products = $this->productRepository->readRecommendedProducts();
         }
 
         $stores = $this->storeRepository->findTop(3);
