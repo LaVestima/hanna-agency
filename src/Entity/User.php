@@ -101,15 +101,15 @@ class User implements UserInterface, \Serializable, EntityInterface
      */
     private $stores;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userFrom")
-     */
-    private $conversationsSent;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userTo")
-     */
-    private $conversationsReceived;
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userFrom")
+//     */
+//    private $conversationsSent;
+//
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\Conversation", mappedBy="userTo")
+//     */
+//    private $conversationsReceived;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ProductReview", mappedBy="user")
@@ -169,7 +169,12 @@ class User implements UserInterface, \Serializable, EntityInterface
     /**
      * @ORM\Column(type="integer")
      */
-    private $gender;
+    private $gender = 1;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="user", orphanRemoval=true)
+     */
+    private $messages;
 
     public function __construct()
     {
@@ -188,6 +193,7 @@ class User implements UserInterface, \Serializable, EntityInterface
         $this->storeOpinionVotes = new ArrayCollection();
         $this->carts = new ArrayCollection();
         $this->MLModels = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function __toString() {
@@ -903,6 +909,37 @@ class User implements UserInterface, \Serializable, EntityInterface
     public function setGender(int $gender): self
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
 
         return $this;
     }

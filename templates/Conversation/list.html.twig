@@ -2,11 +2,12 @@
 
 {% block content %}
     {% for conversation in conversations %}
-        <div style="border: 1px solid red; display: flex;">
+        <div style="border: 1px solid red; display: flex; padding: 10px;">
             <div>
-                From: {{ conversation.userFrom.login }}
-                <br>
-                To: {{ conversation.userTo.login }}
+                [{{ conversation.messages.last().dateCreated | date('Y-m-d') }}]
+{#                From: {{ conversation.userFrom.login }}#}
+{#                <br>#}
+{#                To: {{ conversation.userTo.login }}#}
             </div>
             <div style="border-left: 1px dotted black;">
                 <a href="{{ path('conversation_show', {'identifier': conversation.identifier}) }}">

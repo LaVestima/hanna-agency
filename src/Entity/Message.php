@@ -27,10 +27,10 @@ class Message implements EntityInterface
      */
     private $content;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isRead = false;
+//    /**
+//     * @ORM\Column(type="boolean")
+//     */
+//    private $isRead = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Conversation", inversedBy="messages")
@@ -39,9 +39,15 @@ class Message implements EntityInterface
     private $conversation;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="messages")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $isFromInitiator;
+    private $user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $readAt;
 
     public function getId(): ?int
     {
@@ -72,17 +78,17 @@ class Message implements EntityInterface
         return $this;
     }
 
-    public function getIsRead(): ?bool
-    {
-        return $this->isRead;
-    }
-
-    public function setIsRead(bool $isRead): self
-    {
-        $this->isRead = $isRead;
-
-        return $this;
-    }
+//    public function getIsRead(): ?bool
+//    {
+//        return $this->isRead;
+//    }
+//
+//    public function setIsRead(bool $isRead): self
+//    {
+//        $this->isRead = $isRead;
+//
+//        return $this;
+//    }
 
     public function getConversation(): ?Conversation
     {
@@ -96,14 +102,38 @@ class Message implements EntityInterface
         return $this;
     }
 
-    public function getIsFromInitiator(): ?bool
+//    public function getIsFromInitiator(): ?bool
+//    {
+//        return $this->isFromInitiator;
+//    }
+//
+//    public function setIsFromInitiator(bool $isFromInitiator): self
+//    {
+//        $this->isFromInitiator = $isFromInitiator;
+//
+//        return $this;
+//    }
+
+    public function getUser(): ?User
     {
-        return $this->isFromInitiator;
+        return $this->user;
     }
 
-    public function setIsFromInitiator(bool $isFromInitiator): self
+    public function setUser(?User $user): self
     {
-        $this->isFromInitiator = $isFromInitiator;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getReadAt(): ?\DateTimeInterface
+    {
+        return $this->readAt;
+    }
+
+    public function setReadAt(?\DateTimeInterface $readAt): self
+    {
+        $this->readAt = $readAt;
 
         return $this;
     }

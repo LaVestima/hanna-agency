@@ -24,17 +24,17 @@ class Conversation implements EntityInterface
      */
     private $identifier;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="conversationsSent")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userFrom;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="conversationsReceived")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $userTo;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="conversationsSent")
+//     * @ORM\JoinColumn(nullable=false)
+//     */
+//    private $userFrom;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="conversationsReceived")
+//     * @ORM\JoinColumn(nullable=false)
+//     */
+//    private $userTo;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Message", mappedBy="conversation", orphanRemoval=true)
@@ -63,29 +63,29 @@ class Conversation implements EntityInterface
         return $this;
     }
 
-    public function getUserFrom(): ?User
-    {
-        return $this->userFrom;
-    }
-
-    public function setUserFrom(?User $userFrom): self
-    {
-        $this->userFrom = $userFrom;
-
-        return $this;
-    }
-
-    public function getUserTo(): ?User
-    {
-        return $this->userTo;
-    }
-
-    public function setUserTo(?User $userTo): self
-    {
-        $this->userTo = $userTo;
-
-        return $this;
-    }
+//    public function getUserFrom(): ?User
+//    {
+//        return $this->userFrom;
+//    }
+//
+//    public function setUserFrom(?User $userFrom): self
+//    {
+//        $this->userFrom = $userFrom;
+//
+//        return $this;
+//    }
+//
+//    public function getUserTo(): ?User
+//    {
+//        return $this->userTo;
+//    }
+//
+//    public function setUserTo(?User $userTo): self
+//    {
+//        $this->userTo = $userTo;
+//
+//        return $this;
+//    }
 
     /**
      * @return Collection|Message[]

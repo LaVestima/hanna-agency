@@ -1,28 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {{ conversation.userFrom.login }}
-    {{ conversation.userTo.login }}
+    <style>
+        #message_reply_content {
+            width: 100%;
+        }
+    </style>
+
+{#    {{ conversation.userFrom.login }}#}
+{#    {{ conversation.userTo.login }}#}
 
     {% for message in conversation.messages %}
-        {% set myMessage = false %}
-        {% if (conversation.userFrom == app.user and message.isFromInitiator) or (conversation.userTo == app.user and not message.isFromInitiator) %}
-            {% set myMessage = true %}
-        {% endif %}
-        <div style="display: flex; justify-content: {% if myMessage %}flex-end{% else %}flex-start{% endif %};">
+{#        {% set myMessage = false %}#}
+{#        {% if (conversation.userFrom == app.user and message.isFromInitiator) or (conversation.userTo == app.user and not message.isFromInitiator) %}#}
+{#            {% set myMessage = true %}#}
+{#        {% endif %}#}
+        <div style="display: flex; justify-content: {% if message.user == app.user %}flex-end{% else %}flex-start{% endif %};">
             <div style="width: 45%; background: #ddd; border: 1px solid black; border-radius: 10px; padding: 0.5em;">
                 [{{ message.dateCreated | date('Y-m-d H:i:s') }}]
-                {% if not message.isRead %}
-                    <b>{{ message.content }}</b>
-                {% else %}
+                {% if (message.readAt is defined and message.readAt) or message.user == app.user %}
                     {{ message.content }}
+                {% else %}
+                    <b>{{ message.content }}</b>
                 {% endif %}
             </div>
         </div>
     {% endfor %}
 
     {{ form_start(messageReplyForm) }}
-    <div style="text-align: right">
+    <div style="width: 100%; display: flex;">
         {{ form_widget(messageReplyForm.content) }}
         {{ form_widget(messageReplyForm.submit) }}
     </div>

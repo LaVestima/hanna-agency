@@ -52,6 +52,8 @@ class ConversationController extends BaseController
     {
         // TODO: check access
 
+        // TODO: mark all messages from the other side as read
+
         $message = new Message();
 
         $messageReplyForm = $this->createForm(MessageReplyType::class, $message);
@@ -61,7 +63,7 @@ class ConversationController extends BaseController
             $message = $messageReplyForm->getData();
 
             $message->setConversation($conversation);
-            $message->setIsFromInitiator($conversation->getUserFrom() === $this->getUser());
+            $message->setUser($this->getUser());
 
             $this->messageRepository->createEntity($message);
 //            var_dump($message);
