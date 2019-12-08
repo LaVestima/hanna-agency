@@ -36,10 +36,19 @@ security:
             threads: 2
 
     role_hierarchy:
-        ROLE_USER: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_USER:
+            - IS_AUTHENTICATED_ANONYMOUSLY
+            - ROLE_ALLOWED_TO_SWITCH
         ROLE_STORE_SUBUSER: ROLE_USER
-        ROLE_STORE_ADMIN: ROLE_STORE_SUBUSER
-        ROLE_PRODUCER: ROLE_USER # TODO: remove
+        ROLE_STORE_ADMIN:
+            - ROLE_VIEW_DASHBOARD
+            - ROLE_READ_MESSAGES
+            - ROLE_WRITE_MESSAGES
+            - ROLE_ADD_PRODUCTS
+            - ROLE_EDIT_PRODUCTS
+            - ROLE_DELETE_PRODUCTS
+            - ROLE_ORDER_VIEW
+            - ROLE_VIEW_STATISTICS
         ROLE_SUPER_ADMIN: ROLE_USER
 
 

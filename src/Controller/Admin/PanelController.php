@@ -3,12 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Infrastructure\BaseController;
+use App\Entity\Category;
 use App\Entity\Store;
+use App\Form\Admin\CategoriesType;
 use App\Repository\CategoryRepository;
 use App\Repository\CouponRepository;
 use App\Repository\StoreRepository;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -45,36 +48,81 @@ class PanelController extends BaseController
     /**
      * @Route("/categories", name="admin_panel_categories")
      */
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = $this->categoryRepository->findAll();
+        $form = $this->createForm(CategoriesType::class);
+        $form->handleRequest($request);
 
-        $categoryTree = $this->buildTree($categories);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $treeJson = $form->get('treeJson')->getData();
 
-        return $this->render('Admin/panel/categories.html.twig', [
-            'categoryTree' => $categoryTree
-        ]);
-    }
+            $allCategories = $this->categoryRepository->findAll();
 
-    function buildTree(array $elements, $parentId = null) {
-        $branch = array();
+            $newCategories = $this->saveTreeCategories(json_decode($treeJson, true));
 
-        foreach ($elements as $category) {
-            $c = [
-                'name' => $category->getName() . '<a><i class="fas fa-trash-alt"></i></a>',
-                'id' => $category->getIdentifier(),
-            ];
-
-            if ($category->getParent() == $parentId) {
-                $children = $this->buildTree($elements, $category);
-                if ($children) {
-                    $c['children'] = $children;
+            foreach ($allCategories as $category) {
+                if (!in_array($category, $newCategories)) {
+                    $this->deleteTreeCategory($category);
                 }
-                $branch[] = $c;
             }
         }
 
-        return $branch;
+        $mainCategories = $this->categoryRepository->findBy([
+            'parent' => null
+        ]);
+
+        return $this->render('Admin/panel/categories.html.twig', [
+            'mainCategories' => $mainCategories,
+            'form' => $form->createView()
+        ]);
+    }
+
+    private function saveTreeCategories($categories, $parent = null)
+    {
+        $newCategories = [];
+
+        foreach ($categories as $categoryData) {
+            $category = $this->categoryRepository->findOneBy([
+                'identifier' => $categoryData['identifier']
+            ]);
+
+            if (!$category) {
+                $category = new Category();
+                $category->setName($categoryData['name']);
+                $category->setIdentifier($categoryData['identifier']);
+                $category->setParent($parent);
+
+                $this->categoryRepository->createEntity($category);
+            } else {
+                $this->categoryRepository->updateEntity($category, [
+                    'name' => $categoryData['name'],
+                    'identifier' => $categoryData['identifier'],
+                    'parent' => $parent
+                ]);
+            }
+
+            $newCategories[] = $category;
+
+            if (!empty($categoryData['children'])) {
+                $newCategories = array_merge(
+                    $newCategories,
+                    $this->saveTreeCategories($categoryData['children'], $category)
+                );
+            }
+        }
+
+        return $newCategories;
+    }
+
+    private function deleteTreeCategory(Category $category)
+    {
+        if (!empty($category->getChildren())) {
+            foreach ($category->getChildren() as $child) {
+                $this->deleteTreeCategory($child);
+            }
+        }
+
+        $this->categoryRepository->deleteEntity($category);
     }
 
     /**

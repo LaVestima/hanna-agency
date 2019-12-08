@@ -71,7 +71,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateCreated(new \DateTime('now'));
         }
         if (method_exists($entity, 'setUserCreated') && !$entity->getUserCreated() && $this->user) {
-            $entity->setUserCreated($this->user->getId()); // TODO: change to relation
+            $entity->setUserCreated($this->user);
         }
         if (method_exists($entity, 'setPathSlug') && !$entity->getPathSlug()) {
 	        $entity->setPathSlug(RandomHelper::generateString(50));
@@ -301,9 +301,7 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
             $entity->setDateDeleted(new \DateTime('now'));
             $entity->setUserDeleted($this->user);
         } else {
-            if ($this->isEnvDev()) {
-                throw new \BadMethodCallException('Entity ' . $this->entityClass . ' cannot be deleted');
-            }
+            $this->purgeEntity($entity);
         }
 
 		$this->manager->flush();
@@ -391,7 +389,11 @@ abstract class CrudRepository extends ServiceEntityRepository//BaseController
                     $entity = null;
                 }
 
-                $entities[] = $entity->getResult();
+                if ($entity->getResult()) {
+                    $entities[] = $entity->getResult();
+                } else {
+                    $i--;
+                }
             }
 
             return $entities;

@@ -1,48 +1,164 @@
 {% extends 'Admin/base.html.twig' %}
 
-{% block panelContent %}
-    <div class="button">Add</div>
-    <div id="tree1"></div>
-
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        i.fa-arrows-alt {
+            cursor: move;
+        }
+        body.dragging, body.dragging * {
+            cursor: move !important;
+        }
+        .dragged {
+            position: absolute;
+            top: 20px;
+            opacity: 0.2;
+            z-index: 2000;
+        }
+        ol.category-tree {
+            margin: 0 0 9px 0;
+            min-height: 10px;
+        }
+        ol.category-tree ol {
+            padding-left: 20px;
+        }
+        ol.category-tree li {
+            display: block;
+            margin: 5px 0;
+            padding: 5px;
+            border: 1px solid black;
+            background: rgba(100, 100, 100, 0.1);
+        }
+        ol.category-tree li span {
+            margin-left: 5px;
+        }
+        ol.category-tree li.placeholder {
+            height: 20px;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            background: moccasin;
+        }
+        ol.category-tree li.placeholder:before {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 0;
+            margin-top: -5px;
+            left: -5px;
+            top: -4px;
+            border: 5px solid transparent;
+            border-left-color: red;
+            border-right: none;
+        }
+    </style>
 {% endblock %}
+
+{% block panelContent %}
+    <form>
+        <input type="text" class="add-category-name">
+        <div class="button add-category-submit">Add</div>
+    </form>
+
+    {{ form_start(form) }}
+
+    <ol class="category-tree" data-prototype="
+        <li data-identifier=&quot;&quot; data-name=&quot;__name__&quot;><i class=&quot;fas fa-arrows-alt&quot;></i><span>__name__</span><ol></ol></li>
+    ">
+        {{ _self.tree(mainCategories) }}
+    </ol>
+
+    {{ form_row(form.submit) }}
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% macro tree(categories) %}
+    {% for category in categories %}
+        <li data-identifier="{{ category.identifier }}" data-name="{{ category.name }}">
+            <i class="fas fa-arrows-alt"></i>
+            <span>{{ category.name }}</span>
+            <div style="display: inline-block;">
+                <a href="#">
+                    <i class="fas fa-trash-alt button-icon" style="background: #dc3545;"></i>
+                </a>
+            </div>
+            {% spaceless %}<ol>
+                {% if category.children is not null %}
+                    {{ _self.tree(category.children) }}
+                {% endif %}
+            </ol>{% endspaceless %}
+        </li>
+    {% endfor %}
+{% endmacro %}
 
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqtree/1.4.11/tree.jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
     <script>
-        $(function () {
-            var data = {{ categoryTree|json_encode|raw }};
-            console.log(data);
+        $(function() {
+            $('.add-category-submit').on('click', function () {
+                $newCategoryName = $(this).closest('form').find('.add-category-name').val();
 
-            $tree = $('#tree1');
+                if ($newCategoryName.trim() !== '') {
+                    console.log($newCategoryName);
 
-            $('#tree1').tree({
-                data: {{ categoryTree|json_encode|raw }},
-                dragAndDrop: true,
-                autoOpen: 0,
-                autoEscape: false,
-            });
-            $('#tree1').on(
-                'tree.move',
-                function(event) {
-                    event.move_info.do_move();
-                    console.log(event.move_info);
-                    // console.log('moved_node', event.move_info.moved_node);
-                    // console.log('target_node', event.move_info.target_node);
-                    console.log('position', event.move_info.position);
-                    // console.log('previous_parent', event.move_info.previous_parent);
-                    console.log($(this).tree('toJson'));
-                }
-            );
-            $(document).on('click', '#tree1 .fa-trash-alt', function (event) {
-            // $('#tree1 .fa-trash-alt').click(function () {
-                if (confirm('Really remove?')) {
-                    console.log(event);
-                    console.log('remove');
-                    $('#tree1').tree('removeNode', $tree.tree('getNodeByHtmlElement', $(this).closest('li')));
-                    // console.log($tree.tree('getNodeByHtmlElement', $(this).closest('li')));
-                    $('#tree1').tree('reload');
+                    var list = $('.category-tree');
+
+                    var newElem = list.attr('data-prototype');
+
+                    newElem = newElem.replace(/__name__/g, $newCategoryName);
+
+                    $(newElem).appendTo(list);
+                    reloadTreeJsonInput();
                 }
             });
+
+            $('.category-tree i.fa-trash-alt').on('click', function () {
+                $(this).closest('li').remove();
+                reloadTreeJsonInput();
+            });
+
+            var oldContainer;
+            var group = $("ol.category-tree").sortable({
+                group: 'serialization',
+                handle: 'i.fa-arrows-alt',
+                afterMove: function (placeholder, container) {
+                    if(oldContainer != container){
+                        if(oldContainer)
+                            oldContainer.el.removeClass("active");
+                        container.el.addClass("active");
+
+                        oldContainer = container;
+                    }
+                },
+                onDrop: function ($item, container, _super) {
+                    container.el.removeClass("active");
+                    _super($item, container);
+
+                    reloadTreeJsonInput();
+                },
+                serialize: function ($parent, $children, parentIsContainer) {
+                    var result = $.extend({}, $parent.data());
+
+                    if (parentIsContainer) {
+                        return $children;
+                    } else if ($children[0]) {
+                        result.children = $children;
+                    }
+
+                    delete result.subContainers;
+                    delete result.sortable;
+
+                    return result;
+                },
+            });
+
+            function reloadTreeJsonInput() {
+                $('#categories_treeJson').val(JSON.stringify(group.sortable("serialize").get(), null, ''));
+            }
+
+            reloadTreeJsonInput();
         });
     </script>
 {% endblock %}
