@@ -2,49 +2,15 @@
 
 namespace App\Repository;
 
+use App\Controller\Infrastructure\Crud\CrudRepository;
 use App\Entity\Coupon;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @method Coupon|null find($id, $lockMode = null, $lockVersion = null)
- * @method Coupon|null findOneBy(array $criteria, array $orderBy = null)
- * @method Coupon[]    findAll()
- * @method Coupon[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class CouponRepository extends ServiceEntityRepository
+class CouponRepository extends CrudRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
     {
-        parent::__construct($registry, Coupon::class);
+        parent::__construct($registry, Coupon::class, $tokenStorage);
     }
-
-    // /**
-    //  * @return Coupon[] Returns an array of Coupon objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Coupon
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

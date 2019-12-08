@@ -2,49 +2,15 @@
 
 namespace App\Repository;
 
+use App\Controller\Infrastructure\Crud\CrudRepository;
 use App\Entity\CartProductVariant;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @method CartProductVariant|null find($id, $lockMode = null, $lockVersion = null)
- * @method CartProductVariant|null findOneBy(array $criteria, array $orderBy = null)
- * @method CartProductVariant[]    findAll()
- * @method CartProductVariant[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class CartProductVariantRepository extends ServiceEntityRepository
+class CartProductVariantRepository extends CrudRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
     {
-        parent::__construct($registry, CartProductVariant::class);
+        parent::__construct($registry, CartProductVariant::class, $tokenStorage);
     }
-
-    // /**
-    //  * @return CartProductVariant[] Returns an array of CartProductVariant objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?CartProductVariant
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

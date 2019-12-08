@@ -7,11 +7,19 @@ use App\Entity\User;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 
 class OrderVoter extends Voter
 {
     const LIST_VIEW = 'order_list_view';
     const VIEW = 'order_view';
+
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
     protected function supports($attribute, $subject)
     {
@@ -53,15 +61,17 @@ class OrderVoter extends Voter
 
     private function canView(User $user, Order $order)
     {
-//        if ($order->get) {
-//            return true;
-//        }
+        $store = $order->getOrderProductVariants()[0]->getProductVariant()->getProduct()->getStore();
+
+        foreach ($user->getStoreSubusers() as $storeSubuser) {
+            if ($store->getStoreSubusers()->contains($storeSubuser) && $this->security->isGranted('ROLE_ORDER_VIEW')) {
+                return true;
+            }
+        }
 
         if ($order->getUser() !== $user) {
             return false;
         }
-
-        // TODO: ADD: store subuser with permission to view store orders
 
         return true;
     }

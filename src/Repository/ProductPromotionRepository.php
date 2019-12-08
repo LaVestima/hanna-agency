@@ -2,49 +2,15 @@
 
 namespace App\Repository;
 
+use App\Controller\Infrastructure\Crud\CrudRepository;
 use App\Entity\ProductPromotion;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @method ProductPromotion|null find($id, $lockMode = null, $lockVersion = null)
- * @method ProductPromotion|null findOneBy(array $criteria, array $orderBy = null)
- * @method ProductPromotion[]    findAll()
- * @method ProductPromotion[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class ProductPromotionRepository extends ServiceEntityRepository
+class ProductPromotionRepository extends CrudRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry, TokenStorageInterface $tokenStorage)
     {
-        parent::__construct($registry, ProductPromotion::class);
+        parent::__construct($registry, ProductPromotion::class, $tokenStorage);
     }
-
-    // /**
-    //  * @return ProductPromotion[] Returns an array of ProductPromotion objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ProductPromotion
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
