@@ -15,7 +15,7 @@
         "@fortawesome/fontawesome-free": "^5.5.0",
         "jqtree": "^1.4.12",
         "jquery": "^3.4.1",
-        "node-sass": "^4.10.0",
+        "node-sass": "^7.0.0",
         "sass-loader": "^7.1.0"
     }
 }
